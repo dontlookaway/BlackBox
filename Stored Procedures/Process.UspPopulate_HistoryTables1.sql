@@ -1,0 +1,514 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- Stored Procedure
+
+CREATE Proc [Process].[UspPopulate_HistoryTables1] ( @RebuildBit Bit )
+--exec [Process].[UspPopulate_HistoryTables1] @RebuildBit =0
+--exec [Process].[UspPopulate_HistoryTables1] @RebuildBit =1
+As /*
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///			Template designed by Chris Johnson, Prometic Group September 2015														///
+///																																	///
+///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
+///																																	///
+///																																	///
+///			Version 1.0.1																											///
+///																																	///
+///			Change Log																												///
+///																																	///
+///			Date		Person					Description																			///
+///			7/9/2015	Chris Johnson			Initial version created																///
+///			7/9/2015	Chris Johnson			Changed to use of udf_SplitString to define tables to return						///
+///			9/12/2015	Chris Johnson			Added uppercase to company															///
+///			8/1/2015	Chris Johnson			Removed company & tables from script												///
+///			??/??/201?	Placeholder				Placeholder																			///
+///			??/??/201?	Placeholder				Placeholder																			///
+///			??/??/201?	Placeholder				Placeholder																			///
+///			??/??/201?	Placeholder				Placeholder																			///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+    Begin
+--remove nocount on to speed up query
+        Set NoCount On;
+
+        Declare @ErrorMessage Varchar(50)= 'SQL transaction script is too long';
+        Declare @CurrentTable Int= 1
+          , @TotalTables Int
+          , @SchemaName Varchar(500)
+          , @TableName Varchar(500)
+          , @NewTableName Varchar(500);
+        Declare @Columns Varchar(500)
+          , @Constraints Varchar(500);
+        Declare @CurrentColumn Int = 1
+          , @TotalColumns Int
+          , @ColumnName Varchar(500)
+          , @ColumnType Varchar(500);
+        Declare @TablesToUpdate Varchar(Max);
+
+--list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
+
+--create temporary tables to be pulled from different databases, including a column to id
+
+--Table to capture all Transactions captured
+
+        If Not Exists ( Select  [t].[name]
+                        From    [sys].[tables] [t]
+                                Left Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                        Where   [s].[name] = 'Process'
+                                And [t].[name] = 'SysproTransactionsLogged' )
+            Begin
+                Create Table [Process].[SysproTransactionsLogged]
+                    (
+                      [TransactionDescription] Varchar(150)
+                        Collate Latin1_General_BIN
+                    , [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+                    , [SignatureDateTime] As DateAdd(Millisecond ,
+                                                     Cast(Substring(Cast([SignatureTime] As Char(8)) ,
+                                                              7 , 2) As Int) ,
+                                                     DateAdd(Second ,
+                                                             Cast(Substring(Cast([SignatureTime] As Char(8)) ,
+                                                              5 , 2) As Int) ,
+                                                             DateAdd(Minute ,
+                                                              Cast(Substring(Cast([SignatureTime] As Char(8)) ,
+                                                              3 , 2) As Int) ,
+                                                              DateAdd(Hour ,
+                                                              Cast(Substring(Cast([SignatureTime] As Char(8)) ,
+                                                              1 , 2) As Int) ,
+                                                              Cast([SignatureDate] As DateTime)))))
+                    , [SignatureDate] Date
+                    , [SignatureTime] Int
+                    , [Operator] Varchar(20) Collate Latin1_General_BIN
+                    , [VariableDesc] Varchar(50) Collate Latin1_General_BIN
+                    , [ItemKey] Varchar(150) Collate Latin1_General_BIN
+                    , [VariableType] Char(1)
+                    , [VarAlphaValue] Varchar(255) Collate Latin1_General_BIN
+                    , [VarNumericValue] Float
+                    , [VarDateValue] DateTime2
+                    , [ComputerName] Varchar(150) Collate Latin1_General_BIN
+                    , [ProgramName] Varchar(100) Collate Latin1_General_BIN
+                    , [TableName] Varchar(150) Collate Latin1_General_BIN
+                    , [ConditionName] Varchar(15) Collate Latin1_General_BIN
+                    , [AlreadyEntered] Bit Default 0
+                    , Constraint [TDR_AllKeys] Primary Key NonClustered
+                        ( [DatabaseName] , [SignatureDate] , [SignatureTime] , [ItemKey] , [Operator] , [ProgramName] , [VariableDesc] , [TableName] )
+                        With ( Ignore_Dup_Key = On )
+                    );
+            End;
+
+
+
+
+
+--create script to pull data from each db into the tables
+        Declare @SQLTransactions Varchar(Max) = 'USE [?];
+Declare @DB varchar(150),@DBCode varchar(150)
+Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+BEGIN
+BEGIN
+Insert [BlackBox].[Process].[SysproTransactionsLogged] ([TransactionDescription], [DatabaseName], [SignatureDate], [SignatureTime], [Operator], [VariableDesc], [ItemKey], [VariableType], [VarAlphaValue], [VarNumericValue], [VarDateValue], [ComputerName], [ProgramName], [TableName], [ConditionName])
+Select  [ATI].[TransactionDescription]
+, Db_Name()
+, [AD].[SignatureDate]
+, [AD].[SignatureTime]
+, [AD].[Operator]
+, [VariableDesc] = Replace(Upper([AD].[VariableDesc]),'' '','''')
+, [AL].[ItemKey]
+, [AD].[VariableType]
+, [VarAlphaValue] = Case When [AD].[VariableType] = ''A''
+Then [AD].[VarAlphaValue]
+Else Cast(Null As Varchar(255))
+End
+, [VarNumericValue] = Case When [AD].[VariableType] = ''N''
+Then [AD].[VarNumericValue]
+Else Cast(Null As Float)
+End
+, [VarDateValue] = Case When [AD].[VariableType] = ''D''
+Then [AD].[VarDateValue]
+Else Cast(Null As DateTime)
+End
+, [AL].[ComputerName]
+, [AL].[ProgramName]
+, [AL].[TableName]
+, [AL].[ConditionName]
+From    [dbo].[AdmSignatureLog] [AL]
+Left Join [dbo].[AdmSignatureLogDet] [AD] On [AD].[TransactionId] = [AL].[TransactionId]
+And [AD].[SignatureDate] = [AL].[SignatureDate]
+And [AD].[SignatureTime] = [AL].[SignatureTime]
+And [AD].[SignatureLine] = [AL].[SignatureLine]
+And [AD].[Operator] = [AL].[Operator]
+Left Join [BlackBox].[Lookups].[AdmTransactionIDs] [ATI] On [ATI].[TransactionId] = [AL].[TransactionId]
+Where   [AL].[TableName] <> ''''
+And [AD].[VariableDesc] <> ''''
+			End
+	End';
+
+--Enable this function to check script changes (try to run script directly against db manually)
+        Print 'Length of Transaction script:'
+            + Cast(Len(@SQLTransactions) As Varchar(50));
+--Print @SQLTransactions
+
+	--Remove previous transactions if being rebuilt, but only if table 
+        If @RebuildBit = 1
+            Begin
+                Print 'Rebuilt Option Selected - previous transactions removed';
+                If Exists ( Select  [t].[name]
+                            From    [sys].[tables] [t]
+                                    Left Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                            Where   [s].[name] = 'Process'
+                                    And [t].[name] = 'SysproTransactionsLogged' )
+                    Begin
+                        Truncate Table [Process].[SysproTransactionsLogged];
+                    End;
+            End;
+
+        If Len(@SQLTransactions) <= 2000 --only run script if less than 2000
+            Begin
+                Print 'Capturing Transactions';
+                Exec [sys].[sp_MSforeachdb] @SQLTransactions;
+            End;
+        If Len(@SQLTransactions) > 2000 --if the script is greater than 2000 then the script will probably fail - raise an error
+            Begin
+                Raiserror (@ErrorMessage,16,1); -- With Log;
+            End;
+
+        If @RebuildBit = 1
+            Begin
+
+	--Get list of existing tables that use the History schema
+                Create Table [#TablesToRename]
+                    (
+                      [TID] Int Identity(1 , 1)
+                    , [SchemaName] Varchar(500)
+                    , [TableName] Varchar(500)
+                    , [NewTableName] As 'Archive' + [TableName]
+                        + Upper(Replace(Replace(Convert(Varchar(24) , GetDate() , 113) ,
+                                                ' ' , '') , ':' , '')) --new table name is old name plus the current timestamp
+	                );
+
+                Insert  [#TablesToRename]
+                        ( [SchemaName]
+                        , [TableName]
+                        )
+                        Select  [SchemaName] = [S].[name]
+                              , [TableName] = [T].[name]
+                        From    [sys].[schemas] As [S]
+                                Left Join [sys].[tables] As [T] On [T].[schema_id] = [S].[schema_id]
+                        Where   [S].[name] = 'History'
+                                And [T].[name] Not Like 'Archive%'; --do not archive tables that have already been archived;
+
+
+	--Rename all existing tables
+
+				--Find out how many tables need to be removed
+                Select  @TotalTables = Max([TTR].[TID])
+                From    [#TablesToRename] As [TTR];
+
+
+				--advise user
+                Print 'ExistingTables to Remove '
+                    + Cast(@TotalTables As Varchar(50));
+
+		--iterate through all tables and rename them
+
+                If @TotalTables > 0
+                    Begin
+                        While @CurrentTable <= @TotalTables
+                            Begin
+                                Select  @TableName = [TTR].[TableName]
+                                      , @SchemaName = [TTR].[SchemaName]
+                                      , @NewTableName = [TTR].[NewTableName]
+                                From    [#TablesToRename] As [TTR]
+                                Where   [TTR].[TID] = @CurrentTable;
+
+                                Exec [Process].[UspAlter_TableName] @SchemaName , -- varchar(500)
+                                    @TableName , -- varchar(500)
+                                    @NewTableName; -- varchar(500)
+                                Set @CurrentTable = @CurrentTable + 1;
+                            End;
+                    End;
+
+                Drop Table [#TablesToRename];
+
+	--list of all tables to be created
+                Create Table [#TablesToBeCreated]
+                    (
+                      [TID] Int Identity(1 , 1)
+                    , [TableName] Varchar(500)
+                    );
+
+                Insert  [#TablesToBeCreated]
+                        ( [TableName]
+                        )
+                        Select Distinct
+                                [TL].[TableName]
+                        From    [BlackBox].[Process].[SysproTransactionsLogged]
+                                As [TL];
+
+	--Create all required tables with keys
+                Set @CurrentTable = 1;
+                Set @TotalTables = 0;
+
+	--Get number of tables to create
+                Select  @TotalTables = Max([TTBC].[TID])
+                From    [#TablesToBeCreated] As [TTBC];
+
+                Print 'Number of Tables to be created: '
+                    + Cast(@TotalTables As Varchar(50));
+
+
+
+                While @CurrentTable <= @TotalTables
+                    Begin
+                        Select  @SchemaName = 'History'
+                              , @TableName = [TTBC].[TableName]
+                        From    [#TablesToBeCreated] As [TTBC]
+                        Where   [TTBC].[TID] = @CurrentTable;
+
+                        Set @Columns = 'TransactionDescription VARCHAR(150), DatabaseName VARCHAR(150), SignatureDateTime DATETIME2, Operator VARCHAR(20), ItemKey VARCHAR(150), ComputerName VARCHAR(150), ProgramName VARCHAR(100), ConditionName VARCHAR(15), AlreadyEntered BIT';
+                        Set @Constraints = ' Constraint ' + @TableName
+                            + '_AllKeys Primary Key NonClustered ( DatabaseName, SignatureDateTime, ItemKey, Operator, ProgramName ) With ( Ignore_Dup_Key = On )';
+
+                        Exec [Process].[UspCreate_Table] @SchemaName , -- varchar(500)
+                            @TableName , -- varchar(500)
+                            @Columns , -- varchar(500)
+                            @Constraints;-- varchar(500)
+
+                        Print 'Table ' + @TableName + ' '
+                            + Cast(@CurrentTable As Varchar(50)) + ' created';
+
+
+                        Set @CurrentTable = @CurrentTable + 1;
+                    End;
+
+                Drop Table [#TablesToBeCreated];
+
+	--List of all columns to be added
+ --               Create Table [#ColumnsToBeAdded]
+ --                   (
+ --                     [CID] Int Identity(1 , 1)
+ --                   , [TableName] Varchar(500)
+ --                   , [ColumnName] Varchar(500)
+ --                   , [ColumnType] Varchar(50)
+ --                   , [TableRank] Int Default 0
+ --                   , [ColumnRank] Int Default 0
+ --                   );
+
+ --               Insert  [#ColumnsToBeAdded]
+ --                       ( [TableName]
+ --                       , [ColumnName]
+ --                       , [ColumnType]
+ --                       , [TableRank]
+ --                       , [ColumnRank]
+ --                       )
+ --                       Select  Distinct
+ --                               [t].[TableName]
+ --                             , Replace([t].[VariableDesc] , ' ' , '')
+ --                             , [t].[VariableType]
+ --                             , [TableRank] = Dense_Rank() Over ( Order By [t].[TableName] )
+ --                             , [ColumnRank] = Dense_Rank() Over ( Partition By [t].[TableName] Order By [t].[TableName]
+	--						, [t].[VariableDesc] )
+ --                       From    [BlackBox].[Process].[SysproTransactionsLogged]
+ --                               As [t];
+
+	----add all fields to tables
+
+ --               Set @CurrentTable = 1;
+ --               Select  @TotalTables = Max([CTBA].[TableRank])
+ --               From    [#ColumnsToBeAdded] As [CTBA];
+
+ --               Print 'Number of tables to have columns added '
+ --                   + Cast(@TotalTables As Varchar(50));
+
+
+
+ --               While @CurrentTable <= @TotalTables
+ --                   Begin
+ --                       Set @CurrentColumn = 1;
+ --                       Select  @TotalColumns = Max([CTBA].[ColumnRank])
+ --                       From    [#ColumnsToBeAdded] As [CTBA]
+ --                       Where   [CTBA].[TableRank] = @CurrentTable;
+
+ --                       Print 'Number of columns to be added '
+ --                           + Cast(@TotalColumns As Varchar(50));
+
+ --                       While @CurrentColumn <= @TotalColumns
+ --                           Begin
+
+ --                               Select  @TableName = [CTBA].[TableName]
+ --                                     , @ColumnName = [CTBA].[ColumnName]
+ --                                     , @ColumnType = Case When [CTBA].[ColumnType] = 'A'
+ --                                                          Then 'VARCHAR(255)'
+ --                                                          When [CTBA].[ColumnType] = 'D'
+ --                                                          Then 'DATE'
+ --                                                          When [CTBA].[ColumnType] = 'N'
+ --                                                          Then 'FLOAT'
+ --                                                     End
+ --                               From    [#ColumnsToBeAdded] As [CTBA]
+ --                               Where   [CTBA].[TableRank] = @CurrentTable
+ --                                       And [CTBA].[ColumnRank] = @CurrentColumn;
+
+ --                               Exec [Process].[UspAlter_AddColumn] @Schema = 'History' ,
+ --                                   @Table = @TableName ,
+ --                                   @Column = @ColumnName ,
+ --                                   @Type = @ColumnType; -- varchar(500)
+
+
+ --                               Set @CurrentColumn = @CurrentColumn + 1;
+ --                           End;
+ --                       Set @CurrentTable = @CurrentTable + 1;
+ --                   End;
+                Exec [Process].[UspAlter_CheckAndAddColumns];
+
+
+            End;
+        If @RebuildBit = 0
+            Begin
+
+                Print 'Rebuild option not selected';
+            --Get list of tables that don't exist
+                Create Table [#MissingTables]
+                    (
+                      [TID] Int Identity(1 , 1)
+                    , [TableName] Varchar(500)
+                    );
+
+                Insert  [#MissingTables]
+                        ( [TableName]
+                        )
+                        Select Distinct
+                                [TL].[TableName]
+                        From    [BlackBox].[Process].[SysproTransactionsLogged]
+                                As [TL]
+                        Where   [TL].[TableName] Not In (
+                                Select  [T].[name]
+                                From    [sys].[schemas] As [S]
+                                        Left Join [sys].[tables] [T] On [T].[schema_id] = [S].[schema_id]
+                                Where   [S].[name] = 'History' );
+
+	--Create all required tables with keys
+                Set @CurrentTable = 1;
+                Set @TotalTables = 0;
+
+	--Get number of tables to create
+                Select  @TotalTables = Max([TTBC].[TID])
+                From    [#MissingTables] As [TTBC];
+
+                Print 'Number of Tables to be created: '
+                    + Cast(@TotalTables As Varchar(50));
+
+
+
+                While @CurrentTable <= @TotalTables
+                    Begin
+                        Select  @SchemaName = 'History'
+                              , @TableName = [TTBC].[TableName]
+                        From    [#MissingTables] As [TTBC]
+                        Where   [TTBC].[TID] = @CurrentTable;
+
+                        Set @Columns = 'TransactionDescription VARCHAR(150), DatabaseName VARCHAR(150), SignatureDateTime DATETIME2, Operator VARCHAR(20), ItemKey VARCHAR(150), ComputerName VARCHAR(150), ProgramName VARCHAR(100), ConditionName VARCHAR(15), AlreadyEntered BIT';
+                        Set @Constraints = ' Constraint ' + @TableName
+                            + '_AllKeys Primary Key NonClustered ( DatabaseName, SignatureDateTime, ItemKey, Operator, ProgramName ) With ( Ignore_Dup_Key = On )';
+
+                        Exec [Process].[UspCreate_Table] @SchemaName , -- varchar(500)
+                            @TableName , -- varchar(500)
+                            @Columns , -- varchar(500)
+                            @Constraints;-- varchar(500)
+
+                        Print 'Table ' + @TableName + ' '
+                            + Cast(@CurrentTable As Varchar(50)) + ' created';
+
+
+                        Set @CurrentTable = @CurrentTable + 1;
+                    End;
+
+                Drop Table [#MissingTables];
+			
+			
+   --             Create Table [#ColumnsToCreate]
+   --                 (
+   --                   [CID] Int Identity(1 , 1)
+   --                 , [TableName] Varchar(500)
+   --                 , [ColumnName] Varchar(500)
+   --                 , [VariableType] Char(1)
+   --                 );
+
+			----Get list of columns that don't exist
+   --             Insert  [#ColumnsToCreate]
+   --                     ( [TableName]
+   --                     , [ColumnName]
+   --                     , [VariableType]
+   --                     )
+   --                     Select  [TableName] = [tl].[TableName]
+   --                           , [ColumnName] = Replace(Upper([tl].[VariableDesc]) ,
+   --                                                    ' ' , '')
+   --                           , [tl].[VariableType]
+   --                     From    [sys].[tables] As [T]
+   --                             Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+   --                             Left Join [sys].[columns] As [C] On [C].[object_id] = [T].[object_id]
+   --                             Right Join ( Select Distinct
+   --                                                 [STL].[TableName]
+   --                                               , [STL].[VariableDesc]
+   --                                               , [STL].[VariableType]
+   --                                          From   [Process].[SysproTransactionsLogged]
+   --                                                 As [STL]
+   --                                          Where  [STL].[AlreadyEntered] = 0
+   --                                        ) [tl] On [T].[name] = [tl].[TableName]
+   --                                                  And [C].[name] = [tl].[VariableDesc]
+   --                     Where   [S].[name] = 'History'
+   --                             And [T].[name] Not Like 'Archive%'
+   --                             And [tl].[VariableDesc] Is Null;
+
+			--	--Add new fields
+   --             Select  @TotalColumns = Max([CTC].[CID])
+   --             From    [#ColumnsToCreate] As [CTC];
+
+   --             Set @CurrentColumn = 1;
+
+			--	--iterate through each column that is required
+
+   --             While @CurrentColumn <= @TotalColumns
+   --                 Begin
+   --                     Select  @ColumnName = [CTC].[ColumnName]
+   --                           , @TableName = [CTC].[TableName]
+   --                           , @ColumnType = Case When [CTC].[VariableType] = 'A'
+   --                                                Then 'Varchar(255)'
+   --                                                When [CTC].[VariableType] = 'N'
+   --                                                Then 'Float'
+   --                                                When [CTC].[VariableType] = 'D'
+   --                                                Then 'Date'
+   --                                           End
+   --                     From    [#ColumnsToCreate] As [CTC]
+   --                     Where   [CTC].[CID] = @CurrentColumn;
+
+   --                     Exec [Process].[UspAlter_AddColumn] @Schema = 'History' , -- varchar(500)
+   --                         @Table = @TableName , @Column = @ColumnName , -- varchar(500)
+   --                         @Type = @ColumnType;
+
+   --                     Set @CurrentColumn = @CurrentColumn + 1;
+   --                 End;
+                Exec [Process].[UspAlter_CheckAndAddColumns];
+            End;
+
+		--run insert
+
+
+        Select  @TablesToUpdate = Stuff(( Select Distinct
+                                                    ', '
+                                                    + Cast(''
+                                                    + [STL].[TableName] + '' As Varchar(150))
+                                          From      [Process].[SysproTransactionsLogged]
+                                                    As [STL]
+                                        For
+                                          Xml Path('')
+                                        ) , 1 , 1 , '');
+
+        Print 'Tables to update ' + @TablesToUpdate;
+
+        Exec [Process].[UspPopulate_UnpivotHistory] @Tables = @TablesToUpdate;
+    End;
+
+
+GO
