@@ -1,7 +1,10 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+--d
+
 CREATE Proc [Report].[UspResults_GenledgerJournalsGrouped] ( @Company VARCHAR(Max) )
 As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
     Begin
@@ -32,7 +35,7 @@ As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
         End;
 
 --remove nocount on to speed up query
-        Set NoCount On;
+        Set NoCount off;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables VARCHAR(Max) = 'GenJournalDetail'; 
@@ -176,10 +179,10 @@ As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
                   , [gd].[EntryDate]
                   , [gd].[Journal]
                   , [GlCode] = COALESCE([gd].[GlCode], [gm].[GlCode])
-                  , [GlStart] = COALESCE([gm].[GlStart],
-                                         PARSENAME(gd.GlCode, 3))
-                  , [GlMid] = COALESCE([gm].[GlMid], PARSENAME(gd.GlCode, 2))
-                  , [GlEnd] = COALESCE([gm].[GlEnd], PARSENAME(gd.GlCode, 1))
+                  , [GlStart]	= cast(COALESCE([gm].[GlStart],
+                                         PARSENAME(gd.GlCode, 3))					   as char(3))
+                  , [GlMid]		= cast(COALESCE([gm].[GlMid], PARSENAME(gd.GlCode, 2)) as char(5))
+                  , [GlEnd]		= cast(COALESCE([gm].[GlEnd], PARSENAME(gd.GlCode, 1)) as char(3))
                   , [gd].[EntryType]
                   , Modifier = Case When gd.[EntryType] = 'D' Then 1
                                     When gd.[EntryType] = 'C' Then -1

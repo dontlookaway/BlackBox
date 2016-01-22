@@ -14,10 +14,10 @@ CREATE TABLE [Process].[SysproTransactionsLogged]
 [VarDateValue] [datetime2] NULL,
 [ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
 [ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[TableName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
+[TableName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL CONSTRAINT [DF__SysproTra__Alrea__5A8F5B5D] DEFAULT ((0))
+[AlreadyEntered] [bit] NULL CONSTRAINT [DF__SysproTra__Alrea__3587F3E0] DEFAULT ((0))
 ) ON [PRIMARY]
-GO
-ALTER TABLE [Process].[SysproTransactionsLogged] ADD CONSTRAINT [TDR_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDate], [SignatureTime], [ItemKey], [Operator], [ProgramName], [VariableDesc]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+ALTER TABLE [Process].[SysproTransactionsLogged] ADD CONSTRAINT [TDR_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDate], [SignatureTime], [ItemKey], [Operator], [ProgramName], [VariableDesc], [TableName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+
 GO

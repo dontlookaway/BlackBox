@@ -1,7 +1,10 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+-- Stored Procedure
+
 CREATE Proc [Process].[UspAlter_AddColumn]
 (@Schema Varchar(500)
 ,@Table Varchar(500)
@@ -34,8 +37,8 @@ As
 	Exec (@SQLColumn)
 	Print 'Column '+@Column+' added to table '+@Schema+'.'+@Table
  End
- 
- 
+
+
  --Banana Test
 /*CREATE TABLE [History].Banana
 (BID Int Identity (1,1),Banana varchar(6)

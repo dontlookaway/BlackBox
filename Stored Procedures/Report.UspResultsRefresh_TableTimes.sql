@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -5,6 +6,7 @@ GO
 CREATE Proc [Report].[UspResultsRefresh_TableTimes]
 (@Exec INT)
 As
+--exec [Report].[UspResultsRefresh_TableTimes] @Exec=0
 Begin
 /*
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

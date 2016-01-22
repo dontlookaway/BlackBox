@@ -35,6 +35,7 @@ CREATE TABLE [Report].[Results_WipSubJobStock]
 [ReservedLotDonorNumber] [varchar] (20) COLLATE Latin1_General_BIN NULL,
 [ReservedLotVendorBatchNumber] [varchar] (50) COLLATE Latin1_General_BIN NULL,
 [ReservedLotOldLotNumber] [varchar] (20) COLLATE Latin1_General_BIN NULL,
-[ReservedLotBleedDate] [varchar] (15) COLLATE Latin1_General_BIN NULL
+[ReservedLotBleedDate] [varchar] (15) COLLATE Latin1_General_BIN NULL,
+[StockDecimals] [int] NULL
 ) ON [PRIMARY]
 GO

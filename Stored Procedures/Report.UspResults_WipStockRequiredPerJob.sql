@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -642,6 +643,7 @@ As /*
             Left Join #WipJobAllLab [wjal] On wjam.Job = wjal.Job
                                             And wjam.OperationOffset = wjal.Operation
             Left Join #WipMaster [wm] On jlc.SubJob = wm.Job
+											And [wm].[DatabaseName] = [wjal].[DatabaseName]
             Left Join [#InvMaster] [im2] On [im2].[StockCode] = [wm].[StockCode]
                                                And im2.DatabaseName = wm.DatabaseName
             Left Join #InvMaster [im] On wjam.StockCode = im.StockCode
@@ -652,7 +654,7 @@ As /*
 Order By jlc.Job Asc
 
 
-SELECT * FROM #WipJobAllMat As WJAM
+--SELECT * FROM #WipJobAllMat As WJAM
 --tidy up
     Drop Table #JobLevelCheck;
     Drop Table #WipMasterSub;
