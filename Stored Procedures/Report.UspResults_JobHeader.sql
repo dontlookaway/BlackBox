@@ -1,113 +1,100 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_JobHeader] 
-( @Company VARCHAR(Max) 
-,@Job varchar(150))
+CREATE Proc [Report].[UspResults_JobHeader]
+    (
+      @Company Varchar(Max)
+    , @Job Varchar(150)
+    )
 As
---exec Report.UspResults_JobHeader  10, 'FA1408'
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///																																	///
-///																																	///
-///			Version 1.0.2																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			24/9/2015	Chris Johnson			Initial version created																///
-///			06/10/2015	Chris Johnson			Added details from sales, labour and materials, added parameter to select job		///
-///			07/10/2015	Chris Johnson			used upper on job as was not matching												///
-///			12/11/2015	Chris Johnson			Added QtyToMake												///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+--exec Report.UspResults_JobHeader  10, 'FA1408'
 */
-    Set NoCount Off;
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        Set NoCount Off;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 --remove nocount on to speed up query
-        Set NoCount on;
+        Set NoCount On;
 
-		Select @Job = Case When ISNUMERIC(@Job)=1 Then RIGHT('000000000000000'+@Job,15) Else @Job End
+        Select  @Job = Case When IsNumeric(@Job) = 1
+                            Then Right('000000000000000' + @Job , 15)
+                            Else @Job
+                       End;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'WipMaster,InvMaster'; 
+        Declare @ListOfTables Varchar(Max) = 'WipMaster,InvMaster'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table #WipMaster
+        Create Table [#WipMaster]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Job VARCHAR(35) Collate Latin1_General_BIN
-            , JobDescription VARCHAR(150) Collate Latin1_General_BIN
-            , JobClassification VARCHAR(10) Collate Latin1_General_BIN
-            , ProducedStockCode VARCHAR(35) Collate Latin1_General_BIN
-            , ProducedStockDescription VARCHAR(150) Collate Latin1_General_BIN
-            , UomFlag CHAR(1)
-            , JobTenderDate DATETIME2
-            , JobDeliveryDate DATETIME2
-            , JobStartDate DATETIME2
-            , ActCompleteDate DATETIME2
-            , Complete CHAR(1)
-            , QtyManufactured FLOAT
-            , SalesOrder VARCHAR(35) Collate Latin1_General_BIN
-            , SellingPrice FLOAT
-			, QtyToMake NUMERIC(20,8)
-			);
-        Create Table #InvMaster
-            (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , StockCode VARCHAR(35) Collate Latin1_General_BIN
-            , StockUom VARCHAR(10) Collate Latin1_General_BIN
-            , CostUom VARCHAR(10) Collate Latin1_General_BIN
-            , OtherUom VARCHAR(10) Collate Latin1_General_BIN
-            , AlternateUom VARCHAR(10) Collate Latin1_General_BIN
-            , IssMultLotsFlag CHAR(1)
-			
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(35) Collate Latin1_General_BIN
+            , [JobDescription] Varchar(150) Collate Latin1_General_BIN
+            , [JobClassification] Varchar(10) Collate Latin1_General_BIN
+            , [ProducedStockCode] Varchar(35) Collate Latin1_General_BIN
+            , [ProducedStockDescription] Varchar(150)
+                Collate Latin1_General_BIN
+            , [UomFlag] Char(1)
+            , [JobTenderDate] DateTime2
+            , [JobDeliveryDate] DateTime2
+            , [JobStartDate] DateTime2
+            , [ActCompleteDate] DateTime2
+            , [Complete] Char(1)
+            , [QtyManufactured] Float
+            , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
+            , [SellingPrice] Float
+            , [QtyToMake] Numeric(20 , 8)
             );
-        Create Table #InvMovementsSummary
+        Create Table [#InvMaster]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Job VARCHAR(50) Collate Latin1_General_BIN
-            , MaterialValue NUMERIC(20, 7)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35) Collate Latin1_General_BIN
+            , [StockUom] Varchar(10) Collate Latin1_General_BIN
+            , [CostUom] Varchar(10) Collate Latin1_General_BIN
+            , [OtherUom] Varchar(10) Collate Latin1_General_BIN
+            , [AlternateUom] Varchar(10) Collate Latin1_General_BIN
+            , [IssMultLotsFlag] Char(1)
             );
-		Create TABLE #WipLabJnlSummary
-(DatabaseName VARCHAR(500) Collate Latin1_General_BIN
-  , Job VARCHAR(50) Collate Latin1_General_BIN
-  , LabourValue   NUMERIC(20,7)
-  , TimeTotal   NUMERIC(20,7)
+        Create Table [#InvMovementsSummary]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [MaterialValue] Numeric(20 , 7)
+            );
+        Create Table [#WipLabJnlSummary]
+            (
+              [DatabaseName] Varchar(500) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [LabourValue] Numeric(20 , 7)
+            , [TimeTotal] Numeric(20 , 7)
+            );
+        Create Table [#LotsHeader]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [JobPurchOrder] Varchar(50) Collate Latin1_General_BIN
+            , [Lot] Varchar(50) Collate Latin1_General_BIN
+            );
+        Create Table [#SalesSummary]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [SellingValue] Numeric(20 , 7)
+            , [RemovedValue] Numeric(20 , 7)
+            );
 
-)
-		CREATE TABLE #LotsHeader
-		(DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-		 , [JobPurchOrder] VARCHAR(50) Collate Latin1_General_BIN
-		 ,[Lot]   VARCHAR(50) Collate Latin1_General_BIN
-		)
-        Create Table #SalesSummary
-            (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Job VARCHAR(50) Collate Latin1_General_BIN
-            , SellingValue NUMERIC(20, 7)
-			, RemovedValue NUMERIC(20, 7)
-            );
-
-			set @Job = upper(@Job)
+        Set @Job = Upper(@Job);
 
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 VARCHAR(Max) = '
+        Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -117,8 +104,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -168,10 +155,10 @@ As
 					 , SellingPrice
 					 , QtyToMake
 					  FROM WipMaster
-				Where upper(Job) ='''+@Job+'''
+				Where upper(Job) =''' + @Job + '''
 			End
 	End';
-		Declare @SQL2 VARCHAR(Max) = '
+        Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -181,8 +168,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -215,7 +202,7 @@ As
              , IssMultLotsFlag FROM InvMaster
 			End
 	End';
-		Declare @SQL3 VARCHAR(Max) = '
+        Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -225,8 +212,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -257,12 +244,12 @@ As
 				   And TT.Company = @DBCode
 			Where
 				[IM].[TrnType] <> ''R''
-				And [IM].[Job] = '''+@Job+'''
+				And [IM].[Job] = ''' + @Job + '''
 			Group By
 				IM.Job
 			End
 	End';
-		Declare @SQL4 VARCHAR(Max) = '
+        Declare @SQL4 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -272,8 +259,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -306,12 +293,12 @@ As
 					From
 						WipLabJnl
 					Where
-						[Job] = '''+@Job+'''
+						[Job] = ''' + @Job + '''
 					Group By
 					Job;
 			End
 	End';
-		Declare @SQL5 VARCHAR(Max) = '
+        Declare @SQL5 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -321,8 +308,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -351,10 +338,10 @@ As
         Left Join [dbo].[InvMaster] As [im]
             On [im].[StockCode] = [l].[StockCode]
         Where
-            [JobPurchOrder] = '''+@Job+''';
+            [JobPurchOrder] = ''' + @Job + ''';
 			End
 	End';
-		Declare @SQL6 VARCHAR(Max) = '
+        Declare @SQL6 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -364,8 +351,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -400,7 +387,7 @@ As
             On [wm].[Job] = [lt].[Job] Collate Latin1_General_BIN
         Where
             [wm].[SellingPrice] <> 0
-            And [l].[JobPurchOrder] = '''+@Job+'''
+            And [l].[JobPurchOrder] = ''' + @Job + '''
         Group By
             [l].[JobPurchOrder];
 			End
@@ -409,41 +396,41 @@ As
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb             @SQL1;
-		Exec sp_MSforeachdb             @SQL2;
-		Exec sp_MSforeachdb             @SQL3;
-		Exec sp_MSforeachdb             @SQL4;
-		Exec sp_MSforeachdb             @SQL5;
-		Exec sp_MSforeachdb             @SQL6;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL4;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL5;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL6;
 
 --define the results you want to return
-        Create Table #Results
+        Create Table [#Results]
             (
-              DatabaseName VARCHAR(150)
-            , [Job] VARCHAR(50)
-			,  [JobDescription] VARCHAR(150)
-			,  [JobClassification] VARCHAR(50)
-			,  [ProducedStockCode] VARCHAR(50)
-			,  [ProducedStockDescription] VARCHAR(150)
-			,  [ProducedQty] NUMERIC(20,7)
-			,  [Uom] VARCHAR(10)
-			,  [JobTenderDate] DATETIME2
-			,  [JobDeliveryDate] DATETIME2
-			,  [JobStartDate] DATETIME2
-			,  [ActCompleteDate] DATETIME2 
-			,  [Complete] CHAR(1)
-			,  [QtyManufactured] NUMERIC(20,7)
-			,  [SalesOrder] VARCHAR(50)
-			,  [IssMultLotsFlag] CHAR(1)
-			,  [SellingPrice] NUMERIC(20,7)
-			,  [MaterialValue] NUMERIC(20,7)
-			,  [LabourValue]   NUMERIC(20,7)
-			,  [InputValue]	   NUMERIC(20,7)
-			,  [SellingValue]  NUMERIC(20,7)
-			,  [Profit]		   NUMERIC(20,7)
-			,  RemovedValue   NUMERIC(20,7)
-			,  TimeTotal	NUMERIC(20,7)
-			,  QtyToMake NUMERIC(20,8)
+              [DatabaseName] Varchar(150)
+            , [Job] Varchar(50)
+            , [JobDescription] Varchar(150)
+            , [JobClassification] Varchar(50)
+            , [ProducedStockCode] Varchar(50)
+            , [ProducedStockDescription] Varchar(150)
+            , [ProducedQty] Numeric(20 , 7)
+            , [Uom] Varchar(10)
+            , [JobTenderDate] DateTime2
+            , [JobDeliveryDate] DateTime2
+            , [JobStartDate] DateTime2
+            , [ActCompleteDate] DateTime2
+            , [Complete] Char(1)
+            , [QtyManufactured] Numeric(20 , 7)
+            , [SalesOrder] Varchar(50)
+            , [IssMultLotsFlag] Char(1)
+            , [SellingPrice] Numeric(20 , 7)
+            , [MaterialValue] Numeric(20 , 7)
+            , [LabourValue] Numeric(20 , 7)
+            , [InputValue] Numeric(20 , 7)
+            , [SellingValue] Numeric(20 , 7)
+            , [Profit] Numeric(20 , 7)
+            , [RemovedValue] Numeric(20 , 7)
+            , [TimeTotal] Numeric(20 , 7)
+            , [QtyToMake] Numeric(20 , 8)
             );
 
 --Placeholder to create indexes as required
@@ -473,83 +460,88 @@ As
                 , [InputValue]
                 , [SellingValue]
                 , [Profit]
-				, [RemovedValue]
-				, [TimeTotal]
-				, QtyToMake
+                , [RemovedValue]
+                , [TimeTotal]
+                , [QtyToMake]
                 )
-       Select [WM].[DatabaseName]
-          , WM.Job
-          , WM.JobDescription
-          , WM.JobClassification
-          , ProducedStockCode = WM.ProducedStockCode
-          , ProducedStockDescription = WM.ProducedStockDescription
-          , ProducedQty = QtyManufactured
-		  , Uom = Case When WM.UomFlag ='S' Then IM.StockUom
-						When WM.UomFlag='C' Then IM.CostUom
-						When WM.UomFlag='O' Then IM.OtherUom
-						When WM.UomFlag='A' Then IM.AlternateUom End
-          , JobTenderDate	=WM.JobTenderDate	
-          , JobDeliveryDate =WM.JobDeliveryDate 
-          , JobStartDate	=WM.JobStartDate	
-          , ActCompleteDate =WM.ActCompleteDate 
-          , WM.Complete
-          , WM.QtyManufactured
-          , SalesOrder = Case When WM.SalesOrder='' Then Null Else WM.SalesOrder End
-          , IM.IssMultLotsFlag
-		  , WM.SellingPrice
-		  , [ims].[MaterialValue]
-		  , [wljs].[LabourValue]
-		  , [InputValue] = [MaterialValue] + [LabourValue]
-		  , [SellingValue]
-		  , [Profit] = [SellingValue] + [MaterialValue] - [LabourValue]
-		  , [ss].[RemovedValue]
-		  , [wljs].[TimeTotal]
-		  , [WM].[QtyToMake]
-        From
-            #WipMaster WM
-        Left Join #InvMaster IM
-            On IM.StockCode = WM.ProducedStockCode
-			And IM.DatabaseName = WM.DatabaseName
-		Left Join [#InvMovementsSummary] As [ims]
-			On [ims].[DatabaseName] = [WM].[DatabaseName]
-			And [ims].[Job] = [WM].[Job]
-		Left Join [#WipLabJnlSummary] As [wljs]
-			On [wljs].[DatabaseName] = [WM].[DatabaseName]
-			And [wljs].[Job] = [WM].[Job]
-		Left Join [#SalesSummary] As [ss]
-			On [ss].[Job] = [WM].[Job]
-			And [ss].[Job] = [WM].[Job];
+                Select  [WM].[DatabaseName]
+                      , [WM].[Job]
+                      , [WM].[JobDescription]
+                      , [WM].[JobClassification]
+                      , [ProducedStockCode] = [WM].[ProducedStockCode]
+                      , [ProducedStockDescription] = [WM].[ProducedStockDescription]
+                      , [ProducedQty] = [WM].[QtyManufactured]
+                      , [Uom] = Case When [WM].[UomFlag] = 'S'
+                                     Then [IM].[StockUom]
+                                     When [WM].[UomFlag] = 'C'
+                                     Then [IM].[CostUom]
+                                     When [WM].[UomFlag] = 'O'
+                                     Then [IM].[OtherUom]
+                                     When [WM].[UomFlag] = 'A'
+                                     Then [IM].[AlternateUom]
+                                End
+                      , [JobTenderDate] = [WM].[JobTenderDate]
+                      , [JobDeliveryDate] = [WM].[JobDeliveryDate]
+                      , [JobStartDate] = [WM].[JobStartDate]
+                      , [ActCompleteDate] = [WM].[ActCompleteDate]
+                      , [WM].[Complete]
+                      , [WM].[QtyManufactured]
+                      , [SalesOrder] = Case When [WM].[SalesOrder] = ''
+                                            Then Null
+                                            Else [WM].[SalesOrder]
+                                       End
+                      , [IM].[IssMultLotsFlag]
+                      , [WM].[SellingPrice]
+                      , [ims].[MaterialValue]
+                      , [wljs].[LabourValue]
+                      , [InputValue] = [ims].[MaterialValue]
+                        + [wljs].[LabourValue]
+                      , [ss].[SellingValue]
+                      , [Profit] = [ss].[SellingValue] + [ims].[MaterialValue]
+                        - [wljs].[LabourValue]
+                      , [ss].[RemovedValue]
+                      , [wljs].[TimeTotal]
+                      , [WM].[QtyToMake]
+                From    [#WipMaster] [WM]
+                        Left Join [#InvMaster] [IM] On [IM].[StockCode] = [WM].[ProducedStockCode]
+                                                       And [IM].[DatabaseName] = [WM].[DatabaseName]
+                        Left Join [#InvMovementsSummary] As [ims] On [ims].[DatabaseName] = [WM].[DatabaseName]
+                                                              And [ims].[Job] = [WM].[Job]
+                        Left Join [#WipLabJnlSummary] As [wljs] On [wljs].[DatabaseName] = [WM].[DatabaseName]
+                                                              And [wljs].[Job] = [WM].[Job]
+                        Left Join [#SalesSummary] As [ss] On [ss].[Job] = [WM].[Job]
+                                                             And [ss].[Job] = [WM].[Job];
 
 --return results
-		SELECT CN.CompanyName
-             , [r].[Job]
-             , [r].[JobDescription]
-             , [r].[JobClassification]
-             , [r].[ProducedStockCode]
-             , [r].[ProducedStockDescription]
-             , [r].[ProducedQty]
-             , [r].[Uom]
-             , [JobTenderDate]		= cast([r].[JobTenderDate]   as date)
-             , [JobDeliveryDate]	= cast([r].[JobDeliveryDate] as date)
-             , [JobStartDate]		= cast([r].[JobStartDate]	 as date)
-             , [ActCompleteDate]	= cast([r].[ActCompleteDate] as date)
-             , [r].[Complete]
-             , [r].[QtyManufactured]
-             , [r].[SalesOrder]
-             , [r].[IssMultLotsFlag]
-             , [r].[SellingPrice]
-             , [MaterialValue]		= [r].[MaterialValue]*-1
-             , [r].[LabourValue]
-             , [r].[InputValue]
-             , [r].[SellingValue]
-             , [r].[Profit]		 
-			 , [r].[RemovedValue]
-			 , [r].[TimeTotal]
-			 , [r].[QtyToMake]
-			 From [#Results] As [r]
-			 left join Lookups.CompanyNames CN on Company=DatabaseName  Collate Latin1_General_BIN
+        Select  [CN].[CompanyName]
+              , [r].[Job]
+              , [r].[JobDescription]
+              , [r].[JobClassification]
+              , [r].[ProducedStockCode]
+              , [r].[ProducedStockDescription]
+              , [r].[ProducedQty]
+              , [r].[Uom]
+              , [JobTenderDate] = Cast([r].[JobTenderDate] As Date)
+              , [JobDeliveryDate] = Cast([r].[JobDeliveryDate] As Date)
+              , [JobStartDate] = Cast([r].[JobStartDate] As Date)
+              , [ActCompleteDate] = Cast([r].[ActCompleteDate] As Date)
+              , [r].[Complete]
+              , [r].[QtyManufactured]
+              , [r].[SalesOrder]
+              , [r].[IssMultLotsFlag]
+              , [r].[SellingPrice]
+              , [MaterialValue] = [r].[MaterialValue] * -1
+              , [r].[LabourValue]
+              , [r].[InputValue]
+              , [r].[SellingValue]
+              , [r].[Profit]
+              , [r].[RemovedValue]
+              , [r].[TimeTotal]
+              , [r].[QtyToMake]
+        From    [#Results] As [r]
+                Left Join [Lookups].[CompanyNames] [CN] On [CN].[Company] = [r].[DatabaseName]  Collate Latin1_General_BIN;
 
-	drop table #Results
+        Drop Table [#Results];
     End;
 
 GO

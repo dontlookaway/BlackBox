@@ -1,104 +1,71 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PurchaseOrdersInvoices] ( @Company VARCHAR(Max) )
+CREATE Proc [Report].[UspResults_PurchaseOrdersInvoices] ( @Company Varchar(Max) )
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///			Return details of all purchase orders and invoices, highlighting where a PO is not available or was entered late		///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			21/9/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+Return details of all purchase orders and invoices, highlighting where a PO is not available or was entered late
 */
-    Set NoCount Off;
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        Set NoCount Off;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'CshApPayments,ApInvoice,ApInvoicePay,PorMasterHdr,ApSupplier'; 
+        Declare @ListOfTables Varchar(Max) = 'CshApPayments,ApInvoice,ApInvoicePay,PorMasterHdr,ApSupplier'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table #CshApPayments
+        Create Table [#CshApPayments]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , CbTrnYear INT
-            , TrnMonth INT
-            , Supplier VARCHAR(15) Collate Latin1_General_BIN
-            , Invoice VARCHAR(35) Collate Latin1_General_BIN
-            , InvoiceDate DATETIME2
-            , Reference VARCHAR(60) Collate Latin1_General_BIN
-            , PaymentNumber VARCHAR(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [CbTrnYear] Int
+            , [TrnMonth] Int
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [InvoiceDate] DateTime2
+            , [Reference] Varchar(60) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
             );
-
-
-
-        Create Table #ApInvoice
+        Create Table [#ApInvoice]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Supplier VARCHAR(15) Collate Latin1_General_BIN
-            , Invoice VARCHAR(35) Collate Latin1_General_BIN
-            , PaymentNumber VARCHAR(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
             );
-
-       
-
-        Create Table #ApInvoicePay
+        Create Table [#ApInvoicePay]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , TrnValue FLOAT 
-            , PaymentReference VARCHAR(35) Collate Latin1_General_BIN
-            , Supplier VARCHAR(15) Collate Latin1_General_BIN
-            , Invoice VARCHAR(35)  Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [TrnValue] Float
+            , [PaymentReference] Varchar(35) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
             );
-
-        
-
-        Create Table #PorMasterHdr
+        Create Table [#PorMasterHdr]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , OrderEntryDate DATETIME2
-            , PurchaseOrder VARCHAR(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [OrderEntryDate] DateTime2
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
             );
-
-        
-
-        Create Table #ApSupplier
+        Create Table [#ApSupplier]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Supplier VARCHAR(35) Collate Latin1_General_BIN
-            , SupplierName VARCHAR(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
             );
-
-        
-
-
-        ;
-
 
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 VARCHAR(Max) = '
+        Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -108,8 +75,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -147,7 +114,7 @@ As
 											CshApPayments;
 			End
 	End';
-	Declare @SQL2 VARCHAR(Max) = '
+        Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -157,8 +124,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -188,7 +155,7 @@ As
 								ApInvoice;
 			End
 	End';
-	Declare @SQL3 VARCHAR(Max) = '
+        Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -198,8 +165,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -231,7 +198,7 @@ As
 								ApInvoicePay;
 			End
 	End';
-	Declare @SQL4 VARCHAR(Max) = '
+        Declare @SQL4 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -241,8 +208,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -270,7 +237,7 @@ As
                     PorMasterHdr;
 			End
 	End';
-	Declare @SQL5 VARCHAR(Max) = '
+        Declare @SQL5 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -280,8 +247,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -311,136 +278,130 @@ As
 	End';
 
 --Enable this function to check script changes (try to run script directly against db manually)
-Print @SQL1
-Print @SQL2
-Print @SQL3
-Print @SQL4
-Print @SQL5
+        /*Print @SQL1;
+        Print @SQL2;
+        Print @SQL3;
+        Print @SQL4;
+        Print @SQL5;*/
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb @SQL1;
-        Exec sp_MSforeachdb @SQL2;
-        Exec sp_MSforeachdb @SQL3;
-		Exec sp_MSforeachdb @SQL4;
-		Exec sp_MSforeachdb @SQL5;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL4;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL5;
 
 --define the results you want to return
-        Create Table #Results
+        Create Table [#Results]
             (
-              DatabaseName VARCHAR(150)
-            , TrnYear int
-			,  TrnMonth int
-			,  Supplier VARCHAR(35)
-			,  SupplierName VARCHAR(150)
-			,  Invoice VARCHAR(35)
-			,  InvoiceDate DATETIME2
-			,  Reference VARCHAR(60)
-			,  PaymentNumber VARCHAR(35)
-			,  TrnValue NUMERIC(18,3)
-			,  PaymentReference VARCHAR(35)
-			,  PurchaseOrder VARCHAR(35)
-			,  OrderEntryDate DATETIME2
+              [DatabaseName] Varchar(150)
+            , [TrnYear] Int
+            , [TrnMonth] Int
+            , [Supplier] Varchar(35)
+            , [SupplierName] Varchar(150)
+            , [Invoice] Varchar(35)
+            , [InvoiceDate] DateTime2
+            , [Reference] Varchar(60)
+            , [PaymentNumber] Varchar(35)
+            , [TrnValue] Numeric(18 , 3)
+            , [PaymentReference] Varchar(35)
+            , [PurchaseOrder] Varchar(35)
+            , [OrderEntryDate] DateTime2
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
-        Insert  #Results
-                ( DatabaseName
-                , TrnYear
-                , TrnMonth
-                , Supplier
-                , SupplierName
-                , Invoice
-                , InvoiceDate
-                , Reference
-                , PaymentNumber
-                , TrnValue
-                , PaymentReference
-                , PurchaseOrder
-                , OrderEntryDate
+        Insert  [#Results]
+                ( [DatabaseName]
+                , [TrnYear]
+                , [TrnMonth]
+                , [Supplier]
+                , [SupplierName]
+                , [Invoice]
+                , [InvoiceDate]
+                , [Reference]
+                , [PaymentNumber]
+                , [TrnValue]
+                , [PaymentReference]
+                , [PurchaseOrder]
+                , [OrderEntryDate]
                 )
-                Select
-					  CP.DatabaseName
-					, CP.CbTrnYear
-					, CP.TrnMonth
-					, CP.Supplier
-					, SP.SupplierName
-					, CP.Invoice
-					, CP.InvoiceDate
-					, CP.Reference
-					, CP.PaymentNumber
-					, AIP.TrnValue
-					, AIP.PaymentReference
-					, PMO.PurchaseOrder
-					, PHR.OrderEntryDate
-					
-        From
-            #CshApPayments CP
-        Left Join #ApInvoice AP
-            On AP.DatabaseName = CP.DatabaseName
-			And AP.Supplier = CP.Supplier
-               And AP.Invoice = CP.Invoice
-               And AP.PaymentNumber = CP.PaymentNumber
-        Left Join #ApInvoicePay AIP
-            On AIP.DatabaseName = AP.DatabaseName
-			And AIP.Supplier = AP.Supplier
-               And AIP.Invoice = AP.Invoice
-        Left Join BlackBox.Lookups.PurchaseOrderInvoiceMapping PMO
-            On PMO.Invoice = CP.Invoice Collate Latin1_General_BIN
-               And PMO.Company = CP.DatabaseName
-        Left Join #PorMasterHdr PHR
-            On PHR.DatabaseName = AIP.DatabaseName
-				And PHR.PurchaseOrder = PMO.PurchaseOrder
-        Left Join #ApSupplier SP
-            On SP.Supplier = CP.Supplier
-			Group By CP.DatabaseName
-					, CP.CbTrnYear --group added as there are multiple GRNs on PMO
-					, CP.TrnMonth
-					, CP.Supplier
-					, SP.SupplierName
-					, CP.Invoice
-					, CP.InvoiceDate
-					, CP.Reference
-					, CP.PaymentNumber
-					, AIP.TrnValue
-					, AIP.PaymentReference
-					, PMO.PurchaseOrder
-					, PHR.OrderEntryDate
+                Select  [CP].[DatabaseName]
+                      , [CP].[CbTrnYear]
+                      , [CP].[TrnMonth]
+                      , [CP].[Supplier]
+                      , [SP].[SupplierName]
+                      , [CP].[Invoice]
+                      , [CP].[InvoiceDate]
+                      , [CP].[Reference]
+                      , [CP].[PaymentNumber]
+                      , [AIP].[TrnValue]
+                      , [AIP].[PaymentReference]
+                      , [PMO].[PurchaseOrder]
+                      , [PHR].[OrderEntryDate]
+                From    [#CshApPayments] [CP]
+                        Left Join [#ApInvoice] [AP] On [AP].[DatabaseName] = [CP].[DatabaseName]
+                                                       And [AP].[Supplier] = [CP].[Supplier]
+                                                       And [AP].[Invoice] = [CP].[Invoice]
+                                                       And [AP].[PaymentNumber] = [CP].[PaymentNumber]
+                        Left Join [#ApInvoicePay] [AIP] On [AIP].[DatabaseName] = [AP].[DatabaseName]
+                                                           And [AIP].[Supplier] = [AP].[Supplier]
+                                                           And [AIP].[Invoice] = [AP].[Invoice]
+                        Left Join [BlackBox].[Lookups].[PurchaseOrderInvoiceMapping] [PMO] On [PMO].[Invoice] = [CP].[Invoice] Collate Latin1_General_BIN
+                                                              And [PMO].[Company] = [CP].[DatabaseName]
+                        Left Join [#PorMasterHdr] [PHR] On [PHR].[DatabaseName] = [AIP].[DatabaseName]
+                                                           And [PHR].[PurchaseOrder] = [PMO].[PurchaseOrder]
+                        Left Join [#ApSupplier] [SP] On [SP].[Supplier] = [CP].[Supplier]
+                Group By [CP].[DatabaseName]
+                      , [CP].[CbTrnYear] --group added as there are multiple GRNs on PMO
+                      , [CP].[TrnMonth]
+                      , [CP].[Supplier]
+                      , [SP].[SupplierName]
+                      , [CP].[Invoice]
+                      , [CP].[InvoiceDate]
+                      , [CP].[Reference]
+                      , [CP].[PaymentNumber]
+                      , [AIP].[TrnValue]
+                      , [AIP].[PaymentReference]
+                      , [PMO].[PurchaseOrder]
+                      , [PHR].[OrderEntryDate];
 
 --return results
-        Select
-            Company = DatabaseName
-          , TrnYear
-          , TrnMonth
-          , Supplier
-          , SupplierName
-          , Invoice
-          , InvoiceDate = CAST(InvoiceDate As DATE)
-          , Reference
-          , PaymentNumber 
-		  --= Case When ISNUMERIC(COALESCE(PaymentNumber,'I'))=0 Then PaymentNumber 
-				--					When ISNUMERIC(PaymentNumber)=1 Then CONVERT(VARCHAR(25),CONVERT(bigINT,PaymentNumber))
-				--												Else PaymentNumber End
-          , TrnValue = coalesce(TrnValue,0)
-          , PaymentReference = Case When ISNUMERIC(COALESCE(PaymentReference,'I'))=0 Then PaymentReference 
-									When ISNUMERIC(PaymentReference)=1 Then CONVERT(VARCHAR(25),CONVERT(bigINT,PaymentReference))
-																Else PaymentReference End
-          , PurchaseOrder = Case When ISNUMERIC(COALESCE(PurchaseOrder,'I'))=0 Then PurchaseOrder 
-									When ISNUMERIC(PurchaseOrder)=1 Then CONVERT(VARCHAR(25),CONVERT(bigINT,PurchaseOrder))
-																Else PurchaseOrder End
-          , OrderEntryDate = CAST(OrderEntryDate As DATE)
-		  , [Status] = Case When PurchaseOrder Is Null
-									Then 'No purchase order'
-									When OrderEntryDate Is Null
-									Then 'Unknown entry date'
-									When OrderEntryDate >= InvoiceDate
-									Then 'Purchase Order raised post receipt of invoice'
-									else 'Purchase Order raised on time'
-								End
-        From
-            #Results;
+        Select  [Company] = [DatabaseName]
+              , [TrnYear]
+              , [TrnMonth]
+              , [Supplier]
+              , [SupplierName]
+              , [Invoice]
+              , [InvoiceDate] = Cast([InvoiceDate] As Date)
+              , [Reference]
+              , [PaymentNumber] 
+              , [TrnValue] = Coalesce([TrnValue] , 0)
+              , [PaymentReference] = Case When IsNumeric(Coalesce([PaymentReference] ,
+                                                              'I')) = 0
+                                          Then [PaymentReference]
+                                          When IsNumeric([PaymentReference]) = 1
+                                          Then Convert(Varchar(25) , Convert(BigInt , [PaymentReference]))
+                                          Else [PaymentReference]
+                                     End
+              , [PurchaseOrder] = Case When IsNumeric(Coalesce([PurchaseOrder] ,
+                                                              'I')) = 0
+                                       Then [PurchaseOrder]
+                                       When IsNumeric([PurchaseOrder]) = 1
+                                       Then Convert(Varchar(25) , Convert(BigInt , [PurchaseOrder]))
+                                       Else [PurchaseOrder]
+                                  End
+              , [OrderEntryDate] = Cast([OrderEntryDate] As Date)
+              , [Status] = Case When [PurchaseOrder] Is Null
+                                Then 'No purchase order'
+                                When [OrderEntryDate] Is Null
+                                Then 'Unknown entry date'
+                                When [OrderEntryDate] >= [InvoiceDate]
+                                Then 'Purchase Order raised post receipt of invoice'
+                                Else 'Purchase Order raised on time'
+                           End
+        From    [#Results];
 
     End;
 

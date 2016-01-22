@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -9,28 +10,11 @@ CREATE Proc [Report].[UspResults_UnpaidGRNAssets]
     )
 As
     Begin
---exec [Report].[UspResults_UnpaidGRNAssets] @Company ='10', @PeriodYYYYMM =201504
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///			Compares GRN amounts and confirms how much is outstanding																///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			07/09/2015	Chris Johnson			Initial version created																///
-///			07/09/2015	Chris Johnson			Changed to use of udf_SplitString to define tables to return						///
-///			09/12/2015	Chris Johnson			Added uppercase to company															///
-///			17/12/2015	Placeholder				created initial from template														///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015														///
+Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
+Compares GRN amounts and confirms how much is outstanding																
+--exec [Report].[UspResults_UnpaidGRNAssets] @Company ='10', @PeriodYYYYMM =201504
 */
         If IsNumeric(@Company) = 0
             Begin
@@ -241,13 +225,12 @@ End';
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        --Print @SQLGrnDets;
-		Print Len(@SQLGrnDets);
-        Exec [sys].[sp_MSforeachdb] @SQLGrnDets;
-		Print @SQLGrnAdjust;
-        Exec [sys].[sp_MSforeachdb] @SQLGrnAdjust;
-		Print @SQLGrnMatch;
-		Exec [sys].[sp_MSforeachdb] @SQLGrnMatch;
+		--Print Len(@SQLGrnDets);
+        Exec [Process].[ExecForEachDB] @cmd = @SQLGrnDets;
+		--Print @SQLGrnAdjust;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLGrnAdjust;
+		--Print @SQLGrnMatch;
+		Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatch;
 
 --define the results you want to return
         Create Table [#Results]
@@ -275,7 +258,6 @@ End';
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
         Insert  [#Results]

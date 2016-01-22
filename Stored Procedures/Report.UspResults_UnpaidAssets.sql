@@ -1,31 +1,15 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_UnpaidAssets] ( @Company VARCHAR(Max) )
---exec [Report].[UspResults_UnpaidAssets]  43
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///			unpaid assets report 															///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			28/9/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015 Stored procedure set out to query multiple databases with the same information and return it in a collated format	
+
+--exec [Report].[UspResults_UnpaidAssets]  43
 */
     If IsNumeric(@Company) = 0
         Begin
@@ -57,7 +41,6 @@ As
             , [JournalDate] DATETIME2
             , [InvoiceDate] DATETIME2
             );
-
         Create Table #ApJnlSummary
             (
               DatabaseName VARCHAR(150) Collate Latin1_General_BIN 
@@ -68,7 +51,6 @@ As
             , [Journal] INT
             , [EntryNumber] INT
             );
-
         Create Table #GrnMatching
             (
               DatabaseName VARCHAR(150) Collate Latin1_General_BIN 
@@ -79,7 +61,6 @@ As
 			, [EntryNumber] INT
 			, [Invoice] VARCHAR(35) Collate Latin1_General_BIN 
 			);
-
         Create Table #GrnDetails
             (
               DatabaseName VARCHAR(150) Collate Latin1_General_BIN 
@@ -93,13 +74,11 @@ As
 			, [Journal]	int
 			, [JournalEntry] int
             );
-
         Create Table #ApControl
             (
               DatabaseName VARCHAR(150) Collate Latin1_General_BIN 
             , FinPeriodDate DATETIME2
             );
-
         Create Table #ApJnlDistrib
             (
               [DatabaseName] VARCHAR(150) Collate Latin1_General_BIN 
@@ -110,7 +89,6 @@ As
             , [EntryNumber] INT
             , [ExpenseGlCode] VARCHAR(35) Collate Latin1_General_BIN 
             );
-
 
 --create script to pull data from each db into the tables
         Declare @SQL1 VARCHAR(Max) = '
@@ -399,32 +377,25 @@ As
 	End';
 
 --Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
+--Print @SQL1
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb @SQL1;
-		Exec sp_MSforeachdb @SQL2;
-		Exec sp_MSforeachdb @SQL3;
-		Exec sp_MSforeachdb @SQL4;
-		Exec sp_MSforeachdb @SQL5;
-		Exec sp_MSforeachdb @SQL6;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+		Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+		Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+		Exec [Process].[ExecForEachDB] @cmd = @SQL4;
+		Exec [Process].[ExecForEachDB] @cmd = @SQL5;
+		Exec [Process].[ExecForEachDB] @cmd = @SQL6;
 
 --define the results you want to return
-        --Create Table #Results
-        --    (
-        --      DatabaseName VARCHAR(150)
-        --    , Results VARCHAR(500)
-        --    );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
 
 
 --return results
 	
-
 --Create AP table
         Select
             [ai].Supplier

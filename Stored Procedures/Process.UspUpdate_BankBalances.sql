@@ -1,9 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspUpdate_BankBalances]
---Exec [Process].[UspUpdate_BankBalances]@PrevCheck =0    , @HoursBetweenUpdates =0
     (
       @PrevCheck Int
     , @HoursBetweenUpdates Int
@@ -11,23 +11,9 @@ CREATE Proc [Process].[UspUpdate_BankBalances]
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with BankBalances details				///
-///			transaction types when relating to inventory changes																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			15/1/2016	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with BankBalances details
+transaction types when relating to inventory changes
+--Exec [Process].[UspUpdate_BankBalances]@PrevCheck =0    , @HoursBetweenUpdates =0
 */
 
 --remove nocount on to speed up query
@@ -70,31 +56,11 @@ As
 --remove any balances loaded already today
         Delete  From [Lookups].[BankBalances]
         Where   [DateOfBalance] = @LoadDate;
---check last time run and update if it's been longer than @HoursBetweenUpdates hours - Not needed for bank balances
---Declare @LastDate DATETIME2
 
---Select @LastDate=MAX([DateOfBalance])
---From Lookups.BankBalances
-
- --       If @LastDate Is Null
- --           Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
- --           Begin
-	----Set time of run
- --               Declare @LastUpdated DateTime2;
- --                   Select  @LastUpdated = GetDate();
-
---list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ApBank'; 
 
---create temporary tables to be pulled from different databases, including a column to id - changed to direct insert
-                --Create Table [#Table1]
-                --    (
-                --      [Company] Varchar(150)
-                --    , [BankBalances] Varchar(150)
-                --    );
-
 --create script to pull data from each db into the tables
-        Declare @Company Varchar(30) = 'All';
+        Declare @Company Varchar(max) = 'All';
         Declare @SQLBanks Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
@@ -121,7 +87,8 @@ As
             '
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Declare @LD date ='''+Cast(@LoadDate As Varchar(50))+'''
+			Declare @LD date =''' + Cast(@LoadDate As Varchar(50))
+            + '''
 				Insert  [BlackBox].[Lookups].[BankBalances]
         ( [DatabaseName], [CompanyName], [Bank], [BankDescription], [CashGlCode], [BankCurrency], [CurrentBalance], [StatementBalance], [OutStandingDeposits], [OutStandingWithdrawals], [PrevMonth1CurrentBalance], [PrevMonth1StatementBalance], [PrevMonth1OutStandingDeposits], [PrevMonth1OutStandingWithdrawals], [PrevMonth2CurrentBalance], [PrevMonth2StatementBalance], [PrevMonth2OutStandingDeposits], [PrevMonth2OutStandingWithdrawals], [DateOfBalance])
         Select  Db_Name()
@@ -153,8 +120,7 @@ As
 --Print @SQLBanks
 
 --execute script against each db, populating the base tables
-        --Print Len(@SQLBanks);
-        Exec [sys].[sp_MSforeachdb] @SQLBanks;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLBanks;
 
         If ( Select Count(1)
              From   [Lookups].[BankBalances] As [BB]

@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,43 +11,24 @@ CREATE Proc [Process].[UspUpdate_TrnTypeModifier]
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to		///
-///			transaction types when relating to inventory changes																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			10/9/2015	Chris Johnson			Initial version created																///
-///			14/9/2015	Chris Johnson			Amended print lines to be recognizable within load controller						///
-///			24/9/2015	Chris Johnson			Amended Results table name as was causing conflict									///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
+transaction types when relating to inventory changes
 */
-
         Set NoCount On;
-
 
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    *
-                          From      INFORMATION_SCHEMA.TABLES
-                          Where     TABLE_SCHEMA = 'Lookups'
-                                    And TABLE_NAME = 'TrnTypeAmountModifier' )
+                          From      [INFORMATION_SCHEMA].[TABLES]
+                          Where     [TABLE_SCHEMA] = 'Lookups'
+                                    And [TABLE_NAME] = 'TrnTypeAmountModifier' )
            )
             Begin
-                Create --drop --alter 
-Table Lookups.TrnTypeAmountModifier
+                Create Table [Lookups].[TrnTypeAmountModifier]
                     (
-                      Company Varchar(150)
-                    , TrnType Char(5)
-                    , AmountModifier Int
-                    , LastUpdated DateTime2
+                      [Company] Varchar(150)
+                    , [TrnType] Char(5)
+                    , [AmountModifier] Int
+                    , [LastUpdated] DateTime2
                     );
             End;
 
@@ -54,64 +36,63 @@ Table Lookups.TrnTypeAmountModifier
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Select  @LastDate = Max(LastUpdated)
-        From    Lookups.TrnTypeAmountModifier;
+        Select  @LastDate = Max([LastUpdated])
+        From    [Lookups].[TrnTypeAmountModifier];
 
         If @LastDate Is Null
             Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 	--create master list of how codes affect stock
-                Create --drop --alter 
-	Table #AmountsTTM
+                Create Table [#AmountsTTM]
                     (
-                      TrnType Char(5)
-                    , amountmodifier Int
+                      [TrnType] Char(5)
+                    , [amountmodifier] Int
                     );
 
-                Insert  #AmountsTTM
-                        ( TrnType
-                        , amountmodifier
+                Insert  [#AmountsTTM]
+                        ( [TrnType]
+                        , [amountmodifier]
 			            )
-                        Select  t.TrnType
-                              , t.AmountModifier
-                        From    ( Select    TrnType = 'R'
-                                          , AmountModifier = 1
+                        Select  [t].[TrnType]
+                              , [t].[AmountModifier]
+                        From    ( Select    [TrnType] = 'R'
+                                          , [AmountModifier] = 1
                                   Union
-                                  Select    TrnType = 'I'
-                                          , AmountModifier = -1
+                                  Select    [TrnType] = 'I'
+                                          , [AmountModifier] = -1
                                   Union
-                                  Select    TrnType = 'P'
-                                          , AmountModifier = 0
+                                  Select    [TrnType] = 'P'
+                                          , [AmountModifier] = 0
                                   Union
-                                  Select    TrnType = 'T'
-                                          , AmountModifier = 1
+                                  Select    [TrnType] = 'T'
+                                          , [AmountModifier] = 1
                                   Union
-                                  Select    TrnType = 'A'
-                                          , AmountModifier = 1
+                                  Select    [TrnType] = 'A'
+                                          , [AmountModifier] = 1
                                   Union
-                                  Select    TrnType = 'C'
-                                          , AmountModifier = 0
+                                  Select    [TrnType] = 'C'
+                                          , [AmountModifier] = 0
                                   Union
-                                  Select    TrnType = 'M'
-                                          , AmountModifier = 0
+                                  Select    [TrnType] = 'M'
+                                          , [AmountModifier] = 0
                                   Union
-                                  Select    TrnType = 'B'
-                                          , AmountModifier = 1
+                                  Select    [TrnType] = 'B'
+                                          , [AmountModifier] = 1
                                   Union
-                                  Select    TrnType = 'S'
-                                          , AmountModifier = -1
-                                ) t;
+                                  Select    [TrnType] = 'S'
+                                          , [AmountModifier] = -1
+                                ) [t];
 
 	--Get list of all companies in use
 
 	--create temporary tables to be pulled from different databases, including a column to id
-                Create Table #Table1TTM
+                Create Table [#Table1TTM]
                     (
-                      CompanyName Varchar(150)
+                      [CompanyName] Varchar(150)
                     );
 
 	--create script to pull data from each db into the tables
@@ -129,33 +110,29 @@ Table Lookups.TrnTypeAmountModifier
 		End';
 
 	--execute script against each db, populating the base tables
-                Exec sp_MSforeachdb @SQL;
+                Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
 	--all companies process the same way
-                Select  CompanyName
-                      , TrnType
-                      , amountmodifier
-                Into    #ResultsTTm
-                From    #Table1TTM T
-                        Left Join #AmountsTTM A On 1 = 1;
+                Select  [T].[CompanyName]
+                      , [A].[TrnType]
+                      , [A].[amountmodifier]
+                Into    [#ResultsTTm]
+                From    [#Table1TTM] [T]
+                        Left Join [#AmountsTTM] [A] On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsTTm
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
 
-                Insert  Lookups.TrnTypeAmountModifier
-                        ( Company
-                        , TrnType
-                        , AmountModifier
-                        , LastUpdated
+                Insert  [Lookups].[TrnTypeAmountModifier]
+                        ( [Company]
+                        , [TrnType]
+                        , [AmountModifier]
+                        , [LastUpdated]
                         )
-                        Select  CompanyName
-                              , TrnType
-                              , amountmodifier
+                        Select  [CompanyName]
+                              , [TrnType]
+                              , [amountmodifier]
                               , @LastUpdated
-                        From    #ResultsTTm;
+                        From    [#ResultsTTm];
 
                 If @PrevCheck = 1
                     Begin
@@ -163,17 +140,17 @@ Table Lookups.TrnTypeAmountModifier
                           , @PreviousCount Int;
 	
                         Select  @CurrentCount = Count(*)
-                        From    Lookups.TrnTypeAmountModifier
-                        Where   LastUpdated = @LastUpdated;
+                        From    [Lookups].[TrnTypeAmountModifier]
+                        Where   [LastUpdated] = @LastUpdated;
 
                         Select  @PreviousCount = Count(*)
-                        From    Lookups.TrnTypeAmountModifier
-                        Where   LastUpdated <> @LastUpdated;
+                        From    [Lookups].[TrnTypeAmountModifier]
+                        Where   [LastUpdated] <> @LastUpdated;
 	
                         If @PreviousCount > @CurrentCount
                             Begin
-                                Delete  Lookups.TrnTypeAmountModifier
-                                Where   LastUpdated = @LastUpdated;
+                                Delete  [Lookups].[TrnTypeAmountModifier]
+                                Where   [LastUpdated] = @LastUpdated;
                                 Print 'UspUpdate_TrnTypeModifier - Count has gone down since last run, no update applied';
                                 Print 'Current Count = '
                                     + Cast(@CurrentCount As Varchar(5))
@@ -182,15 +159,15 @@ Table Lookups.TrnTypeAmountModifier
                             End;
                         If @PreviousCount <= @CurrentCount
                             Begin
-                                Delete  Lookups.TrnTypeAmountModifier
-                                Where   LastUpdated <> @LastUpdated;
+                                Delete  [Lookups].[TrnTypeAmountModifier]
+                                Where   [LastUpdated] <> @LastUpdated;
                                 Print 'UspUpdate_TrnTypeModifier - Update applied successfully';
                             End;
                     End;
                 If @PrevCheck = 0
                     Begin
-                        Delete  Lookups.TrnTypeAmountModifier
-                        Where   LastUpdated <> @LastUpdated;
+                        Delete  [Lookups].[TrnTypeAmountModifier]
+                        Where   [LastUpdated] <> @LastUpdated;
                         Print 'UspUpdate_TrnTypeModifier - Update applied successfully';
                     End;
             End;

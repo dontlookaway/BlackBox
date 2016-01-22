@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -11,23 +12,8 @@ CREATE Proc [Process].[UspUpdate_PurchaseOrderType]
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to		///
-///			Purchase Order Type																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			15/9/2015	Chris Johnson			Initial version created																///
-///			24/9/2015	Chris Johnson			Amended Results table name as was causing conflict									///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
+Purchase Order Type
 */
 
         Set NoCount On;
@@ -35,18 +21,17 @@ As
 
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    *
-                          From      INFORMATION_SCHEMA.TABLES
-                          Where     TABLE_SCHEMA = 'Lookups'
-                                    And TABLE_NAME = 'PurchaseOrderType' )
+                          From      [INFORMATION_SCHEMA].[TABLES]
+                          Where     [TABLE_SCHEMA] = 'Lookups'
+                                    And [TABLE_NAME] = 'PurchaseOrderType' )
            )
             Begin
-                Create --drop --alter 
-Table Lookups.PurchaseOrderType
+                Create Table [Lookups].[PurchaseOrderType]
                     (
-                      Company Varchar(150)
-                    , OrderTypeCode Char(5)
-                    , OrderTypeDescription Varchar(150)
-                    , LastUpdated DateTime2
+                      [Company] Varchar(150)
+                    , [OrderTypeCode] Char(5)
+                    , [OrderTypeDescription] Varchar(150)
+                    , [LastUpdated] DateTime2
                     );
             End;
 
@@ -54,46 +39,45 @@ Table Lookups.PurchaseOrderType
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Select  @LastDate = Max(LastUpdated)
-        From    Lookups.PurchaseOrderType;
+        Select  @LastDate = Max([LastUpdated])
+        From    [Lookups].[PurchaseOrderType];
 
         If @LastDate Is Null
             Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 	--create master list of how codes affect stock
-                Create --drop --alter 
-	Table #OrdersPOType
+                Create Table [#OrdersPOType]
                     (
-                      OrderTypeCode Varchar(5)
-                    , OrderTypeDescription Varchar(150)
+                      [OrderTypeCode] Varchar(5)
+                    , [OrderTypeDescription] Varchar(150)
                     );
 
-                Insert  #OrdersPOType
-                        ( OrderTypeCode
-                        , OrderTypeDescription
+                Insert  [#OrdersPOType]
+                        ( [OrderTypeCode]
+                        , [OrderTypeDescription]
 	                    )
-                        Select  OrderTypeCode
-                              , OrderTypeDescription
-                        From    ( Select    OrderTypeCode = 'L'
-                                          , OrderTypeDescription = 'Local'
+                        Select  [t].[OrderTypeCode]
+                              , [t].[OrderTypeDescription]
+                        From    ( Select    [OrderTypeCode] = 'L'
+                                          , [OrderTypeDescription] = 'Local'
                                   Union
-                                  Select    OrderTypeCode = 'I'
-                                          , OrderTypeDescription = 'Import'
+                                  Select    [OrderTypeCode] = 'I'
+                                          , [OrderTypeDescription] = 'Import'
                                   Union
-                                  Select    OrderTypeCode = 'O'
-                                          , OrderTypeDescription = 'Other'
-                                ) t;
+                                  Select    [OrderTypeCode] = 'O'
+                                          , [OrderTypeDescription] = 'Other'
+                                ) [t];
 
 	--Get list of all companies in use
 
 	--create temporary tables to be pulled from different databases, including a column to id
-                Create Table #Table1POType
+                Create Table [#Table1POType]
                     (
-                      CompanyName Varchar(150)
+                      [CompanyName] Varchar(150)
                     );
 
 	--create script to pull data from each db into the tables
@@ -111,15 +95,15 @@ Table Lookups.PurchaseOrderType
 		End';
 
 	--execute script against each db, populating the base tables
-                Exec sp_MSforeachdb @SQL;
+                Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
 	--all companies process the same way
-                Select  CompanyName
-                      , O.OrderTypeCode
-                      , O.OrderTypeDescription
-                Into    #ResultsPOType
-                From    #Table1POType T
-                        Left Join #OrdersPOType O On 1 = 1;
+                Select  [T].[CompanyName]
+                      , [O].[OrderTypeCode]
+                      , [O].[OrderTypeDescription]
+                Into    [#ResultsPOType]
+                From    [#Table1POType] [T]
+                        Left Join [#OrdersPOType] [O] On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
 	--Update #ResultsPOType
@@ -127,17 +111,17 @@ Table Lookups.PurchaseOrderType
 	--Where CompanyName = ''
 	--	And TrnType = '';
 
-                Insert  Lookups.PurchaseOrderType
-                        ( Company
-                        , OrderTypeCode
-                        , OrderTypeDescription
-                        , LastUpdated
+                Insert  [Lookups].[PurchaseOrderType]
+                        ( [Company]
+                        , [OrderTypeCode]
+                        , [OrderTypeDescription]
+                        , [LastUpdated]
 	                    )
-                        Select  CompanyName
-                              , OrderTypeCode
-                              , OrderTypeDescription
+                        Select  [CompanyName]
+                              , [OrderTypeCode]
+                              , [OrderTypeDescription]
                               , @LastUpdated
-                        From    #ResultsPOType;
+                        From    [#ResultsPOType];
 
                 If @PrevCheck = 1
                     Begin
@@ -145,17 +129,17 @@ Table Lookups.PurchaseOrderType
                           , @PreviousCount Int;
 	
                         Select  @CurrentCount = Count(*)
-                        From    Lookups.PurchaseOrderType
-                        Where   LastUpdated = @LastUpdated;
+                        From    [Lookups].[PurchaseOrderType]
+                        Where   [LastUpdated] = @LastUpdated;
 
                         Select  @PreviousCount = Count(*)
-                        From    Lookups.PurchaseOrderType
-                        Where   LastUpdated <> @LastUpdated;
+                        From    [Lookups].[PurchaseOrderType]
+                        Where   [LastUpdated] <> @LastUpdated;
 	
                         If @PreviousCount > @CurrentCount
                             Begin
-                                Delete  Lookups.PurchaseOrderType
-                                Where   LastUpdated = @LastUpdated;
+                                Delete  [Lookups].[PurchaseOrderType]
+                                Where   [LastUpdated] = @LastUpdated;
                                 Print 'UspUpdate_PurchaseOrderType - Count has gone down since last run, no update applied';
                                 Print 'Current Count = '
                                     + Cast(@CurrentCount As Varchar(5))
@@ -164,15 +148,15 @@ Table Lookups.PurchaseOrderType
                             End;
                         If @PreviousCount <= @CurrentCount
                             Begin
-                                Delete  Lookups.PurchaseOrderType
-                                Where   LastUpdated <> @LastUpdated;
+                                Delete  [Lookups].[PurchaseOrderType]
+                                Where   [LastUpdated] <> @LastUpdated;
                                 Print 'UspUpdate_PurchaseOrderType - Update applied successfully';
                             End;
                     End;
                 If @PrevCheck = 0
                     Begin
-                        Delete  Lookups.PurchaseOrderType
-                        Where   LastUpdated <> @LastUpdated;
+                        Delete  [Lookups].[PurchaseOrderType]
+                        Where   [LastUpdated] <> @LastUpdated;
                         Print 'UspUpdate_PurchaseOrderType - Update applied successfully';
                     End;
             End;

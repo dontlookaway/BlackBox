@@ -1,41 +1,26 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_AvailableLots]
---Exec [Report].[UspResults_AvailableLots] @Company ='F', @StockCode ='000000000000013', @AmountRequired = 27.606400
     (
       @Company Varchar(10)
     , @StockCode Varchar(150)
     , @AmountRequired Numeric(20 , 8)
     )
 As /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			3/12/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+--Exec [Report].[UspResults_AvailableLots] @Company ='F', @StockCode ='000000000000013', @AmountRequired = 27.606400
 */
+    Set NoCount On;
 
 --Cater for if lower case companies are entered
-
-    Set NoCount Off;
-If IsNumeric(@Company)=0
-BEGIN
-    Select @Company=Upper(@Company)
-END
+    If IsNumeric(@Company) = 0
+        Begin
+            Select  @Company = Upper(@Company);
+        End;
 
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
@@ -47,18 +32,18 @@ END
       , @InsertCount Int;
 
 --Create table to capture results
-    Create Table #InvMaster
+    Create Table [#InvMaster]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , StockCode Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [StockCode] Varchar(20) Collate Latin1_General_BIN
         , [Description] Varchar(50) Collate Latin1_General_BIN
-        , PartCategory Char(1)
+        , [PartCategory] Char(1)
         , [IssMultLotsFlag] Char(1)
         , [StockUom] Varchar(10)
         );
-    Create Table #LotDetail
+    Create Table [#LotDetail]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
         , [StockCode] Varchar(20) Collate Latin1_General_BIN
         , [Lot] Varchar(20) Collate Latin1_General_BIN
         , [Bin] Varchar(20) Collate Latin1_General_BIN
@@ -167,15 +152,14 @@ END
 	End';
 
 	--Print 1 
-    Exec sp_MSforeachdb @SQLInvMaster;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
 	--Print 2
-    Exec sp_MSforeachdb @SQLLotDetail;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLLotDetail;
 
-    Create --Drop --Truncate 
-Table #Results
+    Create Table [#Results]
         (
-          StockCode Varchar(20)
-        , StockDescription Varchar(50)
+          [StockCode] Varchar(20)
+        , [StockDescription] Varchar(50)
         , [IssMultLotsFlag] Char(1)
         , [AvailableLot] Varchar(20)
         , [AvailableLotBin] Varchar(20)
@@ -183,24 +167,24 @@ Table #Results
         , [AvailableLotQtyOnHand] Numeric(20 , 8)
         , [AvailableLotExpiryDate] Date
         , [AvailableLotCreationDate] Date
-        , RunningTotal Numeric(20 , 8)
-		, LotRank int
+        , [RunningTotal] Numeric(20 , 8)
+        , [LotRank] Int
         );
 
-    Insert  #Results
-            ( StockCode
-            , StockDescription
-            , IssMultLotsFlag
-            , AvailableLot
-            , AvailableLotBin
-            , AvailableLotWarehouse
-            , AvailableLotQtyOnHand
-            , AvailableLotExpiryDate
-            , AvailableLotCreationDate
-			, LotRank
+    Insert  [#Results]
+            ( [StockCode]
+            , [StockDescription]
+            , [IssMultLotsFlag]
+            , [AvailableLot]
+            , [AvailableLotBin]
+            , [AvailableLotWarehouse]
+            , [AvailableLotQtyOnHand]
+            , [AvailableLotExpiryDate]
+            , [AvailableLotCreationDate]
+            , [LotRank]
             )
-            Select  [im].StockCode
-                  , StockDescription = [im].[Description]
+            Select  [im].[StockCode]
+                  , [StockDescription] = [im].[Description]
                   , [im].[IssMultLotsFlag]
                   , [AvailableLot] = [ld].[Lot]
                   , [AvailableLotBin] = [ld].[Bin]
@@ -208,66 +192,68 @@ Table #Results
                   , [AvailableLotQtyOnHand] = [ld].[QtyOnHand]
                   , [AvailableLotExpiryDate] = [ld].[ExpiryDate]
                   , [AvailableLotCreationDate] = [ld].[CreationDate]
-				  , LotRank = Dense_Rank() Over (Partition By ld.StockCode Order BY ld.CreationDate Asc, ld.Lot Asc) 
+                  , [LotRank] = Dense_Rank() Over ( Partition By [ld].[StockCode] Order By [ld].[CreationDate] Asc, [ld].[Lot] Asc )
             From    [#InvMaster] As [im]
                     Left Join [#LotDetail] As [ld] On [ld].[DatabaseName] = [im].[DatabaseName]
                                                       And [ld].[StockCode] = [im].[StockCode]
-                                                      And im.[IssMultLotsFlag] = 'Y';
-			--Order By ld.CreationDate Asc;
+                                                      And [im].[IssMultLotsFlag] = 'Y';
 
 
-    Declare @RunningTotal Numeric(20 , 8)=0;
+    Declare @RunningTotal Numeric(20 , 8)= 0;
 
-    Update  #Results
-    Set     @RunningTotal = RunningTotal = @RunningTotal
-            + AvailableLotQtyOnHand
-    From    #Results; 
+    Update  [#Results]
+    Set     @RunningTotal = [RunningTotal] = @RunningTotal
+            + [AvailableLotQtyOnHand]
+    From    [#Results]; 
 
-Declare @Min Numeric (20,8),@Max Numeric (20,8);
+    Declare @Min Numeric(20 , 8)
+      , @Max Numeric(20 , 8);
 
-Select @Min = Min(R.RunningTotal)
-From #Results As R
-Where R.RunningTotal>@AmountRequired
+    Select  @Min = Min([R].[RunningTotal])
+    From    [#Results] As [R]
+    Where   [R].[RunningTotal] > @AmountRequired;
 
-Select @Max = Max(R.RunningTotal)
-From #Results As R
-Where R.RunningTotal<=@AmountRequired
+    Select  @Max = Max([R].[RunningTotal])
+    From    [#Results] As [R]
+    Where   [R].[RunningTotal] <= @AmountRequired;
 
-Print 1
-Print @Min
-Print 2
-Print @Max
+    Print 1;
+    Print @Min;
+    Print 2;
+    Print @Max;
 
-If @Min Is Null And @Max Is Null
-BEGIN
-    Select @AmountRequired = Min(R.RunningTotal)
-	From #Results As R
-END
+    If @Min Is Null
+        And @Max Is Null
+        Begin
+            Select  @AmountRequired = Min([R].[RunningTotal])
+            From    [#Results] As [R];
+        End;
 
-If Coalesce(@Max,0)<@AmountRequired And @Min Is Not Null
-BEGIN
-    Set @AmountRequired=@Min
-END
+    If Coalesce(@Max , 0) < @AmountRequired
+        And @Min Is Not Null
+        Begin
+            Set @AmountRequired = @Min;
+        End;
 
-    Select  R.StockCode
-          , R.StockDescription
-          , R.IssMultLotsFlag
-          , R.AvailableLot
-          , R.AvailableLotBin
-          , R.AvailableLotWarehouse
-          , R.AvailableLotQtyOnHand
-          , R.AvailableLotExpiryDate
-          , R.AvailableLotCreationDate
-          , R.RunningTotal
-		  , R.LotRank
-    From    #Results As R
-	Left Join #Results As R2 On R2.AvailableLot = R.AvailableLot+1
-    Where   R.RunningTotal <= @AmountRequired
+    Select  [R].[StockCode]
+          , [R].[StockDescription]
+          , [R].[IssMultLotsFlag]
+          , [R].[AvailableLot]
+          , [R].[AvailableLotBin]
+          , [R].[AvailableLotWarehouse]
+          , [R].[AvailableLotQtyOnHand]
+          , [R].[AvailableLotExpiryDate]
+          , [R].[AvailableLotCreationDate]
+          , [R].[RunningTotal]
+          , [R].[LotRank]
+    From    [#Results] As [R]
+            Left Join [#Results] As [R2] On [R2].[AvailableLot] = [R].[AvailableLot] + 1
+    Where   [R].[RunningTotal] <= @AmountRequired;
 	--Or R.LotRank=1;
 
 --tidy up
-    Drop Table #InvMaster;
-    Drop Table #LotDetail;
+    Drop Table [#InvMaster];
+    Drop Table [#LotDetail];
 
 
 

@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -5,29 +6,11 @@ GO
 -- Stored Procedure
 
 CREATE Proc [Process].[UspPopulate_HistoryTables1] ( @RebuildBit Bit )
+As /*
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
 --exec [Process].[UspPopulate_HistoryTables1] @RebuildBit =0
 --exec [Process].[UspPopulate_HistoryTables1] @RebuildBit =1
-As /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			7/9/2015	Chris Johnson			Initial version created																///
-///			7/9/2015	Chris Johnson			Changed to use of udf_SplitString to define tables to return						///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			8/1/2015	Chris Johnson			Removed company & tables from script												///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 */
     Begin
 --remove nocount on to speed up query
@@ -167,7 +150,7 @@ And [AD].[VariableDesc] <> ''''
         If Len(@SQLTransactions) <= 2000 --only run script if less than 2000
             Begin
                 Print 'Capturing Transactions';
-                Exec [sys].[sp_MSforeachdb] @SQLTransactions;
+                Exec [Process].[ExecForEachDB] @cmd = @SQLTransactions;
             End;
         If Len(@SQLTransactions) > 2000 --if the script is greater than 2000 then the script will probably fail - raise an error
             Begin
@@ -285,81 +268,6 @@ And [AD].[VariableDesc] <> ''''
 
                 Drop Table [#TablesToBeCreated];
 
-	--List of all columns to be added
- --               Create Table [#ColumnsToBeAdded]
- --                   (
- --                     [CID] Int Identity(1 , 1)
- --                   , [TableName] Varchar(500)
- --                   , [ColumnName] Varchar(500)
- --                   , [ColumnType] Varchar(50)
- --                   , [TableRank] Int Default 0
- --                   , [ColumnRank] Int Default 0
- --                   );
-
- --               Insert  [#ColumnsToBeAdded]
- --                       ( [TableName]
- --                       , [ColumnName]
- --                       , [ColumnType]
- --                       , [TableRank]
- --                       , [ColumnRank]
- --                       )
- --                       Select  Distinct
- --                               [t].[TableName]
- --                             , Replace([t].[VariableDesc] , ' ' , '')
- --                             , [t].[VariableType]
- --                             , [TableRank] = Dense_Rank() Over ( Order By [t].[TableName] )
- --                             , [ColumnRank] = Dense_Rank() Over ( Partition By [t].[TableName] Order By [t].[TableName]
-	--						, [t].[VariableDesc] )
- --                       From    [BlackBox].[Process].[SysproTransactionsLogged]
- --                               As [t];
-
-	----add all fields to tables
-
- --               Set @CurrentTable = 1;
- --               Select  @TotalTables = Max([CTBA].[TableRank])
- --               From    [#ColumnsToBeAdded] As [CTBA];
-
- --               Print 'Number of tables to have columns added '
- --                   + Cast(@TotalTables As Varchar(50));
-
-
-
- --               While @CurrentTable <= @TotalTables
- --                   Begin
- --                       Set @CurrentColumn = 1;
- --                       Select  @TotalColumns = Max([CTBA].[ColumnRank])
- --                       From    [#ColumnsToBeAdded] As [CTBA]
- --                       Where   [CTBA].[TableRank] = @CurrentTable;
-
- --                       Print 'Number of columns to be added '
- --                           + Cast(@TotalColumns As Varchar(50));
-
- --                       While @CurrentColumn <= @TotalColumns
- --                           Begin
-
- --                               Select  @TableName = [CTBA].[TableName]
- --                                     , @ColumnName = [CTBA].[ColumnName]
- --                                     , @ColumnType = Case When [CTBA].[ColumnType] = 'A'
- --                                                          Then 'VARCHAR(255)'
- --                                                          When [CTBA].[ColumnType] = 'D'
- --                                                          Then 'DATE'
- --                                                          When [CTBA].[ColumnType] = 'N'
- --                                                          Then 'FLOAT'
- --                                                     End
- --                               From    [#ColumnsToBeAdded] As [CTBA]
- --                               Where   [CTBA].[TableRank] = @CurrentTable
- --                                       And [CTBA].[ColumnRank] = @CurrentColumn;
-
- --                               Exec [Process].[UspAlter_AddColumn] @Schema = 'History' ,
- --                                   @Table = @TableName ,
- --                                   @Column = @ColumnName ,
- --                                   @Type = @ColumnType; -- varchar(500)
-
-
- --                               Set @CurrentColumn = @CurrentColumn + 1;
- --                           End;
- --                       Set @CurrentTable = @CurrentTable + 1;
- --                   End;
                 Exec [Process].[UspAlter_CheckAndAddColumns];
 
 
@@ -426,75 +334,10 @@ And [AD].[VariableDesc] <> ''''
 
                 Drop Table [#MissingTables];
 			
-			
-   --             Create Table [#ColumnsToCreate]
-   --                 (
-   --                   [CID] Int Identity(1 , 1)
-   --                 , [TableName] Varchar(500)
-   --                 , [ColumnName] Varchar(500)
-   --                 , [VariableType] Char(1)
-   --                 );
-
-			----Get list of columns that don't exist
-   --             Insert  [#ColumnsToCreate]
-   --                     ( [TableName]
-   --                     , [ColumnName]
-   --                     , [VariableType]
-   --                     )
-   --                     Select  [TableName] = [tl].[TableName]
-   --                           , [ColumnName] = Replace(Upper([tl].[VariableDesc]) ,
-   --                                                    ' ' , '')
-   --                           , [tl].[VariableType]
-   --                     From    [sys].[tables] As [T]
-   --                             Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
-   --                             Left Join [sys].[columns] As [C] On [C].[object_id] = [T].[object_id]
-   --                             Right Join ( Select Distinct
-   --                                                 [STL].[TableName]
-   --                                               , [STL].[VariableDesc]
-   --                                               , [STL].[VariableType]
-   --                                          From   [Process].[SysproTransactionsLogged]
-   --                                                 As [STL]
-   --                                          Where  [STL].[AlreadyEntered] = 0
-   --                                        ) [tl] On [T].[name] = [tl].[TableName]
-   --                                                  And [C].[name] = [tl].[VariableDesc]
-   --                     Where   [S].[name] = 'History'
-   --                             And [T].[name] Not Like 'Archive%'
-   --                             And [tl].[VariableDesc] Is Null;
-
-			--	--Add new fields
-   --             Select  @TotalColumns = Max([CTC].[CID])
-   --             From    [#ColumnsToCreate] As [CTC];
-
-   --             Set @CurrentColumn = 1;
-
-			--	--iterate through each column that is required
-
-   --             While @CurrentColumn <= @TotalColumns
-   --                 Begin
-   --                     Select  @ColumnName = [CTC].[ColumnName]
-   --                           , @TableName = [CTC].[TableName]
-   --                           , @ColumnType = Case When [CTC].[VariableType] = 'A'
-   --                                                Then 'Varchar(255)'
-   --                                                When [CTC].[VariableType] = 'N'
-   --                                                Then 'Float'
-   --                                                When [CTC].[VariableType] = 'D'
-   --                                                Then 'Date'
-   --                                           End
-   --                     From    [#ColumnsToCreate] As [CTC]
-   --                     Where   [CTC].[CID] = @CurrentColumn;
-
-   --                     Exec [Process].[UspAlter_AddColumn] @Schema = 'History' , -- varchar(500)
-   --                         @Table = @TableName , @Column = @ColumnName , -- varchar(500)
-   --                         @Type = @ColumnType;
-
-   --                     Set @CurrentColumn = @CurrentColumn + 1;
-   --                 End;
                 Exec [Process].[UspAlter_CheckAndAddColumns];
             End;
 
 		--run insert
-
-
         Select  @TablesToUpdate = Stuff(( Select Distinct
                                                     ', '
                                                     + Cast(''

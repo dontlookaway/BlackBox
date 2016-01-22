@@ -1,33 +1,16 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Process].[UspUpdate_GlAccountCode]
+CREATE Proc [Process].[UspUpdate_GlAccountCode]
 (@PrevCheck INT --if count is less than previous don't update
 ,@HoursBetweenUpdates int
 )
 As
 Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to		///
-///			Purchase Order Status details																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			30/9/2015	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to	Purchase Order Status details
 */
 
 Set NoCount On
@@ -43,8 +26,7 @@ If ( Not Exists ( Select
                     And TABLE_NAME = 'GlAccountCode' )
    )
     Begin
-        Create --drop --alter 
-Table Lookups.GlAccountCode
+        Create Table Lookups.GlAccountCode
             (
               Company VARCHAR(150)
             , GlAccountCode CHAR(5)
@@ -66,8 +48,7 @@ Begin
 	Declare @LastUpdated DATETIME2; Select @LastUpdated=GETDATE();
 
 	--create master list of how codes affect stock
-	Create --drop --alter 
-	Table #OrdersGlAccountCode
+	Create Table #OrdersGlAccountCode
 		(
 		  GlAccountCode VARCHAR(5)
 		, GlAccountDescription VARCHAR(150)
@@ -89,14 +70,6 @@ Begin
 				  Select GlAccountCode = 'O', GlAccountDescription='Other expense'
 				) t;
 
-	--Get list of all companies in use
-
-	--create temporary tables to be pulled from different databases, including a column to id
-	--Create Table #Table1
-	--	(
-	--	  CompanyName VARCHAR(150)
-	--	);
-
 	--create script to pull data from each db into the tables
 	Declare @SQL VARCHAR(Max) = '
 		USE [?];
@@ -112,7 +85,7 @@ Begin
 		End';
 
 	--execute script against each db, populating the base tables
-	--Exec sp_MSforeachdb    @SQL;
+	--Exec [Process].[ExecForEachDB] @cmd =    @SQL;
 
 	--all companies process the same way
 	Select

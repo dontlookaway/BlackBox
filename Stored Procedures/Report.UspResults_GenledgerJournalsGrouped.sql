@@ -3,31 +3,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
---d
-
 CREATE Proc [Report].[UspResults_GenledgerJournalsGrouped] ( @Company VARCHAR(Max) )
-As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
+As 
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			14/10/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+--Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
 */
     If IsNumeric(@Company) = 0
         Begin
@@ -110,7 +92,7 @@ As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb
+        Exec [Process].[ExecForEachDB] @cmd =
             @SQL;
 
 --define the results you want to return
@@ -141,7 +123,6 @@ As --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
         Insert  [#ResultsGL]

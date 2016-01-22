@@ -4,27 +4,14 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_WipStockRequiredPerJob]
---Exec [Report].[UspResults_WipStockRequiredPerJob] @MasterJob =94, @Company ='F'
     (
       @MasterJob Varchar(50)
     , @Company Varchar(10)
     )
 As /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			3/12/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+--Exec [Report].[UspResults_WipStockRequiredPerJob] @MasterJob =94, @Company ='F'
 */
     Set NoCount Off;
     If IsNumeric(@Company) = 0
@@ -34,7 +21,6 @@ As /*
 	
 --Convert Job to varchar for querying DB
     Declare @MasterJobVarchar Varchar(20);
-			--= RIGHT('000000000000000' + CAST(@MasterJob As VARCHAR(20)),15);
 
 --Cater for number jobs
     Select  @MasterJobVarchar = Case When IsNumeric(@MasterJob) = 1
@@ -52,74 +38,74 @@ As /*
       , @InsertCount Int;
 
 --Create table to capture results
-    Create Table #JobLevelCheck
+    Create Table [#JobLevelCheck]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , JobLevel Int
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , SubJob Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [JobLevel] Int
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [SubJob] Varchar(20) Collate Latin1_General_BIN
         );
-    Create Table #WipMasterSub
+    Create Table [#WipMasterSub]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , SubJob Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [SubJob] Varchar(20) Collate Latin1_General_BIN
         );
-    Create Table #WipJobAllMat
+    Create Table [#WipJobAllMat]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , SequenceNum Varchar(6) Collate Latin1_General_BIN
-        , SubJobQty Numeric(20 , 8)
-        , StockCode Varchar(30) Collate Latin1_General_BIN
-        , StockDescription Varchar(50) Collate Latin1_General_BIN
-        , UnitQtyReqdEnt Numeric(20 , 8)
-        , QtyIssuedEnt Numeric(20 , 8)
-        , FixedQtyPerFlag Char(1)
-        , Uom Varchar(10) Collate Latin1_General_BIN
-        , AllocCompleted Char(1)
-        , OperationOffset Int
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , ReservedLotSerFlag Char(1)
-        , ReservedLotQty Numeric(20 , 8)
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [SequenceNum] Varchar(6) Collate Latin1_General_BIN
+        , [SubJobQty] Numeric(20 , 8)
+        , [StockCode] Varchar(30) Collate Latin1_General_BIN
+        , [StockDescription] Varchar(50) Collate Latin1_General_BIN
+        , [UnitQtyReqdEnt] Numeric(20 , 8)
+        , [QtyIssuedEnt] Numeric(20 , 8)
+        , [FixedQtyPerFlag] Char(1)
+        , [Uom] Varchar(10) Collate Latin1_General_BIN
+        , [AllocCompleted] Char(1)
+        , [OperationOffset] Int
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [ReservedLotSerFlag] Char(1)
+        , [ReservedLotQty] Numeric(20 , 8)
         );
-    Create Table #WipAllMatLot
+    Create Table [#WipAllMatLot]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , StockCode Varchar(30) Collate Latin1_General_BIN
-        , Lot Varchar(50) Collate Latin1_General_BIN
-        , Bin Varchar(20) Collate Latin1_General_BIN
-        , Warehouse Varchar(20) Collate Latin1_General_BIN
-        , QtyReserved Numeric(20 , 8)
-        , QtyIssued Numeric(20 , 8)
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [StockCode] Varchar(30) Collate Latin1_General_BIN
+        , [Lot] Varchar(50) Collate Latin1_General_BIN
+        , [Bin] Varchar(20) Collate Latin1_General_BIN
+        , [Warehouse] Varchar(20) Collate Latin1_General_BIN
+        , [QtyReserved] Numeric(20 , 8)
+        , [QtyIssued] Numeric(20 , 8)
         );
-    Create Table #WipJobAllLab
+    Create Table [#WipJobAllLab]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , WorkCentre Varchar(20) Collate Latin1_General_BIN
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , Operation Int
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [WorkCentre] Varchar(20) Collate Latin1_General_BIN
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [Operation] Int
         );
-    Create Table #WipMaster
+    Create Table [#WipMaster]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , Job Varchar(20) Collate Latin1_General_BIN
-        , QtyToMake Numeric(20 , 8)
-        , QtyManufactured Numeric(20 , 8)
-        , JobDescription Varchar(150)
-        , StockCode Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [Job] Varchar(20) Collate Latin1_General_BIN
+        , [QtyToMake] Numeric(20 , 8)
+        , [QtyManufactured] Numeric(20 , 8)
+        , [JobDescription] Varchar(150)
+        , [StockCode] Varchar(20) Collate Latin1_General_BIN
         );
-    Create Table #InvMaster
+    Create Table [#InvMaster]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , StockCode Varchar(20) Collate Latin1_General_BIN
-        , PartCategory Char(1) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [StockCode] Varchar(20) Collate Latin1_General_BIN
+        , [PartCategory] Char(1) Collate Latin1_General_BIN
         , [IssMultLotsFlag] Char(1)
         , [StockUom] Varchar(10)
         );
-    Create Table #LotDetail
+    Create Table [#LotDetail]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
         , [StockCode] Varchar(20) Collate Latin1_General_BIN
         , [Lot] Varchar(20) Collate Latin1_General_BIN
         , [Bin] Varchar(20) Collate Latin1_General_BIN
@@ -128,25 +114,23 @@ As /*
         , [ExpiryDate] DateTime2
         , [CreationDate] DateTime2
         );
-    Create Table #CusLot
+    Create Table [#CusLot]
         (
-          DatabaseName Varchar(150) Collate Latin1_General_BIN
-        , Lot Varchar(50) Collate Latin1_General_BIN
-        , StockCode Varchar(30) Collate Latin1_General_BIN
-        , BleedNumber Varchar(20) Collate Latin1_General_BIN
-        , DonorNumber Varchar(20) Collate Latin1_General_BIN
-        , VendorBatchNumber Varchar(50) Collate Latin1_General_BIN
-        , OldLotNumber Varchar(20) Collate Latin1_General_BIN
-        , BleedDate Varchar(15) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+        , [Lot] Varchar(50) Collate Latin1_General_BIN
+        , [StockCode] Varchar(30) Collate Latin1_General_BIN
+        , [BleedNumber] Varchar(20) Collate Latin1_General_BIN
+        , [DonorNumber] Varchar(20) Collate Latin1_General_BIN
+        , [VendorBatchNumber] Varchar(50) Collate Latin1_General_BIN
+        , [OldLotNumber] Varchar(20) Collate Latin1_General_BIN
+        , [BleedDate] Varchar(15) Collate Latin1_General_BIN
         );
 
 --create script to pull data from each db into the tables
     Declare @SQLJobLevelCheck Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -187,9 +171,7 @@ As /*
     Declare @SQLWipMasterSub Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -221,9 +203,7 @@ As /*
     Declare @SQLWipJobAllMat Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -278,9 +258,7 @@ As /*
     Declare @SQLWipJobAllLab Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -316,9 +294,7 @@ As /*
     Declare @SQLWipMaster Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -359,9 +335,7 @@ As /*
     Declare @SQLInvMaster Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -400,9 +374,7 @@ As /*
     Declare @SQLWipAllMatLot Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -447,9 +419,7 @@ As /*
     Declare @SQLLotDetail Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -497,9 +467,7 @@ As /*
     Declare @SQLCusLot Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-        + --Only query DBs beginning SysProCompany
-        '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN'
         + --only companies selected in main run, or if companies selected then all
@@ -543,23 +511,23 @@ As /*
 			End
 	End';
 	--Print 1 
-    Exec sp_MSforeachdb @SQLJobLevelCheck;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLJobLevelCheck;
 	--Print 2
-    Exec sp_MSforeachdb @SQLWipMasterSub;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLWipMasterSub;
 	--Print 3
-    Exec sp_MSforeachdb @SQLWipJobAllMat;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLWipJobAllMat;
 	--Print 4
-    Exec sp_MSforeachdb @SQLWipJobAllLab;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLWipJobAllLab;
 	--Print 5
-    Exec sp_MSforeachdb @SQLWipMaster;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLWipMaster;
 	--Print 6
-    Exec sp_MSforeachdb @SQLInvMaster;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
 	--Print 7
-    Exec sp_MSforeachdb @SQLWipAllMatLot;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLWipAllMatLot;
 	--Print 8
-    Exec sp_MSforeachdb @SQLLotDetail;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLLotDetail;
 	--Print 9
-    Exec sp_MSforeachdb @SQLCusLot;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLCusLot;
 
 --iterate through each sub job
     While @CurrentJobLevel < @TotalJobLevel
@@ -615,55 +583,55 @@ As /*
             );
 
 
-    Select MasterJob = @MasterJob
-			, [jlc]	.[Job]
-          , [wjam]	.[SequenceNum]
-          , [jlc]	.[SubJob]
-          , [wjam]	.[OperationOffset]
-		  , [SubJobStockCode] = [wm].[StockCode]
+    Select  [MasterJob] = @MasterJob
+          , [jlc].[Job]
+          , [wjam].[SequenceNum]
+          , [jlc].[SubJob]
+          , [wjam].[OperationOffset]
+          , [SubJobStockCode] = [wm].[StockCode]
           , [SubJobDescription] = [wm].[JobDescription]
-          , [SubJobAmount]		= [wm].[QtyToMake] - [wm].[QtyManufactured]
-          , [SubJobUom]			= [im2].[StockUom]
-          , [wjam]	.[StockCode]
-          , [wjam]	.[StockDescription]
-          , [wjam]	.[UnitQtyReqdEnt]
-          , [Allocated]			= [wjam].[AllocCompleted]
-          , [IMPC]	.[PartCategoryDescription]
-		  , [im]	.[PartCategory]
-          , [wjam]	.[QtyIssuedEnt]
-          , [wjam]	.[FixedQtyPerFlag]
-          , [wjam]	.[Uom]
-		  , [wjal]	.[WorkCentre]
-          , [im]	.[IssMultLotsFlag]
-          , [wjam]	.[ReservedLotSerFlag]
-          , [wjam]	.[ReservedLotQty]
-    From    #JobLevelCheck jlc
-            Left Join #WipJobAllMat [wjam] On jlc.SubJob = wjam.Job
-					And wjam.DatabaseName = jlc.DatabaseName
-            Left Join #WipJobAllLab [wjal] On wjam.Job = wjal.Job
-                                            And wjam.OperationOffset = wjal.Operation
-            Left Join #WipMaster [wm] On jlc.SubJob = wm.Job
-											And [wm].[DatabaseName] = [wjal].[DatabaseName]
+          , [SubJobAmount] = [wm].[QtyToMake] - [wm].[QtyManufactured]
+          , [SubJobUom] = [im2].[StockUom]
+          , [wjam].[StockCode]
+          , [wjam].[StockDescription]
+          , [wjam].[UnitQtyReqdEnt]
+          , [Allocated] = [wjam].[AllocCompleted]
+          , [IMPC].[PartCategoryDescription]
+          , [im].[PartCategory]
+          , [wjam].[QtyIssuedEnt]
+          , [wjam].[FixedQtyPerFlag]
+          , [wjam].[Uom]
+          , [wjal].[WorkCentre]
+          , [im].[IssMultLotsFlag]
+          , [wjam].[ReservedLotSerFlag]
+          , [wjam].[ReservedLotQty]
+    From    [#JobLevelCheck] [jlc]
+            Left Join [#WipJobAllMat] [wjam] On [jlc].[SubJob] = [wjam].[Job]
+                                              And [wjam].[DatabaseName] = [jlc].[DatabaseName]
+            Left Join [#WipJobAllLab] [wjal] On [wjam].[Job] = [wjal].[Job]
+                                              And [wjam].[OperationOffset] = [wjal].[Operation]
+            Left Join [#WipMaster] [wm] On [jlc].[SubJob] = [wm].[Job]
+                                         And [wm].[DatabaseName] = [wjal].[DatabaseName]
             Left Join [#InvMaster] [im2] On [im2].[StockCode] = [wm].[StockCode]
-                                               And im2.DatabaseName = wm.DatabaseName
-            Left Join #InvMaster [im] On wjam.StockCode = im.StockCode
-                                       And im.DatabaseName = wjam.DatabaseName
-			Left Join Lookups.InvMaster_PartCategory [IMPC] On im.PartCategory=IMPC.PartCategoryCode
+                                            And [im2].[DatabaseName] = [wm].[DatabaseName]
+            Left Join [#InvMaster] [im] On [wjam].[StockCode] = [im].[StockCode]
+                                         And [im].[DatabaseName] = [wjam].[DatabaseName]
+            Left Join [Lookups].[InvMaster_PartCategory] [IMPC] On [im].[PartCategory] = [IMPC].[PartCategoryCode]
     --Where   wjam.AllocCompleted = 'N'
     --        And im.PartCategory <> 'M';
-Order By jlc.Job Asc
+Order By    [jlc].[Job] Asc;
 
 
 --SELECT * FROM #WipJobAllMat As WJAM
 --tidy up
-    Drop Table #JobLevelCheck;
-    Drop Table #WipMasterSub;
-    Drop Table #WipJobAllMat;
-    Drop Table #WipAllMatLot;
-    Drop Table #WipJobAllLab;
-    Drop Table #WipMaster;
-    Drop Table #InvMaster;
-    Drop Table #LotDetail;
+    Drop Table [#JobLevelCheck];
+    Drop Table [#WipMasterSub];
+    Drop Table [#WipJobAllMat];
+    Drop Table [#WipAllMatLot];
+    Drop Table [#WipJobAllLab];
+    Drop Table [#WipMaster];
+    Drop Table [#InvMaster];
+    Drop Table [#LotDetail];
 
 
 

@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc  [Process].[UspUpdate_ReqnStatus]
+CREATE Proc [Process].[UspUpdate_ReqnStatus]
     (
       @PrevCheck Int --if count is less than previous don't update
     , @HoursBetweenUpdates Int
@@ -10,42 +11,25 @@ CREATE Proc  [Process].[UspUpdate_ReqnStatus]
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to		///
-///			Requisition Status details																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			23/9/2015	Chris Johnson			Initial version created																///
-///			16/15/2015	Chris Johnson			corrected delete statement															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to	
+Requisition Status details
 */
 
         Set NoCount On;
 
-Drop Table [Lookups].[ReqnStatus]
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    *
-                          From      INFORMATION_SCHEMA.TABLES
-                          Where     TABLE_SCHEMA = 'Lookups'
-                                    And TABLE_NAME = 'ReqnStatus' )
+                          From      [INFORMATION_SCHEMA].[TABLES]
+                          Where     [TABLE_SCHEMA] = 'Lookups'
+                                    And [TABLE_NAME] = 'ReqnStatus' )
            )
             Begin
-                Create --drop --alter 
-Table Lookups.ReqnStatus
+                Create Table [Lookups].[ReqnStatus]
                     (
-                      Company Varchar(150)
-                    , ReqnStatusCode Char(5)
-                    , ReqnStatusDescription Varchar(150)
-                    , LastUpdated DateTime2
+                      [Company] Varchar(150)
+                    , [ReqnStatusCode] Char(5)
+                    , [ReqnStatusDescription] Varchar(150)
+                    , [LastUpdated] DateTime2
                     );
             End;
 
@@ -53,8 +37,8 @@ Table Lookups.ReqnStatus
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Select  @LastDate = Max(LastUpdated)
-        From    Lookups.ReqnStatus;
+        Select  @LastDate = Max([LastUpdated])
+        From    [Lookups].[ReqnStatus];
 
         If @LastDate Is Null
             Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
@@ -64,44 +48,43 @@ Table Lookups.ReqnStatus
                 Select  @LastUpdated = GetDate();
 
 	--create master list of how codes affect stock
-                Create --drop --alter 
-	Table #OrdersReqSC
+                Create Table [#OrdersReqSC]
                     (
-                      ReqnStatusCode Varchar(5)
-                    , ReqnStatusDescription Varchar(150)
+                      [ReqnStatusCode] Varchar(5)
+                    , [ReqnStatusDescription] Varchar(150)
                     );
 
-                Insert  #OrdersReqSC
-                        ( ReqnStatusCode
-                        , ReqnStatusDescription
+                Insert  [#OrdersReqSC]
+                        ( [ReqnStatusCode]
+                        , [ReqnStatusDescription]
 	                    )
-                        Select  ReqnStatusCode
-                              , ReqnStatusDescription
-                        From    ( Select    ReqnStatusCode = ''
-                                          , ReqnStatusDescription = 'Normal'
+                        Select  [t].[ReqnStatusCode]
+                              , [t].[ReqnStatusDescription]
+                        From    ( Select    [ReqnStatusCode] = ''
+                                          , [ReqnStatusDescription] = 'Normal'
                                   Union
-                                  Select    ReqnStatusCode = 'R'
-                                          , ReqnStatusDescription = 'Approved and Ready'
+                                  Select    [ReqnStatusCode] = 'R'
+                                          , [ReqnStatusDescription] = 'Approved and Ready'
                                   Union
-                                  Select    ReqnStatusCode = 'P'
-                                          , ReqnStatusDescription = 'Confirmed into a Purchase Order'
+                                  Select    [ReqnStatusCode] = 'P'
+                                          , [ReqnStatusDescription] = 'Confirmed into a Purchase Order'
                                   Union
-                                  Select    ReqnStatusCode = 'I'
-                                          , ReqnStatusDescription = 'Issued'
+                                  Select    [ReqnStatusCode] = 'I'
+                                          , [ReqnStatusDescription] = 'Issued'
                                   Union
-                                  Select    ReqnStatusCode = 'T'
-                                          , ReqnStatusDescription = 'Transferred'
+                                  Select    [ReqnStatusCode] = 'T'
+                                          , [ReqnStatusDescription] = 'Transferred'
                                   Union
-                                  Select    ReqnStatusCode = '*'
-                                          , ReqnStatusDescription = 'Cancelled'
-                                ) t;
+                                  Select    [ReqnStatusCode] = '*'
+                                          , [ReqnStatusDescription] = 'Cancelled'
+                                ) [t];
 
 	--Get list of all companies in use
 
 	--create temporary tables to be pulled from different databases, including a column to id
-                Create Table #Table1ReqSC
+                Create Table [#Table1ReqSC]
                     (
-                      CompanyName Varchar(150)
+                      [CompanyName] Varchar(150)
                     );
 
 	--create script to pull data from each db into the tables
@@ -119,33 +102,28 @@ Table Lookups.ReqnStatus
 		End';
 
 	--execute script against each db, populating the base tables
-                Exec sp_MSforeachdb @SQL;
+                Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
 	--all companies process the same way
-                Select  CompanyName
-                      , O.ReqnStatusCode
-                      , O.ReqnStatusDescription
-                Into    #ResultsReqStatus
-                From    #Table1ReqSC T
-                        Left Join #OrdersReqSC O On 1 = 1;
+                Select  [T].[CompanyName]
+                      , [O].[ReqnStatusCode]
+                      , [O].[ReqnStatusDescription]
+                Into    [#ResultsReqStatus]
+                From    [#Table1ReqSC] [T]
+                        Left Join [#OrdersReqSC] [O] On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsReqStatus
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
-
-                Insert  Lookups.ReqnStatus
-                        ( Company
-                        , ReqnStatusCode
-                        , ReqnStatusDescription
-                        , LastUpdated
+                Insert  [Lookups].[ReqnStatus]
+                        ( [Company]
+                        , [ReqnStatusCode]
+                        , [ReqnStatusDescription]
+                        , [LastUpdated]
 	                    )
-                        Select  CompanyName
-                              , ReqnStatusCode
-                              , ReqnStatusDescription
+                        Select  [CompanyName]
+                              , [ReqnStatusCode]
+                              , [ReqnStatusDescription]
                               , @LastUpdated
-                        From    #ResultsReqStatus;
+                        From    [#ResultsReqStatus];
 
                 If @PrevCheck = 1
                     Begin
@@ -153,17 +131,17 @@ Table Lookups.ReqnStatus
                           , @PreviousCount Int;
 	
                         Select  @CurrentCount = Count(*)
-                        From    Lookups.ReqnStatus
-                        Where   LastUpdated = @LastUpdated;
+                        From    [Lookups].[ReqnStatus]
+                        Where   [LastUpdated] = @LastUpdated;
 
                         Select  @PreviousCount = Count(*)
-                        From    Lookups.ReqnStatus
-                        Where   LastUpdated <> @LastUpdated;
+                        From    [Lookups].[ReqnStatus]
+                        Where   [LastUpdated] <> @LastUpdated;
 	
                         If @PreviousCount > @CurrentCount
                             Begin
-                                Delete  Lookups.ReqnStatus
-                                Where   LastUpdated = @LastUpdated;
+                                Delete  [Lookups].[ReqnStatus]
+                                Where   [LastUpdated] = @LastUpdated;
                                 Print 'UspUpdate_ReqnStatus - Count has gone down since last run, no update applied';
                                 Print 'Current Count = '
                                     + Cast(@CurrentCount As Varchar(5))
@@ -172,15 +150,15 @@ Table Lookups.ReqnStatus
                             End;
                         If @PreviousCount <= @CurrentCount
                             Begin
-                                Delete  Lookups.ReqnStatus
-                                Where   LastUpdated <> @LastUpdated;
+                                Delete  [Lookups].[ReqnStatus]
+                                Where   [LastUpdated] <> @LastUpdated;
                                 Print 'UspUpdate_ReqnStatus - Update applied successfully';
                             End;
                     End;
                 If @PrevCheck = 0
                     Begin
-                        Delete  Lookups.ReqnStatus
-                        Where   LastUpdated <> @LastUpdated;
+                        Delete  [Lookups].[ReqnStatus]
+                        Where   [LastUpdated] <> @LastUpdated;
                         Print 'UspUpdate_ReqnStatus - Update applied successfully';
                     End;
             End;

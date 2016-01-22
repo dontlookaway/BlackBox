@@ -1,75 +1,57 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_OutstandingPurchaseOrders] ( @Company VARCHAR(Max) )
+CREATE Proc [Report].[UspResults_OutstandingPurchaseOrders] ( @Company Varchar(Max) )
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to bring back purchase orders which do not have receipts		///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			21/9/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015 
+Stored procedure set out to bring back purchase orders which do not have receipts
 */
-    Set NoCount Off;
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        Set NoCount Off;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'PorMasterHdr,ApSupplier,PorMasterDetail'; 
+        Declare @ListOfTables Varchar(Max) = 'PorMasterHdr,ApSupplier,PorMasterDetail'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table #PorMasterHdr
+        Create Table [#PorMasterHdr]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , PurchaseOrder VARCHAR(35) Collate Latin1_General_BIN
-            , OrderEntryDate DATETIME2
-            , OrderDueDate DATETIME2
-            , OrderStatus VARCHAR(35) Collate Latin1_General_BIN
-            , Supplier VARCHAR(15) Collate Latin1_General_BIN
-            , CancelledFlag CHAR(1) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [OrderEntryDate] DateTime2
+            , [OrderDueDate] DateTime2
+            , [OrderStatus] Varchar(35) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [CancelledFlag] Char(1) Collate Latin1_General_BIN
             );
-
-        Create Table #ApSupplier
+        Create Table [#ApSupplier]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , Supplier VARCHAR(15) Collate Latin1_General_BIN
-            , SupplierName VARCHAR(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
             );
-
-        Create Table #PorMasterDetail
+        Create Table [#PorMasterDetail]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , PurchaseOrder VARCHAR(35) Collate Latin1_General_BIN
-            , Line INT
-            , MStockCode VARCHAR(35) Collate Latin1_General_BIN
-            , MStockDes VARCHAR(150) Collate Latin1_General_BIN
-            , MOrderQty NUMERIC(20, 8)
-            , MPrice NUMERIC(20, 3)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [Line] Int
+            , [MStockCode] Varchar(35) Collate Latin1_General_BIN
+            , [MStockDes] Varchar(150) Collate Latin1_General_BIN
+            , [MOrderQty] Numeric(20 , 8)
+            , [MPrice] Numeric(20 , 3)
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 VARCHAR(Max) = '
+        Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -79,8 +61,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -113,8 +95,7 @@ As
 					 , CancelledFlag FROM PorMasterHdr
 			End
 	End';
-
-        Declare @SQL2 VARCHAR(Max) = '
+        Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -124,8 +105,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -151,8 +132,7 @@ As
 						 FROM ApSupplier
 							End
 	End';
-
-        Declare @SQL3 VARCHAR(Max) = '
+        Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -162,8 +142,8 @@ As
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -198,108 +178,93 @@ As
 	End';
 
 --Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
+--Print @SQL1
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb
-            @SQL1;
-        Exec sp_MSforeachdb
-            @SQL2;
-        Exec sp_MSforeachdb
-            @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
 
 --define the results you want to return
-        Create Table #Results
+        Create Table [#Results]
             (
-              DatabaseName VARCHAR(150)
-            , PurchaseOrder VARCHAR(35)
-            , SupplierName VARCHAR(150)
-            , OrderStatusDescription VARCHAR(150)
-            , OrderEntryDate DATETIME2
-            , OrderDueDate DATETIME2
-            , Line INT
-            , StockCode VARCHAR(35)
-            , StockDesc VARCHAR(150)
-            , OrderQty NUMERIC(20, 6)
-            , Price NUMERIC(20, 3)
+              [DatabaseName] Varchar(150)
+            , [PurchaseOrder] Varchar(35)
+            , [SupplierName] Varchar(150)
+            , [OrderStatusDescription] Varchar(150)
+            , [OrderEntryDate] DateTime2
+            , [OrderDueDate] DateTime2
+            , [Line] Int
+            , [StockCode] Varchar(35)
+            , [StockDesc] Varchar(150)
+            , [OrderQty] Numeric(20 , 6)
+            , [Price] Numeric(20 , 3)
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
-        Insert  #Results
-                ( DatabaseName
-                , PurchaseOrder
-                , SupplierName
-                , OrderStatusDescription
-                , OrderEntryDate
-                , OrderDueDate
-                , Line
-                , StockCode
-                , StockDesc
-                , OrderQty
-                , Price
+        Insert  [#Results]
+                ( [DatabaseName]
+                , [PurchaseOrder]
+                , [SupplierName]
+                , [OrderStatusDescription]
+                , [OrderEntryDate]
+                , [OrderDueDate]
+                , [Line]
+                , [StockCode]
+                , [StockDesc]
+                , [OrderQty]
+                , [Price]
 	            )
-                Select
-                    PH.DatabaseName
-                  , PH.PurchaseOrder
-                  , APS.SupplierName
-                  , PS.OrderStatusDescription
-                  , PH.OrderEntryDate
-                  , PH.OrderDueDate
-                  , PMD.Line
-                  , PMD.MStockCode
-                  , PMD.MStockDes
-                  , PMD.MOrderQty
-                  , PMD.MPrice
-                From
-                    #PorMasterHdr PH
-                Left Join BlackBox.Lookups.PurchaseOrderStatus PS
-                    On PH.OrderStatus = PS.OrderStatusCode
-                       And PS.Company = PH.DatabaseName
-                Left Join BlackBox.Lookups.PurchaseOrderInvoiceMapping POI
-                    On POI.PurchaseOrder = PH.PurchaseOrder
-                       And POI.Company = PH.DatabaseName
-                Left Join #ApSupplier APS
-                    On APS.Supplier = PH.Supplier
-                       And APS.DatabaseName = PH.DatabaseName
-                Left Join #PorMasterDetail PMD
-                    On PMD.PurchaseOrder = PH.PurchaseOrder
-                Where
-                    POI.Invoice Is Null --Where an invoice has not been received
-                    And PH.CancelledFlag <> 'Y' --Ignore cancelled flag
+                Select  [PH].[DatabaseName]
+                      , [PH].[PurchaseOrder]
+                      , [APS].[SupplierName]
+                      , [PS].[OrderStatusDescription]
+                      , [PH].[OrderEntryDate]
+                      , [PH].[OrderDueDate]
+                      , [PMD].[Line]
+                      , [PMD].[MStockCode]
+                      , [PMD].[MStockDes]
+                      , [PMD].[MOrderQty]
+                      , [PMD].[MPrice]
+                From    [#PorMasterHdr] [PH]
+                        Left Join [BlackBox].[Lookups].[PurchaseOrderStatus] [PS] On [PH].[OrderStatus] = [PS].[OrderStatusCode]
+                                                              And [PS].[Company] = [PH].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[PurchaseOrderInvoiceMapping] [POI] On [POI].[PurchaseOrder] = [PH].[PurchaseOrder]
+                                                              And [POI].[Company] = [PH].[DatabaseName]
+                        Left Join [#ApSupplier] [APS] On [APS].[Supplier] = [PH].[Supplier]
+                                                     And [APS].[DatabaseName] = [PH].[DatabaseName]
+                        Left Join [#PorMasterDetail] [PMD] On [PMD].[PurchaseOrder] = [PH].[PurchaseOrder]
+                Where   [POI].[Invoice] Is Null --Where an invoice has not been received
+                        And [PH].[CancelledFlag] <> 'Y' --Ignore cancelled flag
 		;
 
 --return results
-        Select
-            DatabaseName
-          , PurchaseOrder
-          , SupplierName
-          , OrderStatusDescription
-          , OrderEntryDate = CAST(OrderEntryDate As DATE)
-          , OrderDueDate = CAST(OrderDueDate As DATE)
-          , Line = COALESCE(Line, 0)
-          , StockCode
-          , StockDesc
-          , OrderQty = COALESCE(OrderQty, 0)
-          , Price = COALESCE(Price, 0)
-          , [Status] = Case When OrderDueDate Is Null
-                            Then 'No due date specified'
-                            When OrderDueDate <= GETDATE()
-                            Then 'Overdue - nothing received'
-                            Else 'Not overdue - nothing received'
-                       End
-        From
-            #Results
-        Where
-            COALESCE(StockCode, '') <> ''
-            And COALESCE(StockDesc, '') <> ''
-            And COALESCE(OrderQty, 0) <> 0
-            And COALESCE(Price, 0) <> 0
-        Order By
-            OrderDueDate Desc
-          , OrderEntryDate Desc;
+        Select  [DatabaseName]
+              , [PurchaseOrder]
+              , [SupplierName]
+              , [OrderStatusDescription]
+              , [OrderEntryDate] = Cast([OrderEntryDate] As Date)
+              , [OrderDueDate] = Cast([OrderDueDate] As Date)
+              , [Line] = Coalesce([Line] , 0)
+              , [StockCode]
+              , [StockDesc]
+              , [OrderQty] = Coalesce([OrderQty] , 0)
+              , [Price] = Coalesce([Price] , 0)
+              , [Status] = Case When [OrderDueDate] Is Null
+                                Then 'No due date specified'
+                                When [OrderDueDate] <= GetDate()
+                                Then 'Overdue - nothing received'
+                                Else 'Not overdue - nothing received'
+                           End
+        From    [#Results]
+        Where   Coalesce([StockCode] , '') <> ''
+                And Coalesce([StockDesc] , '') <> ''
+                And Coalesce([OrderQty] , 0) <> 0
+                And Coalesce([Price] , 0) <> 0
+        Order By [OrderDueDate] Desc
+              , [OrderEntryDate] Desc;
 
     End;
 

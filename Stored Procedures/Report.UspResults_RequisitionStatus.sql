@@ -1,31 +1,16 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_RequisitionStatus] ( @Company VARCHAR(Max) )
 As
---Exec [Report].[UspResults_RequisitionStatus]    @Company = '10' -- varchar(max)
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///			List of all requisitions and their statuses																				///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			24/9/2015	Chris Johnson			Initial version created																///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+List of all requisitions and their statuses
+--Exec [Report].[UspResults_RequisitionStatus]    @Company = '10' -- varchar(max)
 */
     Set NoCount Off;
     If IsNumeric(@Company) = 0
@@ -45,7 +30,6 @@ As
               DatabaseName VARCHAR(150)
             , Requisition VARCHAR(35)
             );
-
         Create Table #ReqDetail
             (
               DatabaseName VARCHAR(150)
@@ -64,18 +48,12 @@ As
             , Requisition VARCHAR(35)
             , Supplier VARCHAR(35)
             );
-
         Create Table #ApSupplier
             (
               DatabaseName VARCHAR(150)
             , Supplier VARCHAR(35)
             , SupplierName VARCHAR(150)
             );
-
-			
-	
-
-
 
 --create script to pull data from each db into the tables
         Declare @SQL VARCHAR(Max) = '
@@ -143,15 +121,14 @@ As
             End;
         If LEN(@SQL) <= 2000
             Begin
-                Exec sp_MSforeachdb
+                Exec [Process].[ExecForEachDB] @cmd =
                     @SQL;
             End;
 --execute script against each db, populating the base tables
         
 
 --define the results you want to return
-        Create --drop --alter 
-        Table #ResultsReqStatus
+        Create Table #ResultsReqStatus
             (
               DatabaseName VARCHAR(150)
             , SupplierName VARCHAR(150)
@@ -172,7 +149,6 @@ As
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
         Insert  #ResultsReqStatus
@@ -223,8 +199,6 @@ As
                        And RS.Company = rd.DatabaseName Collate Latin1_General_BIN
 				Left JOIN  [BlackBox].[Lookups].[CompanyNames] As [cn] 
 					On [cn].[Company] =  RH.DatabaseName Collate Latin1_General_BIN
-                --Where
-                --    rd.DateReqnRaised Between GETDATE() - 365 And GETDATE();
 
 --return results
         Select

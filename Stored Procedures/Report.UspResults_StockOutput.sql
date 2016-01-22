@@ -1,36 +1,16 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_StockOutput] ( @Company VARCHAR(Max) )
-As --exec [Report].[UspResults_StockOutput]  10
+As 
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure set out to query multiple databases with the same information and return it in a collated format		///
-///			Details of where lots are distributd																					///
-///																																	///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			28/9/2015	Chris Johnson			Initial version created																///
-///												Designed for Richard Hawkins & Colin Grant											///
-///			28/9/2015	Chris Johnson			Added Customer PO number															///
-///			05/10/2015	Chris Johnson			Added StockUom, UnitCost & Warehouse												///
-///			04/11/2015	Chris Johnson			Added narration and reference														///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure set out to query multiple databases with the same information and return it in a collated format
+Details of where lots are distributed
+--exec [Report].[UspResults_StockOutput]  10
 */
     If IsNumeric(@Company) = 0
         Begin
@@ -83,13 +63,13 @@ As --exec [Report].[UspResults_StockOutput]  10
 			, StockCode				VARCHAR(50)
 			, StockDescription		VARCHAR(255)
             );
-		CREATE TABLE #SorMaster
+		Create TABLE #SorMaster
 		(
 			  DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
             , SalesOrder			VARCHAR(50) Collate Latin1_General_BIN
             , CustomerPoNumber		VARCHAR(150)
 		)
-		CREATE TABLE #InvMaster
+		Create TABLE #InvMaster
 		( DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
 		    , StockCode			VARCHAR(50)
 			, [StockUom]		VARCHAR(10)
@@ -289,13 +269,13 @@ As --exec [Report].[UspResults_StockOutput]  10
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb
+        Exec [Process].[ExecForEachDB] @cmd =
             @SQL1;
-        Exec sp_MSforeachdb
+        Exec [Process].[ExecForEachDB] @cmd =
             @SQL2;
-		Exec sp_MSforeachdb
+		Exec [Process].[ExecForEachDB] @cmd =
             @SQL3;
-		Exec sp_MSforeachdb
+		Exec [Process].[ExecForEachDB] @cmd =
             @SQL4;
 --define the results you want to return
         Create Table #Results

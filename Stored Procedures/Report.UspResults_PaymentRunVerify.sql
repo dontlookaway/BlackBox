@@ -1,120 +1,98 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PaymentRunVerify] ( @Company VARCHAR(Max) )
---Exec [Report].[UspResults_PaymentRunVerify]  10
+CREATE Proc [Report].[UspResults_PaymentRunVerify] ( @Company Varchar(Max) )
 As
     Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
+Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure for Payment run verify
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			15/9/2015	Chris Johnson			Initial version created																///
-///			28/9/2015	Chris Johnson			Added company name to final report													///
-///			9/12/2015	Chris Johnson			Added uppercase to company															///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+--Exec [Report].[UspResults_PaymentRunVerify]  10
 */
-    Set NoCount Off;
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        Set NoCount Off;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 --remove nocount on to speed up query
         Set NoCount On;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'ApInvoice,ApJnlSummary,ApJnlDistrib,ApPayRunDet,ApPayRunHdr'; 
+        Declare @ListOfTables Varchar(Max) = 'ApInvoice,ApJnlSummary,ApJnlDistrib,ApPayRunDet,ApPayRunHdr'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create --drop --alter 
-	Table #ApInvoice
+        Create Table [#ApInvoice]
             (
-              DatabaseName VARCHAR(150)
-            , Supplier VARCHAR(15)
-            , Invoice VARCHAR(20)
-            , PostCurrency CHAR(3)
-            , ConvRate FLOAT
-            , MulDiv CHAR(1)
-            , MthInvBal1 FLOAT
-            , InvoiceYear INT
-            , InvoiceMonth INT
-            , JournalDate DATETIME2
-            , InvoiceDate DATETIME2
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(15)
+            , [Invoice] Varchar(20)
+            , [PostCurrency] Char(3)
+            , [ConvRate] Float
+            , [MulDiv] Char(1)
+            , [MthInvBal1] Float
+            , [InvoiceYear] Int
+            , [InvoiceMonth] Int
+            , [JournalDate] DateTime2
+            , [InvoiceDate] DateTime2
             );
 
-        Create --drop --alter 
-	Table #ApJnlSummary
+        Create Table [#ApJnlSummary]
             (
-              DatabaseName VARCHAR(150)
-            , Supplier VARCHAR(15)
-            , Invoice VARCHAR(20)
-            , TrnYear INT
-            , TrnMonth INT
-            , Journal INT
-            , EntryNumber INT
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(15)
+            , [Invoice] Varchar(20)
+            , [TrnYear] Int
+            , [TrnMonth] Int
+            , [Journal] Int
+            , [EntryNumber] Int
             );
 
-        Create --drop --alter 
-	Table #ApJnlDistrib
+        Create Table [#ApJnlDistrib]
             (
-              DatabaseName VARCHAR(150)
-            , DistrValue FLOAT
-            , ExpenseGlCode VARCHAR(35)
-            , TrnYear INT
-            , TrnMonth INT
-            , Journal INT
-            , EntryNumber INT
+              [DatabaseName] Varchar(150)
+            , [DistrValue] Float
+            , [ExpenseGlCode] Varchar(35)
+            , [TrnYear] Int
+            , [TrnMonth] Int
+            , [Journal] Int
+            , [EntryNumber] Int
             );
 
-        Create --drop --alter 
-	Table #ApPayRunDet
+        Create Table [#ApPayRunDet]
             (
-              DatabaseName VARCHAR(150)
-            , Supplier VARCHAR(15)
-            , Invoice VARCHAR(20)
-            , Cheque VARCHAR(15)
-            , ChequeDate DATETIME2
-            , InvoiceDate DATETIME2
-            , NetPayValue FLOAT
-            , DueDate DATETIME2
-            , InvoiceType CHAR(1)
-            , PostValue FLOAT
-            , PostCurrency CHAR(3)
-            , PostConvRate FLOAT
-            , PostMulDiv CHAR(1)
-            , SupplierName VARCHAR(50)
-            , PaymentNumber VARCHAR(15)
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(15)
+            , [Invoice] Varchar(20)
+            , [Cheque] Varchar(15)
+            , [ChequeDate] DateTime2
+            , [InvoiceDate] DateTime2
+            , [NetPayValue] Float
+            , [DueDate] DateTime2
+            , [InvoiceType] Char(1)
+            , [PostValue] Float
+            , [PostCurrency] Char(3)
+            , [PostConvRate] Float
+            , [PostMulDiv] Char(1)
+            , [SupplierName] Varchar(50)
+            , [PaymentNumber] Varchar(15)
             );
 
-        Create --drop --alter 
-	Table #ApPayRunHdr
+        Create Table [#ApPayRunHdr]
             (
-              DatabaseName VARCHAR(150)
-            , PaymentNumber VARCHAR(15)
-            , Bank VARCHAR(15)
-            , PaymentDate DATETIME2
-            , PayYear INT
-            , PayMonth INT
-            , Operator VARCHAR(20)
-            , ChRegister FLOAT
+              [DatabaseName] Varchar(150)
+            , [PaymentNumber] Varchar(15)
+            , [Bank] Varchar(15)
+            , [PaymentDate] DateTime2
+            , [PayYear] Int
+            , [PayMonth] Int
+            , [Operator] Varchar(20)
+            , [ChRegister] Float
             );
 	
 --create script to pull data from each db into the tables
-        Declare @SQL1 VARCHAR(Max) = '
+        Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -124,8 +102,8 @@ Stored procedure for Payment run verify
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -185,7 +163,7 @@ Stored procedure for Payment run verify
 			End
 	End';
 
-        Declare @SQL2 VARCHAR(Max) = '
+        Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -195,8 +173,8 @@ Stored procedure for Payment run verify
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -265,7 +243,7 @@ Stored procedure for Payment run verify
 			End
 	End';
 
-        Declare @SQL3 VARCHAR(Max) = '
+        Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -275,8 +253,8 @@ Stored procedure for Payment run verify
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -316,226 +294,214 @@ Stored procedure for Payment run verify
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec sp_MSforeachdb
-            @SQL1;
-        Exec sp_MSforeachdb
-            @SQL2;
-        Exec sp_MSforeachdb
-            @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
 
 --define the results you want to return
-        Create Table #Results
+        Create Table [#Results]
             (
-              DatabaseName VARCHAR(150)
-            , Supplier VARCHAR(15)
-            , Invoice VARCHAR(20)
-            , PostCurrency CHAR(3)
-            , ConvRate FLOAT
-            , MulDiv CHAR(1)
-            , MthInvBal FLOAT
-            , CompLocalAmt DECIMAL(10, 2)
-            , DistrValue FLOAT
-            , Description VARCHAR(50)
-            , ExpenseGlCode VARCHAR(35)
-            , InvoiceYear INT
-            , InvoiceMonth INT
-            , JournalDate DATETIME2
-            , InvoiceDate DATETIME2
-            , PaymentNumber INT
-            , Bank VARCHAR(15)
-            , PaymentDate DATETIME2
-            , PayYear INT
-            , PayMonth INT
-            , Operator VARCHAR(20)
-            , ChRegister FLOAT
-            , Cheque VARCHAR(15)
-            , ChequeDate DATETIME2
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(15)
+            , [Invoice] Varchar(20)
+            , [PostCurrency] Char(3)
+            , [ConvRate] Float
+            , [MulDiv] Char(1)
+            , [MthInvBal] Float
+            , [CompLocalAmt] Decimal(10 , 2)
+            , [DistrValue] Float
+            , [Description] Varchar(50)
+            , [ExpenseGlCode] Varchar(35)
+            , [InvoiceYear] Int
+            , [InvoiceMonth] Int
+            , [JournalDate] DateTime2
+            , [InvoiceDate] DateTime2
+            , [PaymentNumber] Int
+            , [Bank] Varchar(15)
+            , [PaymentDate] DateTime2
+            , [PayYear] Int
+            , [PayMonth] Int
+            , [Operator] Varchar(20)
+            , [ChRegister] Float
+            , [Cheque] Varchar(15)
+            , [ChequeDate] DateTime2
             --, InvoiceDate DATETIME2
-            , InvNetPayValue DECIMAL(15, 3)
-            , DueDate DATETIME2
-            , InvoiceType CHAR(1)
-            , PostValue DECIMAL(15, 3)
-            , PostConvRate FLOAT
-            , PostMulDiv CHAR(1)
-            , SupplierName VARCHAR(50)
+            , [InvNetPayValue] Decimal(15 , 3)
+            , [DueDate] DateTime2
+            , [InvoiceType] Char(1)
+            , [PostValue] Decimal(15 , 3)
+            , [PostConvRate] Float
+            , [PostMulDiv] Char(1)
+            , [SupplierName] Varchar(50)
             );
 
 --Placeholder to create indexes as required
---create NonClustered Index Index_Name On #Table1 (DatabaseName) Include (ColumnName)
 
 --script to combine base data and insert into results table
-        Insert  #Results
-                ( DatabaseName
-                , Supplier
-                , Invoice
-                , PostCurrency
-                , ConvRate
-                , MulDiv
-                , MthInvBal
-                , CompLocalAmt
-                , DistrValue
-                , Description
-                , ExpenseGlCode
-                , InvoiceYear
-                , InvoiceMonth
-                , JournalDate
-                , InvoiceDate
-                , PaymentNumber
-                , Bank
-                , PaymentDate
-                , PayYear
-                , PayMonth
-                , Operator
-                , ChRegister
-                , Cheque
-                , ChequeDate
-                , InvNetPayValue
-                , DueDate
-                , InvoiceType
-                , PostValue
-                , PostConvRate
-                , PostMulDiv
-                , SupplierName
+        Insert  [#Results]
+                ( [DatabaseName]
+                , [Supplier]
+                , [Invoice]
+                , [PostCurrency]
+                , [ConvRate]
+                , [MulDiv]
+                , [MthInvBal]
+                , [CompLocalAmt]
+                , [DistrValue]
+                , [Description]
+                , [ExpenseGlCode]
+                , [InvoiceYear]
+                , [InvoiceMonth]
+                , [JournalDate]
+                , [InvoiceDate]
+                , [PaymentNumber]
+                , [Bank]
+                , [PaymentDate]
+                , [PayYear]
+                , [PayMonth]
+                , [Operator]
+                , [ChRegister]
+                , [Cheque]
+                , [ChequeDate]
+                , [InvNetPayValue]
+                , [DueDate]
+                , [InvoiceType]
+                , [PostValue]
+                , [PostConvRate]
+                , [PostMulDiv]
+                , [SupplierName]
 	            )
-                Select
-					AI.DatabaseName
-                   , AI.Supplier
-                  , AI.Invoice
-                  , AI.PostCurrency
-                  , AI.ConvRate
-                  , AI.MulDiv
-                  , MthInvBal = AI.MthInvBal1
-                  , CompLocalAmt = CAST(Case When AI.MulDiv = 'M'
-                                             Then AI.MthInvBal1 * AI.ConvRate
-                                             Else AI.MthInvBal1 / AI.ConvRate
-                                        End As DECIMAL(10, 2))
-                  , DistrValue = SUM(AJD.DistrValue)
-                  , GM.Description
-                  , ExpenseGlCode = Case When AJD.ExpenseGlCode = '' Then Null
-                                         Else AJD.ExpenseGlCode
-                                    End
-                  , AI.InvoiceYear
-                  , AI.InvoiceMonth
-                  , AI.JournalDate
-                  , AI.InvoiceDate
-                  , APH.PaymentNumber
-                  , APH.Bank
-                  , APH.PaymentDate
-                  , APH.PayYear
-                  , APH.PayMonth
-                  , APH.Operator
-                  , APH.ChRegister
-                  , APD.Cheque
-                  , APD.ChequeDate
-                  , InvNetPayValue = APD.NetPayValue
-                  , APD.DueDate
-                  , APD.InvoiceType
-                  , APD.PostValue
-                  , APD.PostConvRate
-                  , APD.PostMulDiv
-                  , APD.SupplierName
-                From
-                    #ApInvoice AI
-                Left Join #ApJnlSummary AJS With ( NoLock )
-                    On AI.Supplier = AJS.Supplier
-                       And AI.Invoice = AJS.Invoice
-                       And AJS.DatabaseName = AI.DatabaseName
-                Left Join #ApJnlDistrib AJD With ( NoLock )
-                    On AJD.TrnYear = AJS.TrnYear
-                       And AJD.TrnMonth = AJS.TrnMonth
-                       And AJD.Journal = AJS.Journal
-                       And AJD.EntryNumber = AJS.EntryNumber
-                       And AJD.DatabaseName = AJS.DatabaseName
-                Left Join SysproCompany40.dbo.GenMaster GM
-                    On GM.GlCode = AJD.ExpenseGlCode Collate Latin1_General_BIN
-                Inner Join #ApPayRunDet APD
-                    On APD.Supplier = AI.Supplier
-                       And APD.Invoice = AI.Invoice
-                       And APD.DatabaseName = AI.DatabaseName
-                Left Join #ApPayRunHdr APH
-                    On APH.PaymentNumber = APD.PaymentNumber
-                       And APH.PaymentNumber = APD.PaymentNumber
-                Group By
-                    AI.DatabaseName
-                   , AJD.TrnYear
-                  , AJD.TrnMonth
-                  , Case When AJD.ExpenseGlCode = '' Then Null
-                         Else AJD.ExpenseGlCode
-                    End
-                  , GM.Description
-                  , AJS.Supplier
-                  , AJS.Invoice
-                  , AI.Supplier
-                  , AI.Invoice
-                  , AI.PostCurrency
-                  , AI.ConvRate
-                  , AI.MulDiv
-                  , AI.MthInvBal1
-                  , CAST(Case When AI.MulDiv = 'M'
-                              Then AI.MthInvBal1 * AI.ConvRate
-                              Else AI.MthInvBal1 / AI.ConvRate
-                         End As DECIMAL(10, 2))
-                  , AI.InvoiceYear
-                  , AI.InvoiceMonth
-                  , AI.JournalDate
-                  , AI.InvoiceDate
-                  , APH.PaymentNumber
-                  , APH.Bank
-                  , APH.PaymentDate
-                  , APH.PayYear
-                  , APH.PayMonth
-                  , APH.Operator
-                  , APH.ChRegister
-                  , APD.Cheque
-                  , APD.ChequeDate
-                  , APD.InvoiceDate
-                  , APD.NetPayValue
-                  , APD.DueDate
-                  , APD.InvoiceType
-                  , APD.PostValue
-                  , APD.PostCurrency
-                  , APD.PostConvRate
-                  , APD.PostMulDiv
-                  , APD.SupplierName;
+                Select  [AI].[DatabaseName]
+                      , [AI].[Supplier]
+                      , [AI].[Invoice]
+                      , [AI].[PostCurrency]
+                      , [AI].[ConvRate]
+                      , [AI].[MulDiv]
+                      , [MthInvBal] = [AI].[MthInvBal1]
+                      , [CompLocalAmt] = Cast(Case When [AI].[MulDiv] = 'M'
+                                                 Then [AI].[MthInvBal1]
+                                                      * [AI].[ConvRate]
+                                                 Else [AI].[MthInvBal1]
+                                                      / [AI].[ConvRate]
+                                            End As Decimal(10 , 2))
+                      , [DistrValue] = Sum([AJD].[DistrValue])
+                      , [GM].[Description]
+                      , [ExpenseGlCode] = Case When [AJD].[ExpenseGlCode] = ''
+                                             Then Null
+                                             Else [AJD].[ExpenseGlCode]
+                                        End
+                      , [AI].[InvoiceYear]
+                      , [AI].[InvoiceMonth]
+                      , [AI].[JournalDate]
+                      , [AI].[InvoiceDate]
+                      , [APH].[PaymentNumber]
+                      , [APH].[Bank]
+                      , [APH].[PaymentDate]
+                      , [APH].[PayYear]
+                      , [APH].[PayMonth]
+                      , [APH].[Operator]
+                      , [APH].[ChRegister]
+                      , [APD].[Cheque]
+                      , [APD].[ChequeDate]
+                      , [InvNetPayValue] = [APD].[NetPayValue]
+                      , [APD].[DueDate]
+                      , [APD].[InvoiceType]
+                      , [APD].[PostValue]
+                      , [APD].[PostConvRate]
+                      , [APD].[PostMulDiv]
+                      , [APD].[SupplierName]
+                From    [#ApInvoice] [AI]
+                        Left Join [#ApJnlSummary] [AJS] With ( NoLock ) On [AI].[Supplier] = [AJS].[Supplier]
+                                                              And [AI].[Invoice] = [AJS].[Invoice]
+                                                              And [AJS].[DatabaseName] = [AI].[DatabaseName]
+                        Left Join [#ApJnlDistrib] [AJD] With ( NoLock ) On [AJD].[TrnYear] = [AJS].[TrnYear]
+                                                              And [AJD].[TrnMonth] = [AJS].[TrnMonth]
+                                                              And [AJD].[Journal] = [AJS].[Journal]
+                                                              And [AJD].[EntryNumber] = [AJS].[EntryNumber]
+                                                              And [AJD].[DatabaseName] = [AJS].[DatabaseName]
+                        Left Join [SysproCompany40].[dbo].[GenMaster] [GM] On [GM].[GlCode] = [AJD].[ExpenseGlCode] Collate Latin1_General_BIN
+                        Inner Join [#ApPayRunDet] [APD] On [APD].[Supplier] = [AI].[Supplier]
+                                                       And [APD].[Invoice] = [AI].[Invoice]
+                                                       And [APD].[DatabaseName] = [AI].[DatabaseName]
+                        Left Join [#ApPayRunHdr] [APH] On [APH].[PaymentNumber] = [APD].[PaymentNumber]
+                                                      And [APH].[PaymentNumber] = [APD].[PaymentNumber]
+                Group By [AI].[DatabaseName]
+                      , [AJD].[TrnYear]
+                      , [AJD].[TrnMonth]
+                      , Case When [AJD].[ExpenseGlCode] = '' Then Null
+                             Else [AJD].[ExpenseGlCode]
+                        End
+                      , [GM].[Description]
+                      , [AJS].[Supplier]
+                      , [AJS].[Invoice]
+                      , [AI].[Supplier]
+                      , [AI].[Invoice]
+                      , [AI].[PostCurrency]
+                      , [AI].[ConvRate]
+                      , [AI].[MulDiv]
+                      , [AI].[MthInvBal1]
+                      , Cast(Case When [AI].[MulDiv] = 'M'
+                                  Then [AI].[MthInvBal1] * [AI].[ConvRate]
+                                  Else [AI].[MthInvBal1] / [AI].[ConvRate]
+                             End As Decimal(10 , 2))
+                      , [AI].[InvoiceYear]
+                      , [AI].[InvoiceMonth]
+                      , [AI].[JournalDate]
+                      , [AI].[InvoiceDate]
+                      , [APH].[PaymentNumber]
+                      , [APH].[Bank]
+                      , [APH].[PaymentDate]
+                      , [APH].[PayYear]
+                      , [APH].[PayMonth]
+                      , [APH].[Operator]
+                      , [APH].[ChRegister]
+                      , [APD].[Cheque]
+                      , [APD].[ChequeDate]
+                      , [APD].[InvoiceDate]
+                      , [APD].[NetPayValue]
+                      , [APD].[DueDate]
+                      , [APD].[InvoiceType]
+                      , [APD].[PostValue]
+                      , [APD].[PostCurrency]
+                      , [APD].[PostConvRate]
+                      , [APD].[PostMulDiv]
+                      , [APD].[SupplierName];
 
 --return results
-        Select
-            Company = DatabaseName
-          , Supplier
-          , Invoice
-          , PostCurrency
-          , ConvRate
-          , MulDiv
-          , MthInvBal
-          , CompLocalAmt
-          , DistrValue
-          , Description
-          , ExpenseGlCode
-          , InvoiceYear
-          , InvoiceMonth
-          , JournalDate = CONVERT(DATE,JournalDate)
-          , PaymentNumber
-          , Bank
-          , PaymentDate = CONVERT(DATE,PaymentDate)
-          , PayYear
-          , PayMonth
-          , Operator
-          , ChRegister
-          , Cheque
-          , ChequeDate = CONVERT(DATE,ChequeDate)
-          , InvoiceDate = CONVERT(DATE,InvoiceDate)
-          , InvNetPayValue
-          , DueDate = CONVERT(DATE,DueDate)
-          , InvoiceType
-          , PostValue
-          , PostConvRate
-          , PostMulDiv
-          , SupplierName
-		  ,[cn].[CompanyName]
-        From
-            #Results R
-		Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company]=[R].[DatabaseName] Collate Latin1_General_BIN
-			;
+        Select  [Company] = [R].[DatabaseName]
+              , [R].[Supplier]
+              , [R].[Invoice]
+              , [R].[PostCurrency]
+              , [R].[ConvRate]
+              , [R].[MulDiv]
+              , [R].[MthInvBal]
+              , [R].[CompLocalAmt]
+              , [R].[DistrValue]
+              , [R].[Description]
+              , [R].[ExpenseGlCode]
+              , [R].[InvoiceYear]
+              , [R].[InvoiceMonth]
+              , [JournalDate] = Convert(Date , [R].[JournalDate])
+              , [R].[PaymentNumber]
+              , [R].[Bank]
+              , [PaymentDate] = Convert(Date , [R].[PaymentDate])
+              , [R].[PayYear]
+              , [R].[PayMonth]
+              , [R].[Operator]
+              , [R].[ChRegister]
+              , [R].[Cheque]
+              , [ChequeDate] = Convert(Date , [R].[ChequeDate])
+              , [InvoiceDate] = Convert(Date , [R].[InvoiceDate])
+              , [R].[InvNetPayValue]
+              , [DueDate] = Convert(Date , [R].[DueDate])
+              , [R].[InvoiceType]
+              , [R].[PostValue]
+              , [R].[PostConvRate]
+              , [R].[PostMulDiv]
+              , [R].[SupplierName]
+              , [cn].[CompanyName]
+        From    [#Results] [R]
+                Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [R].[DatabaseName] Collate Latin1_General_BIN;
 
     End;
 

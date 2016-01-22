@@ -1,74 +1,19 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Deployment script for SP
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			22/9/2015	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
-
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			SP to be created																										///
-///			> Process.UspCreateAmend_HistoryTables 																					///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
-
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Rollback script																											///
-///			Drop Proc  Process.UspCreateAmend_HistoryTables 																		///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
-
 CREATE Proc [Process].[UspCreateAmend_HistoryTables] ( @Rebuild Bit ) 
--- if rebuild = 1 then drop and recreate
--- if rebuild = 0 then 
-As /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group September 2015														///
-///																																	///
-///			Stored procedure iterates through all electronic signatures and use the variable description to unpivot the data  ///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			22/09/2015	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
 
+As /*
+-- if rebuild = 1 then drop and recreate
+Template designed by Chris Johnson, Prometic Group September 2015
+Stored procedure iterates through all electronic signatures and use the variable description to unpivot the data 
+*/
 
     Set NoCount On;
 
---create temporary tables
-    Create --drop --alter 
-Table #TableList
+Create Table #TableList
         (
           Tid Int Identity(1 , 1)
         , TableName Varchar(150)
@@ -76,8 +21,7 @@ Table #TableList
             With ( Ignore_Dup_Key = On )
         );
 
-    Create --drop --alter 
-Table #ColumnListTemp
+    Create Table #ColumnListTemp
         (
           Cid Int Identity(1 , 1)
         , ColumnName Varchar(150)
@@ -88,8 +32,7 @@ Table #ColumnListTemp
             With ( Ignore_Dup_Key = On )
         );
 
-    Create --drop --alter 
-Table #ColumnList
+    Create Table #ColumnList
         (
           Cid Int Identity(1 , 1)
         , ColumnName Varchar(150)
@@ -100,8 +43,7 @@ Table #ColumnList
             With ( Ignore_Dup_Key = On )
         );
 
-    Create --drop --alter 
-Table #CurrentColumns
+    Create Table #CurrentColumns
         (
           ColumnName Varchar(150)
         , TableName Varchar(150)
@@ -212,8 +154,8 @@ Table #CurrentColumns
 						, ASL.TableName
 			END';
 
-    Exec sp_MSforeachdb @SQLTable;
-    Exec sp_MSforeachdb @SQLColumn;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLTable;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLColumn;
 
     Update  #ColumnListTemp
     Set     ColumnName = Upper(ColumnName);

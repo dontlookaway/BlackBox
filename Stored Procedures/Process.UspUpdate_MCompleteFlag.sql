@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -9,27 +10,11 @@ CREATE Proc [Process].[UspUpdate_MCompleteFlag]
 As
 Begin
 /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to		///
-///			Purchase MCompleteFlag																	///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			15/9/2015	Chris Johnson			Initial version created																///
-///			24/9/2015	Chris Johnson			Amended Results table name as was causing conflict									///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
+Purchase MCompleteFlag
 */
 
 Set NoCount On
-
 
 --check if table exists and create if it doesn't
 If ( Not Exists ( Select
@@ -99,9 +84,7 @@ Begin
 	Declare @SQL VARCHAR(Max) = '
 		USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
-		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-		+ --Only query DBs beginning SysProCompany
-		'
+		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 		BEGIN				
 		Insert #Table1
@@ -110,7 +93,7 @@ Begin
 		End';
 
 	--execute script against each db, populating the base tables
-	Exec sp_MSforeachdb    @SQL;
+	Exec [Process].[ExecForEachDB] @cmd =    @SQL;
 
 	--all companies process the same way
 	Select
@@ -125,10 +108,6 @@ Begin
 		On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsMFlag
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
 
 	Insert  Lookups.MCompleteFlag
 	        ( Company
