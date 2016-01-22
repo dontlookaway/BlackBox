@@ -160,6 +160,7 @@ Stored procedure for Payment run verify
 							,Journal
 							,EntryNumber
 					 FROM ApJnlSummary
+					 Where [TransactionCode]=''I''
 			End
 	End';
 
