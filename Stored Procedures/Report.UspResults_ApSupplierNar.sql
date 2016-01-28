@@ -87,18 +87,34 @@ Returns ApSupplierNar table for PO
 	End';
 
 --Enable this function to check script changes (try to run script directly against db manually)
-        Print @SQLApSupplierNar;
+       -- Print @SQLApSupplierNar;
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplierNar;
 
 --define the results you want to return
 
+CREATE --Drop --Truncate 
+TABLE #Results
+([DatabaseName] Varchar(150)
+              , [Supplier] Varchar(15)
+              , [Invoice] Varchar(20)
+              , [NoteType] Char(1)
+              , [Line] int
+              , [Text] Varchar(100)
+    
+)
 --Placeholder to create indexes as required
 
 --script to combine base data and insert into results table
-
---return results
+Insert [#Results]
+        ( [DatabaseName]
+        , [Supplier]
+        , [Invoice]
+        , [NoteType]
+        , [Line]
+        , [Text]
+        )
         Select  [Company] = [ASN].[DatabaseName]
               , [ASN].[Supplier]
               , [ASN].[Invoice]
@@ -106,6 +122,14 @@ Returns ApSupplierNar table for PO
               , [ASN].[Line]
               , [ASN].[Text]
         From    [#ApSupplierNar] As [ASN];
+--return results
+
+SELECT [R].[DatabaseName]
+     , [R].[Supplier]
+     , [R].[Invoice]
+     , [R].[NoteType]
+     , [R].[Line]
+     , [R].[Text] FROM [#Results] As [R]
 
     End;
 
