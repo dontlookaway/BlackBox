@@ -53,6 +53,13 @@ Stored procedure set out to query multiple databases with the same information a
             , [QtyOnHand] Decimal(20 , 7)
             , [ExpiryDate] DateTime2
             );
+        Create Table [#LatestLots]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [StockCode] Varchar(30)
+            , [Lot] Varchar(50)
+            , [UnitCost] Numeric(20 , 8)
+            );
 
 --create script to pull data from each db into the tables
         Declare @SQL1 Varchar(Max) = '
@@ -217,7 +224,54 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [ld].[ExpiryDate] FROM [LotDetail] As [ld]
 			End
 	End';
-
+        Declare @SQLLatestLots Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+						Insert [#LatestLots]
+		        ( [DatabaseName]
+		        , [StockCode]
+		        , [Lot]
+		        , [UnitCost]
+		        )
+        Select Distinct
+				@DBCode
+              , [t].[StockCode]
+              , [t].[Lot]
+              , [t].[UnitCost]
+        From    ( Select    [StockCode]
+                          , [Lot]
+                          , [LotRankDescending] = Dense_Rank() Over ( Partition By [LT].[StockCode] ,
+                                                              [LT].[Lot] Order By [LT].[TrnDate] Desc, [LT].[TrnType] Asc )
+                          , [LT].[TrnDate]
+                          , [LT].[UnitCost]
+                  From      [LotTransactions] [LT]
+                ) [t]
+        Where   [t].[LotRankDescending] = 1;
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -226,6 +280,7 @@ Stored procedure set out to query multiple databases with the same information a
         Exec [Process].[ExecForEachDB] @cmd = @SQL2;
         Exec [Process].[ExecForEachDB] @cmd = @SQL3;
         Exec [Process].[ExecForEachDB] @cmd = @SQL4;
+		Exec [Process].[ExecForEachDB] @cmd = @SQLLatestLots;
 
 --define the results you want to return
         Create Table [#Results]
@@ -239,6 +294,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Description] Varchar(150) Collate Latin1_General_BIN
             , [LotNumber] Varchar(150) Collate Latin1_General_BIN
             , [Warehouse] Varchar(150) Collate Latin1_General_BIN
+			, UnitCost Numeric(20,8)
             );
 
 --Placeholder to create indexes as required
@@ -254,6 +310,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [Description]
                 , [LotNumber]
                 , [Warehouse]
+				, [UnitCost]
                 )
                 Select  [LD].[DatabaseName]
                       , [LD].[StockCode]
@@ -264,13 +321,17 @@ Stored procedure set out to query multiple databases with the same information a
                       , [im].[Description]
                       , [LotNumber] = [l].[JobPurchOrder]
                       , [Warehouse] = [IWC].[Description]
+					  , [LL].[UnitCost]
                 From    [#LotDetail] [LD]
                         Inner Join [#InvWhControl] [IWC] On [LD].[Warehouse] = [IWC].[Warehouse]
-                                                        And [LD].[DatabaseName] = [IWC].[DatabaseName]
+                                                            And [LD].[DatabaseName] = [IWC].[DatabaseName]
                         Left Join [#InvMaster] As [im] On [im].[StockCode] = [LD].[StockCode]
                                                           And [im].[DatabaseName] = [LD].[DatabaseName]
                         Left Outer Join [#Lots] As [l] On [l].[Lot] = [LD].[Lot]
                                                           And [l].[DatabaseName] = [LD].[DatabaseName]
+						Left Join [#LatestLots] As [LL] On [l].[Lot]=LL.[Lot]
+															And [LL].[StockCode] = [l].[StockCode]
+															And [LL].[DatabaseName] = [im].[DatabaseName]
                 Where   ( [LD].[QtyOnHand] > 0 )
                 Order By [IWC].[Description]
                       , [LD].[StockCode];
@@ -286,6 +347,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[Description]
               , [R].[LotNumber]
               , [R].[Warehouse]
+			  , [R].[UnitCost]
         From    [#Results] [R]
                 Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [cn].[Company] = [R].[DatabaseName];
 
@@ -294,7 +356,7 @@ Stored procedure set out to query multiple databases with the same information a
         Drop Table [#LotDetail];
         Drop Table [#Lots];
         Drop Table [#Results];
-
+		Drop Table [#LatestLots]
     End;
 
 
