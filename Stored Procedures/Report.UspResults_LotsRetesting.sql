@@ -57,7 +57,7 @@ Stored procedure set out to query multiple databases with the same information a
             (
               [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [StockCode] Varchar(30)
-            , [Lot] Varchar(50)
+            , [Lot] Varchar(35) Collate Latin1_General_BIN
             , [UnitCost] Numeric(20 , 8)
             );
 
@@ -329,9 +329,9 @@ Stored procedure set out to query multiple databases with the same information a
                                                           And [im].[DatabaseName] = [LD].[DatabaseName]
                         Left Outer Join [#Lots] As [l] On [l].[Lot] = [LD].[Lot]
                                                           And [l].[DatabaseName] = [LD].[DatabaseName]
-						Left Join [#LatestLots] As [LL] On [l].[Lot]=LL.[Lot]
-															And [LL].[StockCode] = [l].[StockCode]
-															And [LL].[DatabaseName] = [im].[DatabaseName]
+						Left Join [#LatestLots] As [LL] On LD.[Lot]=LL.[Lot]
+															And [LL].[StockCode] = [LD].[StockCode]
+															And [LL].[DatabaseName] = [LD].[DatabaseName]
                 Where   ( [LD].[QtyOnHand] > 0 )
                 Order By [IWC].[Description]
                       , [LD].[StockCode];
