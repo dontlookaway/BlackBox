@@ -3,7 +3,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_RequisitionStatus] ( @Company VARCHAR(Max) )
+CREATE Proc [Report].[UspResults_RequisitionStatus] ( @Company Varchar(Max) )
 As
     Begin
 /*
@@ -12,51 +12,51 @@ Stored procedure set out to query multiple databases with the same information a
 List of all requisitions and their statuses
 --Exec [Report].[UspResults_RequisitionStatus]    @Company = '10' -- varchar(max)
 */
-    Set NoCount Off;
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        Set NoCount Off;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'ReqHeader,ReqDetail,ApSupplier'; 
+        Declare @ListOfTables Varchar(Max) = 'ReqHeader,ReqDetail,ApSupplier'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table #ReqHeader
+        Create Table [#ReqHeader]
             (
-              DatabaseName VARCHAR(150)
-            , Requisition VARCHAR(35)
+              [DatabaseName] Varchar(150)
+            , [Requisition] Varchar(35)
             );
-        Create Table #ReqDetail
+        Create Table [#ReqDetail]
             (
-              DatabaseName VARCHAR(150)
-            , Buyer VARCHAR(20)
-            , CurrentHolder VARCHAR(20)
-            , DateReqnRaised DATETIME2
-            , DueDate DATETIME2
-            , Line INT
-            , OrderQty NUMERIC(20, 6)
-            , Originator VARCHAR(20)
-            , Price NUMERIC(18, 3)
-            , StockCode VARCHAR(35)
-            , StockDescription VARCHAR(150)
-            , SupCatalogueNum VARCHAR(50)
-            , ReqnStatus VARCHAR(10)
-            , Requisition VARCHAR(35)
-            , Supplier VARCHAR(35)
+              [DatabaseName] Varchar(150)
+            , [Buyer] Varchar(20)
+            , [CurrentHolder] Varchar(20)
+            , [DateReqnRaised] DateTime2
+            , [DueDate] DateTime2
+            , [Line] Int
+            , [OrderQty] Numeric(20 , 6)
+            , [Originator] Varchar(20)
+            , [Price] Numeric(18 , 3)
+            , [StockCode] Varchar(35)
+            , [StockDescription] Varchar(150)
+            , [SupCatalogueNum] Varchar(50)
+            , [ReqnStatus] Varchar(10)
+            , [Requisition] Varchar(35)
+            , [Supplier] Varchar(35)
             );
-        Create Table #ApSupplier
+        Create Table [#ApSupplier]
             (
-              DatabaseName VARCHAR(150)
-            , Supplier VARCHAR(35)
-            , SupplierName VARCHAR(150)
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(35)
+            , [SupplierName] Varchar(150)
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL VARCHAR(Max) = '
+        Declare @SQL Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -66,8 +66,8 @@ List of all requisitions and their statuses
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -115,111 +115,104 @@ List of all requisitions and their statuses
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
-        If LEN(@SQL) > 2000
+        If Len(@SQL) > 2000
             Begin
-                Print LEN(@SQL);
+                Print Len(@SQL);
             End;
-        If LEN(@SQL) <= 2000
+        If Len(@SQL) <= 2000
             Begin
-                Exec [Process].[ExecForEachDB] @cmd =
-                    @SQL;
+                Exec [Process].[ExecForEachDB] @cmd = @SQL;
             End;
 --execute script against each db, populating the base tables
         
 
 --define the results you want to return
-        Create Table #ResultsReqStatus
+        Create Table [#ResultsReqStatus]
             (
-              DatabaseName VARCHAR(150)
-            , SupplierName VARCHAR(150)
-            , Buyer VARCHAR(150)
-            , CurrentHolder VARCHAR(150)
-            , DateReqnRaised DATETIME2
-            , DueDate DATETIME2
-            , Line VARCHAR(10)
-            , OrderQty FLOAT
-            , Originator VARCHAR(150)
-            , Price NUMERIC(20, 3)
-            , ReqStatus VARCHAR(150)
-            , StockCode VARCHAR(35)
-            , StockDescription VARCHAR(150)
-            , SupCatalogueNum VARCHAR(50)
-            , Requisition VARCHAR(35)
-			, CompanyName VARCHAR(150)
+              [DatabaseName] Varchar(150)
+            , [SupplierName] Varchar(150)
+            , [Buyer] Varchar(150)
+            , [CurrentHolder] Varchar(150)
+            , [DateReqnRaised] DateTime2
+            , [DueDate] DateTime2
+            , [Line] Varchar(10)
+            , [OrderQty] Float
+            , [Originator] Varchar(150)
+            , [Price] Numeric(20 , 3)
+            , [ReqStatus] Varchar(150)
+            , [StockCode] Varchar(35)
+            , [StockDescription] Varchar(150)
+            , [SupCatalogueNum] Varchar(50)
+            , [Requisition] Varchar(35)
+            , [CompanyName] Varchar(150)
             );
 
 --Placeholder to create indexes as required
 
 --script to combine base data and insert into results table
-        Insert  #ResultsReqStatus
-                ( DatabaseName
-                , SupplierName
-                , Buyer
-                , CurrentHolder
-                , DateReqnRaised
-                , DueDate
-                , Line
-                , OrderQty
-                , Originator
-                , Price
-                , ReqStatus
-                , StockCode
-                , StockDescription
-                , SupCatalogueNum
-                , Requisition
-				, [CompanyName]
+        Insert  [#ResultsReqStatus]
+                ( [DatabaseName]
+                , [SupplierName]
+                , [Buyer]
+                , [CurrentHolder]
+                , [DateReqnRaised]
+                , [DueDate]
+                , [Line]
+                , [OrderQty]
+                , [Originator]
+                , [Price]
+                , [ReqStatus]
+                , [StockCode]
+                , [StockDescription]
+                , [SupCatalogueNum]
+                , [Requisition]
+                , [CompanyName]
                 )
-                Select
-                    RH.DatabaseName
-                  , s.SupplierName
-                  , rd.Buyer
-                  , rd.CurrentHolder
-                  , rd.DateReqnRaised
-                  , rd.DueDate
-                  , rd.Line
-                  , rd.OrderQty
-                  , rd.Originator
-                  , rd.Price
-                  , ReqStatus = RS.ReqnStatusDescription
-                  , rd.StockCode
-                  , rd.StockDescription
-                  , rd.SupCatalogueNum
-                  , RH.Requisition
-				  , [cn].[CompanyName]
-                From
-                    #ReqHeader RH
-                Inner Join #ReqDetail rd
-                    On rd.Requisition = RH.Requisition
-                       And rd.DatabaseName = [RH].[DatabaseName]
-                Left Join #ApSupplier s
-                    On s.Supplier = rd.Supplier
-                       And s.DatabaseName = rd.DatabaseName
-                Left Join BlackBox.Lookups.ReqnStatus RS
-                    On RS.ReqnStatusCode = rd.ReqnStatus Collate Latin1_General_BIN
-                       And RS.Company = rd.DatabaseName Collate Latin1_General_BIN
-				Left JOIN  [BlackBox].[Lookups].[CompanyNames] As [cn] 
-					On [cn].[Company] =  RH.DatabaseName Collate Latin1_General_BIN
+                Select  [RH].[DatabaseName]
+                      , [s].[SupplierName]
+                      , [rd].[Buyer]
+                      , [rd].[CurrentHolder]
+                      , [rd].[DateReqnRaised]
+                      , [rd].[DueDate]
+                      , [rd].[Line]
+                      , [rd].[OrderQty]
+                      , [rd].[Originator]
+                      , [rd].[Price]
+                      , [ReqStatus] = [RS].[ReqnStatusDescription]
+                      , [rd].[StockCode]
+                      , [rd].[StockDescription]
+                      , [rd].[SupCatalogueNum]
+                      , [RH].[Requisition]
+                      , [cn].[CompanyName]
+                From    [#ReqHeader] [RH]
+                        Inner Join [#ReqDetail] [rd] On [rd].[Requisition] = [RH].[Requisition]
+                                                    And [rd].[DatabaseName] = [RH].[DatabaseName]
+                        Left Join [#ApSupplier] [s] On [s].[Supplier] = [rd].[Supplier]
+                                                   And [s].[DatabaseName] = [rd].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[ReqnStatus] [RS] On [RS].[ReqnStatusCode] = [rd].[ReqnStatus] Collate Latin1_General_BIN
+                                                              And [RS].[Company] = [rd].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [cn].[Company] = [RH].[DatabaseName] Collate Latin1_General_BIN;
 
 --return results
-        Select
-            Company = DatabaseName
-          , SupplierName
-          , Buyer
-          , CurrentHolder
-          , DateReqnRaised = CAST(DateReqnRaised As DATE)
-          , DueDate  = CAST(DueDate As DATE)
-          , Line
-          , OrderQty
-          , Originator
-          , Price
-          , ReqStatus = coalesce(ReqStatus,'No Status')
-          , StockCode
-          , StockDescription
-          , SupCatalogueNum
-          , Requisition
-		  , [CompanyName]
-        From 
-            #ResultsReqStatus;
+        Select  [Company] = [DatabaseName]
+              , [SupplierName]
+              , [Buyer] = Case When [Buyer] = '' Then 'Blank'
+                             Else Coalesce([Buyer] , 'Blank')
+                        End
+              , [CurrentHolder]
+              , [DateReqnRaised] = Cast([DateReqnRaised] As Date)
+              , [DueDate] = Cast([DueDate] As Date)
+              , [Line]
+              , [OrderQty]
+              , [Originator]
+              , [Price]
+              , [ReqStatus] = Coalesce([ReqStatus] , 'No Status')
+              , [StockCode]
+              , [StockDescription]
+              , [SupCatalogueNum]
+              , [Requisition]
+              , [CompanyName]
+        From    [#ResultsReqStatus];
 
     End;
 
