@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_SalesOrderKPI] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_SalesOrderKPI] ( @Company Varchar(Max) )
 As
     Begin
 /*
@@ -24,7 +25,6 @@ Stored procedure set out to query multiple databases with the same information a
         Create Table [#MdnMasterRep]
             (
               [DatabaseName] Varchar(150)
-            , [ColumnName] Varchar(500)
             , [PlannedDeliverDate] DateTime
             , [ActualDeliveryDate] DateTime
             , [SalesOrder] Varchar(20)
@@ -38,7 +38,6 @@ Stored procedure set out to query multiple databases with the same information a
             (
               [DatabaseName] Varchar(150)
             , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
             , [OrderDate] DateTime
             , [EntrySystemDate] DateTime
             , [ReqShipDate] DateTime
@@ -119,7 +118,6 @@ Stored procedure set out to query multiple databases with the same information a
 			BEGIN
 				Insert [#MdnMasterRep]
 						( [DatabaseName]
-						, [ColumnName]
 						, [PlannedDeliverDate]
 						, [ActualDeliveryDate]
 						, [SalesOrder]
@@ -130,7 +128,6 @@ Stored procedure set out to query multiple databases with the same information a
 						, [DispatchComments4]
 						)
 				SELECT @DBCode
-					 , [MMR].[ColumnName]
 					 , [MMR].[PlannedDeliverDate]
 					 , [MMR].[ActualDeliveryDate]
 					 , [MMR].[SalesOrder]
@@ -171,7 +168,6 @@ Stored procedure set out to query multiple databases with the same information a
 			Insert  [#SorMaster]
 					( [DatabaseName]
 					, [SalesOrder]
-					, [SalesOrderLine]
 					, [OrderDate]
 					, [EntrySystemDate]
 					, [ReqShipDate]
@@ -184,7 +180,6 @@ Stored procedure set out to query multiple databases with the same information a
 					)
             Select  @DBCode
                   , [SM].[SalesOrder]
-                  , [SM].[SalesOrderLine]
                   , [SM].[OrderDate]
                   , [SM].[EntrySystemDate]
                   , [SM].[ReqShipDate]
@@ -374,7 +369,7 @@ Stored procedure set out to query multiple databases with the same information a
                   , [LT].[NewWarehouse]
                   , [LT].[JnlYear]
                   , [LT].[TrnType]
-            From    [#LotTransactions] As [LT];
+            From    [LotTransactions] As [LT];
 			End
 	End';
 
