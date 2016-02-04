@@ -34,7 +34,7 @@ CREATE TABLE [History].[ApSupplier]
 [LCTREQUIREDBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [LOCALCURRENCY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [MINPURCHASEORDERMASS] [float] NULL,
-[MINPURCHASEORDERVALUELOCAL] [float] NULL,
+[MINPURCHASEORDERVALUELOCAL] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [MINPURCHASEORDERVOLUME] [float] NULL,
 [NATIONALITYCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [ONHOLDFLAGBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -69,6 +69,8 @@ CREATE TABLE [History].[ApSupplier]
 [WITHHOLDINGTAXCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WITHHOLDINGTAXID] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [ApSupl_timeItem] ON [History].[ApSupplier] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 GO
 ALTER TABLE [History].[ApSupplier] ADD CONSTRAINT [ApSupplier_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

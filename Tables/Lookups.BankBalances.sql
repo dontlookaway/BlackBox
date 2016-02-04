@@ -21,4 +21,6 @@ CREATE TABLE [Lookups].[BankBalances]
 [DateOfBalance] [date] NULL,
 [DateTimeOfBalance] [datetime2] NULL CONSTRAINT [DF__BankBalan__DateT__09D45A2B] DEFAULT (getdate())
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [IX_BankBalances_DateOfBalance] ON [Lookups].[BankBalances] ([DateOfBalance]) ON [PRIMARY]
+
 GO
