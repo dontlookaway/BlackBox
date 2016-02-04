@@ -232,15 +232,19 @@ Stored procedure set out to query multiple databases with the same information a
             '
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Insert  [#CusSorMasterPlus]
-					( [DatabaseName]
-					, [SalesOrder]
-					, [AcceptedDate]
-					)
-            Select  @DBCode
+			 Declare @SQL Varchar(250)= ''Select  ''''''+@DBCode+''''''
                   , [CSMP].[SalesOrder]
                   , [CSMP].[AcceptedDate]
-            From    [CusSorMaster+] As [CSMP];
+            From    dbo.[CusSorMaster+] As [CSMP];'';
+			
+                Insert  [#CusSorMasterPlus]
+                        ( [DatabaseName]
+                        , [SalesOrder]
+                        , [AcceptedDate]
+					    )
+                        Exec ( @SQL
+                            );
+
 			End
 	End';
         Declare @SQLSorDetail Varchar(Max) = '
