@@ -268,6 +268,7 @@ Stored procedure set out to query multiple databases with the same information a
                           , [LT].[TrnDate]
                           , [LT].[UnitCost]
                   From      [LotTransactions] [LT]
+				  where TrnType<>''E''
                 ) [t]
         Where   [t].[LotRankDescending] = 1;
 			End
