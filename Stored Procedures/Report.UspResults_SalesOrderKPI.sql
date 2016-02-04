@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_SalesOrderKPI] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_SalesOrderKPI]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -15,8 +20,17 @@ Stored procedure set out to query multiple databases with the same information a
                 Select  @Company = Upper(@Company);
             End;
 
+--Red tag
+    Declare @RedTagDB Varchar(255)= Db_Name();
+    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_SalesOrderKPI' ,
+        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+        @UsedByDb = @RedTagDB;
+
 --remove nocount on to speed up query
         Set NoCount On;
+
+
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'MdnMasterRep,CusSorMaster+'; 
