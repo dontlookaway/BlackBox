@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -66,7 +67,6 @@ SELECT [CC].[DatabaseName]
      , [CR].[JPYMultiply]
      , [CR].[USDMultiply]
      , [CR].[LastUpdated] 
-	 , [CR].[StartDateTime]
 	 From [#CompanyCurrency] As [CC]
 Left Join [Lookups].[CurrencyRates] As [CR] On [CR].[Currency] = [CC].[Currency] 
 And GetDate() Between [CR].[StartDateTime] And [CR].[EndDateTime]
