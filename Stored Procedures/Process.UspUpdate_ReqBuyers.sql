@@ -1,8 +1,8 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Process].[UspUpdate_ReqBuyers]
     (
       @PrevCheck Int
@@ -70,8 +70,7 @@ exec [Process].[UspUpdate_ReqBuyers]  @PrevCheck =0
 	BEGIN'
                     + --only companies selected in main run, or if companies selected then all
                     '
-		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-                    + Upper(@Company) + ''' = ''ALL''
+		IF isnumeric(@DBCode) = 1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -89,7 +88,8 @@ exec [Process].[UspUpdate_ReqBuyers]  @PrevCheck =0
 				Insert #Table1
 					( Company, [BuyerName])
 				Select Distinct @DBCode
-				,[Buyer] = Case When [RD].[Buyer] = '''' Then ''Empty''
+				,[Buyer] = Case When [RD].[Buyer] = '''' Then ''Blank''
+				When [RD].[Buyer] = '' '' Then ''Blank''
                        Else [RD].[Buyer]
                   End
 From    [dbo].[ReqDetail] As [RD];
