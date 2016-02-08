@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_RequisitionStatus] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_RequisitionStatus]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -20,6 +25,14 @@ List of all requisitions and their statuses
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+	--Red tag
+    Declare @RedTagDB Varchar(255)= Db_Name();
+    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_RequisitionStatus' ,
+        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+        @UsedByDb = @RedTagDB;
+
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ReqHeader,ReqDetail,ApSupplier'; 
@@ -186,9 +199,9 @@ List of all requisitions and their statuses
                       , [cn].[CompanyName]
                 From    [#ReqHeader] [RH]
                         Inner Join [#ReqDetail] [rd] On [rd].[Requisition] = [RH].[Requisition]
-                                                    And [rd].[DatabaseName] = [RH].[DatabaseName]
+                                                        And [rd].[DatabaseName] = [RH].[DatabaseName]
                         Left Join [#ApSupplier] [s] On [s].[Supplier] = [rd].[Supplier]
-                                                   And [s].[DatabaseName] = [rd].[DatabaseName]
+                                                       And [s].[DatabaseName] = [rd].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[ReqnStatus] [RS] On [RS].[ReqnStatusCode] = [rd].[ReqnStatus] Collate Latin1_General_BIN
                                                               And [RS].[Company] = [rd].[DatabaseName] Collate Latin1_General_BIN
                         Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [cn].[Company] = [RH].[DatabaseName] Collate Latin1_General_BIN;
@@ -197,8 +210,8 @@ List of all requisitions and their statuses
         Select  [Company] = [DatabaseName]
               , [SupplierName]
               , [Buyer] = Case When [Buyer] = '' Then 'Blank'
-                             Else Coalesce([Buyer] , 'Blank')
-                        End
+                               Else Coalesce([Buyer] , 'Blank')
+                          End
               , [CurrentHolder]
               , [DateReqnRaised] = Cast([DateReqnRaised] As Date)
               , [DueDate] = Cast([DueDate] As Date)
