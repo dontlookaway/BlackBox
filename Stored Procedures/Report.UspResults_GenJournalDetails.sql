@@ -1,8 +1,8 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_GenJournalDetails]
     (
       @RedTagType Char(1)
@@ -81,7 +81,8 @@ If Exists (Select 1 From sys.[tables] As [T] Where [T].[name] =''GenJournalDetai
 			 , DatabaseName = db_name()
 	From [dbo].[GenJournalDetail] As [GJD]
 	Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
-	Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode];''
+	Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]
+	And [GJD].[SubModWh]<>''''RM'''';''
 
 
 	Insert [#Results]
