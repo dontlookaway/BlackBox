@@ -21,11 +21,12 @@ Stored procedure set out to query multiple databases with the same information a
             End;
 
 --Red tag
-    Declare @RedTagDB Varchar(255)= Db_Name();
-    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
-        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_SalesOrderKPI' ,
-        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
-        @UsedByDb = @RedTagDB;
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_SalesOrderKPI' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --remove nocount on to speed up query
         Set NoCount On;
@@ -101,8 +102,8 @@ Stored procedure set out to query multiple databases with the same information a
             , [NewWarehouse] Varchar(10)
             , [JnlYear] Int
             , [TrnType] Char(1)
-			, [Reference] Varchar(30)
-			, [JobPurchOrder] Varchar(30)
+            , [Reference] Varchar(30)
+            , [JobPurchOrder] Varchar(30)
             );
 	
 --create script to pull data from each db into the tables
@@ -531,11 +532,15 @@ Stored procedure set out to query multiple databases with the same information a
                         Left Join ( Select Distinct
                                             [LT2].[Lot]
                                           , [LT2].[StockCode]
-                                          , [Job] = Coalesce([LT2].[JobPurchOrder],[LT2].[Job],[LT2].[Reference])
+                                          , [Job] = Coalesce([LT2].[JobPurchOrder] ,
+                                                             [LT2].[Job] ,
+                                                             [LT2].[Reference])
                                           , [LT2].[DatabaseName]
                                     From    [#LotTransactions] As [LT2]
                                     Where   [LT2].[TrnType] = 'R'
-                                            And Coalesce([LT2].[JobPurchOrder],[LT2].[Job] ,LT2.[Reference], '') <> ''
+                                            And Coalesce([LT2].[JobPurchOrder] ,
+                                                         [LT2].[Job] ,
+                                                         [LT2].[Reference] , '') <> ''
                                   ) [LT3] On [LT].[Lot] = [LT3].[Lot]
                                              And [LT].[StockCode] = [LT3].[StockCode]
                                              And [LT3].[DatabaseName] = [LT].[DatabaseName]
@@ -569,6 +574,15 @@ Stored procedure set out to query multiple databases with the same information a
               , [OrderStatus]
               , [Job]
               , [DispatchComments]
+              , [WorkingDaysBetweenAcceptedAndDeliveryDate] = Case
+                                                              When [AcceptedDate] Is Null
+                                                              Then Null
+                                                              When [AcceptedDate] = [ActualDeliveryDate]
+                                                              Then 0
+                                                              Else [Process].[Udf_WorkingDays]([AcceptedDate] ,
+                                                              [ActualDeliveryDate] ,
+                                                              'UK')-1
+                                                            End
         From    [#Results];
 
     End;
