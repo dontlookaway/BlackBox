@@ -101,6 +101,8 @@ Stored procedure set out to query multiple databases with the same information a
             , [NewWarehouse] Varchar(10)
             , [JnlYear] Int
             , [TrnType] Char(1)
+			, [Reference] Varchar(30)
+			, [JobPurchOrder] Varchar(30)
             );
 	
 --create script to pull data from each db into the tables
@@ -375,9 +377,12 @@ Stored procedure set out to query multiple databases with the same information a
             , [NewWarehouse]
             , [JnlYear]
             , [TrnType]
+			, [Reference]
+			, [JobPurchOrder]
 	        )
             Select  @DBCode
-                  , [LT].[Lot]
+                  , [Lot] = case when [LT].[Lot]='''' then null 
+								 else [LT].[Lot] end
                   , [LT].[Job]
                   , [LT].[SalesOrder]
                   , [LT].[SalesOrderLine]
@@ -387,6 +392,10 @@ Stored procedure set out to query multiple databases with the same information a
                   , [LT].[NewWarehouse]
                   , [LT].[JnlYear]
                   , [LT].[TrnType]
+				  , [Reference] = case when LT.[Reference]='''' then null 
+									   else LT.[Reference] end
+				  , [JobPurchOrder] = case when LT.[JobPurchOrder] ='''' then null
+											else LT.[JobPurchOrder] end
             From    [LotTransactions] As [LT];
 			End
 	End';
@@ -522,11 +531,11 @@ Stored procedure set out to query multiple databases with the same information a
                         Left Join ( Select Distinct
                                             [LT2].[Lot]
                                           , [LT2].[StockCode]
-                                          , [LT2].[Job]
+                                          , [Job] = Coalesce([LT2].[JobPurchOrder],[LT2].[Job],[LT2].[Reference])
                                           , [LT2].[DatabaseName]
                                     From    [#LotTransactions] As [LT2]
                                     Where   [LT2].[TrnType] = 'R'
-                                            And Coalesce([LT2].[Job] , '') <> ''
+                                            And Coalesce([LT2].[JobPurchOrder],[LT2].[Job] ,LT2.[Reference], '') <> ''
                                   ) [LT3] On [LT].[Lot] = [LT3].[Lot]
                                              And [LT].[StockCode] = [LT3].[StockCode]
                                              And [LT3].[DatabaseName] = [LT].[DatabaseName]
