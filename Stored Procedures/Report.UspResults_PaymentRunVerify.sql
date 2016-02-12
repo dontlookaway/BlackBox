@@ -160,7 +160,7 @@ Stored procedure for Payment run verify
 							,Journal
 							,EntryNumber
 					 FROM ApJnlSummary
-					 Where [TransactionCode]=''I''
+					 Where [TransactionCode] not in (''X'')
 			End
 	End';
 
