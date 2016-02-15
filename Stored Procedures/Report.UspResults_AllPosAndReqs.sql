@@ -112,7 +112,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             + --only companies selected in main run, or if companies selected then all
             '
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -172,7 +172,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             + --only companies selected in main run, or if companies selected then all
             '
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -242,7 +242,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             + --only companies selected in main run, or if companies selected then all
             '
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -284,7 +284,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             + --only companies selected in main run, or if companies selected then all
             '
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -329,7 +329,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             + --only companies selected in main run, or if companies selected then all
             '
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
