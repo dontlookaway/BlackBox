@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -83,6 +84,21 @@ Template designed by Chris Johnson, Prometic Group February 2016
             , [OrderStatus] Varchar(10)
             , [Supplier] Varchar(30)
             );
+        Create Table [#ProjectList]
+            (
+              [DatabaseName] Varchar(150)
+            , [PurchaseOrder] Varchar(50)
+            , [Line] Int
+            , [ProjectName] Varchar(255)
+            );
+        Create Table [#ReqUser]
+            (
+              [DatabaseName] Varchar(150)
+            , [Originator] Varchar(100)
+            , [OriginatorName] Varchar(255)
+            );
+    
+
 	
 --create script to pull data from each db into the tables
         Declare @SQLPorMasterDetail Varchar(Max) = '
@@ -257,6 +273,85 @@ Template designed by Chris Johnson, Prometic Group February 2016
          , [PMH].[Supplier] FROM [PorMasterHdr] As [PMH]
 			End
 	End';
+        Declare @SQLProjectList Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+			Insert [#ProjectList]
+					( [DatabaseName]
+					, [PurchaseOrder]
+					, [Line]
+					, [ProjectName]
+					)
+			Select  @DBCode
+				  , [GD].[PurchaseOrder]
+				  , Line = [GD].[PurchaseOrderLin]
+				  , ProjectName = [GAC].[Description]
+			From    [dbo].[GrnDetails] As [GD]
+					Left Join [dbo].[GenJournalDetail]
+					As [GJD] On [GJD].[Journal] = [GD].[Journal]
+					Left Join [dbo].[GenAnalysisTrn] As [GAT] On [GAT].[AnalysisEntry] = [GJD].[AnalysisEntry]
+					Left Join [dbo].[GenAnalysisCode] As GAC On [GAT].[AnalysisCode1] = [GAC].[AnalysisCode]
+																		  And [GAC].[AnalysisType] = 1
+			Where   [GAC].[Description] Is Not Null
+			End
+	End';
+        Declare @SQLReqUser Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+			Insert [#ReqUser]
+					( [DatabaseName],[Originator] , [OriginatorName] )
+			SELECT @DBCode
+				, [Originator]= [UserCode]
+				, [OriginatorName]=[UserName] 
+			From [dbo].[ReqUser]
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -264,57 +359,63 @@ Template designed by Chris Johnson, Prometic Group February 2016
         Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterDetail;
         Exec [Process].[ExecForEachDB] @cmd = @SQLReqDetail;
         Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterHdr;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLProjectList;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLReqUser;
+
 
 --define the results you want to return
         Create Table [#Results]
             (
-              [Requisition] Varchar(50)
-                      , [PurchaseOrder] Varchar(50)
-                      , [Line] Int
-                      , [StockCode] Varchar(50)
-                      , [ProjectName] Varchar(50)
-                      , [OriginalStockCode] Varchar(50)
-                      , [StockDescription] Varchar(200)
-                      , [OrderQty] Numeric(20,8)
-                      , [OrderUom] Varchar(10)
-                      , [DueDate] Date
-                      , [SupCatalogueNum] Varchar(100)
-                      , [Price] Numeric(20,2)
-                      , [MForeignPrice] Numeric(20,2)
-                      , [ProductClass] Varchar(250)
-                      , [GlCode] Varchar(200)
-                      , [GlDescription] Varchar(200)
-                      , [GlGroup] Varchar(20)
-                      , [Originator] Varchar(150)
-                      , [OriginatorName] Varchar(150)
-                      , [Buyer] Varchar(150)
-                      , [ReqnStatus] Varchar(100)
-                      , [Supplier] Varchar(100)
-                      , [DatePoConfirmed] Date
-                      , [DatePoCompleted] Date
-                      , [RequisitionOperator] Varchar(150)
-                      , [ApprovedDate] Date
-                      , [DateRequisitionnRaised] Date
-                      , [PurchaseOrders] bit
-                      , [OpenRequisitions] bit
-                      , [POStatus] Varchar(20)
-                      , [Capex] Varchar(20)
-                      , [DeptCode] char(5)
-                      , [OrderStatus] Varchar(150)
-                      , [OrderStatusDescription] Varchar(250)
-                      , [MCompleteFlag] Char(1)
-                      , [CompanyName] Varchar(200)
-                      , [Currency] Varchar(10)
-                      , [CADDivision] Float
-                      , [CADMultiply] Float
-                      , [StartDateTime] DateTime2
+              [DatabaseName] Varchar(150)
+            , [Requisition] Varchar(50)
+            , [PurchaseOrder] Varchar(50)
+            , [Line] Int
+            , [StockCode] Varchar(50)
+            , [ProjectName] Varchar(50)
+            , [OriginalStockCode] Varchar(50)
+            , [StockDescription] Varchar(200)
+            , [OrderQty] Numeric(20 , 8)
+            , [OrderUom] Varchar(10)
+            , [DueDate] Date
+            , [SupCatalogueNum] Varchar(100)
+            , [Price] Numeric(20 , 2)
+            , [MForeignPrice] Numeric(20 , 2)
+            , [ProductClass] Varchar(250)
+            , [GlCode] Varchar(200)
+            , [GlDescription] Varchar(200)
+            , [GlGroup] Varchar(20)
+            , [Originator] Varchar(150)
+            , [OriginatorName] Varchar(255)
+            , [Buyer] Varchar(150)
+            , [RequisitionStatus] Varchar(150)
+            , [Supplier] Varchar(100)
+            , [DatePoConfirmed] Date
+            , [DatePoCompleted] Date
+            , [RequisitionOperator] Varchar(150)
+            , [ApprovedDate] Date
+            , [DateRequisitionRaised] Date
+            , [PurchaseOrders] Bit
+            , [OpenRequisitions] Bit
+            , [POStatus] Varchar(20)
+            , [Capex] Varchar(20)
+            , [DeptCode] Char(5)
+            , [OrderStatus] Varchar(150)
+            , [OrderStatusDescription] Varchar(250)
+            , [MCompleteFlag] Char(1)
+            , [CompanyName] Varchar(200)
+            , [Company] Varchar(150)
+            , [Currency] Varchar(10)
+            , [CADDivision] Float
+            , [CADMultiply] Float
+            , [StartDateTime] DateTime2
             );
 
 --Placeholder to create indexes as required
 
 --script to combine base data and insert into results table
         Insert  [#Results]
-                ( [Requisition]
+                ( [DatabaseName]
+                , [Requisition]
                 , [PurchaseOrder]
                 , [Line]
                 , [StockCode]
@@ -334,13 +435,13 @@ Template designed by Chris Johnson, Prometic Group February 2016
                 , [Originator]
                 , [OriginatorName]
                 , [Buyer]
-                , [ReqnStatus]
+                , [RequisitionStatus]
                 , [Supplier]
                 , [DatePoConfirmed]
                 , [DatePoCompleted]
                 , [RequisitionOperator]
                 , [ApprovedDate]
-                , [DateRequisitionnRaised]
+                , [DateRequisitionRaised]
                 , [PurchaseOrders]
                 , [OpenRequisitions]
                 , [POStatus]
@@ -350,12 +451,15 @@ Template designed by Chris Johnson, Prometic Group February 2016
                 , [OrderStatusDescription]
                 , [MCompleteFlag]
                 , [CompanyName]
+                , [Company]
                 , [Currency]
                 , [CADDivision]
                 , [CADMultiply]
                 , [StartDateTime]
                 )
-                Select  [Requisition] = Coalesce(Case When [PMD].[MRequisition] = ''
+                Select  [DatabaseName] = Coalesce([RD].[DatabaseName] ,
+                                                  [PMD].[DatabaseName])
+                      , [Requisition] = Coalesce(Case When [PMD].[MRequisition] = ''
                                                       Then Null
                                                       Else [PMD].[MRequisition]
                                                  End , [RD].[Requisition])
@@ -366,7 +470,9 @@ Template designed by Chris Johnson, Prometic Group February 2016
                                                          [RD].[StockCode])
                                            Else Null
                                       End
-                      , [ProjectName] = Case When Replace(Lower(Coalesce([PMD].[MStockCode] ,
+                      , [ProjectName] = Case When [PMD].[DatabaseName] <> '10'
+                                             Then [PL].[ProjectName]
+                                             When Replace(Lower(Coalesce([PMD].[MStockCode] ,
                                                               [RD].[StockCode])) ,
                                                           ' ' , '') In (
                                                   'area51' , 'itproject' )
@@ -395,11 +501,18 @@ Template designed by Chris Johnson, Prometic Group February 2016
                       , [Price] = Coalesce([PMD].[MPrice] , [RD].[Price])
                       , [PMD].[MForeignPrice]
                       , [ProductClass] = [PC].[ProductClassDescription]
-                      , [GlCode] = Coalesce([PMD].[MGlCode] , [RD].[GlCode])
+                      , [GlCode] = Coalesce(Case When [PMD].[MGlCode] = ''
+                                                 Then Null
+                                                 Else [PMD].[MGlCode]
+                                            End ,
+                                            Case When [RD].[GlCode] = ''
+                                                 Then Null
+                                                 Else [RD].[GlCode]
+                                            End)
                       , [GlDescription] = [GM].[Description]
                       , [GM].[GlGroup]
                       , [RD].[Originator]
-                      , [OriginatorName] = 'TBC'
+                      , [OriginatorName] = [RU].[OriginatorName]
                       , [Buyer] = Coalesce(Case When [PMH].[Buyer] = ''
                                                 Then Null
                                                 Else [PMH].[Buyer]
@@ -408,14 +521,14 @@ Template designed by Chris Johnson, Prometic Group February 2016
                                                 Then Null
                                                 Else [RD].[Buyer]
                                            End)
-                      , [RD].[ReqnStatus]
+                      , [RequisitionStatus] = [RS].[ReqnStatusDescription]
                       , [Supplier] = Coalesce([PMH].[Supplier] ,
                                               [RD].[Supplier])
                       , [DatePoConfirmed] = Convert(Date , [RD].[DatePoConfirmed])
                       , [DatePoCompleted] = Convert(Date , [PMH].[DatePoCompleted])
                       , [RequisitionOperator] = [RD].[Operator]
                       , [ApprovedDate] = Convert(Date , [RD].[ApprovedDate])
-                      , [DateRequisitionnRaised] = Convert(Date , [RD].[DateReqnRaised])
+                      , [DateRequisitionRaised] = Convert(Date , [RD].[DateReqnRaised])
                       , [PurchaseOrders] = Case When [PMD].[PurchaseOrder] Is Null
                                                 Then 0
                                                 Else 1
@@ -437,6 +550,8 @@ Template designed by Chris Johnson, Prometic Group February 2016
                       , [POS].[OrderStatusDescription]
                       , [PMD].[MCompleteFlag]
                       , [CN].[CompanyName]
+                      , [Company] = Coalesce([PMH].[DatabaseName] ,
+                                             [RD].[DatabaseName])
                       , [CR].[Currency]
                       , [CR].[CADDivision]
                       , [CR].[CADMultiply]
@@ -444,26 +559,42 @@ Template designed by Chris Johnson, Prometic Group February 2016
                 From    [#PorMasterDetail] As [PMD]
                         Full Outer Join [#ReqDetail] As [RD] On [RD].[Requisition] = [PMD].[MRequisition]
                                                               And [RD].[Line] = [PMD].[Line]
-															  And [RD].[DatabaseName] = [PMD].[DatabaseName]
+                                                              And [RD].[DatabaseName] = [PMD].[DatabaseName]
                         Left Join [#PorMasterHdr] As [PMH] On [PMH].[PurchaseOrder] = [PMD].[PurchaseOrder]
-															And [PMH].[DatabaseName] = [PMD].[DatabaseName]
+                                                              And [PMH].[DatabaseName] = [PMD].[DatabaseName]
                         Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[GlCode] = Coalesce([PMD].[MGlCode] ,
                                                               [RD].[GlCode])
                         Left Join [BlackBox].[Lookups].[ProductClass] As [PC] On [PC].[ProductClass] = Coalesce([PMD].[MProductClass] ,
                                                               [RD].[ProductClass])
-                                                              And [PC].[Company] = Coalesce(PMD.[DatabaseName],RD.[ProductClass])
+                                                              And [PC].[Company] = Coalesce([PMD].[DatabaseName] ,
+                                                              [RD].[ProductClass])
                         Left Join [BlackBox].[Lookups].[PurchaseOrderStatus]
                         As [POS] On [POS].[OrderStatusCode] = [PMH].[OrderStatus]
-                                    And [POS].[Company] = PMH.[DatabaseName]
-                        Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = Coalesce([PMH].[DatabaseName],[RD].[DatabaseName])
+                                    And [POS].[Company] = [PMH].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = Coalesce([PMH].[DatabaseName] ,
+                                                              [RD].[DatabaseName])
                         Left Join [BlackBox].[Lookups].[CurrencyRates] As [CR] On [CR].[Currency] = [CN].[Currency]
                                                               And GetDate() Between [CR].[StartDateTime]
-																			And [CR].[EndDateTime]
+                                                              And
+                                                              [CR].[EndDateTime]
+                        Left Join [#ProjectList] As [PL] On [PL].[Line] = [PMD].[Line]
+                                                            And [PL].[PurchaseOrder] = [PMD].[PurchaseOrder]
+                                                            And [PL].[DatabaseName] = [PMD].[DatabaseName]
+                        Left Join [#ReqUser] As [RU] On [RU].[Originator] = [RD].[Originator]
+                                                        And [RU].[DatabaseName] = [RD].[DatabaseName]
+                        Left Join [Lookups].[ReqnStatus] As [RS] On [RS].[ReqnStatusCode] = [RD].[ReqnStatus]
+                                                              And [RS].[Company] = [RD].[DatabaseName]
                 Where   Coalesce([PMD].[MPrice] , [RD].[Price]) <> 0;
 
 --return results
-        Select  [Requisition] = Case When IsNumeric([Requisition])=1 Then Convert(Varchar(50),Convert(Int,[Requisition])) Else Null End
-              , [PurchaseOrder] = Case When IsNumeric([PurchaseOrder])=1 Then Convert(Varchar(50),Convert(Int,[PurchaseOrder])) Else Null End
+        Select  [Requisition] = Case When IsNumeric([Requisition]) = 1
+                                     Then Convert(Varchar(50) , Convert(Int , [Requisition]))
+                                     Else Null
+                                End
+              , [PurchaseOrder] = Case When IsNumeric([PurchaseOrder]) = 1
+                                       Then Convert(Varchar(50) , Convert(Int , [PurchaseOrder]))
+                                       Else Null
+                                  End
               , [Line]
               , [StockCode]
               , [ProjectName]
@@ -477,18 +608,19 @@ Template designed by Chris Johnson, Prometic Group February 2016
               , [MForeignPrice]
               , [ProductClass]
               , [GlCode]
+              , [CompanyGlCode] = [DatabaseName] + '.' + [GlCode]
               , [GlDescription]
               , [GlGroup]
               , [Originator]
               , [OriginatorName]
               , [Buyer]
-              , [ReqnStatus]
+              , [RequisitionStatus]
               , [Supplier]
               , [DatePoConfirmed]
               , [DatePoCompleted]
               , [RequisitionOperator]
               , [ApprovedDate]
-              , [DateRequisitionnRaised]
+              , [DateRequisitionRaised]
               , [PurchaseOrders]
               , [OpenRequisitions]
               , [POStatus]
@@ -498,23 +630,15 @@ Template designed by Chris Johnson, Prometic Group February 2016
               , [OrderStatusDescription]
               , [MCompleteFlag]
               , [CompanyName]
+              , [Company]
               , [Currency]
               , [CADDivision]
               , [CADMultiply]
               , [StartDateTime]
         From    [#Results]
-Order By PurchaseOrder Asc, [Line] Asc
-
---Project list (non PBL)
-SELECT [GD].[PurchaseOrder]
-, [GD].[PurchaseOrderLin]
-, [GAC].[Description]
-
- From [10.100.125.61].[SysproCompany41].[dbo].[GrnDetails] As [GD]
-Left Join [10.100.125.61].[SysproCompany41].[dbo].[GenJournalDetail] As [GJD] On [GJD].[Journal] = [GD].[Journal]
-Left Join [10.100.125.61].[SysproCompany41].[dbo].[GenAnalysisTrn] As [GAT] On [GAT].[AnalysisEntry] = [GJD].[AnalysisEntry]
-Left join [10.100.125.61].[SysproCompany41].[dbo].[GenAnalysisCode] As GAC On [GAT].[AnalysisCode1]=[GAC].[AnalysisCode] And [GAC].[AnalysisType]=1
-Where [GAC].[Description] Is Not Null
+        Where   Coalesce([RequisitionStatus] , '') <> 'Cancelled'
+        Order By [PurchaseOrder] Asc
+              , [Line] Asc;
     End;
 
 GO
