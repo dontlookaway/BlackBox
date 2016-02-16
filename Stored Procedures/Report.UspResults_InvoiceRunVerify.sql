@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -39,6 +40,7 @@ Stored procedure set out to query multiple databases with the same information a
               [DatabaseName] Varchar(150)
             , [Supplier] Varchar(50)
             , [SupplierName] Varchar(255)
+            , [Currency] Varchar(5)
             );
         Create Table [#ApInvoice]
             (
@@ -131,10 +133,13 @@ Stored procedure set out to query multiple databases with the same information a
 						( [DatabaseName]
 						, [Supplier]
 						, [SupplierName]
+						, [Currency]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [AS].[Supplier]
-					 , [AS].[SupplierName] FROM [ApSupplier] As [AS]
+					 , [AS].[SupplierName]
+					 , [AS].[Currency]
+					  FROM [ApSupplier] As [AS]
 			End
 	End';
         Declare @SQLApInvoice Varchar(Max) = '
@@ -421,7 +426,8 @@ Stored procedure set out to query multiple databases with the same information a
             , [PostMulDiv] Char(1)
             , [SupplierName] Varchar(50)
             , [ExpenseType] Varchar(150)
-			, [CompanyName] Varchar(300)
+            , [CompanyName] Varchar(300)
+            , [SupplierCurrency] Varchar(5)
             );
 
 --Placeholder to create indexes as required
@@ -460,7 +466,8 @@ Stored procedure set out to query multiple databases with the same information a
                 , [PostMulDiv]
                 , [SupplierName]
                 , [ExpenseType]
-				, [CompanyName] 
+                , [CompanyName]
+                , [SupplierCurrency]
                 )
                 Select  [Company] = [AI].[DatabaseName]
                       , [Supplier] = [AS].[Supplier]
@@ -484,7 +491,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [InvoiceYear] = [AI].[InvoiceYear]
                       , [InvoiceMonth] = [AI].[InvoiceMonth]
                       , [JournalDate] = [AI].[JournalDate]
-					  , [InvoiceDate] = [AI].[InvoiceDate]
+                      , [InvoiceDate] = [AI].[InvoiceDate]
                       , [PaymentNumber] = [AI].[PaymentNumber]
                       , [Bank] = [AI].[Bank]
                       , [PaymentDate] = [APH].[PaymentDate]
@@ -502,32 +509,66 @@ Stored procedure set out to query multiple databases with the same information a
                       , [PostMulDiv] = [AD].[PostMulDiv]
                       , [SupplierName] = [AS].[SupplierName]
                       , [ExpenseType] = [AJDE].[ExpenseTypeDesc]
-					  , [CompanyName] = CN.[CompanyName]
+                      , [CompanyName] = [CN].[CompanyName]
+                      , [SupplierCurrency] = [AS].[Currency]
                 From    [#ApSupplier] As [AS]
                         Left Join [#ApInvoice] As [AI] On [AI].[Supplier] = [AS].[Supplier]
-														And [AI].[DatabaseName] = [AS].[DatabaseName]
+                                                          And [AI].[DatabaseName] = [AS].[DatabaseName]
                         Left Join [#ApJnlSummary] As [AJS] On [AJS].[Invoice] = [AI].[Invoice]
                                                               And [AJS].[EntryNumber] = [AI].[EntryNumber]
                                                               And [AJS].[Journal] = [AI].[Journal]
-															  And [AJS].[DatabaseName] = [AI].[DatabaseName]
+                                                              And [AJS].[DatabaseName] = [AI].[DatabaseName]
                         Left Join [#ApJnlDistrib] As [AJD] On [AJD].[Journal] = [AI].[Journal]
                                                               And [AJD].[EntryNumber] = [AI].[EntryNumber]
-															  And [AJD].[DatabaseName] = [AI].[DatabaseName]
+                                                              And [AJD].[DatabaseName] = [AI].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[ApJnlDistribExpenseType] [AJDE] On [AJD].[ExpenseType] = [AJDE].[ExpenseType]
                         Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [AJD].[ExpenseGlCode] = [GM].[GlCode]
-																				And [AJD].[DatabaseName]=GM.[Company]
+                                                              And [AJD].[DatabaseName] = [GM].[Company]
                         Left Join [#ApPayRunDet] [AD] On [AD].[Invoice] = [AI].[Invoice]
                                                          And [AD].[PaymentNumber] = [AI].[PaymentNumber]
                                                          And [AD].[Supplier] = [AI].[Supplier]
-														 And [AD].[DatabaseName] = [AI].[DatabaseName]
+                                                         And [AD].[DatabaseName] = [AI].[DatabaseName]
                         Left Join [#ApPayRunHdr] [APH] On [APH].[PaymentNumber] = [AI].[PaymentNumber]
-														And [APH].[DatabaseName] = [AI].[DatabaseName]
-						Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = AI.[DatabaseName]
-						Where [AI].[Invoice] Is Not Null;
+                                                          And [APH].[DatabaseName] = [AI].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = [AI].[DatabaseName]
+                Where   [AI].[Invoice] Is Not Null;
 
 
 --return results
-        Select  *
+        Select  [CompanyName] = [DatabaseName]
+              , [Supplier]
+              , [Invoice]
+              , [PostCurrency]
+              , [ConvRate]
+              , [MulDiv]
+              , [MthInvBal]
+              , [CompLocalAmt]
+              , [DistrValue]
+              , [Description]
+              , [ExpenseGlCode]
+              , [InvoiceYear]
+              , [InvoiceMonth]
+              , [JournalDate]
+              , [InvoiceDate]
+              , [PaymentNumber]
+              , [Bank]
+              , [PaymentDate]
+              , [PayYear]
+              , [PayMonth]
+              , [Operator]
+              , [ChRegister]
+              , [Cheque]
+              , [ChequeDate]
+              , [InvNetPayValue]
+              , [DueDate]
+              , [InvoiceType]
+              , [PostValue]
+              , [PostConvRate]
+              , [PostMulDiv]
+              , [SupplierName]
+              , [ExpenseType]
+              , [CompanyName]
+              , [SupplierCurrency]
         From    [#Results];
 
     End;
