@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PaymentRunVerify] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_PaymentRunVerify]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -11,13 +16,20 @@ Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure for Payment run verify
 --Exec [Report].[UspResults_PaymentRunVerify]  10
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
             End;
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_PaymentRunVerify' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ApInvoice,ApJnlSummary,ApJnlDistrib,ApPayRunDet,ApPayRunHdr'; 
@@ -37,7 +49,6 @@ Stored procedure for Payment run verify
             , [JournalDate] DateTime2
             , [InvoiceDate] DateTime2
             );
-
         Create Table [#ApJnlSummary]
             (
               [DatabaseName] Varchar(150)
@@ -48,7 +59,6 @@ Stored procedure for Payment run verify
             , [Journal] Int
             , [EntryNumber] Int
             );
-
         Create Table [#ApJnlDistrib]
             (
               [DatabaseName] Varchar(150)
@@ -59,7 +69,6 @@ Stored procedure for Payment run verify
             , [Journal] Int
             , [EntryNumber] Int
             );
-
         Create Table [#ApPayRunDet]
             (
               [DatabaseName] Varchar(150)
@@ -78,7 +87,6 @@ Stored procedure for Payment run verify
             , [SupplierName] Varchar(50)
             , [PaymentNumber] Varchar(15)
             );
-
         Create Table [#ApPayRunHdr]
             (
               [DatabaseName] Varchar(150)
@@ -89,6 +97,13 @@ Stored procedure for Payment run verify
             , [PayMonth] Int
             , [Operator] Varchar(20)
             , [ChRegister] Float
+            );
+        Create Table [#ApSupplier]
+            (
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(50)
+            , [SupplierName] Varchar(255)
+            , [Currency] Varchar(5)
             );
 	
 --create script to pull data from each db into the tables
@@ -160,10 +175,9 @@ Stored procedure for Payment run verify
 							,Journal
 							,EntryNumber
 					 FROM ApJnlSummary
-					 Where [TransactionCode]=''I''
+					 Where [TransactionCode] not in (''X'')
 			End
 	End';
-
         Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
@@ -243,7 +257,6 @@ Stored procedure for Payment run verify
 						FROM ApPayRunDet
 			End
 	End';
-
         Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
@@ -291,6 +304,45 @@ Stored procedure for Payment run verify
 				FROM ApPayRunHdr		
 			End
 	End';
+        Declare @SQLApSupplier Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#ApSupplier]
+						( [DatabaseName]
+						, [Supplier]
+						, [SupplierName]
+						, [Currency]
+						)
+				SELECT [DatabaseName]=@DBCode
+					 , [AS].[Supplier]
+					 , [AS].[SupplierName]
+					 , [AS].[Currency]
+					  FROM [ApSupplier] As [AS]	
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -298,6 +350,7 @@ Stored procedure for Payment run verify
         Exec [Process].[ExecForEachDB] @cmd = @SQL1;
         Exec [Process].[ExecForEachDB] @cmd = @SQL2;
         Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
 
 --define the results you want to return
         Create Table [#Results]
@@ -334,6 +387,7 @@ Stored procedure for Payment run verify
             , [PostConvRate] Float
             , [PostMulDiv] Char(1)
             , [SupplierName] Varchar(50)
+            , [SupplierCurrency] Varchar(5)
             );
 
 --Placeholder to create indexes as required
@@ -371,6 +425,7 @@ Stored procedure for Payment run verify
                 , [PostConvRate]
                 , [PostMulDiv]
                 , [SupplierName]
+                , [SupplierCurrency] 
 	            )
                 Select  [AI].[DatabaseName]
                       , [AI].[Supplier]
@@ -380,17 +435,17 @@ Stored procedure for Payment run verify
                       , [AI].[MulDiv]
                       , [MthInvBal] = [AI].[MthInvBal1]
                       , [CompLocalAmt] = Cast(Case When [AI].[MulDiv] = 'M'
-                                                 Then [AI].[MthInvBal1]
-                                                      * [AI].[ConvRate]
-                                                 Else [AI].[MthInvBal1]
-                                                      / [AI].[ConvRate]
-                                            End As Decimal(10 , 2))
+                                                   Then [AI].[MthInvBal1]
+                                                        * [AI].[ConvRate]
+                                                   Else [AI].[MthInvBal1]
+                                                        / [AI].[ConvRate]
+                                              End As Decimal(10 , 2))
                       , [DistrValue] = Sum([AJD].[DistrValue])
                       , [GM].[Description]
                       , [ExpenseGlCode] = Case When [AJD].[ExpenseGlCode] = ''
-                                             Then Null
-                                             Else [AJD].[ExpenseGlCode]
-                                        End
+                                               Then Null
+                                               Else [AJD].[ExpenseGlCode]
+                                          End
                       , [AI].[InvoiceYear]
                       , [AI].[InvoiceMonth]
                       , [AI].[JournalDate]
@@ -411,6 +466,7 @@ Stored procedure for Payment run verify
                       , [APD].[PostConvRate]
                       , [APD].[PostMulDiv]
                       , [APD].[SupplierName]
+                      , [SupplierCurrency] = [AS].[Currency]
                 From    [#ApInvoice] [AI]
                         Left Join [#ApJnlSummary] [AJS] With ( NoLock ) On [AI].[Supplier] = [AJS].[Supplier]
                                                               And [AI].[Invoice] = [AJS].[Invoice]
@@ -422,10 +478,12 @@ Stored procedure for Payment run verify
                                                               And [AJD].[DatabaseName] = [AJS].[DatabaseName]
                         Left Join [SysproCompany40].[dbo].[GenMaster] [GM] On [GM].[GlCode] = [AJD].[ExpenseGlCode] Collate Latin1_General_BIN
                         Inner Join [#ApPayRunDet] [APD] On [APD].[Supplier] = [AI].[Supplier]
-                                                       And [APD].[Invoice] = [AI].[Invoice]
-                                                       And [APD].[DatabaseName] = [AI].[DatabaseName]
+                                                           And [APD].[Invoice] = [AI].[Invoice]
+                                                           And [APD].[DatabaseName] = [AI].[DatabaseName]
                         Left Join [#ApPayRunHdr] [APH] On [APH].[PaymentNumber] = [APD].[PaymentNumber]
-                                                      And [APH].[PaymentNumber] = [APD].[PaymentNumber]
+                                                          And [APH].[PaymentNumber] = [APD].[PaymentNumber]
+                        Left Join [#ApSupplier] As [AS] On [AS].[Supplier] = [AI].[Supplier]
+                                                           And [AS].[DatabaseName] = [AI].[DatabaseName]
                 Group By [AI].[DatabaseName]
                       , [AJD].[TrnYear]
                       , [AJD].[TrnMonth]
@@ -466,7 +524,8 @@ Stored procedure for Payment run verify
                       , [APD].[PostCurrency]
                       , [APD].[PostConvRate]
                       , [APD].[PostMulDiv]
-                      , [APD].[SupplierName];
+                      , [APD].[SupplierName]
+                      , [AS].[Currency];
 
 --return results
         Select  [Company] = [R].[DatabaseName]
@@ -500,7 +559,9 @@ Stored procedure for Payment run verify
               , [R].[PostConvRate]
               , [R].[PostMulDiv]
               , [R].[SupplierName]
+              , [ExpenseType] = Null
               , [cn].[CompanyName]
+              , [R].[SupplierCurrency]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [R].[DatabaseName] Collate Latin1_General_BIN;
 

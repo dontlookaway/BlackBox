@@ -19,6 +19,8 @@ CREATE TABLE [History].[ReqHeader]
 [ROUTEDTOREQUISITIONUSER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [VALUEOFREQUISITION] [float] NULL
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [ReqHeader_timeItem] ON [History].[ReqHeader] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 GO
 ALTER TABLE [History].[ReqHeader] ADD CONSTRAINT [ReqHeader_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

@@ -17,6 +17,8 @@ CREATE TABLE [History].[WipJobAllMat]
 [WIPJOBALLMATKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [OPERATORCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [WipJobAllMat_timeItem] ON [History].[WipJobAllMat] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 GO
 ALTER TABLE [History].[WipJobAllMat] ADD CONSTRAINT [WipJobAllMat_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

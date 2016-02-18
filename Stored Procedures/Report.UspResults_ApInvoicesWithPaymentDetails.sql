@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_ApInvoicesWithPaymentDetails] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_ApInvoicesWithPaymentDetails]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -19,6 +24,14 @@ Stored procedure set out to query multiple databases with the same information a
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_ApInvoicesWithPaymentDetails' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ApInvoice,ApInvoicePay,ApSupplier'; 
@@ -297,9 +310,9 @@ Stored procedure set out to query multiple databases with the same information a
                 Select  [r].[DatabaseName]
                       , [r].[Supplier]
                       , [SupplierValue] = Sum(Case When [r].[Value] >= 0
-                                                 Then [r].[Value]
-                                                 Else 0
-                                            End)
+                                                   Then [r].[Value]
+                                                   Else 0
+                                              End)
                       , [r].[Currency]
                 From    [#Results] As [r]
                 Group By [r].[DatabaseName]

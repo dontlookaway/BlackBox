@@ -31,6 +31,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                     (
                       [Company] Varchar(150)
                     , [CompanyName] Varchar(250)
+					, Currency Varchar(10)
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -141,7 +142,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--Get list of all companies in use
 
 	--create temporary tables to be pulled from different databases, including a column to id
-                Create Table [#CompanyNameTable1] ( [Company] Varchar(150) );
+                Create Table [#CompanyNameTable1] ( [Company] Varchar(150),Currency Varchar(10) );
                 Print 6;
 	--create script to pull data from each db into the tables
                 Declare @SQL Varchar(Max) = '
@@ -153,8 +154,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 		BEGIN				
 		Insert #CompanyNameTable1
-			( Company )
-		Select @DBCode
+			( Company,Currency )
+		Select @DBCode,[TC].[Currency] FROM [dbo].[TblCurrency] As [TC]
+		Where [TC].[BuyExchangeRate]=1
 		End';
                 Print 7;
 	--execute script against each db, populating the base tables
@@ -165,6 +167,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                 Select  [T].[Company]
                       , [CompanyName] = Coalesce([cl].[CompanyName] ,
                                                  'Unknown')
+					  , [T].[Currency]
                 Into    [#ResultsCompanyName]
                 From    [#CompanyNameTable1] [T]
                         Left Join [#CompanyList] As [cl] On [cl].[Company] = [T].[Company];
@@ -179,10 +182,12 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                 Insert  [Lookups].[CompanyNames]
                         ( [Company]
                         , [CompanyName]
+						, Currency
                         , [LastUpdated]
 	                    )
                         Select  [rcn].[Company]
                               , [rcn].[CompanyName]
+							  , [rcn].[Currency]
                               , @LastUpdated
                         From    [#ResultsCompanyName] As [rcn];
 

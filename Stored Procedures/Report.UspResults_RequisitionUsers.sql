@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_RequisitionUsers] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_RequisitionUsers]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -11,7 +16,6 @@ Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 List of all requisition users																					
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -20,6 +24,14 @@ List of all requisition users
 
 --remove nocount on to speed up query
         Set NoCount On;
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_RequisitionUsers' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
+
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ReqUser,ReqGroup,ReqGroupAuthority'; 
@@ -38,6 +50,7 @@ List of all requisition users
             , [CanCreateOrder] Char(1)
             , [RequisitionGroup] Varchar(6)
             , [AdminStopFlag] Char(1)
+            , [MaxApproveValue] Float
             );
 
         Create Table [#ReqGroup]
@@ -94,6 +107,7 @@ List of all requisition users
 						, CanCreateOrder
 						, RequisitionGroup
 						, AdminStopFlag
+						, [MaxApproveValue]
 						)
 				Select @DBCode
 					,UserCode
@@ -106,6 +120,7 @@ List of all requisition users
 					,CanCreateOrder
 					,RequisitionGroup
 					,AdminStopFlag
+					, [MaxApproveValue]
 				 FROM [ReqUser]
 			End
 	End';
@@ -209,6 +224,7 @@ List of all requisition users
             , [AdminStopFlag] Char(1)
             , [RequisitionGroup] Varchar(50)
             , [GroupMaxApproveValue] Float
+            , [UserMaxApproveValue] Float
             );
 
 
@@ -228,6 +244,7 @@ List of all requisition users
                 , [AdminStopFlag]
                 , [RequisitionGroup]
                 , [GroupMaxApproveValue]
+                , [UserMaxApproveValue]
                 )
                 Select  [RU].[DatabaseName]
                       , [RU].[UserCode]
@@ -241,11 +258,12 @@ List of all requisition users
                       , [RU].[AdminStopFlag]
                       , [RequisitionGroup] = [RG].[GroupDescription]
                       , [RGA].[MaxApproveValue]
+                      , [RU].[MaxApproveValue]
                 From    [#ReqUser] [RU]
                         Left Join [#ReqGroup] [RG] On [RG].[DatabaseName] = [RU].[DatabaseName]
-                                                  And [RG].[RequisitionGroup] = [RU].[RequisitionGroup]
+                                                      And [RG].[RequisitionGroup] = [RU].[RequisitionGroup]
                         Left Join [#ReqGroupAuthority] [RGA] On [RGA].[DatabaseName] = [RG].[DatabaseName]
-                                                            And [RGA].[RequisitionGroup] = [RU].[RequisitionGroup];
+                                                              And [RGA].[RequisitionGroup] = [RU].[RequisitionGroup];
 
 --return results
         Select  [Company] = [DatabaseName]
@@ -258,20 +276,26 @@ List of all requisition users
               , [CanApproveReqn]
               , [CanCreateOrder]
               , [RequisitionGroup] = Case When [RequisitionGroup] = ''
-                                        Then 'No Group'
-                                        When [RequisitionGroup] Is Null
-                                        Then 'No Group'
-                                        Else [RequisitionGroup]
-                                   End
+                                          Then 'No Group'
+                                          When [RequisitionGroup] Is Null
+                                          Then 'No Group'
+                                          Else [RequisitionGroup]
+                                     End
               , [AdminStopFlag] = Case When [AdminStopFlag] = '' Then Null
-                                     Else [AdminStopFlag]
-                                End
+                                       Else [AdminStopFlag]
+                                  End
               , [GroupMaxApproveValue] = Case When [GroupMaxApproveValue] = ''
-                                            Then 0
-                                            When [GroupMaxApproveValue] Is Null
-                                            Then 0
-                                            Else [GroupMaxApproveValue]
-                                       End
+                                              Then 0
+                                              When [GroupMaxApproveValue] Is Null
+                                              Then 0
+                                              Else [GroupMaxApproveValue]
+                                         End
+              , [UserMaxApproveValue] = Case When [UserMaxApproveValue] = ''
+                                             Then 0
+                                             When [UserMaxApproveValue] Is Null
+                                             Then 0
+                                             Else [UserMaxApproveValue]
+                                        End
         From    [#Results];
 
     End;

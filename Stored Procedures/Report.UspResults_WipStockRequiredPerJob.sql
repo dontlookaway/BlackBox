@@ -7,17 +7,27 @@ CREATE Proc [Report].[UspResults_WipStockRequiredPerJob]
     (
       @MasterJob Varchar(50)
     , @Company Varchar(10)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 --Exec [Report].[UspResults_WipStockRequiredPerJob] @MasterJob =94, @Company ='F'
 */
-    Set NoCount Off;
+    Set NoCount On;
     If IsNumeric(@Company) = 0
         Begin
             Select  @Company = Upper(@Company);
         End;
+
+--Red tag
+    Declare @RedTagDB Varchar(255)= Db_Name();
+    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_Template' ,
+        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+        @UsedByDb = @RedTagDB;
+
 	
 --Convert Job to varchar for querying DB
     Declare @MasterJobVarchar Varchar(20);
@@ -607,15 +617,15 @@ Stored procedure set out to query multiple databases with the same information a
           , [wjam].[ReservedLotQty]
     From    [#JobLevelCheck] [jlc]
             Left Join [#WipJobAllMat] [wjam] On [jlc].[SubJob] = [wjam].[Job]
-                                              And [wjam].[DatabaseName] = [jlc].[DatabaseName]
+                                                And [wjam].[DatabaseName] = [jlc].[DatabaseName]
             Left Join [#WipJobAllLab] [wjal] On [wjam].[Job] = [wjal].[Job]
-                                              And [wjam].[OperationOffset] = [wjal].[Operation]
+                                                And [wjam].[OperationOffset] = [wjal].[Operation]
             Left Join [#WipMaster] [wm] On [jlc].[SubJob] = [wm].[Job]
-                                         And [wm].[DatabaseName] = [wjal].[DatabaseName]
+                                           And [wm].[DatabaseName] = [wjal].[DatabaseName]
             Left Join [#InvMaster] [im2] On [im2].[StockCode] = [wm].[StockCode]
                                             And [im2].[DatabaseName] = [wm].[DatabaseName]
             Left Join [#InvMaster] [im] On [wjam].[StockCode] = [im].[StockCode]
-                                         And [im].[DatabaseName] = [wjam].[DatabaseName]
+                                           And [im].[DatabaseName] = [wjam].[DatabaseName]
             Left Join [Lookups].[InvMaster_PartCategory] [IMPC] On [im].[PartCategory] = [IMPC].[PartCategoryCode]
     --Where   wjam.AllocCompleted = 'N'
     --        And im.PartCategory <> 'M';

@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PurchaseOrderChanges] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_PurchaseOrderChanges]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -19,7 +24,13 @@ Stored procedure set out to query multiple databases with the same information a
 
 --remove nocount on to speed up query
         Set NoCount On;
-
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_PurchaseOrderChanges' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 --grab and unpivot all audit tables in BlackBox History Tables
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
@@ -144,8 +155,8 @@ Stored procedure set out to query multiple databases with the same information a
                 )
                 Select  [PD].[ItemKey]
                       , [PurchaseOrder] = [PD].[PURCHASEORDER]
-                      , [Line] = ParseName(Replace([PD].[ItemKey] , '     ' , '.') ,
-                                         1)
+                      , [Line] = ParseName(Replace([PD].[ItemKey] , '     ' ,
+                                                   '.') , 1)
                       , [PM].[OrderEntryDate]
                       , [PM].[OrderDueDate]
                       , [PD].[DatabaseName]
@@ -162,35 +173,37 @@ Stored procedure set out to query multiple databases with the same information a
                       , [PriceDiff] = Abs([PD].[PREVIOUSPRICE] - [PD].[PRICE])
                       , [PriceDiffPercent] = Case When Coalesce([PD].[PREVIOUSPRICE] ,
                                                               0) = 0 Then 1
-                                                Else Abs([PD].[PREVIOUSPRICE]
-                                                         - [PD].[PRICE])
-                                                     / [PD].[PREVIOUSPRICE]
-                                           End
+                                                  Else Abs([PD].[PREVIOUSPRICE]
+                                                           - [PD].[PRICE])
+                                                       / [PD].[PREVIOUSPRICE]
+                                             End
                       , [ForeignPriceDiff] = Abs([PD].[PREVIOUSFOREIGNPRICE]
-                                               - [PD].[FOREIGNPRICE])
+                                                 - [PD].[FOREIGNPRICE])
                       , [ForeignPriceDiffPercent] = Case When Coalesce([PD].[PREVIOUSFOREIGNPRICE] ,
                                                               0) = 0 Then 1
-                                                       Else Abs([PD].[PREVIOUSFOREIGNPRICE]
+                                                         Else Abs([PD].[PREVIOUSFOREIGNPRICE]
                                                               - [PD].[FOREIGNPRICE])
-                                                            / [PD].[PREVIOUSFOREIGNPRICE]
-                                                  End
-                      , [QuantityDiff] = Abs([PD].[PREVIOUSQUANTITY] - [PD].[QUANTITY])
+                                                              / [PD].[PREVIOUSFOREIGNPRICE]
+                                                    End
+                      , [QuantityDiff] = Abs([PD].[PREVIOUSQUANTITY]
+                                             - [PD].[QUANTITY])
                       , [QuantityDiffPercent] = Case When Coalesce([PD].[PREVIOUSQUANTITY] ,
                                                               0) = 0 Then 1
-                                                   Else Abs([PD].[PREVIOUSQUANTITY]
-                                                            - [PD].[QUANTITY])
-                                                        / [PD].[PREVIOUSQUANTITY]
-                                              End
-                      , [LineForeignValue] = ( [PD].[QUANTITY] * [PD].[FOREIGNPRICE] )
+                                                     Else Abs([PD].[PREVIOUSQUANTITY]
+                                                              - [PD].[QUANTITY])
+                                                          / [PD].[PREVIOUSQUANTITY]
+                                                End
+                      , [LineForeignValue] = ( [PD].[QUANTITY]
+                                               * [PD].[FOREIGNPRICE] )
                       , [PrevLineForeignValue] = ( [PD].[PREVIOUSQUANTITY]
-                                                 * [PD].[PREVIOUSFOREIGNPRICE] )
+                                                   * [PD].[PREVIOUSFOREIGNPRICE] )
                       , [LineLocalValue] = ( [PD].[QUANTITY] * [PD].[PRICE] )
                       , [PrevLineLocalValue] = ( [PD].[PREVIOUSQUANTITY]
-                                               * [PD].[PREVIOUSPRICE] )
+                                                 * [PD].[PREVIOUSPRICE] )
                       , [cn].[CompanyName]
                 From    [History].[PorMasterDetail] [PD]
                         Inner Join [#PorMasterHdr] [PM] On [PD].[PURCHASEORDER] = [PM].[PurchaseOrder] Collate Latin1_General_BIN
-                                                       And [PM].[DatabaseName] = [PD].[DatabaseName] Collate Latin1_General_BIN
+                                                           And [PM].[DatabaseName] = [PD].[DatabaseName] Collate Latin1_General_BIN
                         Left Join [Lookups].[CompanyNames] As [cn] On 'SysproCompany'
                                                               + [cn].[Company] = [PD].[DatabaseName] Collate Latin1_General_BIN
                 Where   [PD].[TransactionDescription] In (
@@ -222,12 +235,13 @@ Stored procedure set out to query multiple databases with the same information a
               , [ForeignPriceDiffPercent] = [ForeignPriceDiffPercent] * 100 -- crystal does not handle decimal percentages
               , [QuantityDiff]
               , [QuantityDiffPercent] = [QuantityDiffPercent] * 100
-              , [LineForeignValue] = Coalesce([LineForeignValue] , [ForeignPrice])
+              , [LineForeignValue] = Coalesce([LineForeignValue] ,
+                                              [ForeignPrice])
               , [PrevLineForeignValue] = Coalesce([PrevLineForeignValue] ,
-                                                [PreviousForeignPrice]) --take into account POs without a quantity
+                                                  [PreviousForeignPrice]) --take into account POs without a quantity
               , [LineLocalValue] = Coalesce([LineLocalValue] , [Price])
               , [PrevLineLocalValue] = Coalesce([PrevLineLocalValue] ,
-                                              [PreviousPrice])
+                                                [PreviousPrice])
         From    [#Results];
 
     End;

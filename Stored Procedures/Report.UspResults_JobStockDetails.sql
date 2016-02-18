@@ -3,20 +3,31 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_JobStockDetails] ( @Company Varchar(Max) )
-As --exec Report.UspResults_JobStockDetails 10
+CREATE Proc [Report].[UspResults_JobStockDetails]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
+As --exec Report.UspResults_JobStockDetails @Company=10, @RedTagType='M', @RedTagUse='Testing'
+
     Begin
 /*
 Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
             End;
 --remove nocount on to speed up query
         Set NoCount On;
+	--Red tag
+    Declare @RedTagDB Varchar(255)= Db_Name();
+    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_JobStockDetails' ,
+        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+        @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'InvMovements,InvMaster'; 
@@ -153,13 +164,15 @@ Stored procedure set out to query multiple databases with the same information a
               , [IM].[Bin]
               , [IM].[StockCode]
               , [IMA].[StockDescription]
-              , [OutwardLot] = Case When [IM].[TrnType] = 'R' Then [IM].[LotSerial]
-                                  Else Null
-                             End --receipted Lots generated from job
+              , [OutwardLot] = Case When [IM].[TrnType] = 'R'
+                                    Then [IM].[LotSerial]
+                                    Else Null
+                               End --receipted Lots generated from job
               , [InwardLot] = Case When [IM].[TrnType] <> 'R'
-                                      And [IM].[LotSerial] <> '' Then [IM].[LotSerial]
-                                 Else Null
-                            End --receipted Lots generated from job
+                                        And [IM].[LotSerial] <> ''
+                                   Then [IM].[LotSerial]
+                                   Else Null
+                              End --receipted Lots generated from job
               , [IM].[TrnType]
               , [Quantity] = Sum([IM].[TrnQty] * [TT].[AmountModifier])
               , [Value] = Sum([IM].[TrnValue] * [TT].[AmountModifier])
@@ -169,7 +182,7 @@ Stored procedure set out to query multiple databases with the same information a
                 Left Join [BlackBox].[Lookups].[TrnTypeAmountModifier] [TT] On [TT].[TrnType] = [IM].[TrnType] Collate Latin1_General_BIN
                                                               And [TT].[Company] = [IM].[DatabaseName] Collate Latin1_General_BIN
                 Left Join [#InvMaster] [IMA] On [IMA].[StockCode] = [IM].[StockCode] Collate Latin1_General_BIN
-                                            And [IMA].[DatabaseName] = [IM].[DatabaseName] Collate Latin1_General_BIN
+                                                And [IMA].[DatabaseName] = [IM].[DatabaseName] Collate Latin1_General_BIN
         Group By [IM].[DatabaseName]
               , [IM].[Job]
               , [IM].[Warehouse]

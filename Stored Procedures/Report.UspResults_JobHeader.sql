@@ -7,6 +7,8 @@ CREATE Proc [Report].[UspResults_JobHeader]
     (
       @Company Varchar(Max)
     , @Job Varchar(150)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As
     Begin
@@ -15,7 +17,6 @@ Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 --exec Report.UspResults_JobHeader  10, 'FA1408'
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -23,6 +24,14 @@ Stored procedure set out to query multiple databases with the same information a
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_JobHeader' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
         Select  @Job = Case When IsNumeric(@Job) = 1
                             Then Right('000000000000000' + @Job , 15)

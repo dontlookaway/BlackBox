@@ -54,6 +54,8 @@ CREATE TABLE [History].[ReqDetail]
 [SUPPLIER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [ReqDetail_timeItem] ON [History].[ReqDetail] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 GO
 ALTER TABLE [History].[ReqDetail] ADD CONSTRAINT [ReqDetail_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

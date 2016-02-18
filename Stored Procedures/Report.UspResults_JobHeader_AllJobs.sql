@@ -8,6 +8,8 @@ CREATE Proc [Report].[UspResults_JobHeader_AllJobs]
       @Company Varchar(Max)
     , @StartDateText Varchar(50)
     , @EndDateText Varchar(50)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
@@ -21,7 +23,6 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
         Select  @StartDate = Cast(@StartDateText As Date);
         Select  @EndDate = Cast(@EndDateText As Date);
 
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -29,6 +30,14 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_Template' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'WipMaster,InvMaster,InvMovements,WipLabJnl,SorContractPrice'; 
@@ -41,7 +50,8 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
             , [JobDescription] Varchar(150) Collate Latin1_General_BIN
             , [JobClassification] Varchar(10) Collate Latin1_General_BIN
             , [ProducedStockCode] Varchar(35) Collate Latin1_General_BIN
-            , [ProducedStockDescription] Varchar(150) Collate Latin1_General_BIN
+            , [ProducedStockDescription] Varchar(150)
+                Collate Latin1_General_BIN
             , [UomFlag] Char(1)
             , [JobTenderDate] DateTime2
             , [JobDeliveryDate] DateTime2
@@ -535,20 +545,25 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
                       , [ProducedStockCode] = [WM].[ProducedStockCode]
                       , [ProducedStockDescription] = [WM].[ProducedStockDescription]
                       , [ProducedQty] = [WM].[QtyManufactured]
-                      , [Uom] = Case When [WM].[UomFlag] = 'S' Then [IM].[StockUom]
-                                   When [WM].[UomFlag] = 'C' Then [IM].[CostUom]
-                                   When [WM].[UomFlag] = 'O' Then [IM].[OtherUom]
-                                   When [WM].[UomFlag] = 'A' Then [IM].[AlternateUom]
-                              End
+                      , [Uom] = Case When [WM].[UomFlag] = 'S'
+                                     Then [IM].[StockUom]
+                                     When [WM].[UomFlag] = 'C'
+                                     Then [IM].[CostUom]
+                                     When [WM].[UomFlag] = 'O'
+                                     Then [IM].[OtherUom]
+                                     When [WM].[UomFlag] = 'A'
+                                     Then [IM].[AlternateUom]
+                                End
                       , [JobTenderDate] = [WM].[JobTenderDate]
                       , [JobDeliveryDate] = [WM].[JobDeliveryDate]
                       , [JobStartDate] = [WM].[JobStartDate]
                       , [ActCompleteDate] = [WM].[ActCompleteDate]
                       , [WM].[Complete]
                       , [WM].[QtyManufactured]
-                      , [SalesOrder] = Case When [WM].[SalesOrder] = '' Then Null
-                                          Else [WM].[SalesOrder]
-                                     End
+                      , [SalesOrder] = Case When [WM].[SalesOrder] = ''
+                                            Then Null
+                                            Else [WM].[SalesOrder]
+                                       End
                       , [IM].[IssMultLotsFlag]
                       , [WM].[SellingPrice]
                       , [ims].[MaterialValue]
@@ -564,7 +579,7 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
                       , [scp].[MinFixedPrice]
                 From    [#WipMaster] [WM]
                         Left Join [#InvMaster] [IM] On [IM].[StockCode] = [WM].[ProducedStockCode]
-                                                   And [IM].[DatabaseName] = [WM].[DatabaseName]
+                                                       And [IM].[DatabaseName] = [WM].[DatabaseName]
                         Left Join [#InvMovementsSummary] As [ims] On [ims].[DatabaseName] = [WM].[DatabaseName]
                                                               And [ims].[Job] = [WM].[Job]
                         Left Join [#WipLabJnlSummary] As [wljs] On [wljs].[DatabaseName] = [WM].[DatabaseName]

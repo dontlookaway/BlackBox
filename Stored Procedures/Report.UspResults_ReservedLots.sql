@@ -8,6 +8,8 @@ CREATE Proc [Report].[UspResults_ReservedLots]
       @Company Varchar(10)
     , @StockCode Varchar(20)
     , @Job Varchar(50)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
@@ -19,6 +21,14 @@ Stored procedure set out to query multiple databases with the same information a
         Begin
             Select  @Company = Upper(@Company);
         End;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_ReservedLots' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --Convert Job to varchar for querying DB
     Declare @JobVarchar Varchar(20);

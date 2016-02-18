@@ -3,8 +3,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_StockOutput] ( @Company VARCHAR(Max) )
-As 
+CREATE Proc [Report].[UspResults_StockOutput]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
+As
     Begin
 /*
 Template designed by Chris Johnson, Prometic Group September 2015
@@ -12,74 +17,81 @@ Stored procedure set out to query multiple databases with the same information a
 Details of where lots are distributed
 --exec [Report].[UspResults_StockOutput]  10
 */
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 
 --remove nocount on to speed up query
         Set NoCount On;
-
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_StockOutput' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'LotTransactions,WipMaster,SorMaster'; 
+        Declare @ListOfTables Varchar(Max) = 'LotTransactions,WipMaster,SorMaster'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table #LotTransactions
+        Create Table [#LotTransactions]
             (
-              DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
-            , [JobPurchOrder]		VARCHAR(50) Collate Latin1_General_BIN
-            , [Lot]					VARCHAR(50) Collate Latin1_General_BIN
-            , [TrnQuantity]			NUMERIC(20,7)
-            , [TrnValue]			NUMERIC(20,2)
-            , [TrnType]				VARCHAR(5) Collate Latin1_General_BIN
-            , [TrnDate]				DATETIME2
-            , [OldExpiryDate]		DATETIME2
-            , [NewExpiryDate]		DATETIME2
-            , [Job]					VARCHAR(50) Collate Latin1_General_BIN
-            , [Bin]					VARCHAR(50) Collate Latin1_General_BIN
-			, [UnitCost]			NUMERIC(20,7)
-			, [Warehouse]			VARCHAR(10) Collate Latin1_General_BIN
-			, [Narration]			VARCHAR(150) Collate Latin1_General_BIN
-			, [Reference]			VARCHAR(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [JobPurchOrder] Varchar(50) Collate Latin1_General_BIN
+            , [Lot] Varchar(50) Collate Latin1_General_BIN
+            , [TrnQuantity] Numeric(20 , 7)
+            , [TrnValue] Numeric(20 , 2)
+            , [TrnType] Varchar(5) Collate Latin1_General_BIN
+            , [TrnDate] DateTime2
+            , [OldExpiryDate] DateTime2
+            , [NewExpiryDate] DateTime2
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [Bin] Varchar(50) Collate Latin1_General_BIN
+            , [UnitCost] Numeric(20 , 7)
+            , [Warehouse] Varchar(10) Collate Latin1_General_BIN
+            , [Narration] Varchar(150) Collate Latin1_General_BIN
+            , [Reference] Varchar(150) Collate Latin1_General_BIN
             );
-        Create Table #WipMaster
+        Create Table [#WipMaster]
             (
-              DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
-            , [Customer]			VARCHAR(50) Collate Latin1_General_BIN
-            , [CustomerName]		VARCHAR(255) Collate Latin1_General_BIN
-            , [Job]					VARCHAR(50) Collate Latin1_General_BIN
-            , [JobDescription]		VARCHAR(255) Collate Latin1_General_BIN
-            , [JobClassification]	VARCHAR(50) Collate Latin1_General_BIN
-            , [SellingPrice]		NUMERIC(20,2)
-			, [SalesOrder]			VARCHAR(50) Collate Latin1_General_BIN
-            , [SalesOrderLine]		VARCHAR(15) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Customer] Varchar(50) Collate Latin1_General_BIN
+            , [CustomerName] Varchar(255) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [JobDescription] Varchar(255) Collate Latin1_General_BIN
+            , [JobClassification] Varchar(50) Collate Latin1_General_BIN
+            , [SellingPrice] Numeric(20 , 2)
+            , [SalesOrder] Varchar(50) Collate Latin1_General_BIN
+            , [SalesOrderLine] Varchar(15) Collate Latin1_General_BIN
             );
-        Create Table #Lots
+        Create Table [#Lots]
             (
-              DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
-            , [JobPurchOrder]		VARCHAR(50) Collate Latin1_General_BIN
-            , [Lot]					VARCHAR(50)
-			, StockCode				VARCHAR(50)
-			, StockDescription		VARCHAR(255)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [JobPurchOrder] Varchar(50) Collate Latin1_General_BIN
+            , [Lot] Varchar(50)
+            , [StockCode] Varchar(50)
+            , [StockDescription] Varchar(255)
             );
-		Create TABLE #SorMaster
-		(
-			  DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
-            , SalesOrder			VARCHAR(50) Collate Latin1_General_BIN
-            , CustomerPoNumber		VARCHAR(150)
-		)
-		Create TABLE #InvMaster
-		( DatabaseName			VARCHAR(150) Collate Latin1_General_BIN
-		    , StockCode			VARCHAR(50)
-			, [StockUom]		VARCHAR(10)
-		)
+        Create Table [#SorMaster]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(50) Collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(150)
+            );
+        Create Table [#InvMaster]
+            (
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [StockCode] Varchar(50)
+            , [StockUom] Varchar(10)
+            );
 
 		
 		
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 VARCHAR(Max) = '
+        Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -89,8 +101,8 @@ Details of where lots are distributed
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -141,7 +153,7 @@ Details of where lots are distributed
 				[JobPurchOrder] <> ''''
 			End
 	End';
-        Declare @SQL2 VARCHAR(Max) = '
+        Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -151,8 +163,8 @@ Details of where lots are distributed
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -190,7 +202,7 @@ Details of where lots are distributed
 				FROM [WipMaster] As [wm]
 			End
 	End';
-	   Declare @SQL3 VARCHAR(Max) = '
+        Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -200,8 +212,8 @@ Details of where lots are distributed
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -227,7 +239,7 @@ Details of where lots are distributed
 			FROM [SorMaster] As [sm]
 			End
 	End';
-	   Declare @SQL4 VARCHAR(Max) = '
+        Declare @SQL4 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -237,8 +249,8 @@ Details of where lots are distributed
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -269,45 +281,41 @@ Details of where lots are distributed
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec [Process].[ExecForEachDB] @cmd =
-            @SQL1;
-        Exec [Process].[ExecForEachDB] @cmd =
-            @SQL2;
-		Exec [Process].[ExecForEachDB] @cmd =
-            @SQL3;
-		Exec [Process].[ExecForEachDB] @cmd =
-            @SQL4;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL4;
 --define the results you want to return
-        Create Table #Results
+        Create Table [#Results]
             (
-              [DatabaseName] VARCHAR(150)
-            , [CompanyName] VARCHAR(150)
-            , [JobPurchOrder] VARCHAR(50)
-            , [Lot] VARCHAR(50)
-			, StockCode VARCHAR(50)
-			, StockDescription VARCHAR(255)
-            , [Customer] VARCHAR(50)
-            , [CustomerName] VARCHAR(255)
-            , [JobDescription] VARCHAR(255)
-            , [JobClassification] VARCHAR(150)
-            , [SellingPrice] NUMERIC(20,2)
-            , [SalesOrder] VARCHAR(50)
-            , [SalesOrderLine] VARCHAR(15)
-            , [TrnQuantity] NUMERIC(20,7)
-            , [TrnValue] NUMERIC(20,2)
-            , [TrnType] VARCHAR(10)
-            , [AmountModifier] INT
-            , [TrnDate] DATETIME2
-            , [OldExpiryDate] DATETIME2
-            , [NewExpiryDate] DATETIME2
-            , [Job] VARCHAR(50)
-            , [Bin] VARCHAR(50)
-			, [CustomerPoNumber] VARCHAR(150)
-			, [UnitCost] NUMERIC(20,7)
-			, [StockUom] VARCHAR(10)
-			, [Warehouse] VARCHAR(200)
-			, [Narration]			VARCHAR(150) Collate Latin1_General_BIN
-			, [Reference]			VARCHAR(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)
+            , [CompanyName] Varchar(150)
+            , [JobPurchOrder] Varchar(50)
+            , [Lot] Varchar(50)
+            , [StockCode] Varchar(50)
+            , [StockDescription] Varchar(255)
+            , [Customer] Varchar(50)
+            , [CustomerName] Varchar(255)
+            , [JobDescription] Varchar(255)
+            , [JobClassification] Varchar(150)
+            , [SellingPrice] Numeric(20 , 2)
+            , [SalesOrder] Varchar(50)
+            , [SalesOrderLine] Varchar(15)
+            , [TrnQuantity] Numeric(20 , 7)
+            , [TrnValue] Numeric(20 , 2)
+            , [TrnType] Varchar(10)
+            , [AmountModifier] Int
+            , [TrnDate] DateTime2
+            , [OldExpiryDate] DateTime2
+            , [NewExpiryDate] DateTime2
+            , [Job] Varchar(50)
+            , [Bin] Varchar(50)
+            , [CustomerPoNumber] Varchar(150)
+            , [UnitCost] Numeric(20 , 7)
+            , [StockUom] Varchar(10)
+            , [Warehouse] Varchar(200)
+            , [Narration] Varchar(150) Collate Latin1_General_BIN
+            , [Reference] Varchar(150) Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -319,8 +327,8 @@ Details of where lots are distributed
                 , [CompanyName]
                 , [JobPurchOrder]
                 , [Lot]
-				, [StockCode]
-				, [StockDescription]
+                , [StockCode]
+                , [StockDescription]
                 , [Customer]
                 , [CustomerName]
                 , [JobDescription]
@@ -337,100 +345,93 @@ Details of where lots are distributed
                 , [NewExpiryDate]
                 , [Job]
                 , [Bin]
-				, [CustomerPoNumber]
-				, [UnitCost]
-				, [StockUom]
-				, [Warehouse]
-				, [Narration]
-				, [Reference]
+                , [CustomerPoNumber]
+                , [UnitCost]
+                , [StockUom]
+                , [Warehouse]
+                , [Narration]
+                , [Reference]
 				)
-                Select
-                    [lt].[DatabaseName]
-                  , [cn].[CompanyName]
-                  , [l].[JobPurchOrder]
-                  , [l].[Lot]
-				  , [l].[StockCode]
-				  , [l].[StockDescription]
-                  , [wm].[Customer]
-                  , [wm].[CustomerName]
-                  , [wm].[JobDescription]
-                  , [wm].[JobClassification]
-                  , [wm].[SellingPrice]
-                  , [wm].[SalesOrder]
-                  , [wm].[SalesOrderLine]
-                  , [lt].[TrnQuantity]
-                  , [lt].[TrnValue]
-                  , [lt].[TrnType]
-                  , [ttam].[AmountModifier]
-                  , lt.[TrnDate]
-                  , lt.[OldExpiryDate]
-                  , lt.[NewExpiryDate]
-                  , lt.[Job]
-                  , lt.[Bin]
-				  , sm.[CustomerPoNumber]
-				  , lt.[UnitCost]
-				  ,	[im].[StockUom] 
-				  , [w].[WarehouseDescription]
-				  , [lt].[Narration]
-				  , [lt].[Reference]
-                From
-                    #LotTransactions As [lt]
-                Inner Join [#Lots] As [l]
-                    On [l].[Lot] = [lt].[Lot] Collate Latin1_General_BIN
-                       And [l].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                Left Join #WipMaster As [wm]
-                    On [wm].[Job] = [lt].[Job] Collate Latin1_General_BIN
-                       And [wm].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
-				Left Join [#SorMaster] As [sm]
-					On [sm].[SalesOrder] = [wm].[SalesOrder]
-						And [sm].[DatabaseName] = [wm].[DatabaseName]
-				Left Join [#InvMaster] As [im]
-					On [im].[DatabaseName] = [lt].[DatabaseName]
-						And [im].[StockCode] = [l].[StockCode]
-                Left Join [BlackBox].[Lookups].[TrnTypeAmountModifier] As [ttam]
-                    On [ttam].[TrnType] = [lt].[TrnType]  Collate Latin1_General_BIN
-                       And [ttam].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                Left Join [Lookups].[CompanyNames] As [cn]
-                    On [cn].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
-				Left Join [BlackBox].[Lookups].[Warehouse] As [w] 
-					On [w].[Warehouse] = [lt].[Warehouse]
-					And [w].[Company] = [lt].[DatabaseName]
-					;
+                Select  [lt].[DatabaseName]
+                      , [cn].[CompanyName]
+                      , [l].[JobPurchOrder]
+                      , [l].[Lot]
+                      , [l].[StockCode]
+                      , [l].[StockDescription]
+                      , [wm].[Customer]
+                      , [wm].[CustomerName]
+                      , [wm].[JobDescription]
+                      , [wm].[JobClassification]
+                      , [wm].[SellingPrice]
+                      , [wm].[SalesOrder]
+                      , [wm].[SalesOrderLine]
+                      , [lt].[TrnQuantity]
+                      , [lt].[TrnValue]
+                      , [lt].[TrnType]
+                      , [ttam].[AmountModifier]
+                      , [lt].[TrnDate]
+                      , [lt].[OldExpiryDate]
+                      , [lt].[NewExpiryDate]
+                      , [lt].[Job]
+                      , [lt].[Bin]
+                      , [sm].[CustomerPoNumber]
+                      , [lt].[UnitCost]
+                      , [im].[StockUom]
+                      , [w].[WarehouseDescription]
+                      , [lt].[Narration]
+                      , [lt].[Reference]
+                From    [#LotTransactions] As [lt]
+                        Inner Join [#Lots] As [l] On [l].[Lot] = [lt].[Lot] Collate Latin1_General_BIN
+                                                     And [l].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [#WipMaster] As [wm] On [wm].[Job] = [lt].[Job] Collate Latin1_General_BIN
+                                                          And [wm].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [#SorMaster] As [sm] On [sm].[SalesOrder] = [wm].[SalesOrder]
+                                                          And [sm].[DatabaseName] = [wm].[DatabaseName]
+                        Left Join [#InvMaster] As [im] On [im].[DatabaseName] = [lt].[DatabaseName]
+                                                          And [im].[StockCode] = [l].[StockCode]
+                        Left Join [BlackBox].[Lookups].[TrnTypeAmountModifier]
+                        As [ttam] On [ttam].[TrnType] = [lt].[TrnType]  Collate Latin1_General_BIN
+                                     And [ttam].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [BlackBox].[Lookups].[Warehouse] As [w] On [w].[Warehouse] = [lt].[Warehouse]
+                                                              And [w].[Company] = [lt].[DatabaseName];
 
 --return results
-        Select
-            [Company] = [DatabaseName]
-          , [CompanyName]
-          , OriginalBatch = [JobPurchOrder]
-          , [Lot]
-		  , [StockCode]
-		  , [StockDescription]
-          , [Customer]
-          , [CustomerName]
-          , [JobDescription]
-          , [JobClassification]
-          , [SellingPrice]
-          , [SalesOrder]
-          , [SalesOrderLine]
-          , [TrnQuantity]
-          , [TrnValue]
-          , [TrnType]
-          , [AmountModifier]	= coalesce([AmountModifier],0)
-          , [TrnDate]			= CAST([TrnDate] As DATE)
-          , [OldExpiryDate]		= CAST([OldExpiryDate] As DATE)
-          , [NewExpiryDate]		= CAST([NewExpiryDate] As DATE)
-          , [Job]
-          , [Bin]
-		  , [CustomerPoNumber]
-		  , [UnitCost]
-		  , [Warehouse]
-		  ,	[Uom]				= [StockUom] 
-		  , [Narration]			= Case When [Narration]='' Then Null Else [Narration] End
-		  , [Reference]			= Case When [Reference]='' Then Null Else [Reference] End
-		  , [TranRank]			= RANK() Over ( Partition By [Lot] Order By [TrnDate] Asc) 
-		  , [ContainerRank]		= DENSE_RANK() Over ( Partition By [JobPurchOrder] Order By [Lot] Asc) 
-        From
-            #Results;
+        Select  [Company] = [DatabaseName]
+              , [CompanyName]
+              , [OriginalBatch] = [JobPurchOrder]
+              , [Lot]
+              , [StockCode]
+              , [StockDescription]
+              , [Customer]
+              , [CustomerName]
+              , [JobDescription]
+              , [JobClassification]
+              , [SellingPrice]
+              , [SalesOrder]
+              , [SalesOrderLine]
+              , [TrnQuantity]
+              , [TrnValue]
+              , [TrnType]
+              , [AmountModifier] = Coalesce([AmountModifier] , 0)
+              , [TrnDate] = Cast([TrnDate] As Date)
+              , [OldExpiryDate] = Cast([OldExpiryDate] As Date)
+              , [NewExpiryDate] = Cast([NewExpiryDate] As Date)
+              , [Job]
+              , [Bin]
+              , [CustomerPoNumber]
+              , [UnitCost]
+              , [Warehouse]
+              , [Uom] = [StockUom]
+              , [Narration] = Case When [Narration] = '' Then Null
+                                   Else [Narration]
+                              End
+              , [Reference] = Case When [Reference] = '' Then Null
+                                   Else [Reference]
+                              End
+              , [TranRank] = Rank() Over ( Partition By [Lot] Order By [TrnDate] Asc )
+              , [ContainerRank] = Dense_Rank() Over ( Partition By [JobPurchOrder] Order By [Lot] Asc )
+        From    [#Results];
 
     End;
 

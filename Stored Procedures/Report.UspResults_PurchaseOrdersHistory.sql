@@ -3,14 +3,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PurchaseOrdersHistory] ( @Company Varchar(Max) )
+
+
+CREATE Proc [Report].[UspResults_PurchaseOrdersHistory] ( @Company Varchar(10)     , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
 Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 Procedure to return all Purchase Order Details and changes
---Exec [Report].[UspResults_PurchaseOrdersHistory] 43
+--Exec [Report].[UspResults_PurchaseOrdersHistory] 10
 */
         If IsNumeric(@Company) = 0
             Begin
@@ -19,6 +23,14 @@ Procedure to return all Purchase Order Details and changes
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_PurchaseOrdersHistory' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'PorMasterDetail'; 
@@ -160,13 +172,13 @@ End';
                 , [CompanyName]
                 )
                 Select  [PurchaseOrder] = Coalesce([md].[PurchaseOrder] ,
-                                                   [pmd].[PURCHASE ORDER])
+                                                   [pmd].[PURCHASEORDER])
                       , [Line] = Coalesce([md].[Line] ,
-                                          [pmd].[PURCHASE ORDER LINE])
+                                          [pmd].[PURCHASEORDERLINE])
                       , [StockCode] = Coalesce([md].[StockCode] ,
-                                               [pmd].[STOCK CODE])
+                                               [pmd].[STOCKCODE])
                       , [StockDescription] = Coalesce([md].[StockDescription] ,
-                                                      [pmd].[STOCK DESCRIPTION])
+                                                      [pmd].[STOCKDESCRIPTION])
                       , [md].[MStockingUom]
                       , [md].[MOrderQty]
                       , [md].[MReceivedQty]
@@ -178,11 +190,11 @@ End';
                       , [pmd].[SignatureDateTime]
                       , [pmd].[Operator]
                       , [pmd].[PRICE]
-                      , [pmd].[PREVIOUS PRICE]
+                      , [pmd].[PREVIOUSPRICE]
                       , [pmd].[QUANTITY]
-                      , [pmd].[PREVIOUS QUANTITY]
-                      , [pmd].[QUANTITY BEING RECEIVED]
-                      , [Grn] = [pmd].[GOODS RECEIVED NUMBER]
+                      , [pmd].[PREVIOUSQUANTITY]
+                      , [pmd].[QUANTITYBEINGRECEIVED]
+                      , [Grn] = [pmd].[GOODSRECEIVEDNUMBER]
                       , [cn].[CompanyName]
                 From    [#PorMasterDetail] As [md]
                         Inner Join [BlackBox].[History].[PorMasterDetail] As [pmd] On [pmd].[PURCHASEORDER] = [md].[PurchaseOrder]

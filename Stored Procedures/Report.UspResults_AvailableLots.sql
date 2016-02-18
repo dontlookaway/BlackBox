@@ -8,6 +8,8 @@ CREATE Proc [Report].[UspResults_AvailableLots]
       @Company Varchar(10)
     , @StockCode Varchar(150)
     , @AmountRequired Numeric(20 , 8)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
@@ -22,6 +24,13 @@ Stored procedure set out to query multiple databases with the same information a
             Select  @Company = Upper(@Company);
         End;
 
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_AvailableLots' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
     Declare @ListOfTables Varchar(Max) = 'WipMasterSub,TblApTerms'; 

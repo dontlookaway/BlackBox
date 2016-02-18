@@ -57,6 +57,10 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>0</Count>
+    <Count>4</Count>
+    <DataFile>Lookups.GenJournalDetailSource_Data.sql</DataFile>
+    <DataFile>Lookups.GenJournalType_Data.sql</DataFile>
+    <DataFile>Lookups.LotTransactionTrnType_Data.sql</DataFile>
+    <DataFile>Lookups.HolidayDays_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>

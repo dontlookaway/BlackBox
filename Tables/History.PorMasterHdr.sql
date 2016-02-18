@@ -14,6 +14,8 @@ CREATE TABLE [History].[PorMasterHdr]
 [PURCHASEORDER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SUPPLIER] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [PorMasterHdr_timeItem] ON [History].[PorMasterHdr] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 GO
 ALTER TABLE [History].[PorMasterHdr] ADD CONSTRAINT [PorMasterHdr_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
