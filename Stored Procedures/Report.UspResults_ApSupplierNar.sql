@@ -7,6 +7,8 @@ CREATE Proc [Report].[UspResults_ApSupplierNar]
     (
       @Company Varchar(Max)
     , @Supplier Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As
     Begin
@@ -16,7 +18,6 @@ Stored procedure set out to query multiple databases with the same information a
 Returns ApSupplierNar table for PO																				
 --exec Report.UspResults_ApSupplierNar @Company =10,@Supplier ='K3SY01'
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -24,7 +25,13 @@ Returns ApSupplierNar table for PO
 
 --remove nocount on to speed up query
         Set NoCount On;
-
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_ApSupplierNar' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'ApSupplierNar'; 
 

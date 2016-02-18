@@ -3,45 +3,57 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_GenledgerJournalsGrouped] ( @Company VARCHAR(Max) )
-As 
+CREATE Proc [Report].[UspResults_GenledgerJournalsGrouped]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
+As
     Begin
 /*
 Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 --Exec [Report].[UspResults_GenledgerJournalsGrouped] @Company ='10'
 */
-    If IsNumeric(@Company) = 0
-        Begin
-            Select  @Company = Upper(@Company);
-        End;
+        If IsNumeric(@Company) = 0
+            Begin
+                Select  @Company = Upper(@Company);
+            End;
 
 --remove nocount on to speed up query
-        Set NoCount off;
+        Set NoCount Off;
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_GenledgerJournalsGrouped' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables VARCHAR(Max) = 'GenJournalDetail'; 
+        Declare @ListOfTables Varchar(Max) = 'GenJournalDetail'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GenJournalDetail]
             (
-              DatabaseName VARCHAR(150) Collate Latin1_General_BIN
-            , [GlYear] INT
-            , [GlPeriod] INT
-            , [EntryDate] DATETIME2
-            , [Journal] INT
-            , [GlCode] VARCHAR(150) Collate Latin1_General_BIN
-            , [EntryType] CHAR(1)
-            , [Reference] VARCHAR(255)
-            , [Comment] VARCHAR(255)
-            , [EntryValue] NUMERIC(20, 7)
-            , [EntryPosted] CHAR(1)
-            , [SubModJournal] INT
-            , [Description] VARCHAR(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [GlYear] Int
+            , [GlPeriod] Int
+            , [EntryDate] DateTime2
+            , [Journal] Int
+            , [GlCode] Varchar(150) Collate Latin1_General_BIN
+            , [EntryType] Char(1)
+            , [Reference] Varchar(255)
+            , [Comment] Varchar(255)
+            , [EntryValue] Numeric(20 , 7)
+            , [EntryPosted] Char(1)
+            , [SubModJournal] Int
+            , [Description] Varchar(150)
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL VARCHAR(Max) = '
+        Declare @SQL Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -51,8 +63,8 @@ Stored procedure set out to query multiple databases with the same information a
 	BEGIN'
             + --only companies selected in main run, or if companies selected then all
             '
-		IF @DBCode in (''' + REPLACE(@Company, ',', ''',''') + ''') or '''
-            + UPPER(@Company) + ''' = ''ALL''
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
 					, @RequiredCountOfTables INT
 					, @ActualCountOfTables INT'
@@ -92,34 +104,33 @@ Stored procedure set out to query multiple databases with the same information a
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec [Process].[ExecForEachDB] @cmd =
-            @SQL;
+        Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
 --define the results you want to return
-        Create Table #ResultsGL
+        Create Table [#ResultsGL]
             (
-              DatabaseName VARCHAR(150)
-            , [Mapping1] VARCHAR(255)
-            , [Mapping2] VARCHAR(255)
-            , [Mapping3] VARCHAR(255)
-            , [Mapping4] VARCHAR(255)
-            , [Mapping5] VARCHAR(255)
-            , [GlYear] INT
-            , [GlPeriod] INT
-            , [EntryDate] DATETIME2
-            , [Journal] INT
-            , [GlCode] VARCHAR(150)
-            , [GlStart] CHAR(3)
-            , [GlMid] CHAR(5)
-            , [GlEnd] CHAR(3)
-            , [EntryType] CHAR(1)
-            , [Modifier] NUMERIC(20, 7)
-            , [Reference] VARCHAR(250)
-            , [Comment] VARCHAR(250)
-            , [EntryValue] NUMERIC(20, 7)
-            , [EntryPosted] CHAR(1)
-            , [SubModJournal] INT
-            , [GlDescription] VARCHAR(150)
+              [DatabaseName] Varchar(150)
+            , [Mapping1] Varchar(255)
+            , [Mapping2] Varchar(255)
+            , [Mapping3] Varchar(255)
+            , [Mapping4] Varchar(255)
+            , [Mapping5] Varchar(255)
+            , [GlYear] Int
+            , [GlPeriod] Int
+            , [EntryDate] DateTime2
+            , [Journal] Int
+            , [GlCode] Varchar(150)
+            , [GlStart] Char(3)
+            , [GlMid] Char(5)
+            , [GlEnd] Char(3)
+            , [EntryType] Char(1)
+            , [Modifier] Numeric(20 , 7)
+            , [Reference] Varchar(250)
+            , [Comment] Varchar(250)
+            , [EntryValue] Numeric(20 , 7)
+            , [EntryPosted] Char(1)
+            , [SubModJournal] Int
+            , [GlDescription] Varchar(150)
             );
 
 --Placeholder to create indexes as required
@@ -149,74 +160,72 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SubModJournal]
                 , [GlDescription]
 	            )
-                Select COALESCE([gd].[DatabaseName],[gm].[Company])
-                  , [Mapping1] = COALESCE([gm].[Mapping1], 'No map')
-                  , [Mapping2] = COALESCE([gm].[Mapping2], 'No map')
-                  , [Mapping3] = COALESCE([gm].[Mapping3], 'No map')
-                  , [Mapping4] = COALESCE([gm].[Mapping4], 'No map')
-                  , [Mapping5] = COALESCE([gm].[Mapping5], 'No map')
-                  , [gd].[GlYear]
-                  , [gd].[GlPeriod]
-                  , [gd].[EntryDate]
-                  , [gd].[Journal]
-                  , [GlCode] = COALESCE([gd].[GlCode], [gm].[GlCode])
-                  , [GlStart]	= cast(COALESCE([gm].[GlStart],
-                                         PARSENAME(gd.GlCode, 3))					   as char(3))
-                  , [GlMid]		= cast(COALESCE([gm].[GlMid], PARSENAME(gd.GlCode, 2)) as char(5))
-                  , [GlEnd]		= cast(COALESCE([gm].[GlEnd], PARSENAME(gd.GlCode, 1)) as char(3))
-                  , [gd].[EntryType]
-                  , Modifier = Case When gd.[EntryType] = 'D' Then 1
-                                    When gd.[EntryType] = 'C' Then -1
-                                    Else 0
-                               End
-                  , [Reference] = Case When [gd].[Reference] = '' Then Null
-                                       Else [gd].[Reference]
-                                  End
-                  , [Comment] = Case When [gd].[Comment] = '' Then Null
-                                     Else [gd].[Comment]
-                                End
-                  , [EntryValue] = COALESCE([gd].[EntryValue], 0)
-                  , [gd].[EntryPosted]
-                  , [SubModJournal] = Case When [gd].[SubModJournal] = 0
+                Select  Coalesce([gd].[DatabaseName] , [gm].[Company])
+                      , [Mapping1] = Coalesce([gm].[Mapping1] , 'No map')
+                      , [Mapping2] = Coalesce([gm].[Mapping2] , 'No map')
+                      , [Mapping3] = Coalesce([gm].[Mapping3] , 'No map')
+                      , [Mapping4] = Coalesce([gm].[Mapping4] , 'No map')
+                      , [Mapping5] = Coalesce([gm].[Mapping5] , 'No map')
+                      , [gd].[GlYear]
+                      , [gd].[GlPeriod]
+                      , [gd].[EntryDate]
+                      , [gd].[Journal]
+                      , [GlCode] = Coalesce([gd].[GlCode] , [gm].[GlCode])
+                      , [GlStart] = Cast(Coalesce([gm].[GlStart] ,
+                                                  ParseName([gd].[GlCode] , 3)) As Char(3))
+                      , [GlMid] = Cast(Coalesce([gm].[GlMid] ,
+                                                ParseName([gd].[GlCode] , 2)) As Char(5))
+                      , [GlEnd] = Cast(Coalesce([gm].[GlEnd] ,
+                                                ParseName([gd].[GlCode] , 1)) As Char(3))
+                      , [gd].[EntryType]
+                      , [Modifier] = Case When [gd].[EntryType] = 'D' Then 1
+                                          When [gd].[EntryType] = 'C' Then -1
+                                          Else 0
+                                     End
+                      , [Reference] = Case When [gd].[Reference] = ''
                                            Then Null
-                                           Else [gd].[SubModJournal]
+                                           Else [gd].[Reference]
                                       End
-				  , [gd].[Description]
-                From
-                    [Lookups].[GLMapping] As [gm]
-                Full Outer Join [#GenJournalDetail] gd
-                    On [gd].[GlCode] = [gm].[GlCode]
-                       And [gd].[DatabaseName] = [gm].[Company];
+                      , [Comment] = Case When [gd].[Comment] = '' Then Null
+                                         Else [gd].[Comment]
+                                    End
+                      , [EntryValue] = Coalesce([gd].[EntryValue] , 0)
+                      , [gd].[EntryPosted]
+                      , [SubModJournal] = Case When [gd].[SubModJournal] = 0
+                                               Then Null
+                                               Else [gd].[SubModJournal]
+                                          End
+                      , [gd].[Description]
+                From    [Lookups].[GLMapping] As [gm]
+                        Full Outer Join [#GenJournalDetail] [gd] On [gd].[GlCode] = [gm].[GlCode]
+                                                              And [gd].[DatabaseName] = [gm].[Company];
 
 --return results
-        Select
-            Company = [rg].[DatabaseName]
-		  , CompanyName
-          , [rg].[Mapping1]
-          , [rg].[Mapping2]
-          , [rg].[Mapping3]
-          , [rg].[Mapping4]
-          , [rg].[Mapping5]
-          , [rg].[GlYear]
-          , [rg].[GlPeriod]
-          , [EntryDate] = CAST([rg].[EntryDate] As DATE)
-          , [rg].[Journal]
-          , [rg].[GlCode]
-          , [rg].[GlStart]
-          , [rg].[GlMid]
-          , [rg].[GlEnd]
-          , [rg].[EntryType]
-          , [rg].[Modifier]
-          , [rg].[Reference]
-          , [rg].[Comment]
-          , [rg].[EntryValue]
-          , [rg].[EntryPosted]
-          , [rg].[SubModJournal]
-          , [rg].[GlDescription]
-        From
-            [#ResultsGL] As [rg]
-			left join Lookups.CompanyNames cn on rg.[DatabaseName]=cn.Company
-			;
+        Select  [Company] = [rg].[DatabaseName]
+              , [cn].[CompanyName]
+              , [rg].[Mapping1]
+              , [rg].[Mapping2]
+              , [rg].[Mapping3]
+              , [rg].[Mapping4]
+              , [rg].[Mapping5]
+              , [rg].[GlYear]
+              , [rg].[GlPeriod]
+              , [EntryDate] = Cast([rg].[EntryDate] As Date)
+              , [rg].[Journal]
+              , [rg].[GlCode]
+              , [rg].[GlStart]
+              , [rg].[GlMid]
+              , [rg].[GlEnd]
+              , [rg].[EntryType]
+              , [rg].[Modifier]
+              , [rg].[Reference]
+              , [rg].[Comment]
+              , [rg].[EntryValue]
+              , [rg].[EntryPosted]
+              , [rg].[SubModJournal]
+              , [rg].[GlDescription]
+        From    [#ResultsGL] As [rg]
+                Left Join [Lookups].[CompanyNames] [cn] On [rg].[DatabaseName] = [cn].[Company];
 
     End;
 

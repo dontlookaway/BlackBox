@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_LotsRetesting] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_LotsRetesting]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -19,6 +24,14 @@ Stored procedure set out to query multiple databases with the same information a
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_LotsRetesting' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'InvMaster,InvWhControl,LotDetail'; 
@@ -281,7 +294,7 @@ Stored procedure set out to query multiple databases with the same information a
         Exec [Process].[ExecForEachDB] @cmd = @SQL2;
         Exec [Process].[ExecForEachDB] @cmd = @SQL3;
         Exec [Process].[ExecForEachDB] @cmd = @SQL4;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLLatestLots;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLLatestLots;
 
 --define the results you want to return
         Create Table [#Results]
@@ -295,7 +308,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Description] Varchar(150) Collate Latin1_General_BIN
             , [LotNumber] Varchar(150) Collate Latin1_General_BIN
             , [Warehouse] Varchar(150) Collate Latin1_General_BIN
-			, UnitCost Numeric(20,8)
+            , [UnitCost] Numeric(20 , 8)
             );
 
 --Placeholder to create indexes as required
@@ -311,7 +324,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [Description]
                 , [LotNumber]
                 , [Warehouse]
-				, [UnitCost]
+                , [UnitCost]
                 )
                 Select  [LD].[DatabaseName]
                       , [LD].[StockCode]
@@ -322,7 +335,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [im].[Description]
                       , [LotNumber] = [l].[JobPurchOrder]
                       , [Warehouse] = [IWC].[Description]
-					  , [LL].[UnitCost]
+                      , [LL].[UnitCost]
                 From    [#LotDetail] [LD]
                         Inner Join [#InvWhControl] [IWC] On [LD].[Warehouse] = [IWC].[Warehouse]
                                                             And [LD].[DatabaseName] = [IWC].[DatabaseName]
@@ -330,9 +343,9 @@ Stored procedure set out to query multiple databases with the same information a
                                                           And [im].[DatabaseName] = [LD].[DatabaseName]
                         Left Outer Join [#Lots] As [l] On [l].[Lot] = [LD].[Lot]
                                                           And [l].[DatabaseName] = [LD].[DatabaseName]
-						Left Join [#LatestLots] As [LL] On LD.[Lot]=LL.[Lot]
-															And [LL].[StockCode] = [LD].[StockCode]
-															And [LL].[DatabaseName] = [LD].[DatabaseName]
+                        Left Join [#LatestLots] As [LL] On [LD].[Lot] = [LL].[Lot]
+                                                           And [LL].[StockCode] = [LD].[StockCode]
+                                                           And [LL].[DatabaseName] = [LD].[DatabaseName]
                 Where   ( [LD].[QtyOnHand] > 0 )
                 Order By [IWC].[Description]
                       , [LD].[StockCode];
@@ -348,7 +361,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[Description]
               , [R].[LotNumber]
               , [R].[Warehouse]
-			  , [R].[UnitCost]
+              , [R].[UnitCost]
         From    [#Results] [R]
                 Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [cn].[Company] = [R].[DatabaseName];
 
@@ -357,7 +370,7 @@ Stored procedure set out to query multiple databases with the same information a
         Drop Table [#LotDetail];
         Drop Table [#Lots];
         Drop Table [#Results];
-		Drop Table [#LatestLots]
+        Drop Table [#LatestLots];
     End;
 
 

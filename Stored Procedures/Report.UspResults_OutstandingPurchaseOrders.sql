@@ -3,14 +3,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_OutstandingPurchaseOrders] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_OutstandingPurchaseOrders]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
 Template designed by Chris Johnson, Prometic Group September 2015 
 Stored procedure set out to bring back purchase orders which do not have receipts
 */
-        Set NoCount Off;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -18,6 +22,14 @@ Stored procedure set out to bring back purchase orders which do not have receipt
 
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_Template' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'PorMasterHdr,ApSupplier,PorMasterDetail'; 
@@ -234,7 +246,7 @@ Stored procedure set out to bring back purchase orders which do not have receipt
                         Left Join [BlackBox].[Lookups].[PurchaseOrderInvoiceMapping] [POI] On [POI].[PurchaseOrder] = [PH].[PurchaseOrder]
                                                               And [POI].[Company] = [PH].[DatabaseName]
                         Left Join [#ApSupplier] [APS] On [APS].[Supplier] = [PH].[Supplier]
-                                                     And [APS].[DatabaseName] = [PH].[DatabaseName]
+                                                         And [APS].[DatabaseName] = [PH].[DatabaseName]
                         Left Join [#PorMasterDetail] [PMD] On [PMD].[PurchaseOrder] = [PH].[PurchaseOrder]
                 Where   [POI].[Invoice] Is Null --Where an invoice has not been received
                         And [PH].[CancelledFlag] <> 'Y' --Ignore cancelled flag

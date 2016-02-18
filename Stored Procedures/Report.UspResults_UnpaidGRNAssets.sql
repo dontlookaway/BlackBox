@@ -7,6 +7,8 @@ CREATE Proc [Report].[UspResults_UnpaidGRNAssets]
     (
       @Company Varchar(Max)
     , @PeriodYYYYMM Int
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
     )
 As
     Begin
@@ -25,6 +27,13 @@ Compares GRN amounts and confirms how much is outstanding
 --remove nocount on to speed up query
         Set NoCount On;
 
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_UnpaidGRNAssets' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'GrnDetails,GrnAdjustment,GrnMatching'; 
 
@@ -79,24 +88,25 @@ Compares GRN amounts and confirms how much is outstanding
 USE [?];
 Declare @DB varchar(150),@DBCode varchar(150)
 Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-+ --Only query DBs beginning SysProCompany
-'
+            + --Only query DBs beginning SysProCompany
+            '
 IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 BEGIN'
-+ --only companies selected in main run, or if companies selected then all
-'
+            + --only companies selected in main run, or if companies selected then all
+            '
 IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-+ Upper(@Company) + ''' = ''ALL''
-Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + ''', @RequiredCountOfTables INT,@ActualCountOfTables INT'
-+ --count number of tables requested (number of commas plus one)
-'
+            + Upper(@Company) + ''' = ''ALL''
+Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + ''', @RequiredCountOfTables INT,@ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
 Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-+ --Count of the tables requested how many exist in the db
-'
+            + --Count of the tables requested how many exist in the db
+            '
 Select @ActualCountOfTables = COUNT(1) FROM sys.tables
 Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-+ --only if the count matches (all the tables exist in the requested db) then run the script
-'
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
 If @ActualCountOfTables=@RequiredCountOfTables
 BEGIN
 Insert  [#GrnDets]
@@ -109,9 +119,11 @@ Select  @DBCode
 , QtyReceived = Sum(GD.QtyReceived)
 , PostCurrency, ConvRate, MulDiv, GrnYear, GrnMonth
 From    [GrnDetails] [GD] Left Join [SysproCompany40].[dbo].[GenMaster] As [GM2] On [GD].[DebitRecGlCode] = [GM2].[GlCode]
-Where   ([GrnYear]*100)+[GD].[GrnMonth]<='+ Cast(@PeriodYYYYMM As NChar(6))+ '
+Where   ([GrnYear]*100)+[GD].[GrnMonth]<=' + Cast(@PeriodYYYYMM As NChar(6))
+            + '
 And (Substring([GM2].[GlCode],5,5) In (''11200'',''11201'',''26001'',''26011'',''26021'',''22999'') Or (Substring([GM2].[GlCode],5,5) Like ''22%%1'' ) Or (Substring([GM2].[GlCode],5,9) = ''49900.003'' ))
-And [GM2].[Company] = ''' + @Company + '''
+And [GM2].[Company] = ''' + @Company
+            + '''
 Group By [Supplier],[Grn],[DebitRecGlCode],[GM2].[Description],[PurchaseOrder],[PurchaseOrderLin],[StockCode],[StockDescription],[SupCatalogueNum],[Warehouse],[GrnSource],[Journal],[JournalEntry],[PostCurrency],[ConvRate],[MulDiv],[GrnYear],[GrnMonth];
 End
 End';
@@ -230,7 +242,7 @@ End';
 		--Print @SQLGrnAdjust;
         Exec [Process].[ExecForEachDB] @cmd = @SQLGrnAdjust;
 		--Print @SQLGrnMatch;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatch;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatch;
 
 --define the results you want to return
         Create Table [#Results]
@@ -331,7 +343,7 @@ End';
                       , [GD].[PostCurrency]
                       , [GD].[ConvRate]
                       , [GD].[MulDiv]
-					  , [CN].[CompanyName]
+                      , [CN].[CompanyName]
                 Having  ( Sum([OrigGrnValue])
                           - IsNull(Sum(IsNull([GM].[MatchedValue] , 0)) , 0)
                           + Sum(IsNull([GA].[GrnAdjValue] , 0)) <> 0 );

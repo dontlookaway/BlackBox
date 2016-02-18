@@ -3,7 +3,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_StockMovements] ( @Company Varchar(Max) )
+CREATE Proc [Report].[UspResults_StockMovements]
+    (
+      @Company Varchar(Max)
+    , @RedTagType Char(1)
+    , @RedTagUse Varchar(500)
+    )
 As
     Begin
 /*
@@ -21,6 +26,14 @@ Stored procedure set out to query multiple databases with the same information a
           , @StockCodes Varchar(Max) = 'All';
 --remove nocount on to speed up query
         Set NoCount On;
+
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_StockMovements' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'InvMaster,InvMovements'; 
@@ -46,7 +59,8 @@ Stored procedure set out to query multiple databases with the same information a
                         ( [Warehouse]
                         )
                         Select  [Value]
-                        From    [BlackBox].[dbo].[udf_SplitString](@Warehouses , ',');
+                        From    [BlackBox].[dbo].[udf_SplitString](@Warehouses ,
+                                                              ',');
             End;
 
 	--List of Bins selected by User
@@ -94,7 +108,8 @@ Stored procedure set out to query multiple databases with the same information a
                         ( [StockCode]
                         )
                         Select  [Value]
-                        From    [BlackBox].[dbo].[udf_SplitString](@StockCodes , ',');
+                        From    [BlackBox].[dbo].[udf_SplitString](@StockCodes ,
+                                                              ',');
             End;
 
 --create temporary tables to be pulled from different databases, including a column to id
@@ -289,7 +304,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [IM2].[TrnPeriod]
                 From    [#InvMaster] [IM]
                         Left Join [#InvMovements] [IM2] On [IM2].[DatabaseName] = [IM].[DatabaseName]
-                                                       And [IM2].[StockCode] = [IM].[StockCode]
+                                                           And [IM2].[StockCode] = [IM].[StockCode]
                         Left Join [Lookups].[TrnTypeAmountModifier] [TM] On [TM].[TrnType] Collate Latin1_General_BIN = [IM2].[TrnType]
                                                               And [TM].[Company] = [IM].[DatabaseName] Collate Latin1_General_BIN;
 
@@ -311,16 +326,17 @@ Stored procedure set out to query multiple databases with the same information a
               , [TrnValue] = Coalesce([TrnValue] , 0)
               , [Warehouse]
               , [Lot] = Case When [LotSerial] = '' Then Null
-                           When IsNumeric([LotSerial]) = 1
-                           Then Cast([LotSerial] As BigInt)
-                           Else [LotSerial]
-                      End
+                             When IsNumeric([LotSerial]) = 1
+                             Then Cast([LotSerial] As BigInt)
+                             Else [LotSerial]
+                        End
               , [TrnPeriod] = Cast(DateAdd(Month ,
-                                         Cast(Right([TrnPeriod] , 2) As Int) - 1 ,
-                                         DateAdd(Year ,
-                                                 Cast(Left([TrnPeriod] , 4) As Int)
-                                                 - 1900 ,
-                                                 Cast('' As DateTime2))) As Date)
+                                           Cast(Right([TrnPeriod] , 2) As Int)
+                                           - 1 ,
+                                           DateAdd(Year ,
+                                                   Cast(Left([TrnPeriod] , 4) As Int)
+                                                   - 1900 ,
+                                                   Cast('' As DateTime2))) As Date)
         From    [#Results];
 
     End;
