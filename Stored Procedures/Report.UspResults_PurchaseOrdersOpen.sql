@@ -60,6 +60,7 @@ Returns details of all open (non cancelled & non fulfilled) PO's
             , [LatestDueDate] DateTime2
             , [CompleteFlag] Char(5)
             , [MForeignPrice] Numeric(20 , 3)
+            , [MGlCode] Varchar(35)
             );
         Create Table [#ApSupplier]
             (
@@ -158,6 +159,7 @@ Returns details of all open (non cancelled & non fulfilled) PO's
 			        , [LatestDueDate]
 			        , [CompleteFlag]
 					, MForeignPrice
+					,[MGlCode] 
 			        )
 			SELECT [DatabaseName] = @DBCode
                  , [pmd].[PurchaseOrder]
@@ -173,6 +175,7 @@ Returns details of all open (non cancelled & non fulfilled) PO's
                  , [pmd].[MLatestDueDate]
                  , [pmd].[MCompleteFlag]
 				 , [MForeignPrice]
+				 ,[MGlCode] 
 			From [PorMasterDetail] As [pmd]
 			End
 	End';
@@ -268,44 +271,87 @@ Returns details of all open (non cancelled & non fulfilled) PO's
         Exec [Process].[ExecForEachDB] @cmd = @SQL4;
 
 --define the results you want to return
+        Create Table [#Results]
+            (
+              [Company] Varchar(250)
+            , [PurchaseOrder] Varchar(35)
+            , [Line] Varchar(15)
+            , [Supplier] Varchar(35)
+            , [SupplierName] Varchar(150)
+            , [Buyer] Varchar(35)
+            , [StockCode] Varchar(35)
+            , [StockDescription] Varchar(150)
+            , [SupCatalogue] Varchar(50)
+            , [OrderQty] Numeric(20 , 7)
+            , [ReceivedQty] Numeric(20 , 7)
+            , [OrderUom] Varchar(10)
+            , [Warehouse] Varchar(35)
+            , [LatestDueDate] Date
+            , [Confirmed] Varchar(35)
+            , [OrderStatusDescription] Varchar(150)
+            , [MPrice] Numeric(20 , 2)
+            , [MForeignPrice] Numeric(20 , 2)
+            , [GLCode] Varchar(35)
+            );
 
 --Placeholder to create indexes as required
 
 --script to combine base data and insert into results table
 
 --return results
-        Select  [Company] = [PH].[DatabaseName]
-              , [PH].[PurchaseOrder]
-              , [PD].[Line]
-              , [APS].[Supplier]
-              , [APS].[SupplierName]
-              , [PH].[Buyer]
-              , [StockCode] = [PD].[StockCode]
-              , [StockDescription] = [PD].[StockDes]
-              , [SupCatalogue] = [PD].[SupCatalogue]
-              , [OrderQty] = [PD].[OrderQty]
-              , [ReceivedQty] = [PD].[ReceivedQty]
-              , [OrderUom] = [PD].[OrderUom]
-              , [Warehouse] = [PD].[Warehouse]
-              , [LatestDueDate] = [PD].[LatestDueDate]
-              , [Confirmed] = [PMp].[Confirmed]
-              , [pos].[OrderStatusDescription]
-              , [PD].[MPrice]
-              , [PD].[MForeignPrice]
-        Into    [#Results]
-        From    [#PorMasterHdr] [PH]
-                Inner Join [#PorMasterDetail] [PD] On [PH].[PurchaseOrder] = [PD].[PurchaseOrder]
-                                                      And [PD].[DatabaseName] = [PH].[DatabaseName]
-                Inner Join [#ApSupplier] [APS] On [PH].[Supplier] = [APS].[Supplier]
-                                                  And [APS].[DatabaseName] = [PD].[DatabaseName]
-                Left Outer Join [#PorMasterDetailPlus] [PMp] With ( NoLock ) On [PD].[PurchaseOrder] = [PMp].[PurchaseOrder]
+        Insert  [#Results]
+                ( [Company]
+                , [PurchaseOrder]
+                , [Line]
+                , [Supplier]
+                , [SupplierName]
+                , [Buyer]
+                , [StockCode]
+                , [StockDescription]
+                , [SupCatalogue]
+                , [OrderQty]
+                , [ReceivedQty]
+                , [OrderUom]
+                , [Warehouse]
+                , [LatestDueDate]
+                , [Confirmed]
+                , [OrderStatusDescription]
+                , [MPrice]
+                , [MForeignPrice]
+                , [GLCode]
+                )
+                Select  [Company] = [PH].[DatabaseName]
+                      , [PH].[PurchaseOrder]
+                      , [PD].[Line]
+                      , [APS].[Supplier]
+                      , [APS].[SupplierName]
+                      , [PH].[Buyer]
+                      , [StockCode] = [PD].[StockCode]
+                      , [StockDescription] = [PD].[StockDes]
+                      , [SupCatalogue] = [PD].[SupCatalogue]
+                      , [OrderQty] = [PD].[OrderQty]
+                      , [ReceivedQty] = [PD].[ReceivedQty]
+                      , [OrderUom] = [PD].[OrderUom]
+                      , [Warehouse] = [PD].[Warehouse]
+                      , [LatestDueDate] = [PD].[LatestDueDate]
+                      , [Confirmed] = [PMp].[Confirmed]
+                      , [pos].[OrderStatusDescription]
+                      , [PD].[MPrice]
+                      , [PD].[MForeignPrice]
+                      , [GLCode] = [PD].[MGlCode]
+                From    [#PorMasterHdr] [PH]
+                        Inner Join [#PorMasterDetail] [PD] On [PH].[PurchaseOrder] = [PD].[PurchaseOrder]
+                                                              And [PD].[DatabaseName] = [PH].[DatabaseName]
+                        Inner Join [#ApSupplier] [APS] On [PH].[Supplier] = [APS].[Supplier]
+                                                          And [APS].[DatabaseName] = [PD].[DatabaseName]
+                        Left Outer Join [#PorMasterDetailPlus] [PMp] With ( NoLock ) On [PD].[PurchaseOrder] = [PMp].[PurchaseOrder]
                                                               And [PMp].[DatabaseName] = [PD].[DatabaseName]
                                                               And [PD].[Line] = [PMp].[Line]
-                Left Join [Lookups].[PurchaseOrderStatus] As [pos] On [APS].[DatabaseName] = [pos].[Company] Collate Latin1_General_BIN
+                        Left Join [Lookups].[PurchaseOrderStatus] As [pos] On [APS].[DatabaseName] = [pos].[Company] Collate Latin1_General_BIN
                                                               And [PH].[OrderStatus] = [pos].[OrderStatusCode] Collate Latin1_General_BIN
-        Where   [PH].[OrderStatus] <> '*'
-                And [PD].[OrderQty] > [PD].[ReceivedQty]
-                And ( [PD].[CompleteFlag] <> 'Y' );
+                Where   [PH].[OrderStatus] <> '*'
+                        And [PD].[OrderQty] > [PD].[ReceivedQty]
+                        And ( [PD].[CompleteFlag] <> 'Y' );
 
         Select  [cn].[CompanyName]
               , [r].[PurchaseOrder]
@@ -325,8 +371,12 @@ Returns details of all open (non cancelled & non fulfilled) PO's
               , [r].[OrderStatusDescription]
               , [Price] = [r].[MPrice]
               , [ForeignPrice] = [r].[MForeignPrice]
+              , [r].[GLCode]
+			  , [GLCodeDescription] = [GM].[Description]
         From    [#Results] As [r]
-                Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [r].[Company] Collate Latin1_General_BIN;
+                Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [r].[Company] Collate Latin1_General_BIN
+                Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[GlCode] = [r].[GLCode]
+                                                              And [GM].[Company] = [r].[Company];
 
     End;
 
