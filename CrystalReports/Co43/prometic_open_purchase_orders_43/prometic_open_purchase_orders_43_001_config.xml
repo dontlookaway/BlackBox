@@ -1,0 +1,72 @@
+<ExportReportConfiguration NodeName="prometic_open_purchase_orders_43_001" NodeText="prometic_open_purchase_orders_43">
+  <ControlFile Name="prometic_open_purchase_orders_43_001">
+    <ReportControl SaveValue="ctl_prometic_open_purchase_orders_43_001_system">
+      <Control Type="3" Template="tem_prometic_open_purchase_orders_43_001" CrystalUserName="" CrystalPassword="ythbl5jM74idHUqGUyg/UqPsGaqRy95ZKH9dmyYH98dfiJAa+FQsiw==" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_prometic_open_purchase_orders_43_001.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_prometic_open_purchase_orders_43_001">
+      <Form FormSize="{Width=450, Height=455}" TabSize="{Width=450, Height=455}">
+        <TabPage Text="Tab Page" Name="d4811ac9-544b-418e-8c8b-8110490ef0c4" />
+        <TabPage Text="Dynamic parameters" Name="35e4aab8-37b1-45f3-ba85-4bffb38f8e96" />
+        <TabPage Text="Output Options" Name="7457dea9-6266-4cfc-914a-79edf0052b68">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+      <ArrayOfParameterQueryInfo>
+        <ParameterQueryInfo>
+          <ParameterName>Stockcode</ParameterName>
+          <DatabaseName>SysproCompany43</DatabaseName>
+          <SchemaName>dbo</SchemaName>
+          <TableName>v_LSI_OpenPurchaseReport</TableName>
+          <ColumnKeyName>MStockCode</ColumnKeyName>
+          <TableNameDescription />
+          <DescriptionLinkColumnName />
+          <ColumnDescriptionName />
+          <RecordLimit>1000</RecordLimit>
+          <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
+          <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
+        </ParameterQueryInfo>
+        <ParameterQueryInfo>
+          <ParameterName>Buyer</ParameterName>
+          <DatabaseName>SysproCompany43</DatabaseName>
+          <SchemaName>dbo</SchemaName>
+          <TableName>v_LSI_OpenPurchaseReport</TableName>
+          <ColumnKeyName>Buyer</ColumnKeyName>
+          <TableNameDescription />
+          <DescriptionLinkColumnName />
+          <ColumnDescriptionName />
+          <RecordLimit>100</RecordLimit>
+          <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
+          <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
+        </ParameterQueryInfo>
+        <ParameterQueryInfo>
+          <ParameterName>Supplier</ParameterName>
+          <DatabaseName>SysproCompany43</DatabaseName>
+          <SchemaName>dbo</SchemaName>
+          <TableName>v_LSI_OpenPurchaseReport</TableName>
+          <ColumnKeyName>Supplier</ColumnKeyName>
+          <TableNameDescription />
+          <DescriptionLinkColumnName />
+          <ColumnDescriptionName />
+          <RecordLimit>1000</RecordLimit>
+          <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
+          <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
+        </ParameterQueryInfo>
+      </ArrayOfParameterQueryInfo>
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>
