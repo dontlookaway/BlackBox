@@ -1,0 +1,12 @@
+<ExportReportConfiguration NodeName="gl_transaction_report" NodeText="GL Transaction Report">
+  <ControlFile Name="gl_transaction_report">
+    <ReportControl SaveValue="ctl_gl_transaction_report_system">
+      <Control Type="3" Template="gl_transaction_report" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_gl_transaction_report.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_gl_transaction_report">
+      <Form />
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>
