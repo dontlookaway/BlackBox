@@ -1,10 +1,8 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-/*Exec [Report].[UspResults_JournalDetails] @Company = '10' , -- varchar(max)
-    @RedTagType = 'M' , -- char(1)
-    @RedTagUse = 'testing' -- varchar(500)*/
 
 CREATE Proc [Report].[UspResults_JournalDetails]
     (
@@ -30,7 +28,7 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_Template' ,
+            @StoredProcName = 'UspResults_JournalDetails' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 
