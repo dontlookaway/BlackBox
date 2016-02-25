@@ -82,6 +82,7 @@ Stored procedure set out to query multiple databases with the same information a
             );
 
 			
+	
 
 --create script to pull data from each db into the tables
         Declare @SQLGrnDetails Varchar(Max) = '
@@ -149,35 +150,43 @@ Stored procedure set out to query multiple databases with the same information a
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#InvInspect]
-						( [DB]
-						, [Lot]
-						, [Grn]
-						, [DeliveryDate]
-						, [GrnReceiptDate]
-						, [InspNarration]
-						, [ExpiryDate]
-						, [StockCode]
-						, [QtyAdvised]
-						, [QtyInspected]
-						, [QtyAccepted]
-						, [QtyScrapped]
-						, [QtyRejected]
-						, [InspectCompleted]
-						)
+			        ( [DB]
+			        , [Lot]
+			        , [Grn]
+			        , [DeliveryDate]
+			        , [GrnReceiptDate]
+			        , [InspNarration]
+			        , [ExpiryDate]
+			        , [StockCode]
+			        , [QtyAdvised]
+			        , [QtyInspected]
+			        , [QtyAccepted]
+			        , [QtyScrapped]
+			        , [QtyRejected]
+			        , [InspectCompleted]
+			        , [Supplier]
+			        , [PurchaseOrder]
+			        , [PurchaseOrderLin]
+			        , [SupDelNote]
+			        )
 				SELECT [DB]=@DBCode
 					 , [II].[Lot]
-					 , [II].[Grn]
-					 , [II].[DeliveryDate]
-					 , [II].[GrnReceiptDate]
-					 , [II].[InspNarration]
-					 , [II].[ExpiryDate]
-					 , [II].[StockCode]
-					 , [II].[QtyAdvised]
-					 , [II].[QtyInspected]
-					 , [II].[QtyAccepted]
-					 , [II].[QtyScrapped]
-					 , [II].[QtyRejected]
-					 , [II].[InspectCompleted] FROM [InvInspect] As [II]
+                 , [II].[Grn]
+                 , [II].[DeliveryDate]
+                 , [II].[GrnReceiptDate]
+                 , [II].[InspNarration]
+                 , [II].[ExpiryDate]
+                 , [II].[StockCode]
+                 , [II].[QtyAdvised]
+                 , [II].[QtyInspected]
+                 , [II].[QtyAccepted]
+                 , [II].[QtyScrapped]
+                 , [II].[QtyRejected]
+                 , [II].[InspectCompleted]
+                 , [II].[Supplier]
+                 , [II].[PurchaseOrder]
+                 , [II].[PurchaseOrderLin]
+                 , [II].[SupDelNote] FROM [InvInspect] As [II]
 			End
 	End';
         Declare @SQLInvMaster Varchar(Max) = '
@@ -411,6 +420,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [DeliveryQuarter] = Ceiling(Month([R].[DeliveryDate]) / 3.0)
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[DatabaseName];
+
 
     End;
 
