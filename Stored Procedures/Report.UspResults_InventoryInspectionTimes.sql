@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -34,19 +35,12 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @ListOfTables Varchar(Max) = 'GrnDetails,InvInspect'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table [#GrnDetails]
+        Create Table [#PorMasterDetail]
             (
               [DB] Varchar(150)
-            , [Grn] Varchar(20)
-            , [Supplier] Varchar(15)
-            , [OrigReceiptDate] Date
             , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLin] Int
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [SupCatalogueNum] Varchar(50)
-            , [QtyReceived] Numeric(20 , 8)
-            , [QtyUom] Varchar(10)
+            , [Line] Int
+            , [MPrice] Numeric(20 , 2)
             );
         Create Table [#InvInspect]
             (
@@ -64,6 +58,10 @@ Stored procedure set out to query multiple databases with the same information a
             , [QtyScrapped] Numeric(20 , 8)
             , [QtyRejected] Numeric(20 , 8)
             , [InspectCompleted] Char(1)
+            , [Supplier] Varchar(15)
+            , [PurchaseOrder] Varchar(20)
+            , [PurchaseOrderLin] Int
+            , [SupDelNote] Varchar(50)
             );
         Create Table [#InvInspectDet]
             (
@@ -78,6 +76,9 @@ Stored procedure set out to query multiple databases with the same information a
               [DB] Varchar(150)
             , [StockCode] Varchar(30)
             , [InspectionFlag] Char(1)
+            , [TraceableType] Char(1)
+            , [Description] Varchar(50)
+            , [StockUom] Varchar(10)
             );
 
 --create script to pull data from each db into the tables
@@ -221,10 +222,13 @@ Stored procedure set out to query multiple databases with the same information a
 						( [DB]
 						, [StockCode]
 						, [InspectionFlag]
+						, [TraceableType]
 						)
 				SELECT [DB]=@DBCode
 					 , [IM].[StockCode]
-					 , [IM].[InspectionFlag] FROM [InvMaster] As [IM]
+					 , [IM].[InspectionFlag] 
+					 , [TraceableType]
+				FROM [InvMaster] As [IM]
 			End
 	End';
         Declare @SQLInvInspectDet Varchar(Max) = '
@@ -288,7 +292,6 @@ Stored procedure set out to query multiple databases with the same information a
             , [StockCode] Varchar(30)
             , [StockDescription] Varchar(50)
             , [SupCatalogueNum] Varchar(50)
-            , [QtyReceived] Numeric(20 , 8)
             , [QtyUom] Varchar(10)
             , [DeliveryDate] Date
             , [GrnReceiptDate] Date
@@ -303,6 +306,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TrnDate] Date
             , [WorkingDaysToApprove] Int
             , [DatabaseName] Varchar(150)
+            , [Price] Numeric(20 , 2)
             );
 
 --Placeholder to create indexes as required
@@ -318,7 +322,6 @@ Stored procedure set out to query multiple databases with the same information a
                 , [StockCode]
                 , [StockDescription]
                 , [SupCatalogueNum]
-                , [QtyReceived]
                 , [QtyUom]
                 , [DeliveryDate]
                 , [GrnReceiptDate]
@@ -333,18 +336,18 @@ Stored procedure set out to query multiple databases with the same information a
                 , [TrnDate]
                 , [WorkingDaysToApprove]
                 , [DatabaseName]
+                , [Price]
                 )
-                Select  [GD].[Grn]
+                Select  [II].[Grn]
                       , [II].[Lot]
-                      , [GD].[Supplier]
-                      , [GD].[OrigReceiptDate]
-                      , [GD].[PurchaseOrder]
-                      , [GD].[PurchaseOrderLin]
-                      , [GD].[StockCode]
-                      , [GD].[StockDescription]
-                      , [GD].[SupCatalogueNum]
-                      , [GD].[QtyReceived]
-                      , [GD].[QtyUom]
+                      , [II].[Supplier]
+                      , [II].[DeliveryDate]
+                      , [II].[PurchaseOrder]
+                      , [II].[PurchaseOrderLin]
+                      , [II].[StockCode]
+                      , [IM].[Description]
+                      , [II].[SupDelNote]
+                      , [IM].[StockUom]
                       , [II].[DeliveryDate]
                       , [II].[GrnReceiptDate]
                       , [SupplierLot] = [II].[InspNarration]
@@ -354,24 +357,30 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[QtyAccepted]
                       , [II].[QtyScrapped]
                       , [II].[QtyRejected]
-                      , [II].[InspectCompleted]
+                      , [InspectCompleted] = Case When Coalesce([II].[InspectCompleted] ,
+                                                              '') = ''
+                                                  Then 'N'
+                                                  Else [II].[InspectCompleted]
+                                             End
                       , [IID].[TrnDate]
                       , [WorkingDaysToApprove] = [BlackBox].[Process].[Udf_WorkingDays]([II].[DeliveryDate] ,
                                                               Coalesce([IID].[TrnDate] ,
                                                               GetDate()) ,
                                                               'UK')
-                      , [GD].[DB]
-                From    [#GrnDetails] As [GD]
-                        Left Join [#InvInspect] As [II] On [II].[Grn] = [GD].[Grn]
-                                                           And [II].[StockCode] = [GD].[StockCode]
-                                                           And [II].[DB] = [GD].[DB]
+                      , [II].[DB]
+                      , [PMD].[MPrice]
+                From    [#InvInspect] As [II]
                         Left Join [#InvInspectDet] As [IID] On [IID].[Grn] = [II].[Grn]
                                                               And [IID].[Lot] = [II].[Lot]
                                                               And [IID].[TrnType] = 'A'
                                                               And [IID].[DB] = [II].[DB]
-                        Left Join [#InvMaster] As [IM] On [IM].[StockCode] = [GD].[StockCode]
-                                                          And [IM].[DB] = [GD].[DB]
-                Where   [IM].[InspectionFlag] = 'Y';
+                        Left Join [#InvMaster] As [IM] On [IM].[StockCode] = [II].[StockCode]
+                                                          And [IM].[DB] = [II].[DB]
+                        Left Join [#PorMasterDetail] As [PMD] On [PMD].[PurchaseOrder] = [II].[PurchaseOrder]
+                                                              And [PMD].[Line] = [II].[PurchaseOrderLin]
+                                                              And [PMD].[DB] = [II].[DB]
+                Where   [IM].[InspectionFlag] = 'Y'
+                        And [IM].[TraceableType] = 'T';
 --return results
         Select  [CN].[CompanyName]
               , [R].[Grn]
@@ -383,7 +392,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[StockCode]
               , [R].[StockDescription]
               , [R].[SupCatalogueNum]
-              , [R].[QtyReceived]
+              , [R].[Price]
               , [R].[QtyUom]
               , [R].[DeliveryDate]
               , [R].[GrnReceiptDate]
@@ -395,11 +404,9 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[QtyScrapped]
               , [R].[QtyRejected]
               , [R].[InspectCompleted]
-              , CompletedDate = [R].[TrnDate]
+              , [CompletedDate] = [R].[TrnDate]
               , [R].[WorkingDaysToApprove]
-              , [ReportStatus] = Case When [R].[DeliveryDate] Is Null
-                                      Then 'Not Entered Inspection'
-                                      When [R].[TrnDate] Is Null
+              , [ReportStatus] = Case When [R].[InspectCompleted] = 'N'
                                       Then 'Still awaiting inspection'
                                       When [R].[WorkingDaysToApprove] <= 1
                                       Then '1 day or less'
@@ -411,9 +418,9 @@ Stored procedure set out to query multiple databases with the same information a
                                       Then '15 days or less'
                                       Else 'More than 15 days'
                                  End
-			,DeliveryYear= Year([R].[DeliveryDate])
-			,DeliveryMonth = Month([R].[DeliveryDate])
-			,DeliveryQuarter = Ceiling(Month([R].[DeliveryDate])/3.0)
+              , [DeliveryYear] = Year([R].[DeliveryDate])
+              , [DeliveryMonth] = Month([R].[DeliveryDate])
+              , [DeliveryQuarter] = Ceiling(Month([R].[DeliveryDate]) / 3.0)
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[DatabaseName];
 
