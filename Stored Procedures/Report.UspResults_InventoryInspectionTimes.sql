@@ -81,6 +81,8 @@ Stored procedure set out to query multiple databases with the same information a
             , [StockUom] Varchar(10)
             );
 
+			
+
 --create script to pull data from each db into the tables
         Declare @SQLGrnDetails Varchar(Max) = '
 	USE [?];
@@ -108,30 +110,16 @@ Stored procedure set out to query multiple databases with the same information a
             '
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-				Insert [#GrnDetails]
-					( [DB]
-					, [Grn]
-					, [Supplier]
-					, [OrigReceiptDate]
-					, [PurchaseOrder]
-					, [PurchaseOrderLin]
-					, [StockCode]
-					, [StockDescription]
-					, [SupCatalogueNum]
-					, [QtyReceived]
-					, [QtyUom]
-					)
+				Insert [#PorMasterDetail]
+			        ( [DB]
+			        , [PurchaseOrder]
+			        , [Line]
+			        , [MPrice]
+			        )
 			SELECT [DB]=@DBCode
-				 , [GD].[Grn]
-				 , [GD].[Supplier]
-				 , [GD].[OrigReceiptDate]
-				 , [GD].[PurchaseOrder]
-				 , [GD].[PurchaseOrderLin]
-				 , [GD].[StockCode]
-				 , [GD].[StockDescription]
-				 , [GD].[SupCatalogueNum]
-				 , [GD].[QtyReceived]
-				 , [GD].[QtyUom] FROM [GrnDetails] As [GD]
+                 , [PMD].[PurchaseOrder]
+                 , [PMD].[Line]
+                 , [PMD].[MPrice] FROM [PorMasterDetail] As [PMD]
 			End
 	End';
         Declare @SQLInvInspect Varchar(Max) = '
