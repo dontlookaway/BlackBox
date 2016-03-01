@@ -91,28 +91,28 @@ transaction types when relating to inventory changes
             + '''
 				Insert  [BlackBox].[Lookups].[BankBalances]
         ( [DatabaseName], [CompanyName], [Bank], [BankDescription], [CashGlCode], [BankCurrency], [CurrentBalance], [StatementBalance], [OutStandingDeposits], [OutStandingWithdrawals], [PrevMonth1CurrentBalance], [PrevMonth1StatementBalance], [PrevMonth1OutStandingDeposits], [PrevMonth1OutStandingWithdrawals], [PrevMonth2CurrentBalance], [PrevMonth2StatementBalance], [PrevMonth2OutStandingDeposits], [PrevMonth2OutStandingWithdrawals], [DateOfBalance])
-        Select  Db_Name()
-              , [CN].[CompanyName]
-              , [Bank]
-              , [Description]
-              , [CashGlCode]
-              , [Currency]
-              , [CbCurBalLoc1]
-              , [CbStmtBal1]
-              , [OutstDep1]
-              , [OutstWith1]
-              , [CbCurBal2]
-              , [CbStmtBal2]
-              , [OutstDep2]
-              , [OutstWith2]
-              , [CbCurBal3]
-              , [CbStmtBal3]
-              , [OutstDep3]
-              , [OutstWith3]
-              , @LD
-        From    [dbo].[ApBank]
-                Cross Join [BlackBox].[Lookups].[CompanyNames] As [CN] 
-		Where [CN].[Company] = @DBCode;
+         Select  Db_Name()
+                          , [CN].[CompanyName]
+                          , [AP].[Bank]
+                          , [AP].[Description]
+                          , [AP].[CashGlCode]
+                          , [AP].[Currency]
+                          , [AP].[CbCurBalLoc1]
+                          , [AP].[CbStmtBal1]
+                          , [AP].[OutstDep1]
+                          , [AP].[OutstWith1]
+                          , [AP].[CbCurBal2]
+                          , [AP].[CbStmtBal2]
+                          , [AP].[OutstDep2]
+                          , [AP].[OutstWith2]
+                          , [AP].[CbCurBal3]
+                          , [AP].[CbStmtBal3]
+                          , [AP].[OutstDep3]
+                          , [AP].[OutstWith3]
+                          , @LD
+                    From    [dbo].[ApBank] [AP]
+                            Cross Join [BlackBox].[Lookups].[CompanyNames] As [CN]
+                    Where   [CN].[Company] = @DBCode;
 			End
 	End';
 
