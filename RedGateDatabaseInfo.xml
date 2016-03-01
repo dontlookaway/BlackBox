@@ -57,10 +57,12 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>4</Count>
+    <Count>6</Count>
     <DataFile>Lookups.GenJournalDetailSource_Data.sql</DataFile>
     <DataFile>Lookups.GenJournalType_Data.sql</DataFile>
     <DataFile>Lookups.LotTransactionTrnType_Data.sql</DataFile>
     <DataFile>Lookups.HolidayDays_Data.sql</DataFile>
+    <DataFile>Lookups.LedgerGroupMaps_Data.sql</DataFile>
+    <DataFile>Lookups.ReportIndexUserMaps_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
