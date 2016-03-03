@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<!-- Copyright 1994-2014 SYSPRO Ltd.-->
+<!--
+     Sample XML for the Foreign Purchase Order Document Printing Business Object
+-->
+<Documents xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="sample_foreign_po_print_document.xsd">
+  <Document>
+    <SystemInformation>
+      <CssStyle/>
+      <Language>EN</Language>
+      <DecFormat>1</DecFormat>
+      <DateFormat>01</DateFormat>
+      <Role>01</Role>
+      <Version>6.0.000</Version>
+      <CompanyId>1</CompanyId>
+      <CompanyName>The OUTDOORS Company</CompanyName>
+      <OperatorCode>ADMIN</OperatorCode>
+      <OperatorName>Administrator</OperatorName>
+      <OperatorGroup>ADMIN</OperatorGroup>
+      <OperatorEmailAddress>Admin@za.syspro.com</OperatorEmailAddress>
+      <OperatorLocation/>
+      <LocalCurrency>$</LocalCurrency>
+      <LocalCurrencyDesc>Local Currency</LocalCurrencyDesc>
+      <GlPrdPerYear>12</GlPrdPerYear>
+      <ReportDate>21/04/2009 13:38</ReportDate>
+      <UseSeparatorOnReports>N</UseSeparatorOnReports>
+      <SeparatorToUse>,</SeparatorToUse>
+      <OperatorPrimaryRole/>
+      <NoOfDigits/>
+      <DecCharToUse/>
+    </SystemInformation>
+    <HeaderData>
+      <CompanyName>Company name</CompanyName>
+      <CompanyAddressOne>Company address line 1</CompanyAddressOne>
+      <CompanyAddressTwo>Company address line 2</CompanyAddressTwo>
+      <CompanyAddressThree>Company address line 3</CompanyAddressThree>
+      <CompanyAddressLoc>Company address locality</CompanyAddressLoc>
+      <CompanyAddressState>Company address state</CompanyAddressState>
+      <CompanyAddressCountry>Company address country</CompanyAddressCountry>
+      <CompanyAddressPost>Company address postal or zip code</CompanyAddressPost>
+      <CompanyAddressGpsLat>Company address gps latitude</CompanyAddressGpsLat>
+      <CompanyAddressGpsLon>Company address gps longitude</CompanyAddressGpsLon>
+      <CompanyTaxNumber>Company tax registration number</CompanyTaxNumber>
+      <SupplierName>Supplier name</SupplierName>
+      <SupplierCheckName>Supplier check name</SupplierCheckName>
+      <SupplierAddressOne>Supplier address line 1</SupplierAddressOne>
+      <SupplierAddressTwo>Supplier address line 2</SupplierAddressTwo>
+      <SupplierAddressThre>Supplier address line 3</SupplierAddressThre>
+      <SupplierAddressFour>Supplier address line 4</SupplierAddressFour>
+      <SupplierAddressFive>Supplier address line 5</SupplierAddressFive>
+      <SupplierCode>Supplier address postal or zip code</SupplierCode>
+            <SupplierAddressLoc>Supplier address locality</SupplierAddressLoc>
+      <SupplierAddressGpsLat>Supplier address gps latitude</SupplierAddressGpsLat>
+      <SupplierAddressGpsLon>Supplier address gps longitude</SupplierAddressGpsLon>
+      <SupplierEmail>Supplier email</SupplierEmail>
+      <DeliveryAddressName>Delivery address name</DeliveryAddressName>
+      <DeliveryAddressOne>Delivery address line 1</DeliveryAddressOne>
+      <DeliveryAddressTwo>Delivery address line 2</DeliveryAddressTwo>
+      <DeliveryAddressThre>Delivery address line 3</DeliveryAddressThre>
+      <DeliveryAddressFour>Delivery address line 4</DeliveryAddressFour>
+      <DeliveryAddressFive>Delivery address line 5</DeliveryAddressFive>
+      <DeliveryAddressCode>Delivery address postal or zip code</DeliveryAddressCode>
+            <DeliveryAddressLoc>Delivery address locality</DeliveryAddressLoc>
+      <DeliveryAddressGpsLat>Delivery address gps latitude</DeliveryAddressGpsLat>
+      <DeliveryAddressGpsLon>Delivery address gps longitude</DeliveryAddressGpsLon>
+      <CompanyRegNumber>Company registration number</CompanyRegNumber>
+      <Customer>Customer</Customer>
+      <Supplier>Supplier</Supplier>
+      <CustomerPOrder>Customer purchase order number</CustomerPOrder>
+      <OrderDate>Order date</OrderDate>
+      <OrderDateCymd>20100601</OrderDateCymd>
+      <OrderDueDate>Order due date</OrderDueDate>
+      <OrderDueDateCymd>20100601</OrderDueDateCymd>
+      <MemoDate>Memo date</MemoDate>
+      <MemoDateCymd>20100601</MemoDateCymd>
+      <ShippingInstruct>Shipping instructions</ShippingInstruct>
+      <MemoCode>Memo code</MemoCode>
+      <PurchaseOrder>Purchase Order</PurchaseOrder>
+      <POrdMedia>Purchase Order multimedia</POrdMedia>
+      <DocumentPrintCount>Document print count</DocumentPrintCount>
+      <PurchaseOrderType>Purchase Order type</PurchaseOrderType>
+      <SupplierClass>Supplier class</SupplierClass>
+      <PaymentTerms>Payment terms</PaymentTerms>
+      <ForeignCurrency>Foreign currency</ForeignCurrency>
+      <ForeignCurrencyDesc>Foreign currency description</ForeignCurrencyDesc>
+      <ForeignXchgRate>Foreign exchange rate</ForeignXchgRate>
+      <IssueNumber>Issue number</IssueNumber>
+      <CustomerName>Customer name</CustomerName>
+      <Contact>Contact</Contact>
+      <Telephone>Telephone</Telephone>
+      <Fax>Fax</Fax>
+      <CustomerEmail>Customer email</CustomerEmail>
+      <SystemDate>System date</SystemDate>
+      <POrderTaxStatus>Purchase order tax status</POrderTaxStatus>
+      <POrdNumberNoSuppr>Purchase order nunber no suppression</POrdNumberNoSuppr>
+      <UserDefField>User defined field</UserDefField>
+      <Nationality>Nationality</Nationality>
+      <NationalityDescription>Nationality description</NationalityDescription>
+      <DeliveryTerms>Delivery terms</DeliveryTerms>
+      <DeliveryTermsDescription>Delivery terms description</DeliveryTermsDescription>
+      <ShippingLocation>Shipping location</ShippingLocation>
+      <ShippingLocationDescription>Shipping location description</ShippingLocationDescription>
+      <SupplierTaxNumber>Supplier tax registration number</SupplierTaxNumber>
+      <InvoiceTermsDescr>Invoice terms description</InvoiceTermsDescr>
+      <UserConfPOrder>User who confirmed Purchase Order</UserConfPOrder>
+      <Buyer>Buyer</Buyer>
+      <BuyerName>Buyer name</BuyerName>
+      <BuyerEMail>Buyer email address</BuyerEMail>
+      <Warehouse>Warehouse</Warehouse>
+      <WarehouseDescription>Warehouse description</WarehouseDescription>
+      <BlanketPO>Blanket Purchase Order</BlanketPO>
+      <TranFax>Transmission fax</TranFax>
+      <TranContact>Transmission contact</TranContact>
+      <ReprintMessage>Reprint message</ReprintMessage>
+      <CustomFieldOne>Custom form field 1</CustomFieldOne>
+      <CustomFieldTwo>Custom form field 2</CustomFieldTwo>
+      <CustomFieldThr>Custom form field 3</CustomFieldThr>
+      <CustomFieldFou>Custom form field 4</CustomFieldFou>
+      <CustomFieldFiv>Custom form field 5</CustomFieldFiv>
+      <CustomFieldSix>Custom form field 6</CustomFieldSix>
+      <CustomFieldSev>Custom form field 7</CustomFieldSev>
+      <CustomFieldEig>Custom form field 8</CustomFieldEig>
+      <CustomFieldNin>Custom form field 9</CustomFieldNin>
+      <CustomFieldTen>Custom form field 10</CustomFieldTen>
+      <SupCustomFieldOne>Supplier custom form field 1</SupCustomFieldOne>
+      <SupCustomFieldTwo>Supplier custom form field 2</SupCustomFieldTwo>
+      <SupCustomFieldThr>Supplier custom form field 3</SupCustomFieldThr>
+      <SupCustomFieldFou>Supplier custom form field 4</SupCustomFieldFou>
+      <SupCustomFieldFiv>Supplier custom form field 5</SupCustomFieldFiv>
+      <SupCustomFieldSix>Supplier custom form field 6</SupCustomFieldSix>
+      <SupCustomFieldSev>Supplier custom form field 7</SupCustomFieldSev>
+      <SupCustomFieldEig>Supplier custom form field 8</SupCustomFieldEig>
+      <SupCustomFieldNin>Supplier custom form field 9</SupCustomFieldNin>
+      <SupCustomFieldTen>Supplier custom form field 10</SupCustomFieldTen>
+    </HeaderData>
+    <DetailData>
+      <DetailLine>
+        <General>
+          <DetDetailLine>Detail line</DetDetailLine>
+          <DetOutstandOrderQty>Outstanding order quantity</DetOutstandOrderQty>
+          <DetReceivedQuantity>Received quantity</DetReceivedQuantity>
+          <DetOrderUnitMeasure>Order unit of measure</DetOrderUnitMeasure>
+          <DetStockUnitMeasure>Stocking unit of measure</DetStockUnitMeasure>
+          <DetStockDescription>Stock description</DetStockDescription>
+          <DetStockCode>Stock Code</DetStockCode>
+          <DetWarehouse>Warehouse</DetWarehouse>
+          <DetUnitPriceForeign>Unit price (foreign)</DetUnitPriceForeign>
+          <DetUnitPriceLocal>Unit price (local)</DetUnitPriceLocal>
+          <DetPriceUnitMeasure>Price unit of measure</DetPriceUnitMeasure>
+          <DetLineDiscountPerc>Line discount percentage(s)</DetLineDiscountPerc>
+          <DetGrossAmountLocal>Gross amount (local)</DetGrossAmountLocal>
+          <DetOriginalOrderQt>Original order quantity</DetOriginalOrderQt>
+          <DetStockCdeLongDesc>Stock long description</DetStockCdeLongDesc>
+          <DetTaxCode>Tax code</DetTaxCode>
+          <DetNetAmountLocal>Net amount (local)</DetNetAmountLocal>
+          <DetUnitFactor>Unit factor</DetUnitFactor>
+          <DetLineDueDate>Line due date</DetLineDueDate>
+          <DetCatalogue>Catalogue</DetCatalogue>
+          <DetGrossAmountForgn>Gross amount (foreign)</DetGrossAmountForgn>
+          <DetDrawingNumber>Drawing number</DetDrawingNumber>
+          <DetJob>Job</DetJob>
+          <DetLedgerCode>Ledger code</DetLedgerCode>
+          <DetStockVersion>Stock Revision</DetStockVersion>
+          <DetStockRelLevel>Stock Release</DetStockRelLevel>
+          <DetTotalMass>Total mass</DetTotalMass>
+          <DetTotalOutMass>Total outstanding mass</DetTotalOutMass>
+          <DetTotalVol>Total volume</DetTotalVol>
+          <DetTotalOutVol>Total outstanding volume</DetTotalOutVol>
+          <DetCatalogueXref>Catalogue (from xref file)</DetCatalogueXref>
+          <DetNetAmountForgn>Net amount (foreign)</DetNetAmountForgn>
+          <DetCurrentInvCost>Current inventory cost</DetCurrentInvCost>
+          <DetSuppStckDescXref>Supplier's stock desc. (from xref file)</DetSuppStckDescXref>
+          <DetSuppLongDescXref>Supplier's long desc. (from xref file)</DetSuppLongDescXref>
+          <DetPOrderLineOneX>Purchase Order text line 1 (from xref file)</DetPOrderLineOneX>
+          <DetPOrderLineTwoX>Purchase Order text line 2 (from xref file)</DetPOrderLineTwoX>
+          <DetPOrderLineThreeX>Purchase Order text line 3 (from xref file)</DetPOrderLineThreeX>
+          <DetPOrderLineFourX>Purchase Order text line 4 (from xref file)</DetPOrderLineFourX>
+          <DetInventoryUser1>Inventory user defined field 1</DetInventoryUser1>
+          <DetInventoryUser2>Inventory user defined field 2</DetInventoryUser2>
+          <DetInventoryUser3>Inventory user defined field 3</DetInventoryUser3>
+          <DetInventoryUser4>Inventory user defined field 4</DetInventoryUser4>
+          <DetInventoryUser5>Inventory user defined field 5</DetInventoryUser5>
+          <DetInventoryLoc>Inventory bin location</DetInventoryLoc>
+          <DetPOrdOrigDueDate>Original due date</DetPOrdOrigDueDate>
+          <DetSalesTaxLineLoc>Sales tax (per line) (local)</DetSalesTaxLineLoc>
+          <DetNetAmtInclTax>Net amount including tax (local)</DetNetAmtInclTax>
+          <DetTariffCode>Tariff code</DetTariffCode>
+          <DetRequisition>Requisition</DetRequisition>
+          <DetRequisitionLine>Requisition line</DetRequisitionLine>
+          <DetOrigionRequest>Originator of Requisition</DetOrigionRequest>
+          <DetProductClass>Product class</DetProductClass>
+          <DetProdClsDsc>Product class description</DetProdClsDsc>
+          <DetAltInv>Inventory alternate key</DetAltInv>
+          <DetSalesOrder>Sales order</DetSalesOrder>
+          <DetProjHeadCode>Projects and contracts head code</DetProjHeadCode>
+          <DetProjSectCode>Projects and contracts section code</DetProjSectCode>
+          <DetCustomFieldOne>Detail line custom form field 1</DetCustomFieldOne>
+          <DetCustomFieldTwo>Detail line custom form field 2</DetCustomFieldTwo>
+          <DetCustomFieldThr>Detail line custom form field 3</DetCustomFieldThr>
+          <DetCustomFieldFou>Detail line custom form field 4</DetCustomFieldFou>
+          <DetCustomFieldFiv>Detail line custom form field 5</DetCustomFieldFiv>
+          <DetCustomFieldSix>Detail line custom form field 6</DetCustomFieldSix>
+          <DetCustomFieldSev>Detail line custom form field 7</DetCustomFieldSev>
+          <DetCustomFieldEig>Detail line custom form field 8</DetCustomFieldEig>
+          <DetCustomFieldNin>Detail line custom form field 9</DetCustomFieldNin>
+          <DetCustomFieldTen>Detail line custom form field 10</DetCustomFieldTen>
+          <DetStkCustomFieldOne>Stock code custom form field 1</DetStkCustomFieldOne>
+          <DetStkCustomFieldTwo>Stock code custom form field 2</DetStkCustomFieldTwo>
+          <DetStkCustomFieldThr>Stock code custom form field 3</DetStkCustomFieldThr>
+          <DetStkCustomFieldFou>Stock code custom form field 4</DetStkCustomFieldFou>
+          <DetStkCustomFieldFiv>Stock code custom form field 5</DetStkCustomFieldFiv>
+          <DetStkCustomFieldSix>Stock code custom form field 6</DetStkCustomFieldSix>
+          <DetStkCustomFieldSev>Stock code custom form field 7</DetStkCustomFieldSev>
+          <DetStkCustomFieldEig>Stock code custom form field 8</DetStkCustomFieldEig>
+          <DetStkCustomFieldNin>Stock code custom form field 9</DetStkCustomFieldNin>
+          <DetStkCustomFieldTen>Stock code custom form field 10</DetStkCustomFieldTen>
+        </General>
+      </DetailLine>
+      <DetailLine>
+        <Comment>
+          <DetCommentLine>Comment line</DetCommentLine>
+          <DetCommentDescript>Comment description</DetCommentDescript>
+        </Comment>
+      </DetailLine>
+      <DetailLine>
+        <Miscellaneous_Freight_charges>
+          <DetMiscChargeLine>Misc charges or freight line</DetMiscChargeLine>
+          <DetMiscChargeDesc>Misc charges or freight description</DetMiscChargeDesc>
+          <DetMiscChrgeAmtLcl>Misc charges or freight amount (local)</DetMiscChrgeAmtLcl>
+          <DetMiscChrgeAmtFrgn>Misc charges or freight amount (foreign)</DetMiscChrgeAmtFrgn>
+          <DetMiscTaxCode>Misc or freight tax code</DetMiscTaxCode>
+          <DetMiscTaxAmount>Misc or freight tax amount</DetMiscTaxAmount>
+        </Miscellaneous_Freight_charges>
+      </DetailLine>
+      <DetailLine>
+        <Notepad>
+          <DetNotepad>Notepad line</DetNotepad>
+        </Notepad>
+      </DetailLine>
+      <DetailLine>
+        <Approved_Manufacturers>
+          <AppManufacturer>Approved manufacturer code</AppManufacturer>
+          <AppManufacturerName>Approved manufacturer name</AppManufacturerName>
+          <AppManPartNumber>Approved manufacturer part number</AppManPartNumber>
+          <AppManPartStatus>Approved manufacturer part status</AppManPartStatus>
+          <AppManPartRevisionNum>Approved manufacturer part revision number</AppManPartRevisionNum>
+          <AppEffectiveDate>Approved manufacturer part effective date</AppEffectiveDate>
+          <AppManPartPreferredFlag>Approved manufacturer part preferred flag</AppManPartPreferredFlag>
+        </Approved_Manufacturers>
+      </DetailLine>
+    </DetailData>
+    <TotalData>
+      <AmtTaxable>Amount on which tax is payable</AmtTaxable>
+      <AmtTaxableFor>Taxable amount (foreign)</AmtTaxableFor>
+      <SalesTaxAmount>Sales tax amount</SalesTaxAmount>
+      <TotalMerchTax>Total merchandise tax</TotalMerchTax>
+      <HashQuantity>Hash quantity total</HashQuantity>
+      <TotalGrossAmount>Total gross amount</TotalGrossAmount>
+      <TotalNetAmount>Total net amount</TotalNetAmount>
+      <TotalLineDiscount>Total line discount amount</TotalLineDiscount>
+      <TotalOrdDiscountAmt>Total order discount amount</TotalOrdDiscountAmt>
+      <TotalOrdDiscPerc>Total order discount percent</TotalOrdDiscPerc>
+      <TotalNetAmtInclTax>Total net amount including tax</TotalNetAmtInclTax>
+      <TotalDocumentAmount>Total document amount</TotalDocumentAmount>
+      <TotalDocumentAmtFor>Total document amount (foreign)</TotalDocumentAmtFor>
+      <TotalFreightAmount>Total freight amount</TotalFreightAmount>
+      <TotalMiscChargesAmt>Total misc charges amount</TotalMiscChargesAmt>
+      <TotalGrossAmtForgn>Total gross amount (foreign)</TotalGrossAmtForgn>
+      <TotalDiscAmtForgn>Total discount amt (foreign)</TotalDiscAmtForgn>
+      <TotalNetAmtForgn>Total net amount (foreign)</TotalNetAmtForgn>
+      <TotalMass>Total mass</TotalMass>
+      <TotalOutMass>Total outstanding mass</TotalOutMass>
+      <TotalVol>Total volume</TotalVol>
+      <TotalOutVol>Total outstanding volume</TotalOutVol>
+      <PriceVariance>Price variance</PriceVariance>
+      <PriceVariancePerc>Price variance percentage</PriceVariancePerc>
+      <TotalFreightForeign>Total freight (foreign)</TotalFreightForeign>
+      <TotalMiscChargForgn>Total misc charges (foreign)</TotalMiscChargForgn>
+      <SalesTaxAmtForeign>Sales tax amount (foreign)</SalesTaxAmtForeign>
+      <TotalNetInclTaxFrgn>Total net incl tax (foreign)</TotalNetInclTaxFrgn>
+      <ForeignXchgRate>Foreign exchange rate</ForeignXchgRate>
+      <TotalMerchTaxFrgn>Total merchandise tax (foreign)</TotalMerchTaxFrgn>
+      <ContinuationMsg>Continuation message</ContinuationMsg>
+    </TotalData>
+  </Document>
+</Documents>
