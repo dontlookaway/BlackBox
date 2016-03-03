@@ -202,6 +202,7 @@ Stored procedure set out to query multiple databases with the same information a
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvInspect;
         Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterDetail;
+		Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
 
 --define the results you want to return
         Create Table [#Results]
