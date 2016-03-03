@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -56,6 +57,13 @@ Stored procedure set out to query multiple databases with the same information a
             , [PurchaseOrder] Varchar(20)
             , [Line] Int
             );
+        Create Table [#InvMaster]
+            (
+              [DatabaseName] Varchar(150)
+            , [StockCode] Varchar(30)
+            , [Description] Varchar(50)
+            );
+
 
 --create script to pull data from each db into the tables
         Declare @SQLInvInspect Varchar(Max) = '
@@ -150,6 +158,44 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [PMD].[Line] FROM [PorMasterDetail] As [PMD]
 			End
 	End';
+        Declare @SQLInvMaster Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#InvMaster]
+						( [DatabaseName]
+						, [StockCode]
+						, [Description]
+						)
+				SELECT [DatabaseName]=@DBCode
+					 , [IM].[StockCode]
+					 , [IM].[Description] FROM [InvMaster] As [IM]
+			End
+	End';
+
+
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -172,6 +218,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [MOrderUom] Varchar(10)
             , [InspectCompleted] Char(1)
             , [DeliveryDate] Date
+            , [StockDescription] Varchar(50)
             );
 
 --Placeholder to create indexes as required
@@ -190,6 +237,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [MOrderUom]
                 , [InspectCompleted]
                 , [DeliveryDate]
+                , [StockDescription] 
                 )
                 Select  [II].[DatabaseName]
                       , [II].[Grn]
@@ -203,9 +251,12 @@ Stored procedure set out to query multiple databases with the same information a
                       , [PMD].[MOrderUom]
                       , [II].[InspectCompleted]
                       , [II].[DeliveryDate]
+                      , [IM].[Description]
                 From    [#InvInspect] As [II]
                         Left  Join [#PorMasterDetail] As [PMD] On [PMD].[PurchaseOrder] = [II].[PurchaseOrder]
                                                               And [PMD].[Line] = [II].[PurchaseOrderLin]
+                        Left Join [#InvMaster] As [IM] On [IM].[StockCode] = [II].[StockCode]
+                                                          And [IM].[DatabaseName] = [II].[DatabaseName]
                 Where   Coalesce([II].[InspectCompleted] , 'N') <> 'Y';
 
 --return results
@@ -231,6 +282,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[MOrderUom]
               , [R].[InspectCompleted]
               , [R].[DeliveryDate]
+              , [R].[StockDescription]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] As [CN] On [R].[DatabaseName] = [CN].[Company];
 
