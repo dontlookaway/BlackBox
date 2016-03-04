@@ -1,10 +1,11 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_ApAgingInvoices]
-    (
-      @RedTagType Char(1)
+    ( @RunDate Date
+    , @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
 As
@@ -23,6 +24,9 @@ Template designed by Chris Johnson, Prometic Group March 2016
             @StoredProcName = 'UspResults_ApAgingInvoices' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
+
+--If no rundate defined, use todays date
+Select @RunDate=Coalesce(@RunDate,GetDate())
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'AssetDepreciation,TblApTerms'; 
@@ -97,6 +101,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
               [DB] Varchar(50)
             , [Supplier] Varchar(50)
             , [SupplierName] Varchar(255)
+            , [TermsCode] Char(2)
             );
 
 
@@ -160,7 +165,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 			End
 		End
 	End';
-	Declare @SQLApSupplier Varchar(Max) = '
+        Declare @SQLApSupplier Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
@@ -187,10 +192,11 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 						Insert [#ApSupplier]
-			        ( [DB] , [Supplier] , [SupplierName] )
+			        ( [DB] , [Supplier] , [SupplierName], [TermsCode]  )
 			SELECT [DB]=@DBCode
                  , [AS].[Supplier]
-                 , [AS].[SupplierName] FROM [ApSupplier] As [AS]
+                 , [AS].[SupplierName]
+				 , [TermsCode]  FROM [ApSupplier] As [AS]
 			End
 		End
 	End';
@@ -199,7 +205,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLApInvoice;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
 
 --define the results you want to return
         Create Table [#ApData]
@@ -271,6 +277,8 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
             , [120Days] Numeric(20 , 2)
             , [121DaysPlus] Numeric(20 , 2)
             , [LocalCurrency] Numeric(20 , 2)
+            , [TermsCode] Char(2)
+			, RunDate Date
             );
 
 --Placeholder to create indexes as required
@@ -344,6 +352,8 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                 , [120Days]
                 , [121DaysPlus]
                 , [LocalCurrency]
+                , [TermsCode] 
+				, [RunDate]
                 )
                 Select  [Company] = [API].[DB]
                       , [Supplier] = LTrim(RTrim([API].[Supplier])) + ' - '
@@ -408,19 +418,19 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                       , [API].[SecondTaxCode]
                       , [API].[WithTaxCode]
                       , [30Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
-                                                      GetDate()) <= 30
+                                                      @RunDate) <= 30
                                         Then [API].[MthInvBal1]
                                         Else 0
                                    End
                       , [60Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
-                                                      GetDate()) Between 31
+                                                      @RunDate) Between 31
                                                               And
                                                               60
                                         Then [API].[MthInvBal1]
                                         Else 0
                                    End
                       , [90Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
-                                                      GetDate()) Between 61
+                                                      @RunDate) Between 61
                                                               And
                                                               90
                                         Then [API].[MthInvBal1]
@@ -428,7 +438,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                                    End
                       , [120Days] = Case When DateDiff(dd ,
                                                        [API].[InvoiceDate] ,
-                                                       GetDate()) Between 91
+                                                       @RunDate) Between 91
                                                               And
                                                               120
                                          Then [API].[MthInvBal1]
@@ -436,7 +446,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                                     End
                       , [121DaysPlus] = Case When DateDiff(dd ,
                                                            [API].[InvoiceDate] ,
-                                                           GetDate()) > 120
+                                                           @RunDate) > 120
                                              Then [API].[MthInvBal1]
                                              Else 0
                                         End
@@ -446,9 +456,11 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                                                     Else [API].[MthInvBal1]
                                                          / [API].[ConvRate]
                                                End As Decimal(20 , 2))
+                      , [APS].[TermsCode]
+					  , @RunDate
                 From    [#ApInvoice] As [API]
                         Left Outer Join [#ApSupplier] As [APS] On [API].[Supplier] = [APS].[Supplier]
-						And [APS].[DB] = [API].[DB];
+                                                              And [APS].[DB] = [API].[DB];
 
 
 --return results
@@ -520,6 +532,8 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
               , [AD].[121DaysPlus]
               , [AD].[LocalCurrency]
               , [CN].[CompanyName]
+              , [AD].[TermsCode]
+			  , [AD].[RunDate]
         From    [#ApData] As [AD]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [AD].[Company];
 
