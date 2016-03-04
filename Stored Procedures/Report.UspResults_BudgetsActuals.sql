@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -146,6 +147,9 @@ Template designed by Chris Johnson, Prometic Group March 2016
               , [GAT].[GLAccountTypeDesc]
               , [RIUM].[Map]
               , [RIUM].[IsSummary]
+              , [GroupMap1] = [LGM].[Map1]
+              , [GroupMap2] = [LGM].[Map2]
+              , [GroupMap3] = [LGM].[Map3]
         From    [#BudgetsActuals] As [BA]
                 Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[Company] = [BA].[Company]
                                                               And [GM].[GlCode] = [BA].[CompanyGlCode]
@@ -155,6 +159,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               And
                                                               [CR].[EndDateTime]
                 Left Join [BlackBox].[Lookups].[GLAccountType] As [GAT] On [GM].[AccountType] = [GAT].[GLAccountType]
+				Left Join [BlackBox].[Lookups].[LedgerGroupMaps] As [LGM] On [LGM].[GlGroup] = [GM].[GlGroup]
                 Left Join [Lookups].[ReportIndexUserMaps] As [RIUM] On [RIUM].[ReportIndex2] = Case
                                                               When [GM].[ReportIndex2] = ''
                                                               Then Null
