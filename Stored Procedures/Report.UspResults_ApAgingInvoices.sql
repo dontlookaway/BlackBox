@@ -4,7 +4,8 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Report].[UspResults_ApAgingInvoices]
-    ( @RunDate Date
+    (
+      @RunDate Date
     , @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
@@ -26,7 +27,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
             @UsedByDb = @RedTagDB;
 
 --If no rundate defined, use todays date
-Select @RunDate=Coalesce(@RunDate,GetDate())
+        Select  @RunDate = Coalesce(@RunDate , GetDate());
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'AssetDepreciation,TblApTerms'; 
@@ -103,7 +104,12 @@ Select @RunDate=Coalesce(@RunDate,GetDate())
             , [SupplierName] Varchar(255)
             , [TermsCode] Char(2)
             );
-
+        Create Table [#TblApTerms]
+            (
+              [DB] Varchar(50)
+            , [TermsCode] Char(2)
+            , [Description] Varchar(50)
+            );
 
 
 
@@ -200,12 +206,48 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 			End
 		End
 	End';
+        Declare @SQLTblApTerms Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF isnumeric(@DBCode)=1
+			begin
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#TblApTerms]
+						( [DB] , [TermsCode] , [Description] )
+				SELECT [DB]=@DBCode
+					 , [TAT].[TermsCode]
+					 , [TAT].[Description] FROM [TblApTerms] As [TAT]
+			End
+		End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLApInvoice;
         Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLTblApTerms;
+		
 
 --define the results you want to return
         Create Table [#ApData]
@@ -272,13 +314,14 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
             , [SecondTaxCode] Char(3)
             , [WithTaxCode] Char(3)
             , [30Days] Numeric(20 , 2)
+            , [45Days] Numeric(20 , 2)
             , [60Days] Numeric(20 , 2)
             , [90Days] Numeric(20 , 2)
             , [120Days] Numeric(20 , 2)
             , [121DaysPlus] Numeric(20 , 2)
             , [LocalCurrency] Numeric(20 , 2)
-            , [TermsCode] Char(2)
-			, RunDate Date
+            , [SupplierTerms] Varchar(50)
+            , [RunDate] Date
             );
 
 --Placeholder to create indexes as required
@@ -347,13 +390,14 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                 , [SecondTaxCode]
                 , [WithTaxCode]
                 , [30Days]
+                , [45Days]
                 , [60Days]
                 , [90Days]
                 , [120Days]
                 , [121DaysPlus]
                 , [LocalCurrency]
-                , [TermsCode] 
-				, [RunDate]
+                , [SupplierTerms]
+                , [RunDate]
                 )
                 Select  [Company] = [API].[DB]
                       , [Supplier] = LTrim(RTrim([API].[Supplier])) + ' - '
@@ -422,8 +466,15 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                                         Then [API].[MthInvBal1]
                                         Else 0
                                    End
-                      , [60Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
+                      , [45Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
                                                       @RunDate) Between 31
+                                                              And
+                                                              45
+                                        Then [API].[MthInvBal1]
+                                        Else 0
+                                   End
+                      , [60Days] = Case When DateDiff(dd , [API].[InvoiceDate] ,
+                                                      @RunDate) Between 46
                                                               And
                                                               60
                                         Then [API].[MthInvBal1]
@@ -456,11 +507,13 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                                                     Else [API].[MthInvBal1]
                                                          / [API].[ConvRate]
                                                End As Decimal(20 , 2))
-                      , [APS].[TermsCode]
-					  , @RunDate
+                      , [SupplierTerms] = [TAT].[Description]
+                      , @RunDate
                 From    [#ApInvoice] As [API]
                         Left Outer Join [#ApSupplier] As [APS] On [API].[Supplier] = [APS].[Supplier]
-                                                              And [APS].[DB] = [API].[DB];
+                                                              And [APS].[DB] = [API].[DB]
+                        Left Join [#TblApTerms] As [TAT] On [TAT].[TermsCode] = [APS].[TermsCode]
+                                                            And [TAT].[DB] = [APS].[DB];
 
 
 --return results
@@ -526,14 +579,15 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
               , [AD].[SecondTaxCode]
               , [AD].[WithTaxCode]
               , [AD].[30Days]
+              , [AD].[45Days]
               , [AD].[60Days]
               , [AD].[90Days]
               , [AD].[120Days]
               , [AD].[121DaysPlus]
               , [AD].[LocalCurrency]
               , [CN].[CompanyName]
-              , [AD].[TermsCode]
-			  , [AD].[RunDate]
+              , [AD].[SupplierTerms]
+              , [AD].[RunDate]
         From    [#ApData] As [AD]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [AD].[Company];
 
