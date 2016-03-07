@@ -1,0 +1,726 @@
+<ExportReportConfiguration NodeName="ap_aged_analysis_1" NodeText="ap_aged_analysis_1">
+  <ControlFile Name="ap_aged_analysis_1">
+    <ReportControl SaveValue="ctl_ap_aged_analysis_1_system">
+      <Control BO="APSQCR" SchemaIn="ap_aged_analysis" SchemaOut="ap_aged_analysis_out" XmlFile="ap_aged_analysis_out" Definition=".xml" SubReports="" Type="S" Template="tem_ap_aged_analysis_1" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_ap_aged_analysis_1.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_ap_aged_analysis_1">
+      <Form FormSize="{Width=633, Height=409}" TabSize="{Width=633, Height=409}">
+        <TabPage Text="Report Options" Name="9aaa46f5-19ea-47fe-a258-2507754bc8f6">
+          <GroupBox Name="6398c82c-e69e-4282-9745-37888648be9d" Text="Currency options" Size="{Width=307, Height=314}" Location="{X=305,Y=16}" Tag="S" TabIndex="2">
+            <GroupBox Name="grpCurrencyValues" Text="" Size="{Width=295, Height=42}" Location="{X=8,Y=5}" Tag="D" TabIndex="8">
+              <Label Name="lblcboCurrencyValues" Text="Show values in:" Size="{Width=90, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboCurrencyValues" Size="{Width=146, Height=21}" Location="{X=143,Y=13}" TabIndex="9" SelectedIndex="0" Items="L - Local currency;F - Foreign currency;" />
+            </GroupBox>
+            <GroupBox Name="grpConvertToLocalValue" Text="" Size="{Width=295, Height=42}" Location="{X=8,Y=52}" Tag="D" TabIndex="9">
+              <Label Name="lblcboConvertToLocalValue" Text="Convert to local value at:" Size="{Width=129, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboConvertToLocalValue" Size="{Width=146, Height=21}" Location="{X=143,Y=13}" TabIndex="10" SelectedIndex="0" Items="E - At entry time;C - At current exchange rate;" />
+            </GroupBox>
+            <GroupBox Name="grpCurrency" Text="Foreign currency selection" Size="{Width=293, Height=78}" Location="{X=8,Y=118}" Tag="R" TabIndex="3">
+              <Label Name="lblcboCurrency" Text="Show:" Size="{Width=80, Height=18}" Location="{X=8,Y=20}" Tag="R" />
+              <ComboBox Name="cboCurrency" Size="{Width=100, Height=21}" Location="{X=95,Y=17}" TabIndex="1" SelectedIndex="0" Items="A - All;S - Single;" />
+              <Label Name="lblSCurrency1" Text="Currency:" Size="{Width=80, Height=18}" Location="{X=8,Y=51}" Tag="R" />
+              <TextBox Name="txtSCurrency1" Text="" Size="{Width=100, Height=21}" Location="{X=95,Y=48}" TabIndex="3" />
+              <Button Name="brwSCurrency[TblCurrency]" Text="" Size="{Width=28, Height=24}" Location="{X=198,Y=46}" TabIndex="4" ImageIndex="0" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="0fb5dee2-b8ef-4c99-8127-228a96fd199d" Text="" Size="{Width=285, Height=196}" Location="{X=8,Y=16}" Tag="S" TabIndex="0">
+            <GroupBox Name="grpReportType" Text="" Size="{Width=255, Height=34}" Location="{X=8,Y=39}" Tag="D" TabIndex="1">
+              <Label Name="lblcboReportType" Text="Report type:" Size="{Width=80, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboReportType" Size="{Width=120, Height=21}" Location="{X=106,Y=13}" TabIndex="2" SelectedIndex="0" Items="D - Detail;S - Summary;" />
+            </GroupBox>
+            <GroupBox Name="grpReportAsOf" Text="" Size="{Width=254, Height=36}" Location="{X=8,Y=141}" Tag="D" TabIndex="6">
+              <Label Name="lblcboReportAsOf" Text="Report as of:" Size="{Width=80, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboReportAsOf" Size="{Width=120, Height=21}" Location="{X=105,Y=13}" TabIndex="5" SelectedIndex="0" Items="C - Current period;P1 - Previous period 1;P2 - Previous period 2;" />
+            </GroupBox>
+            <GroupBox Name="grpDateOnReport" Text="" Size="{Width=255, Height=42}" Location="{X=8,Y=110}" Tag="D" TabIndex="5">
+              <Label Name="lblcboDateOnReport" Text="Date on report:" Size="{Width=92, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboDateOnReport" Size="{Width=120, Height=21}" Location="{X=105,Y=13}" TabIndex="4" SelectedIndex="0" Items="I - Invoice date;D - Invoice due date;" />
+            </GroupBox>
+            <GroupBox Name="grpAgeingMethod" Text="" Size="{Width=255, Height=42}" Location="{X=8,Y=73}" Tag="D" TabIndex="4">
+              <Label Name="lblcboAgeingMethod" Text="Ageing method:" Size="{Width=92, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboAgeingMethod" Size="{Width=120, Height=21}" Location="{X=106,Y=13}" TabIndex="3" SelectedIndex="0" Items="F - Financial month;I - Invoice date;" />
+            </GroupBox>
+            <GroupBox Name="grpReportSequence" Text="" Size="{Width=255, Height=42}" Location="{X=8,Y=5}" Tag="D" TabIndex="0">
+              <Label Name="lblcboReportSequence" Text="Report sequence:" Size="{Width=97, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboReportSequence" Size="{Width=120, Height=21}" Location="{X=105,Y=13}" TabIndex="1" SelectedIndex="0" Items="S - Supplier;SN - Short name;" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="grpBranch" Text="Branch selection" Size="{Width=285, Height=108}" Location="{X=8,Y=222}" Tag="R" TabIndex="6">
+            <Label Name="lblcboBranch" Text="Show:" Size="{Width=80, Height=18}" Location="{X=15,Y=20}" Tag="R" />
+            <ComboBox Name="cboBranch" Size="{Width=100, Height=21}" Location="{X=113,Y=17}" TabIndex="7" SelectedIndex="0" Items="A - All;S - Single;" />
+            <Label Name="lblSBranch1" Text="Branch:" Size="{Width=80, Height=18}" Location="{X=15,Y=51}" Tag="R" />
+            <TextBox Name="txtSBranch1" Text="" Size="{Width=100, Height=21}" Location="{X=113,Y=48}" TabIndex="7" />
+            <Button Name="brwSBranch[ApBranch]" Text="" Size="{Width=28, Height=24}" Location="{X=219,Y=46}" TabIndex="8" ImageIndex="0" />
+          </GroupBox>
+        </TabPage>
+        <TabPage Text="Output Options" Name="fd41aede-0490-42ae-aab4-60628596fda8">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+      <Events>
+        <Declarations><![CDATA[//Removing any of this code may result in unpredictable results
+private TabControl tabControl = null;
+private String[] SystemVariablesArray = null;
+private Control[] control = null;
+private ComboBox cboCurrencyValues = null;
+private ComboBox cboCurrency = null;
+private ComboBox cboConvertToLocalValue = null;
+private GroupBox grpCurrency = null;
+
+//Constructor for class DO NOT REMOVE
+public void SetTabControl(ref TabControl ctlTabControl, ref String[] SystemVariables)
+{
+  tabControl = ctlTabControl;
+  SystemVariablesArray = SystemVariables;
+
+  //Declare variable for - cboCurrencyValues
+  control = tabControl.Controls.Find("cboCurrencyValues",true);
+  cboCurrencyValues = (ComboBox)control[0];
+
+  //Declare variable for - cboCurrency
+  control = tabControl.Controls.Find("cboCurrency",true);
+  cboCurrency = (ComboBox)control[0];
+
+  //Declare variable for - cboConvertToLocalValue
+  control = tabControl.Controls.Find("cboConvertToLocalValue",true);
+  cboConvertToLocalValue = (ComboBox)control[0];
+
+  //Declare variable for - grpCurrency
+  control = tabControl.Controls.Find("grpCurrency",true);
+  grpCurrency = (GroupBox)control[0];
+}
+]]></Declarations>
+        <ControlsEvents><![CDATA[//Function for Form_Load
+public void Form_Load ()
+{
+	cboCurrencyValues_SelectedIndexChanged ();
+}
+//Function for cboCurrencyValues_SelectedIndexChanged
+public void cboCurrencyValues_SelectedIndexChanged ()
+{
+	if(cboCurrencyValues.SelectedIndex ==1)
+	{
+		grpCurrency.Enabled = true;
+		cboCurrency.SelectedIndex = 1;
+		cboCurrency.Enabled = false;
+		cboConvertToLocalValue.Enabled = false;
+		cboConvertToLocalValue.SelectedIndex = 0;
+	}
+	else
+	{
+		cboCurrency.SelectedIndex = 0;
+		grpCurrency.Enabled = false;
+		cboConvertToLocalValue.Enabled = true;
+	}
+}]]></ControlsEvents>
+        <Controls>
+          <Form>
+            <Load EventName="Form_Load" />
+          </Form>
+          <cboCurrencyValues>
+            <SelectedIndexChanged EventName="cboCurrencyValues_SelectedIndexChanged" />
+          </cboCurrencyValues>
+        </Controls>
+      </Events>
+    </ReportForm>
+  </FormFile>
+  <SchemaIn Name="ap_aged_analysis">
+    <xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="AgeingMethod">
+        <xsd:annotation>
+          <xsd:documentation>Indicates what ageing method should be applied when aging transactions. (I - Invoice date and F - Financial month) If no value is supllied the default ageing option 'F' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;F=Financial month;I=Invoice date" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="F" />
+            <xsd:enumeration value="I" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Branch">
+        <xsd:annotation>
+          <xsd:documentation>All,  Single, Range of branches to be returned. FilterType options - A(All), (S)Single, (R)Range. Default to A(All).</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=ApBranch;A=All;S=Single;" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConvertToLocalValue">
+        <xsd:annotation>
+          <xsd:documentation>Only if CurrencyValues has a vaue of 'L' then the ConvertToLocalCurrency is used to indicate whether the transaction must be converted to local currency at the entry time exchange rate (E) or the current exchange rate (C). If no value is supplied then a default value of 'E' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;E=At entry time;C=Current exchange rate" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="E" />
+            <xsd:enumeration value="C" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Currency">
+        <xsd:annotation>
+          <xsd:documentation>All,  Single, Range of currencies to be returned. FilterType options - A(All), (S)Single, (R)Range. Default to A(All).</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=TblCurrency;A=All;S=Single" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="CurrencyValues">
+        <xsd:annotation>
+          <xsd:documentation>Indicates what currency the values must be returned in. (L - Local and F - Foreign). If no value is supplied then a default value of 'L' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;L=Local currency;F=Foreign currency" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="L" />
+            <xsd:enumeration value="F" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DateOnReport">
+        <xsd:annotation>
+          <xsd:documentation>Indicates what report date should be applied. (I - invoice date and D - Due date).  If no value is supplied the default of 'I' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;J=Journal date;D=Due date" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="I" />
+            <xsd:enumeration value="D" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Filter">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="Supplier" minOccurs="0" />
+            <xsd:element ref="Branch" minOccurs="0" />
+            <xsd:element ref="FollowUpDate" minOccurs="0" />
+            <xsd:element ref="Currency" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="FollowUpDate">
+        <xsd:annotation>
+          <xsd:documentation>All,  Single, Range of suppliers follow up dates to be returned. FilterType options - A(All), (S)Single, (R)Range. Default to A(All).</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse={Date};A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="R" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="IncludeRetainedInvoices">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether retained invoices should be included. (Y - yes and N - No). If no value is supplied then a default value of 'N' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeUnapprovedInvoice">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether unapproved invoices should be included. (Y - yes and N - No). If no value is supplied then a default value of 'N' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeZeroBalanceSuppliers">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether suppliers with a zero balance should be included. ( Y - yes and N - No ). If no value is supplied then a default value of 'Y' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Y" />
+            <xsd:enumeration value="N" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Option">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ReportAsOf" minOccurs="0" />
+            <xsd:element ref="ReportSequence" minOccurs="0" />
+            <xsd:element ref="SuppliersOnHold" minOccurs="0" />
+            <xsd:element ref="IncludeZeroBalanceSuppliers" minOccurs="0" />
+            <xsd:element ref="IncludeUnapprovedInvoice" minOccurs="0" />
+            <xsd:element ref="IncludeRetainedInvoices" minOccurs="0" />
+            <xsd:element ref="CurrencyValues" minOccurs="0" />
+            <xsd:element ref="ConvertToLocalValue" minOccurs="0" />
+            <xsd:element ref="ReportType" minOccurs="0" />
+            <xsd:element ref="AgeingMethod" minOccurs="0" />
+            <xsd:element ref="TagFile" minOccurs="0" />
+            <xsd:element ref="DateOnReport" minOccurs="0" />
+            <xsd:element ref="XslStylesheet" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Query">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="Option" minOccurs="0" />
+            <xsd:element ref="Filter" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReportAsOf">
+        <xsd:annotation>
+          <xsd:documentation>Defines the financial period for which the report will be run. (C - Current, P1 - Previous period 1 and P2 - Previous period 2 ). If no value is supplied a default of 'C' will be used.  </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;C=Current period;P1=Previous period 1;P2=Previous period 2" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="C" />
+            <xsd:enumeration value="P1" />
+            <xsd:enumeration value="P2" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ReportSequence">
+        <xsd:annotation>
+          <xsd:documentation>Defines the sequence in which the report will be printed. ( S - Supplier, SN - Shortname, BS - Branch/Supplier and U - user defined sequence). If no value is supplied a default of 'S' will be used. If a value of  'BS' is passed there will be special totalling by branch. If a value of 'U' is passed then a tag file must be supplied indicating the sequence of suppliers.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;S=Supplier;SN=Short name;BS=Branch/Supplier;" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="S" />
+            <xsd:enumeration value="SN" />
+            <xsd:enumeration value="BS" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ReportType">
+        <xsd:annotation>
+          <xsd:documentation>Indicates how much detail should be returned (S - summary - Select this to print a report listing a list of the accumulated invoice amounts for each supplier on a single line and D -Detail 
+Select this to print a report listing all invoices for each supplier. If no value is supplied then a default value of 'D' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;D=Detail;S=Summary;" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="D" />
+            <xsd:enumeration value="S" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Supplier">
+        <xsd:annotation>
+          <xsd:documentation>All,  Single, Range of supplierss to be returned. FilterType options - A(All), (S)Single, (R)Range. Default to A(All).</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=ApSupplier;A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="R" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SuppliersOnHold">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether suppliers on hold should be included. (I - Include, E -Exclude and O - Only print suppliers on hold) If no value is passed a default value of 'I' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;I=Include suppliers on hold;E=Exclude suppliers on hold;O=Only suppliers on hold" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="I" />
+            <xsd:enumeration value="E" />
+            <xsd:enumeration value="O" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="TagFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>This is the path for the file which must be used for the user defined entry. This will only be used if ReportSequnce has a value of 'U'.</xsd:documentation>
+          <xsd:appinfo source="screenItem=N;" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="XslStylesheet">
+        <xsd:annotation>
+          <xsd:documentation>The stylesheet to be applied</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType />
+      </xsd:element>
+    </xsd:schema>
+  </SchemaIn>
+  <SchemaOut Name="ap_aged_analysis_out">
+    <xsd:schema elementFormDefault="unqualified" attributeFormDefault="unqualified" id="APAgedTrialBalanceReport" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="APAgedTrialBalanceReport">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="SystemInformation">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="CssStyle" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Language" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DecFormat" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DateFormat" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Role" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Version" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CompanyId" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CompanyName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorCode" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorGroup" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorEmailAddress" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorLocation" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LocalCurrency" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LocalCurrencyDesc" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GlPrdPerYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ReportDate" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="UseSeparatorOnReports" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SeparatorToUse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorPrimaryRole" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NoOfDigits" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="DecCharToUse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="BOMQtyPerDecimals" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="QueryOptions">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="ReportAsOf" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ReportAsOf" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ReportSequence" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ReportSequence" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SuppliersOnHold" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_SuppliersOnHold" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeZeroBalanceSuppliers" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroBalanceSuppliers" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeUnapprovedInvoice" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeUnapprovedInvoice" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeRetainedInvoices" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeRetainedInvoices" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CurrencyValues" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_CurrencyValues" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ConvertToLocalValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ConvertToLocalValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ReportType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ReportType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AgeingMethod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_AgeingMethod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="TagFile" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DateOnReport" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_DateOnReport" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SupplierFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_SupplierFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SupplierFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="BranchFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_BranchFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="BranchFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="FollowUpDateFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_FollowUpDateFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="FollowUpDateFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CurrencyFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_CurrencyFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CurrencyFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SelectedYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SelectedMonth" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="WithholdingTaxFlag" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_WithholdingTaxFlag" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GroupItems">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="GroupItem" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="Group" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="SequenceDescription" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="SupplierItem" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="SupplierHeader" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="Supplier" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupplierName" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupShortName" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr1" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr2" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr3" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr3Loc" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr4" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddr5" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupPostalCode" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupAddGpsLat" minOccurs="0" />
+                              <xsd:element name="SupAddGpsLong" minOccurs="0" />
+                              <xsd:element name="Telephone" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Fax" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="MerchGlCode" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="FreightGlCode" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="UserField1" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="UserField2" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="FirstPurchDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="LastPurchDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupplierClass" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Branch" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="APSBRN_Description" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Currency" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TBLCUR_Description" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TermsCode" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TBLAPT_Description" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Contact" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SupplierOnHold" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Translated_SupplierOnHold" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Report_SequencingFormula" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Report_SequencingFormula_Aged" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="Invoices" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="InvoiceHeader" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element name="Invoice" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Branch" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="APSBRN_Description" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceDate" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Journal" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Reference" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Currency" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="JournalDate" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceDueDate" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="OrigInvValue" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_OrigInvValue" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceStatus" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Translated_InvoiceStatus" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceTotalCurrent" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_InvoiceTotalCurrent" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceTotalPrev1" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_InvoiceTotalPrev1" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceTotalPrev2" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_InvoiceTotalPrev2" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvoiceBeforePrev2" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_InvoiceBeforePrev2" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="InvalidCurrencyMsg" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Translated_InvalidCurrencyMsg" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="RegisteredInvoice" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Translated_RegisteredInvoice" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Report_InvoiceDate" type="xsd:string" minOccurs="0" />
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+                              <xsd:element name="Transactions" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element name="TransactionDetail" minOccurs="0" maxOccurs="unbounded">
+                                      <xsd:complexType>
+                                        <xsd:sequence>
+                                          <xsd:element name="Type" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="Translated_Type" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="Date" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="Journal" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="Reference" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="Currency" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="TransactionAmount" type="xsd:double" minOccurs="0" />
+                                          <xsd:element name="Edited_TransactionAmount" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="InvoiceTotalCurrent" type="xsd:double" minOccurs="0" />
+                                          <xsd:element name="Edited_InvoiceTotalCurrent" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="InvoiceTotalPrev1" type="xsd:double" minOccurs="0" />
+                                          <xsd:element name="Edited_InvoiceTotalPrev1" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="InvoiceTotalPrev2" type="xsd:double" minOccurs="0" />
+                                          <xsd:element name="Edited_InvoiceTotalPrev2" type="xsd:string" minOccurs="0" />
+                                          <xsd:element name="InvoiceBeforePrev2" type="xsd:double" minOccurs="0" />
+                                          <xsd:element name="Edited_InvoiceBeforePrev2" type="xsd:string" minOccurs="0" />
+                                        </xsd:sequence>
+                                      </xsd:complexType>
+                                    </xsd:element>
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+                              <xsd:element name="InvoiceTotal" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element name="InvoiceBalance" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="Edited_InvoiceBalance" type="xsd:string" minOccurs="0" />
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="SupplierTotals" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="InvoiceBalance" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_InvoiceBalance" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="ForCurrInvBal" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_ForCurrInvBal" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalCurrent" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalCurrent" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalPrev1" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalPrev1" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalPrev2" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalPrev2" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalBeforePrev2" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalBeforePrev2" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalRegisteredInvoices" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalRegisteredInvoices" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="GroupTotals" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="GroupTotal" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="TotalsGroup" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="InvoiceCurrency" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="InvoiceBalance" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_InvoiceBalance" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="RegInvoiceCurrency" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="TotalRegisteredInvoices" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="Edited_TotalRegisteredInvoices" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="GroupSummary" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="RegisteredInvoices" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_RegisteredInvoices" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="BranchActivityDate" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InvoicesReceived" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_InvoicesReceived" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="DebitNotes" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_DebitNotes" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="CreditNotes" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_CreditNotes" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Adjustments" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_Adjustments" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Disbursements" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_Disbursements" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Revaluations" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_Revaluations" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="WithholdingTax" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_WithholdingTax" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="ControlBalance" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_ControlBalance" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TotalActivity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="Edited_TotalActivity" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="CompanyTotals">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="LastAPJournal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LastChkRegister" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="APBalanceFWD" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_APBalanceFWD" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="APBalanceFwdDate" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdInvoices" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdInvoices" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdDebits" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdDebits" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdCredits" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdCredits" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdAdjustments" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdAdjustments" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdDisbursements" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdDisbursements" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdRevaluations" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdRevaluations" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdWithholdingTax" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdWithholdingTax" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MtdErrorCor" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_MtdErrorCor" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ControlBalance" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_ControlBalance" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalCurrent" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalCurrent" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalPrev1" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalPrev1" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalPrev2" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalPrev2" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalBeforePrev2" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalBeforePrev2" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalControl" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalControl" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GrandTotalRegisteredInvoices" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_GrandTotalRegisteredInvoices" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ApEndingBalance" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="Edited_ApEndingBalance" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </SchemaOut>
+</ExportReportConfiguration>
