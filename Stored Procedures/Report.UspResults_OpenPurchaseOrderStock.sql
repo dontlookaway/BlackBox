@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -156,6 +157,7 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [PMH].[PurchaseOrder]
 					 , [PMH].[OrderDueDate]
 					 , [PMH].[DeliveryAddr1] FROM [PorMasterHdr] As [PMH]
+					 where [OrderStatus] not in (''*'')
 			End
 	End';
         Declare @SQLApSupplier Varchar(Max) = '
