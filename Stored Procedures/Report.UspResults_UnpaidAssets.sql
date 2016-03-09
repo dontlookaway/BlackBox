@@ -35,7 +35,6 @@ Template designed by Chris Johnson, Prometic Group September 2015 Stored procedu
         Create Table #ApInvoice
             (
               [DatabaseName] VARCHAR(150) Collate Latin1_General_BIN 
-            , [ColumnName] VARCHAR(500) Collate Latin1_General_BIN 
             , [Supplier] VARCHAR(50) Collate Latin1_General_BIN 
             , [Invoice] VARCHAR(50) Collate Latin1_General_BIN 
             , [PostCurrency] VARCHAR(15) Collate Latin1_General_BIN 
@@ -127,7 +126,6 @@ Template designed by Chris Johnson, Prometic Group September 2015 Stored procedu
 			BEGIN
 				Insert [#ApInvoice]
 						( [DatabaseName]
-						, [ColumnName]
 						, [Supplier]
 						, [Invoice]
 						, [PostCurrency]
@@ -142,7 +140,6 @@ Template designed by Chris Johnson, Prometic Group September 2015 Stored procedu
 						, [InvoiceDate]
 						)
 				SELECT [DatabaseName]=@DBCode
-					 , [ai].[ColumnName]
 					 , [ai].[Supplier]
 					 , [ai].[Invoice]
 					 , [ai].[PostCurrency]
@@ -155,7 +152,7 @@ Template designed by Chris Johnson, Prometic Group September 2015 Stored procedu
 					 , [ai].[InvoiceMonth]
 					 , [ai].[JournalDate]
 					 , [ai].[InvoiceDate] 
-				From [#ApInvoice] As [ai]
+				From [ApInvoice] As [ai]
 			End
 	End';
         Declare @SQL2 VARCHAR(Max) = '
@@ -200,7 +197,7 @@ Template designed by Chris Johnson, Prometic Group September 2015 Stored procedu
                  , [ajs].[TrnMonth]
                  , [ajs].[Journal]
                  , [ajs].[EntryNumber] 
-			FROM [#ApJnlSummary] As [ajs]
+			FROM [ApJnlSummary] As [ajs]
 			End
 	End';
         Declare @SQL3 VARCHAR(Max) = '
