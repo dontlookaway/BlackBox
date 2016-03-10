@@ -1,0 +1,12 @@
+<ExportReportConfiguration NodeName="actual_vs_budget_-_period" NodeText="actual_vs_budget_-_period">
+  <ControlFile Name="actual_vs_budget_-_period">
+    <ReportControl SaveValue="ctl_actual_vs_budget_-_period_system">
+      <Control Type="3" Template="actual_vs_budget_-_period" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_actual_vs_budget_-_period.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_actual_vs_budget_-_period">
+      <Form />
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>
