@@ -1,0 +1,45 @@
+<ExportReportConfiguration NodeName="grn_unpaid_assets" NodeText="GRN_Unpaid_Assets">
+  <ControlFile Name="grn_unpaid_assets">
+    <ReportControl SaveValue="ctl_grn_unpaid_assets_system">
+      <Control Type="3" Template="grn_unpaid_assets" CrystalUserName="" CrystalPassword="ythbl5jM74idHUqGUyg/UqPsGaqRy95ZKH9dmyYH98dfiJAa+FQsiw==" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_grn_unpaid_assets.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_grn_unpaid_assets">
+      <Form FormSize="{Width=450, Height=455}" TabSize="{Width=450, Height=455}">
+        <TabPage Text="Tab Page" Name="1d5f7bcf-36ec-43e7-82b5-a2341efe0d0b" />
+        <TabPage Text="Dynamic parameters" Name="9c658a4d-0993-4540-8c4e-c9489465820f" />
+        <TabPage Text="Output Options" Name="eaeb6e5f-9879-4c82-8e36-62994c9293de">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+      <ArrayOfParameterQueryInfo>
+        <ParameterQueryInfo>
+          <ParameterName>@CurrPerMain</ParameterName>
+          <DatabaseName>SysproCompany40</DatabaseName>
+          <SchemaName>dbo</SchemaName>
+          <TableName>v_LSI_GrnPeriodSelector</TableName>
+          <ColumnKeyName>GrnPeriod</ColumnKeyName>
+          <ColumnDescriptionName>GrnPeriod</ColumnDescriptionName>
+          <RecordLimit>1000</RecordLimit>
+          <HierarchicalLinkColumnNameList />
+          <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
+          <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
+        </ParameterQueryInfo>
+      </ArrayOfParameterQueryInfo>
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>

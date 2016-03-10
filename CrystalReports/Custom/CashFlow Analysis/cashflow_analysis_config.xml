@@ -1,0 +1,12 @@
+<ExportReportConfiguration NodeName="cashflow_analysis" NodeText="CashFlow Analysis">
+  <ControlFile Name="cashflow_analysis">
+    <ReportControl SaveValue="ctl_cashflow_analysis_system">
+      <Control Type="3" Template="cashflow_analysis" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_cashflow_analysis.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_cashflow_analysis">
+      <Form />
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>
