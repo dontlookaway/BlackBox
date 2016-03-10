@@ -54,6 +54,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [MLatestDueDate] Date
             , [MCompleteFlag] Char(1)
             , [MOrderQty] Numeric(20 , 8)
+            , [MReceivedQty] Numeric(20 , 8)
             , [MOrderUom] Varchar(10)
             , [MWarehouse] Varchar(10)
             );
@@ -105,6 +106,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [MOrderQty]
 						, [MOrderUom]
 						, [MWarehouse]
+						, [MReceivedQty]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [PMD].[PurchaseOrder]
@@ -116,7 +118,8 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [PMD].[MCompleteFlag]
 					 , [PMD].[MOrderQty]
 					 , [PMD].[MOrderUom]
-					 , [PMD].[MWarehouse] FROM [PorMasterDetail] As [PMD]
+					 , [PMD].[MWarehouse]
+					 , [PMD].[MReceivedQty] FROM [PorMasterDetail] As [PMD]
 			End
 	End';
         Declare @SQLPorMasterHdr Varchar(Max) = '
@@ -201,8 +204,8 @@ Stored procedure set out to query multiple databases with the same information a
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterDetail;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterHdr;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterDetail;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterHdr;
 
 --define the results you want to return
         
@@ -234,6 +237,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [PMD].[MOrderUom]
               , [PMD].[MWarehouse]
               , [PMH].[DeliveryAddr1]
+              , [PMD].[MReceivedQty]
         From    [#PorMasterHdr] As [PMH]
                 Left Join [#PorMasterDetail] As [PMD] On [PMD].[PurchaseOrder] = [PMH].[PurchaseOrder]
                                                          And [PMD].[DatabaseName] = [PMH].[DatabaseName]
