@@ -1,0 +1,685 @@
+<ExportReportConfiguration NodeName="inv_val_test" NodeText="Inventory_valuation_Test">
+  <ControlFile Name="inv_val_test">
+    <ReportControl SaveValue="ctl_inv_val_test_system">
+      <Control BO="INVQVL" SchemaIn="inventory_valuation" SchemaOut="inventory_valuation_out" XmlFile="inventory_valuation_out.xml" Definition="" Type="S" Template="inv_val_test" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_inv_val_test.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_inv_val_test">
+      <Form FormSize="{Width=396, Height=417}" TabSize="{Width=396, Height=417}">
+        <TabPage Text="Tab Page" Name="8fdce1e5-6b91-4810-a18a-d924949fac7e" />
+        <TabPage Text="Output Options" Name="170e6d65-8165-43cc-981b-607a9e870b28">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+    </ReportForm>
+  </FormFile>
+  <SchemaIn Name="inventory_valuation">
+    <xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="AsOfPeriod" default="C">
+        <xsd:annotation>
+          <xsd:documentation>Valuation as of period. Select the period in which to show the details. Default is C for Current period.  C - Current period, P - Previous month 1, B - Previous month 2</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;C=Current Period;P=Previous Month1;B=Previous Month2" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="C" />
+            <xsd:enumeration value="P" />
+            <xsd:enumeration value="B" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="EccItemsOnly" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Specifies if ECC Items should be included. Default is No</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeZeroEccRevRel" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Specifies if zero value ECC Items should be included. Default is No</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CheckNegativeAtWarehouse" default="N">
+        <xsd:annotation>
+          <xsd:documentation>This parameter applies when using multiple bins, and negative stock is allowed. If selected, then the check for inclusing negative values is made at warehouse level, and not at bin level</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve" />
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CycleCount">
+        <xsd:annotation>
+          <xsd:documentation>This field enables you to select stock items for valuation according to the number of times a stock item has been counted during the year. The field will have a value(2 character) if a single Cyclecount is selected.  </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;A=All;S=Single" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Filter">
+        <xsd:annotation>
+          <xsd:documentation>List of filters.</xsd:documentation>
+          <xsd:appinfo source="screenItem=N;" />
+        </xsd:annotation>
+        <xsd:complexType mixed="false">
+          <xsd:sequence>
+            <xsd:element ref="CycleCount" minOccurs="0" />
+            <xsd:element ref="ProductClass" minOccurs="0" />
+            <xsd:element ref="Supplier" minOccurs="0" />
+            <xsd:element ref="StockCode" minOccurs="0" />
+            <xsd:element ref="Warehouse" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="IncludeProductClassDesc" default="N">
+        <xsd:annotation>
+          <xsd:documentation>This option is effective only if you select to show the query in product class sequence. Your entry at the Branch field is used to extract the relevant product class description. If no Branch is selected, the product class description will not be returned. The default is No.  </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeWarehouseMass" default="N">
+        <xsd:annotation>
+          <xsd:documentation>If multiple bins are set on then you have the option to print warehouse mass or not. Otherwise the mass will print in all selections. Default N - No, Values Y - Yes, N - No. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeZeroValueWarehouses" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Default N - No, This element gives an option to include warehouses for  selected stock items that have a zero value. Values Y - Yes, N - No.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No;Q=Warehouses with quantity on hand and zero cost;C=Warehouses with zero quantity and non zero cost" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+            <xsd:enumeration value="Q" />
+            <xsd:enumeration value="C" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Option">
+        <xsd:annotation>
+          <xsd:documentation>The list of options</xsd:documentation>
+          <xsd:appinfo source="screenItem=N;" />
+        </xsd:annotation>
+        <xsd:complexType mixed="false">
+          <xsd:sequence>
+            <xsd:element ref="AsOfPeriod" minOccurs="0" />
+            <xsd:element ref="Sequence" minOccurs="0" />
+            <xsd:element ref="IncludeZeroValueWarehouses" minOccurs="0" />
+            <xsd:element ref="IncludeProductClassDesc" minOccurs="0" />
+            <xsd:element ref="ValuationCostBasedOn" minOccurs="0" />
+            <xsd:element ref="EccItemsOnly" minOccurs="0" />
+            <xsd:element ref="IncludeZeroEccRevRel" />
+            <xsd:element ref="ReportType" minOccurs="0" />
+            <xsd:element ref="MultipleBinsPrintTotalsOnly" minOccurs="0" />
+            <xsd:element ref="IncludeZeroBins" minOccurs="0" />
+            <xsd:element ref="CheckNegativeAtWarehouse" minOccurs="0" />
+            <xsd:element ref="XslStylesheet" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ProductClass">
+        <xsd:annotation>
+          <xsd:documentation>This specifies the selection of product class ( A - All, S - Single, R - Range).  If not provided default is A.  If range(R) is selected then start and end product classes are separated by a comma. If single(S) is selected a product class is given as FilterValue.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=SalProductClassDes;A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+                <xsd:enumeration value="R" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Query">
+        <xsd:annotation>
+          <xsd:documentation>This is the root element.</xsd:documentation>
+          <xsd:appinfo source="screenItem=N;" />
+        </xsd:annotation>
+        <xsd:complexType mixed="false">
+          <xsd:sequence>
+            <xsd:element ref="Option" minOccurs="0" />
+            <xsd:element ref="Filter" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReportType" default="S">
+        <xsd:annotation>
+          <xsd:documentation>This specifies the type of report, detail or summary (S - Summary, D -Detail).  If not provided the default is D.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;S=Summary;D=Detail" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="S" />
+            <xsd:enumeration value="D" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Sequence" default="S">
+        <xsd:annotation>
+          <xsd:documentation>This specifies which sequence in which the data is returned ( S - Stock code, D - Stock code description,  U - Supplier, P - Product class).  If not provided the default is S. (W - Warehouse: Summary report only)</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;S=Stock code;D=Description;U=Supplier;P=Product class;W=Warehouse" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="S" />
+            <xsd:enumeration value="D" />
+            <xsd:enumeration value="U" />
+            <xsd:enumeration value="P" />
+            <xsd:enumeration value="W" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="StockCode">
+        <xsd:annotation>
+          <xsd:documentation>This specifies the selection of stock codes ( A - All, S - Single, R - Range).  If not provided default is A.  If range(R) is selected then start and end stock codes are separated by a comma. If single(S) is selected a stock code is given as FilterValue.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=InvMaster;A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="R" />
+                <xsd:enumeration value="S" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Supplier">
+        <xsd:annotation>
+          <xsd:documentation>This specifies the selection of suppliers ( A - All, S - Single, R - Range).  If not provided default is A.  If range(R) is selected then start and end supplier codes are separated by a comma. If single(S) is selected a supplier code is given as FilterValue.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=ApSupplier;A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+                <xsd:enumeration value="R" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ValuationCostBasedOn" default="C">
+        <xsd:annotation>
+          <xsd:documentation>Default C - Current costing method. You can select to return the values based on Fifo(F), if you have FIFO on. If you do not FIFO set on, and you selected to F(FIFO) the program will default to the current costing method. You can select, F - Fifo, L - last costing, and C - current cost. Select FIFO to show inventory value according to the FIFO costs held in each FIFO bin location. W - Warehouse costs, this will return the values based on the warehouse costing method, this option is only available if you have costing per warehouse, else the default will be applied</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;C=Current;L=Last cost;F=FIFO;W=Warehouse cost" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="C" />
+            <xsd:enumeration value="F" />
+            <xsd:enumeration value="L" />
+            <xsd:enumeration value="W" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Warehouse">
+        <xsd:annotation>
+          <xsd:documentation>This specifies the selection of warehouses ( A - All, S - Single, R - Range).  If not provided default is A.  If range(R) is selected then start and end warehouses are separated by a comma. If single(S) is selected a warehouse is given as FilterValue.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;browse=InvWhControl;A=All;S=Single;R=Range" />
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A" />
+                <xsd:enumeration value="S" />
+                <xsd:enumeration value="R" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="XslStylesheet" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>The Stylesheet to be applied</xsd:documentation>
+          <xsd:appinfo source="screenItem=N;" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MultipleBinsPrintTotalsOnly" default="N">
+        <xsd:annotation>
+          <xsd:documentation>This flag enables you to print warehouse totals only when Muliple Bins are switched on. Default is N. Options are Y or N.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve" />
+            <xsd:enumeration value="N" />
+            <xsd:enumeration value="Y" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeZeroBins">
+        <xsd:annotation>
+          <xsd:documentation>This option is only available when you have multiple bins, and you selected not to print totals only. (you want to print every single bin for the warehouse). Y=Yes; N=No.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Y" />
+            <xsd:enumeration value="N" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ReturnSummaryReport" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>This option is selected when you  would like to return a summary report in the selected sequence.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Y" />
+            <xsd:enumeration value="N" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ReturnWarehouseSummary" default="N">
+        <xsd:annotation>
+          <xsd:documentation>This option is only available when you selected to return the summary report, then the summary for the selected sequence is also selected by warehouse.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes" />
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Y" />
+            <xsd:enumeration value="N" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:schema>
+  </SchemaIn>
+  <SchemaOut Name="inventory_valuation_out">
+    <xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="InvValuationQuery">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="SystemInformation" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence minOccurs="0">
+                  <xsd:element name="CssStyle" type="xsd:string" />
+                  <xsd:element name="Language" type="xsd:string" />
+                  <xsd:element name="DecFormat" type="xsd:string" />
+                  <xsd:element name="DateFormat" type="xsd:string" />
+                  <xsd:element name="Role" type="xsd:string" />
+                  <xsd:element name="Version" type="xsd:string" />
+                  <xsd:element name="CompanyId" type="xsd:string" />
+                  <xsd:element name="CompanyName" type="xsd:string" />
+                  <xsd:element name="OperatorCode" type="xsd:string" />
+                  <xsd:element name="OperatorName" type="xsd:string" />
+                  <xsd:element name="OperatorGroup" type="xsd:string" />
+                  <xsd:element name="OperatorEmailAddress" type="xsd:string" />
+                  <xsd:element name="OperatorLocation" type="xsd:string" />
+                  <xsd:element name="LocalCurrency" type="xsd:string" />
+                  <xsd:element name="LocalCurrencyDesc" type="xsd:string" />
+                  <xsd:element name="ReportDate" type="xsd:string" />
+                  <xsd:element name="UseSeparatorOnReports" type="xsd:string" />
+                  <xsd:element name="SeparatorToUse" type="xsd:string" />
+                  <xsd:element name="NoOfDigits" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="DecCharToUse" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="QueryOptions" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence minOccurs="0">
+                  <xsd:element name="AsOfPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_AsOfPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AsOfPeriodMonth" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AsOfPeriodYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Sequence" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_Sequence" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ValuationCostBasedOn" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ValuationCostBasedOn" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CompanyCostingMethod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CycleCountFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_CycleCountFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CycleCountFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ProductClassFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ProductClassFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ProductClassFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SupplierFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_SupplierFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SupplierFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StockcodeFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_StockcodeFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StockcodeFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="WarehouseFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_WarehouseFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="WarehouseFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeZeroValueWarehouses" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroValueWarehouses" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroQtyCostWhs" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroQtyWhs" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeProductClassDesc" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeProductClassDesc" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="EccItemsOnly" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_EccItemsOnly" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeZeroEccRevRel" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroEccRevRel" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ReportType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ReportType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="MultipleBinsPrintTotalsOnly" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_MultipleBinsPrintTotalsOnly" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeZeroBins" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeZeroBins" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CheckNegativeAtWarehouse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_CheckNegativeAtWarehouse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ActualCosting" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_ActualCosting" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_BinBucket" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_BinOr" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_BinTotal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="TranslatedWarehouseTotal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_Continued" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_GroupedBy" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="StockItem" minOccurs="0" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:sequence minOccurs="0">
+                  <xsd:element name="GroupSeq" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="StockCode" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Description" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LongDesc" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Decimals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Supplier" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ProductClass" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ProductClassDescription" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AbcClass" minOccurs="0" />
+                  <xsd:element name="StockUom" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CostUom" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CycleCount" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PartCategory" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AlternateKey1" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AlternateKey2" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DrawOfficeNum" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StockOnHold" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StockOnHoldReason" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StockOnHoldReasonDescription" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="WarehouseItem" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence minOccurs="0">
+                        <xsd:element name="Warehouse" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InvQtyAllocLevel" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="BinLocation" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="AbcClass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="QtyOnHand" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="QtyOnHandCases" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="QtyOnHandPieces" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="SQtyOnHand" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SQtyOnHandUnits" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EditedSQtyOnHand" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="UnitCost" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedUnitCost" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="WarehouseMass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedWarehouseMass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EccDetailsItem" minOccurs="0">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="Version" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Release" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="VersionRelease" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QuantityOnHand" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="QtyOnHandCases" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHandPieces" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SQuantityOnHand" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="SQuantityOnHandUnits" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="EditedSQuantityOnHand" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="WarehouseMass" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedWarehouseMass" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="UnitCost" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedUnitCot" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="WarehouseEccTotal" minOccurs="0">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="FifoBucketItem" minOccurs="0">
+                          <xsd:complexType>
+                            <xsd:sequence minOccurs="0">
+                              <xsd:element name="FifoBucket" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHand" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHandCases" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHandPieces" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SQtyOnHand" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="SQtyOnHandUnits" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="EditedSQtyOnHand" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="UnitCost" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedUnitCost" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="LastReceiptDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="LastIssueDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="WarehouseFifoTotal" minOccurs="0">
+                          <xsd:complexType>
+                            <xsd:sequence minOccurs="0">
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="QtyCases" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyPieces" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="BinItem" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence minOccurs="0">
+                              <xsd:element name="BinLocation" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHand" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="QtyOnHandCases" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyOnHandPieces" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="SQtyOnHand" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="SQtyOnHandUnits" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="EditedSQtyOnHand" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="UnitCost" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedUnitCost" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="LastReceiptDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="LastIssueDate" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="WarehouseBinTotal" minOccurs="0">
+                          <xsd:complexType>
+                            <xsd:sequence minOccurs="0">
+                              <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                              <xsd:element name="QtyCases" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="QtyPieces" type="xsd:string" minOccurs="0" />
+                              <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="StockTotal" minOccurs="0">
+                    <xsd:complexType>
+                      <xsd:sequence minOccurs="0">
+                        <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="QtyCases" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="QtyPieces" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="SQuantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SQuantityUnits" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Mass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedMass" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="WarehouseTotal" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence minOccurs="0">
+                  <xsd:element name="WarehouseItemTotal" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence minOccurs="0">
+                        <xsd:element name="Warehouse" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Description" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="CurrentInventoryValue" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedCurrentInventoryValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TotalMass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedTotalMass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="HashQuantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SHashQuantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SHashQuantityUnits" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EditedSHashQuantity" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="CostingMethod" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Translated_CostingMethod" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="TotalWarehouseTotal" minOccurs="0">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="CurrentInventoryValue" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedCurrentInventoryValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="HashQuantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SHashQuantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="SHashQuantityUnits" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EditedSHashQuantity" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TotalMass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedTotalMass" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ProductClassTotal" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="ProductClassItem" minOccurs="0">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="ProductClass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Description" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Warehouse" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Mass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedMass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Translated_TotalText" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SupplierTotal" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="SupplierItem" minOccurs="0">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="Supplier" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="SupplierName" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Warehouse" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Value" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedValue" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Quantity" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedSQuantity" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Mass" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedMass" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Translated_TotalText" type="xsd:string" minOccurs="0" />
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </SchemaOut>
+</ExportReportConfiguration>
