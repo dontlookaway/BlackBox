@@ -53,7 +53,7 @@ Stored procedure set out to query multiple databases with the same information a
         Create Table [#PorMasterDetail]
             (
               [DatabaseName] Varchar(150)
-            , [MOrderUom] Varchar(10)
+            , [MStockingUom] Varchar(10)
             , [PurchaseOrder] Varchar(20)
             , [Line] Int
             );
@@ -148,12 +148,12 @@ Stored procedure set out to query multiple databases with the same information a
 			BEGIN
 				Insert [#PorMasterDetail]
 						( [DatabaseName]
-						, [MOrderUom]
+						, [MStockingUom]
 						, [PurchaseOrder]
 						, [Line]
 						)
 				SELECT [DatabaseName]=@DBCode
-					 , [PMD].[MOrderUom]
+					 , [PMD].[MStockingUom]
 					 , [PMD].[PurchaseOrder]
 					 , [PMD].[Line] FROM [PorMasterDetail] As [PMD]
 			End
@@ -216,7 +216,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [QtyAdvised] Numeric(20 , 8)
             , [QtyInspected] Numeric(20 , 8)
             , [QtyRejected] Numeric(20 , 8)
-            , [MOrderUom] Varchar(10)
+            , [MStockingUom] Varchar(10)
             , [InspectCompleted] Char(1)
             , [DeliveryDate] Date
             , [StockDescription] Varchar(50)
@@ -235,7 +235,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [QtyAdvised]
                 , [QtyInspected]
                 , [QtyRejected]
-                , [MOrderUom]
+                , [MStockingUom]
                 , [InspectCompleted]
                 , [DeliveryDate]
                 , [StockDescription] 
@@ -249,7 +249,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[QtyAdvised]
                       , [II].[QtyInspected]
                       , [II].[QtyRejected]
-                      , [PMD].[MOrderUom]
+                      , [PMD].[MStockingUom]
                       , [II].[InspectCompleted]
                       , [II].[DeliveryDate]
                       , [IM].[Description]
@@ -280,7 +280,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[QtyAdvised]
               , [R].[QtyInspected]
               , [R].[QtyRejected]
-              , [R].[MOrderUom]
+              , [MOrderUom] = [R].[MStockingUom]
               , [R].[InspectCompleted]
               , [R].[DeliveryDate]
               , [R].[StockDescription]
