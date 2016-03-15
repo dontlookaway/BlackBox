@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -221,111 +222,141 @@ Stored procedure set out to query multiple databases with the same information a
         Exec [Process].[ExecForEachDB] @cmd = @SQLLotTransactions;
 
 --define the results you want to return
-        Create Table [#Results] 
+        Create Table [#Results]
             (
               [Company] Varchar(300)
-			  ,[SupplierLotNumber] Varchar(100)
-			  ,[Lot] Varchar(50)
-			  ,[GrnReceiptDate] Date
-			  ,[StockCode] Varchar(30)
-			  ,[StockDescription] Varchar(50)
-			  ,[TrnDate] Date
-			  ,[Warehouse] Varchar(10)
-			  , [Bin] Varchar(20)
-			  ,[Job] Varchar(20)
-			  ,[TrnTypeDescription] Varchar(100)
-			  ,[Reference] Varchar(30)
-			  ,[TotalReceiptQty] Numeric(20,8)
-			  ,[StockUom] Varchar(20)
-			  ,[UnitCost] Numeric(20,2)
-			  ,[TrnQuantity] Numeric(20,8)
-			  ,[TrnValue] Numeric(20,2)
+            , [SupplierLotNumber] Varchar(100)
+            , [Lot] Varchar(50)
+            , [GrnReceiptDate] Date
+            , [StockCode] Varchar(30)
+            , [StockDescription] Varchar(50)
+            , [TrnDate] Date
+            , [Warehouse] Varchar(10)
+            , [Bin] Varchar(20)
+            , [Job] Varchar(20)
+            , [TrnTypeDescription] Varchar(100)
+            , [Reference] Varchar(30)
+            , [TotalReceiptQty] Numeric(20 , 8)
+            , [StockUom] Varchar(20)
+            , [UnitCost] Numeric(20 , 2)
+            , [TrnQuantity] Numeric(20 , 8)
+            , [TrnValue] Numeric(20 , 2)
+            , [MasterJob] Varchar(30)
             );
 
 --Placeholder to create indexes as required
+        Create Table [#LotMasterJob]
+            (
+              [Lot] Varchar(50)
+            , [MasterJob] Varchar(30)
+            );
+
+        Insert  [#LotMasterJob]
+                ( [Lot]
+                , [MasterJob]
+                )
+                Select Distinct
+                        [LT].[Lot]
+                      , [LT].[Reference]
+                From    [#LotTransactions] As [LT]
+                Where   [LT].[TrnType] = 'R'
+                        And [LT].[Reference] <> '';
+
+        Create Index [LMJ] On [#LotMasterJob] ([Lot]);
 
 --script to combine base data and insert into results table
-Insert [#Results]
-        ( [Company]
-        , [SupplierLotNumber]
-        , [Lot]
-        , [GrnReceiptDate]
-        , [StockCode]
-        , [StockDescription]
-        , [TrnDate]
-        , [Warehouse]
-        , [Bin]
-        , [Job]
-        , [TrnTypeDescription]
-        , [Reference]
-        , [TotalReceiptQty]
-        , [StockUom]
-        , [UnitCost]
-        , [TrnQuantity]
-        , [TrnValue]
-        )
-        Select [Company] = Coalesce([II].[DatabaseName] ,
-                                                              [LT].[DatabaseName])
-		 , [SupplierLotNumber] = [II].[InspNarration]
-              , [Lot] = Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
+        Insert  [#Results]
+                ( [Company]
+                , [SupplierLotNumber]
+                , [Lot]
+                , [GrnReceiptDate]
+                , [StockCode]
+                , [StockDescription]
+                , [TrnDate]
+                , [Warehouse]
+                , [Bin]
+                , [Job]
+                , [TrnTypeDescription]
+                , [Reference]
+                , [TotalReceiptQty]
+                , [StockUom]
+                , [UnitCost]
+                , [TrnQuantity]
+                , [TrnValue]
+                , [MasterJob]
+                )
+                Select  [Company] = Coalesce([II].[DatabaseName] ,
+                                             [LT].[DatabaseName])
+                      , [SupplierLotNumber] = [II].[InspNarration]
+                      , [Lot] = Case When IsNumeric(Coalesce([II].[Lot] ,
+                                                             [LT].[Lot])) = 1
+                                     Then Convert(Varchar(50) , Convert(Int , Coalesce([II].[Lot] ,
+                                                              [LT].[Lot])))
+                                     Else Coalesce([II].[Lot] , [LT].[Lot])
+                                End
+                      , [II].[GrnReceiptDate]
+                      , [StockCode] = Coalesce([II].[StockCode] ,
+                                               [LT].[StockCode])
+                      , [StockDescription] = [IM].[Description]
+                      , [TrnDate] = [LT].[TrnDate]
+                      , [LT].[Warehouse]
+                      , [LT].[Bin]
+                      , [Job] = [LT].[Job]
+                      , [TransactionType] = [LTT].[TrnTypeDescription]
+                      , [Reference] = [LT].[Reference]
+                      , [II].[TotalReceiptQty]
+                      , [IM].[StockUom]
+                      , [LT].[UnitCost]
+                      , [LT].[TrnQuantity]
+                      , [LT].[TrnValue]
+                      , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob])=1 Then Convert(Varchar(30),Convert(Int,[LMJ].[MasterJob])) Else [LMJ].[MasterJob] End
+                From    [#InvInspect] As [II]
+                        Full Outer Join [#LotTransactions] As [LT] On [LT].[Lot] = [II].[Lot]
+                                                              And [LT].[StockCode] = [II].[StockCode]
+                                                              And [LT].[DatabaseName] = [II].[DatabaseName]
+                        Left Join [#InvMaster] As [IM] On Coalesce([II].[StockCode] ,
+                                                              [LT].[StockCode]) = [IM].[StockCode]
+                                                          And Coalesce([II].[DatabaseName] ,
+                                                              [LT].[DatabaseName]) = [IM].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT] On [LT].[TrnType] = [LTT].[TrnType]
+                        Left Join [#LotMasterJob] As [LMJ] On [LMJ].[Lot] = [LT].[Lot]
+                Where   Coalesce([II].[Lot] , [LT].[Lot] , '') <> ''
+                Order By [SupplierLotNumber] Desc
+                      , Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
                              Then Convert(Varchar(50) , Convert(Int , Coalesce([II].[Lot] ,
                                                               [LT].[Lot])))
                              Else Coalesce([II].[Lot] , [LT].[Lot])
-                        End
-              , [II].[GrnReceiptDate]
-              , [StockCode] = Coalesce([II].[StockCode] , [LT].[StockCode])
-              , [StockDescription] = [IM].[Description]
-              , [TrnDate] = [LT].[TrnDate]
-              , [LT].[Warehouse]
-              , [LT].[Bin]
-              , [Job] = [LT].[Job]
-              , [TransactionType] = [LTT].[TrnTypeDescription]
-              , [Reference] = [LT].[Reference]
-              , [II].[TotalReceiptQty]
-              , [IM].[StockUom]
-              , [LT].[UnitCost]
-              , [LT].[TrnQuantity]
-              , [LT].[TrnValue]
-        From    [#InvInspect] As [II]
-                Full Outer Join [#LotTransactions] As [LT] On [LT].[Lot] = [II].[Lot]
-                                                              And [LT].[StockCode] = [II].[StockCode]
-                                                              And [LT].[DatabaseName] = [II].[DatabaseName]
-                Left Join [#InvMaster] As [IM] On Coalesce([II].[StockCode] ,
-                                                           [LT].[StockCode]) = [IM].[StockCode]
-                                                  And Coalesce([II].[DatabaseName] ,
-                                                              [LT].[DatabaseName]) = [IM].[DatabaseName]
-                Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT] On [LT].[TrnType] = [LTT].[TrnType]
-        Where   Coalesce([II].[Lot] , [LT].[Lot] , '') <> ''
-        Order By [SupplierLotNumber] Desc
-              , Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
-                     Then Convert(Varchar(50) , Convert(Int , Coalesce([II].[Lot] ,
-                                                              [LT].[Lot])))
-                     Else Coalesce([II].[Lot] , [LT].[Lot])
-                End Asc
-              , [LT].[TrnDate];
+                        End Asc
+                      , [LT].[TrnDate];
 
 
 --return results
-SELECT [CN].[CompanyName]
-, [R].[Company]
-     , [R].[SupplierLotNumber]
-     , [R].[Lot]
-     , [R].[GrnReceiptDate]
-     , [R].[StockCode]
-     , [R].[StockDescription]
-     , [R].[TrnDate]
-     , Warehouse = [W].[WarehouseDescription]
-     , [R].[Bin]
-     , [R].[Job]
-     , TransactionType = [R].[TrnTypeDescription]
-     , [R].[Reference]
-     , [R].[TotalReceiptQty]
-     , [R].[StockUom]
-     , [R].[UnitCost]
-     , [R].[TrnQuantity]
-     , [R].[TrnValue] FROM [#Results] As [R]
-Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[Company]
-Left Join [Lookups].[Warehouse] As [W] On [W].[Warehouse] = [R].[Warehouse] And [W].[Company] = [R].[Company]
-Where [R].[TrnTypeDescription] In ('Receipt of lot qty','Issue to a job','Transfer of lot qty','Adjustment to lot qty')
+        Select  [CN].[CompanyName]
+              , [R].[Company]
+              , [R].[SupplierLotNumber]
+              , [R].[Lot]
+              , [R].[GrnReceiptDate]
+              , [R].[StockCode]
+              , [R].[StockDescription]
+              , [R].[TrnDate]
+              , [Warehouse] = [W].[WarehouseDescription]
+              , [R].[Bin]
+              , [R].[Job]
+              , [TransactionType] = [R].[TrnTypeDescription]
+              , [R].[Reference]
+              , [R].[TotalReceiptQty]
+              , [R].[StockUom]
+              , [R].[UnitCost]
+              , [R].[TrnQuantity]
+              , [R].[TrnValue]
+              , [R].[MasterJob]
+        From    [#Results] As [R]
+                Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[Company]
+                Left Join [Lookups].[Warehouse] As [W] On [W].[Warehouse] = [R].[Warehouse]
+                                                          And [W].[Company] = [R].[Company]
+        Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
+                                              'Issue to a job' ,
+                                              'Transfer of lot qty' ,
+                                              'Adjustment to lot qty' );
     End;
 GO
