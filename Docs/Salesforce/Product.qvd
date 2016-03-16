@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <QvdTableHeader>
+   <QvBuildNo>12904</QvBuildNo>
+   <CreatorDoc>C:\Users\cjohnson\Desktop\Salesforce\SalesForce_Prometic2_1.qvw</CreatorDoc>
+   <CreateUtcTime>2015-12-10 16:32:55</CreateUtcTime>
+   <SourceCreateUtcTime></SourceCreateUtcTime>
+   <SourceFileUtcTime></SourceFileUtcTime>
+   <SourceFileSize>-1</SourceFileSize>
+   <StaleUtcTime></StaleUtcTime>
+   <TableName>ProductRaw</TableName>
+   <Fields>
+     <QvdFieldHeader>
+       <FieldName>Product2Id</FieldName>
+       <BitOffset>0</BitOffset>
+       <BitWidth>9</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>494</NoOfSymbols>
+       <Offset>0</Offset>
+       <Length>9880</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+         <String>$key</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Product Name</FieldName>
+       <BitOffset>16</BitOffset>
+       <BitWidth>9</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>489</NoOfSymbols>
+       <Offset>9880</Offset>
+       <Length>15081</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Product Code</FieldName>
+       <BitOffset>25</BitOffset>
+       <BitWidth>9</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>330</NoOfSymbols>
+       <Offset>24961</Offset>
+       <Length>3462</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Product Description</FieldName>
+       <BitOffset>34</BitOffset>
+       <BitWidth>6</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>53</NoOfSymbols>
+       <Offset>28423</Offset>
+       <Length>3504</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Product2IsActive</FieldName>
+       <BitOffset>9</BitOffset>
+       <BitWidth>1</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>INTEGER</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>2</NoOfSymbols>
+       <Offset>31927</Offset>
+       <Length>10</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$integer</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Product2Family</FieldName>
+       <BitOffset>10</BitOffset>
+       <BitWidth>6</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>13</NoOfSymbols>
+       <Offset>31937</Offset>
+       <Length>291</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+   </Fields>
+   <Compression></Compression>
+   <RecordByteSize>5</RecordByteSize>
+   <NoOfRecords>494</NoOfRecords>
+   <Offset>32228</Offset>
+   <Length>2470</Length>
+   <Lineage>
+     <LineageInfo>
+       <Discriminator>INLINE</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpportunityLineItemRaw:
+LOAD
+    OpportunityId,
+    PricebookEntryId,
+    Quantity as [Opportunity Qty],
+    TotalPrice as [Opportunity Total Price],
+    UnitPrice as [Opportunity Unit Price],
+    ListPrice as [Opportunity List Price];SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpsRaw:
+LOAD Id as  OpportunityId, 
+	IsDeleted as  OpportunityIsDeleted, 
+	AccountId, 
+	Name as  OpportunityName, 
+	Description as  OpportunityDescription, 
+	StageName, 
+	Amount, 
+	ExpectedRevenue, 
+	TotalOpportunityQuantity, 
+	CloseDate as CloseDateRaw, 
+	Type, 
+	NextStep, 
+	LeadSource, 
+	if(IsClosed	='true',1,if(IsClosed	='false',0,IsClosed)) as IsClosed, 
+	if(IsWon		='true',1,if(IsWon		='false',0,IsWon)) as IsWon, 
+	ForecastCategory, 
+	ForecastCategoryName, 
+	CampaignId, 
+	HasOpportunityLineItem
+	, FiscalQuarter			
+	, FiscalYear
+	, CurrencyIsoCode as Op_Currency
+	, Probability/100 as Probability	;SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>PricebookEntryRaw:
+LOAD Id as PricebookEntryId,
+    Product2Id;Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>ProductRaw:
+LOAD 
+	Id as Product2Id,
+    Name as [Product Name],
+    ProductCode as [Product Code],
+    Description as [Product Description],
+    IsActive as Product2IsActive,
+    Family as Product2Family;SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>QuotesRaw:
+LOAD
+Id as QuoteId, 
+	IsDeleted as QuoteIsDeleted, 
+	Name as QuoteName, 
+	CurrencyIsoCode, 
+	Date(CreatedDate) as QuoteCreatedDate, 
+	LastModifiedDate, 
+	OpportunityId, 
+	Pricebook2Id, 
+	ContactId, 
+	QuoteNumber, 
+	ShippingHandling, 
+	Tax, 
+	Status, 
+	ExpirationDate, 
+	Description  as QuoteDescription, 
+	Subtotal as QuoteSubtotal, 
+	TotalPrice as QuoteTotalPrice, 
+	LineItemCount, 
+	Discount as QuoteDiscount, 
+	GrandTotal as QuoteGrandTotal
+	,date(MonthStart(Date(CreatedDate)),'MMM YY') as QuoteMonth;SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SFRaw:
+LOAD  
+	Id 					As AccountId, 
+	IsDeleted 			As AccountIsDeleted, 
+	Name				As AccountName, 
+	Type 				As AccountType, 
+	BillingStreet, 
+	BillingCity, 
+	BillingPostalCode, 
+	BillingCountry, 
+	
+	
+	ShippingStreet, 
+	ShippingCity, 
+	ShippingState, 
+	ShippingPostalCode, 
+	
+	
+	Phone 				As AccountPhone, 
+	Fax 					As AccountFax, 
+	if(AccountNumber='' or(AccountNumber=' '),Null(),AccountNumber)		As Customer, 
+	Website, 
+	Industry, 
+	Description 			As AccountDescription, 
+	Rating, 
+	Site, 
+	OwnerId 			As AccountOwnerId, 
+	CreatedDate 			As AccountCreatedDate, 
+	LastModifiedDate 	As AccountLastModifiedDate, 
+	LastActivityDate		As AccountLastActivityDate	, 
+	Total_Sales__c
+	;SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Opportunity.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - OpportunityLineItem.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - PricebookEntry.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Product.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Quotes.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - SalesForceAccounts.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+   </Lineage>
+   <Comment></Comment>
+ </QvdTableHeader>
+ 01tD0000005946zIAA 01tD0000005946uIAA 01tD000000594BkIAI 01tD0000003NuBdIAK 01tD0000003NuM0IAK 01tD0000004bxy4IAA 01tD0000004byA7IAI 01tD0000005dHAhIAM 01tD0000003NuCCIA0 01tD0000003NuFaIAK 01tD0000004bgpXIAQ 01tD0000004bxzHIAQ 01tD0000004byAMIAY 01tD0000005dGhVIAU 01tD0000005dGiTIAU 01tD0000004by1wIAA 01tD0000004byCrIAI 01tD0000004ex9uIAA 01tD0000005dGhkIAE 01tD0000003NuC2IAK 01tD0000005dGjRIAU 01tD0000003NuFfIAK 01tD0000003NuivIAC 01tD0000004by1rIAA 01tD0000003Nu4pIAC 01tD0000003NuuwIAC 01tD0000004bxuvIAA 01tD0000004by2QIAQ 01tD0000005dGisIAE 01tD0000003NuCvIAK 01tD0000004bxszIAA 01tD0000003NuDAIA0 01tD0000003Nv4NIAS 01tD0000004bgoyIAA 01tD0000004bxuRIAQ 01tD0000004bxvKIAQ 01tD0000005dGhpIAE 01tD0000005dHBLIA2 01tD0000005dGjbIAE 01tD0000005dGkFIAU 01tD0000005dGhLIAU 01tD0000003NuCHIA0 01tD0000004bxt4IAA 01tD0000003Nv0pIAC 01tD0000005I4txIAC 01tD0000003NuFLIA0 01tD0000003Nuh4IAC 01tD0000004bxtYIAQ 01tD0000003Nv19IAC 01tD0000004bgrYIAQ 01tD0000004bwirIAA 01tD0000004bxydIAA 01tD0000004bxzWIAQ 01tD0000005dHBaIAM 01tD0000005fP1KIAU 01tD0000003NuGiIAK 01tD0000003NurOIAS 01tD0000004bxzRIAQ 01tD0000003NuDZIA0 01tD0000003NuIOIA0 01tD0000004by26IAA 01tD0000005dGjMIAU 01tD0000004by00IAA 01tD0000003NuE8IAK 01tD0000003NuwEIAS 01tD0000004bxxzIAA 01tD0000005dHBQIA2 01tD0000005dGidIAE 01tD0000005dHBpIAM 01tD0000003NuIEIA0 01tD0000003Nuj5IAC 01tD0000003NuzDIAS 01tD0000003Nu41IAC 01tD0000005dHBGIA2 01tD0000003Nu3NIAS 01tD0000003Nuw9IAC 01tD0000004bxsVIAQ 01tD0000004bxtTIAQ 01tD0000004bxtUIAQ 01tD0000004bxxaIAA 01tD0000004bxyJIAQ 01tD0000004by1hIAA 01tD0000004by21IAA 01tD0000005dGi4IAE 01tD0000005dGi5IAE 01tD0000005dGkAIAU 01tD0000003Nu3IIAS 01tD0000003NuDFIA0 01tD0000004bxugIAA 01tD0000005dHB1IAM 01tD0000005dGhBIAU 01tD0000003NuB4IAK 01tD0000003NuErIAK 01tD0000003NuIJIA0 01tD0000003NuhEIAS 01tD0000003NuhnIAC 01tD0000003NuurIAC 01tD0000003NuvfIAC 01tD0000003Nv2CIAS 01tD0000004bxx6IAA 01tD0000003NuBiIAK 01tD0000003NuI4IAK 01tD0000003Nv2RIAS 01tD0000004bgprIAA 01tD0000004bgqGIAQ 01tD0000004bgp3IAA 01tD0000004bgrdIAA 01tD0000004by13IAA 01tD0000004dZHwIAM 01tD0000004dmhqIAA 01tD0000003NurEIAS 01tD0000004bgqkIAA 01tD0000004bxtdIAA 01tD0000004bxv5IAA 01tD0000004bxy9IAA 01tD0000004by0eIAA 01tD0000005dHC4IAM 01tD0000005POyxIAG 01tD0000005PHzuIAG 01tD0000005POvjIAG 01tD0000005POyiIAG 01tD0000005PC2sIAG 01tD0000005PhndIAC 01tD0000005POysIAG 01tD0000005POzCIAW 01tD0000005POvtIAG 01tD0000005PC2TIAW 01tD0000005POveIAG 01tD0000005P6diIAC 01tD0000005PHzpIAG 01tD0000005POydIAG 01tD0000005PHzzIAG 01tD0000005PiTSIA0 01tD0000005PO4oIAG 01tD0000005PC2xIAG 01tD0000005POw3IAG 01tD0000005PMscIAG 01tD0000005PTuvIAG 01tD0000005P6dxIAC 01tD0000005PC32IAG 01tD0000005PHyNIAW 01tD0000005POyYIAW 01tD0000005Pfy6IAC 01tD0000005PHzkIAG 01tD0000005POynIAG 01tD0000005PK1WIAW 01tD0000005P6dnIAC 01tD0000005PHy8IAG 01tD0000005POvZIAW 01tD0000005POvPIAW 01tD0000005PP3KIAW 01tD0000005P5fVIAS 01tD0000005POvyIAG 01tD0000005P6dsIAC 01tD0000005946pIAA 01tD0000005946VIAQ 01tD0000005PiTNIA0 01tD0000005PhnYIAS 01tD0000004zlYxIAI 01tD0000004zhpTIAQ 01tD0000004ziUIIAY 01tD0000004zlYsIAI 01tD0000004zlZ2IAI 01tD0000004ziV1IAI 01tD0000004zoUoIAI 01tD0000004ziUmIAI 01tD0000004zhqqIAA 01tD0000003Nu38IAC 01tD0000003Nu4VIAS 01tD0000003Nu4WIAS 01tD0000003NuBJIA0 01tD0000003NuBnIAK 01tD0000003NuBsIAK 01tD0000003NuDeIAK 01tD0000003NuG9IAK 01tD0000003NuGJIA0 01tD0000003NuI9IAK 01tD0000003NuLvIAK 01tD0000003NucFIAS 01tD0000003NufmIAC 01tD0000003NuhTIAS 01tD0000003NuibIAC 01tD0000003NujKIAS 01tD0000003NuquIAC 01tD0000003NuvLIAS 01tD0000003NuvuIAC 01tD0000003Nuw4IAC 01tD0000003Nv3PIAS 01tD0000003Nv3UIAS 01tD0000003NuGEIA0 01tD0000003Nv3tIAC 01tD0000003Nv3yIAC 01tD0000004bgooIAA 01tD0000004bgqaIAA 01tD0000004bgqpIAA 01tD0000004bgqzIAA 01tD0000004bgr9IAA 01tD0000004bgrTIAQ 01tD0000004bh6xIAA 01tD0000004bkp7IAA 01tD0000004bwicIAA 01tD0000004bwimIAA 01tD0000004bxl9IAA 01tD0000004bxuHIAQ 01tD0000004bxxuIAA 01tD0000004bxyOIAQ 01tD0000004bxzMIAQ 01tD0000004bxzgIAA 01tD0000004bxzqIAA 01tD0000004by05IAA 01tD0000004by0KIAQ 01tD0000004by0UIAQ 01tD0000004by0tIAA 01tD0000004by1IIAQ 01tD0000004by1NIAQ 01tD0000004by2GIAQ 01tD0000004byA2IAI 01tD0000003NuF1IAK 01tD0000003NudIIAS 01tD0000003Nv2WIAS 01tD0000004bgpmIAA 01tD0000004bxsGIAQ 01tD0000004bxuqIAA 01tD0000003NuFGIA0 01tD0000003NuFpIAK 01tD0000003Nuh9IAC 01tD0000003Nur9IAC 01tD0000004bxzCIAQ 01tD0000004by0jIAA 01tD0000003Nu5OIAS 01tD0000003NuCMIA0 01tD0000003NuG4IAK 01tD0000003NufhIAC 01tD0000003NuxRIAS 01tD0000003NuzrIAC 01tD0000003Nv2MIAS 01tD0000004bgpNIAQ 01tD0000004bgquIAA 01tD0000004bnXpIAI 01tD0000003Nu59IAC 01tD0000003Nu5JIAS 01tD0000004bxkQIAQ 01tD0000004bxkVIAQ 01tD0000004bxtiIAA 01tD0000004bxxfIAA 01tD0000004bxyYIAQ 01tD0000004by0FIAQ 01tD0000003NuAuIAK 01tD0000003NuBTIA0 01tD0000003NuCWIA0 01tD0000003NuClIAK 01tD0000003NuDtIAK 01tD0000003NuFBIA0 01tD0000003NuFkIAK 01tD0000003NuFzIAK 01tD0000004bxv0IAA 01tD0000004dZI6IAM 01tD0000005HnFtIAK 01tD0000003NuD5IAK 01tD0000003NuKnIAK 01tD0000003NufNIAS 01tD0000003NuqpIAC 01tD0000004by2LIAQ 01tD0000005HnFoIAK 01tD0000003Nv3KIAS 01tD0000004bgqfIAA 01tD0000004dmhvIAA 01tD0000005dGiYIAU 01tD0000005dGiEIAU 01tD0000005dGinIAE 01tD0000005dGk5IAE 01tD0000005dGkPIAU 01tD0000005dGixIAE 01tD0000005dGj7IAE 01tD0000005dGjlIAE 01tD0000005dGjvIAE 01tD0000005dGkKIAU 01tD0000005dGkUIAU 01tD0000005dHBuIAM 01tD0000005dHC9IAM 01tD0000005dHCOIA2 01tD0000005dLMrIAM 01tD0000005dHAmIAM 01tD0000005diWfIAI 01tD0000005dGk0IAE 01tD0000005dGkZIAU 01tD0000005dHB6IAM 01tD0000005dGgrIAE 01tD0000005dGjgIAE 01tD0000005dwB3IAI 01tD0000003Nu3DIAS 01tD0000003Nu3rIAC 01tD0000003Nu46IAC 01tD0000003Nu4LIAS 01tD0000003Nu4QIAS 01tD0000003Nu5TIAS 01tD0000003Nu5YIAS 01tD0000003NuAkIAK 01tD0000003NuApIAK 01tD0000003NuBxIAK 01tD0000003NuCbIAK 01tD0000003NuCgIAK 01tD0000003NuCqIAK 01tD0000003NuDKIA0 01tD0000003NuDoIAK 01tD0000003NuDyIAK 01tD0000003NuE3IAK 01tD0000003NuEIIA0 01tD0000003NuENIA0 01tD0000003NuESIA0 01tD0000003NuEXIA0 01tD0000003NuEcIAK 01tD0000005dGftIAE 01tD0000005dGjCIAU 01tD0000005dHBBIA2 01tD0000005dHBkIAM 01tD0000003NuEhIAK 01tD0000003NuEmIAK 01tD0000003NuFQIA0 01tD0000003NuGTIA0 01tD0000003NuGYIA0 01tD0000003NubgIAC 01tD0000003NudrIAC 01tD0000003NufcIAC 01tD0000003NugzIAC 01tD0000003NuhxIAC 01tD0000003NuqzIAC 01tD0000003Nur4IAC 01tD0000003NurTIAS 01tD0000003Nuv1IAC 01tD0000003NuvBIAS 01tD0000003NuvQIAS 01tD0000003NuvkIAC 01tD0000003NuwJIAS 01tD0000003NuzwIAC 01tD0000003Nv06IAC 01tD0000003Nv0uIAC 01tD0000003Nv14IAC 01tD0000003Nv1EIAS 01tD0000003Nv2vIAC 01tD0000005dHBfIAM 01tD0000005dHCJIA2 01tD0000003Nu3XIAS 01tD0000003NuEDIA0 01tD0000003NuF6IAK 01tD0000003NuFVIA0 01tD0000003Nv0kIAC 01tD0000003Nv48IAC 01tD0000004bgpIIAQ 01tD0000004bgpSIAQ 01tD0000004bgphIAA 01tD0000004bgq6IAA 01tD0000004bgqBIAQ 01tD0000004bgqVIAQ 01tD0000004bnXzIAI 01tD0000004bwO2IAI 01tD0000004bwOHIAY 01tD0000003Nv3FIAS 01tD0000004bwihIAA 01tD0000004bxkGIAQ 01tD0000004bxkLIAQ 01tD0000004bxkfIAA 01tD0000004bxlJIAQ 01tD0000004bxsBIAQ 01tD0000004bxsfIAA 01tD0000004bxtEIAQ 01tD0000004bxtxIAA 01tD0000004bxuWIAQ 01tD0000004bxubIAA 01tD0000004bxulIAA 01tD0000004bxvFIAQ 01tD0000004bxvjIAA 01tD0000004bxwNIAQ 01tD0000004bxwcIAA 01tD0000004bxzbIAA 01tD0000004bxzlIAA 01tD0000004bxzvIAA 01tD0000004by0PIAQ 01tD0000004by0oIAA 01tD0000004by1cIAA 01tD0000004by1mIAA 01tD0000004by2BIAQ 01tD0000004by2aIAA 01tD0000004by2fIAA 01tD0000004by9OIAQ 01tD0000004by9xIAA 01tD0000004byACIAY 01tD0000004byCcIAI 01tD0000004byE4IAI 01tD0000004byE5IAI 01tD0000003NujFIAS 01tD0000004bxvAIAQ 01tD0000004dZI1IAM 01tD0000005cz7mIAA 01tD0000005d2zrIAA 01tD0000005dGiOIAU 01tD0000005dHAwIAM 01tD0000003Nu3mIAC 01tD0000003Nu4aIAC 01tD0000003Nu5EIAS 01tD0000003NuB9IAK 01tD0000003NuBYIA0 01tD0000003NuCRIA0 01tD0000003NuDPIA0 01tD0000003NuGOIA0 01tD0000003NuLlIAK 01tD0000003NuiHIAS 01tD0000003NuilIAC 01tD0000003NujPIAS 01tD0000003NurJIAS 01tD0000003NuvVIAS 01tD0000003Nv2bIAC 01tD0000003Nv2qIAC 01tD0000003Nv3ZIAS 01tD0000004bgp8IAA 01tD0000004bgrEIAQ 01tD0000004bgr5IAA 01tD0000004bxk6IAA 01tD0000004bxkaIAA 01tD0000004bxliIAA 01tD0000004bxsQIAQ 01tD0000004bxt9IAA 01tD0000004bxtOIAQ 01tD0000004bxtnIAA 01tD0000004bxxkIAA 01tD0000004bxyTIAQ 01tD0000004by1SIAQ 01tD0000004by1XIAQ 01tD0000003Nu3cIAC 01tD0000003Nu3hIAC 01tD0000003Nu4GIAS 01tD0000003Nu4fIAC 01tD0000003Nu4kIAC 01tD0000003NuBEIA0 01tD0000003NuBOIA0 01tD0000003NuhOIAS 01tD0000003Nuj0IAC 01tD0000003NujAIAS 01tD0000004bgpcIAA 01tD0000003NuqkIAC 01tD0000003NuvzIAC 01tD0000003Nv30IAC 01tD0000003Nv35IAC 01tD0000003Nv3AIAS 01tD0000004bnXuIAI 01tD0000004bwOCIAY 01tD0000004bwkYIAQ 01tD0000004bxkBIAQ 01tD0000004bxsLIAQ 01tD0000004bxskIAA 01tD0000004bxsuIAA 01tD0000005dGhfIAE 01tD0000003Nu4zIAC 01tD0000004bxtsIAA 01tD0000004bxu2IAA 01tD0000004bxu7IAA 01tD0000004bxxpIAA 01tD0000004by1DIAQ 01tD0000004by34IAA 01tD0000004by9sIAA 01tD0000005IB2uIAG 01tD0000005dGhzIAE 01tD0000005dGiJIAU 01tD0000005dGj2IAE 01tD0000005dGjWIAU 01tD0000005dGjqIAE 01tD0000005dHBVIA2 01tD0000003Nu4uIAC 01tD0000004dZIBIA2 01tD0000004evx5IAA 01tD0000004bxlEIAQ 01tD0000005dGhQIAU 01tD0000005dGhuIAE 01tD0000005dGiiIAE 01tD0000005dHArIAM 01tD0000005dHCEIA2 01tD0000005dHCTIA2 01tD0000003Nv0zIAC 01tD0000003Nu54IAC 01tD0000004by9nIAA 01tD0000004by2VIAQ 01tD0000004bgq1IAA 01tD0000004bgq2IAA 01tD0000004by0ZIAQ 01tD0000005dGi9IAE 01tD0000003NuGdIAK 01tD0000003Nuv6IAC 01tD0000003Nv3jIAC 01tD0000004byARIAY 01tD0000005dGjHIAU 01tD0000003NuAzIAK 01tD0000003NuD0IAK 01tD0000003NufXIAS 01tD0000003Nv01IAC Carboxyl activated Purabead P6HF Carboxyl activated Purabead P60HF FOC Samples Mimetic Red¬Æ 2 A6XL (1L) p-Aminobenzamidine A6XL (1L) MAbsorbent A1P (150-249 litres) AlbuPure (20-59 litres) P100 ADJUSTER CELL KIT WITH FITTED ANTI JET Mimetic Yellow¬Æ 1 A6XL (100mL) Decyl Agarose 6XL (25mL) Hexyl Agarose 6XL (5L) MAbsorbent A2P HF (150-249 litres) AlbuPure (150-249 litres) Evolve 200mm Column TOOLKIT, P70 COLUMN Octyl Agarose 6XL (20-59 litres) Insulin Adsorbent (60-149 litres) Product Sample CONNECTION KIT, P70 COLUMN Mimetic Yellow¬Æ 1 A6XL (25mL) P100 BED SUPPORT KIT Decyl Agarose 6XL (100mL) Mimetic Blue¬Æ 1 A6XL PuraPlate (0090) Hexyl Agarose 6XL (250-999 litres) MAbsorbent¬Æ A1P (100mL) Mimetic Red¬Æ 3 A6XL Column Kit Mimetic Blue 1 P6XL (150-249 litres) Decyl Agarose 6XL (250-999 litres) P70 WETTED FLOWPATH KIT Mimetic Orange¬Æ 1 A6XL (500mL) Mimetic Yellow 1 A6XL (20-59 litres) Mimetic Orange¬Æ 2 A6XL (100mL) Mimetic Blue¬Æ 1 M P6XL Column Kit Aminophenylboronate A6XL (5L) Mimetic Blue AP A6XL (20-59 litres) Mimetic Blue 1M P6XL (250-999 litres) CONNECTION KIT, P100 COLUMN P250 FIXED CELL KIT WITH FITTED ANTI JET P200 BED SUPPORT KIT P100 TUBE REPLACEMENT KIT Evolve 100mm Column Mimetic Yellow¬Æ 1 A6XL (500mL) Mimetic Yellow 1 A6XL (60-149 litres) Phenyl Agarose 6XL PuraPlate (0405) Phenyl P6HF Hexyl Agarose 6XL (100mL) Mimetic Blue¬Æ 1 A6XL (100mL) Mimetic Yellow 2 A6XL (150-249 litres) Decyl Agarose 6XL PuraPlate (0445) p-Aminobenzamidine A6XL (5L) EtoxiClear Slurry (1000ml) MAbsorbent A2P HF (20-59 litres) Fabsorbent F1P HF (60-149 litres) FLEXIBLE HOSE KIT 70 & 100 COLUMNS Matrix 115 Aminophenylboronate P6XL (100mL) Fabsorbent‚Ñ¢ F1P HF PuraPlate (3904) Fabsorbent F1P HF (20-59 litres) Mimetic Orange¬Æ 3 A6XL (100mL) EtoxiClear‚Ñ¢ (500mL) Octyl Agarose 6XL (250-999 litres) P70 BED SUPPORT KIT Aminophenylboronate Agarose 6XL (250-999 litres) Mimetic Green¬Æ 1 A6XL (1L) Mimetic Yellow¬Æ 2 A6XL PuraPlate (0070) MAbsorbent A1P (60-149 litres) FLUID CONNECTION KIT 70 & 100 COLUMNS TOOLKIT, P140 COLUMN TORQUE WRENCH KIT 200 & 250 COLUMNS EtoxiClear‚Ñ¢ (5mL) Mimetic Blue¬Æ 1 P6XL PuraPlate (3090) Mimetic¬Æ Screening PuraPlate‚Ñ¢ Mimetic Blue¬Æ SA HL P6XL (100mL) P200 FIXED CELL KIT WITH FITTED ANTI JET Mimetic Blue¬Æ 1 P6XL (1L) Mimetic Yellow¬Æ 1 A6XL PuraPlate (0060_ Mimetic Orange 3 A6XL (20-59 litres) Mimetic Yellow 2 A6XL (60-149 litres) Mimetic Green 1 A6XL (20-59 litres) Mimetic Blue SA HL P6XL (20-59 litres) MAbsorbent A2P (20-59 litres) Hexyl Agarose 6XL (60-149 litres) Octyl Agarose 6XL (60-149 litres) CONNECTION KIT, P250 COLUMN SPARES KIT, P140 COLUMN P70 TUBE REPLACEMENT KIT Mimetic Blue¬Æ 1 P6XL (500mL) Mimetic Orange¬Æ 2 A6XL (500mL) Mimetic Blue AP A6XL (250-999 litres) P70 FIXED CELL KIT WITH FITTED ANTI JET Evolve 70mm Column Fabsorbent‚Ñ¢ F1P HF (25mL) Octyl Agarose 6XL (25mL) EtoxiClear‚Ñ¢ (50mL) Mimetic Blue¬Æ 1 A6XL (1L) Mimetic Blue¬Æ AP A6XL (500mL) Mimetic Red¬Æ 2 A6XL Column Kit Mimetic Red¬Æ 2 A6XL PuraPlate (0020) Aminophenylboronate A6XL Column Kit Mimetic Blue SA P6XL (250-999 litres) Mimetic Red¬Æ 3 A6XL (25mL) Aminophenylboronate P6XL (500mL) Aminophenylboronate P6XL PuraPlate (3355) Mimetic Blue¬Æ 1 A6XL (5L) Mimetic Blue¬Æ SA HL P6XL (5L) Aminophenylboronate P6XL (5L) Perflurosorb¬Æ S (5L) Phenyl Agarose 6XL (150-249 litres) EtoxiClear Slurry (20-59L) Air Freight to Mumbai MAbsorbent¬Æ A2P PuraPlate (3901) Mimetic Orange¬Æ 2 A6XL (5L) Mimetic Yellow 2 A6XL (250-999 litres) Mimetic Blue 1M P6XL (20-59 litres) MAbsorbent A1P (250-999 litres) Aminophenylboronate P6XL (150-249 litres) CASTOR TOW KIT 200 & 250 COLUMNS Purabead P60HF Mimetic Blue 2 (MSD) Octyl Purabead P6HF BAC-KappaXL Q Purabead P6HF 5/5 PuraBead¬Æ 6XL (Factor VII Adsorbent) BAC-HSA Miscellaneous Mabsorbent A2P P6HF LL Factor VII Adsorbent Fibrinogen Adsorbent BTG_Stage_1 AAT Sorbent BAC-FSH Matrix B IsoClear B (Matrix B) Epoxy Activated Purabead 60HF (1 litre) Factor VIII_IX Puraplates Phenyl Purabead 6HF Octyl Agarose 6XL (150-249) Tech Transfer & Validation Set up for GILT resin BTG_Validation_Batch Mixed Mode Puraplates Resin B (CSL) PPPS Resins Certificate of Origin BAC-CH1 Custom Development Purabead P6HF BTG_Stage_2 Resin A (CSL) SP Purabead P6HF Plasminogen Adsorbent Shipping Costs Order Processing Fees CM Purabead P6HF BTG_Validation Aldehyde activated Purabead P6HF Aldehyde activated Purabead P60HF IsoClear A (Matrix A) Prioclear B Matrix A ACCESSORY SUPPORT BRACKET KIT PrioClear A BAC-GILT SP Purabead HF BAC-FcXL 160ml Proxcys Column Mimetic Blue¬Æ 1 P6XL (25mL) AlbuPure¬Æ (1L) MAbsorbent¬Æ A2P P6HF (100mL) Fabsorbent‚Ñ¢ F1P HF (1L) Mimetic Red¬Æ 3 A6XL (100mL) Mimetic Red¬Æ 3 A6XL (500mL) Mimetic Orange¬Æ 3 A6XL (500mL) Aminophenylboronate A6XL (500mL) Aminophenylboronate A6XL LL (25mL) Aminophenylboronate P6XL (1L) p-Aminobenzamidine A6XL (500mL) Perflurosorb¬Æ S (100mL) PRIOCLEAR E‚Ñ¢ Mimetic Blue¬Æ AP A6XL (100mL) Mimetic Blue¬Æ AP A6XL PuraPlate (0110) Mimetic Blue¬Æ SA HL P6XL Column Kit MAbsorbent¬Æ A1P Column Kit Mimetic Yellow¬Æ 1 A6XL Column Kit Mimetic Orange¬Æ 1 A6XL PuraPlate (0030) Mimetic Orange¬Æ 3 A6XL PuraPlate (0050) ELISA Kit PIKSI M Test Kit (Gravity Kit) Aminophenylboronate A6XL (1L) Mimetic Blue¬Æ 1 M P6XL (100mL) Mimetic Blue¬Æ 1 M P6XL (500mL) AlbuPure¬Æ (5L) Mimetic Green¬Æ 1 A6XL (5L) Mimetic Orange¬Æ 3 A6XL (5L) Mimetic Red¬Æ 3 A6XL (5L) Mimetic Yellow¬Æ 1 A6XL (5L) Octyl Agarose 6XL (1L) EtoxiClear Slurry 10mL Custom EtoxiClear Slurry (25ml) EtoxiClear Slurry (500ml) Mimetic Orange 1 A6XL (60-149 litres) Mimetic Blue 1 A6XL (250-999 litres) MAbsorbent A1P (20-59 litres) MAbsorbent A2P (60-149 litres) MAbsorbent A2P HF (250-999 litres) Fabsorbent F1P HF (250-999 litres) Aminophenylboronate Agarose 6XL (60-149 litres) p-Aminobenzamidine Agarose 6XL (20-59 litres) p-Aminobenzamidine Agarose 6XL (150-249 litres) Aminophenylboronate P6XL (20-59 litres) Phenyl Agarose 6XL (60-149 litres) Butyl Agarose 6XL (20-59 litres) Butyl Agarose 6XL (60-149 litres) Decyl Agarose 6XL (60-149 litres) DEAE PuraBead HF (250-999 litres) Octyl Agarose 6XL (100mL) Perflurosorb¬Æ S (500mL) Para-aminobenzamidine 6XL PuraPlate (0320) MAbsorbent¬Æ A2P P6HF (5L) Mimetic Orange 2 A6XL (60-149 litres) Mimetic Blue 1 P6XL (60-149 litres) Hexyl Agarose 6XL (25mL) Decyl Agarose 6XL (1L) Mimetic Blue¬Æ 1 A6XL (500mL) MAbsorbent¬Æ A1P PuraPlate (3900) MAbsorbent A2P HF (60-149 litres) Aminophenylboronate P6XL (250-999 litres) MAbsorbent¬Æ A2P P6HF (25mL) Mimetic Yellow¬Æ 1 A6XL (1L) Aminophenylboronate A6XL (100mL) PRIOCLEAR D‚Ñ¢ Mimetic¬Æ Screening Column Kit Phenyl Agarose 6XL Column Kit Aminophenylboronate 6XL PuraPlate (0355) Decyl Agarose 6XL (5L) Mimetic Red¬Æ 2 A6XL (5L) Insulin Adsorbent (100mL) MAbsorbent¬Æ A2P (100mL) MAbsorbent¬Æ A2P (1L) Mimetic Red 3 A6XL (60-149 litres) Mimetic Red 3 A6XL (150-249 litres) Mimetic Green 1 A6XL (60-149 litres) Mimetic Blue SA HL P6XL (60-149 litres) MAbsorbent A2P (250-999 litres) p-Aminobenzamidine Agarose 6XL (60-149 litres) MAbsorbent¬Æ A2P P6HF LL (500mL) Mimetic Red¬Æ 2 A6XL (100mL) Mimetic Yellow¬Æ 2 A6XL (100mL) Mimetic Orange¬Æ 1 A6XL (25mL) Mimetic Green¬Æ 1 A6XL (25mL) Decyl Agarose 6XL (500mL) Aminophenylboronate A6XL (25mL) Mimetic Blue 1 P6XL (250-999 litres) EtoxiClear Slurry (150-249L) Analysis of 9 samples (6 plasma and 3  buffer) for leachates Mimetic Orange¬Æ 2 A6XL (25mL) p-Aminobenzamidine A6XL (25mL) PRIOCLEAR A‚Ñ¢ AlbuPure¬Æ PuraPlate (3151) Decyl Agarose 6XL (150-249 litres) Analysis of 4 Prioclear B samples for prion binding Mimetic Blue¬Æ SA A6XL PuraPlate (0120) Mimetic Orange¬Æ 1 A6XL (5L) 100% Advance Payment by TT TOOLKIT, P100 COLUMN SPARES KIT, P100 COLUMN TOOLKIT, P250 COLUMN P250 ELASTOMER SEAL KIT P200 TUBE REPLACEMENT KIT P140 WETTED FLOWPATH KIT P70 ELASTOMER SEAL KIT P140 ELASTOMER SEAL KIT P140 TUBE REPLACEMENT KIT P250 TUBE REPLACEMENT KIT COLUMN FEET KIT 200 & 250 COLUMNS P70 COLUMN RENEWAL KIT P200 COLUMN RENEWAL KIT Aminophenylboronate P6XL 7L P140 ADJUSTER CELL KIT WITH FITTED ANTI JET Phenyl Purabead HF (60ml) P200 ELASTOMER SEAL KIT P70 ADJUSTER CELL KIT WITH FITTED ANTI JET P100 FIXED CELL KIT WITH FITTED ANTI JET Process Design Kit P250 BED SUPPORT KIT 15L DBA Rewash Mimetic Blue¬Æ 1 P6XL (100mL) Mimetic Blue¬Æ SA HL P6XL (25mL) Mimetic Blue¬Æ SA HL P6XL (500mL) AlbuPure¬Æ (100mL) AlbuPure¬Æ (500mL) MAbsorbent¬Æ A2P P6HF (500mL) MAbsorbent¬Æ A2P P6HF (1L) MAbsorbent¬Æ A2P P6HF LL (25mL) MAbsorbent¬Æ A2P P6HF LL (100mL) Mimetic Red¬Æ 3 A6XL (1L) Mimetic Yellow¬Æ 2 A6XL (500mL) Mimetic Yellow¬Æ 2 A6XL (1L) Mimetic Orange¬Æ 1 A6XL (100mL) Mimetic Orange¬Æ 2 A6XL (1L) Mimetic Orange¬Æ 3 A6XL (1L) Mimetic Green¬Æ 1 A6XL (100mL) Mimetic Green¬Æ 1 A6XL (500mL) Phenyl Agarose 6XL (100mL) Phenyl Agarose 6XL (500mL) Phenyl Agarose 6XL (1L) Butyl Agarose 6XL(25mL) Butyl Agarose 6XL (100mL) INSULIN ADSORBENT COLUMN KIT P200 WETTED FLOWPATH KIT P140 FIXED CELL KIT WITH FITTED ANTI JET TORQUE WRENCH KIT 70, 100, 140 COLUMNS Butyl Agarose 6XL (500mL) Butyl Agarose 6XL (1L) Hexyl Agarose 6XL (500mL) Aminophenylboronate A6XL LL (500mL) Aminophenylboronate A6XL LL (1L) Perflurosorb¬Æ S (25mL) Perflurosorb¬Æ S (1L) PRIOCLEAR C‚Ñ¢ Mimetic Blue¬Æ 1 A6XL (25mL) Mimetic Blue¬Æ AP A6XL (1L) MAbsorbent¬Æ A2P Column Kit MAbsorbent¬Æ A2P P6HF Column Kit Fabsorbent‚Ñ¢ F1P HF Column Kit Mimetic Orange¬Æ 1 A6XL Column Kit Mimetic Orange¬Æ 3 A6XL Column Kit Mimetic Yellow¬Æ 2 A6XL Column Kit Mimetic Red¬Æ 3 A6XL PuraPlate (0013) Mimetic Green¬Æ 1 A6XL PuraPlate (0080) Butyl Agarose 6XL Column Kit Octyl Agarose 6XL Column Kit Butyl Agarose 6XL PuraPlate (0415) Octyl Agarose 6XL PuraPlate (0435) Hydrophobic A6XL Screening Column Kit DEAE PuraBead HF (100mL) FLEXIBLE HOSE KIT 140,200,250 COLUMNS P140 COLUMN RENEWAL KIT Mimetic Blue¬Æ SA P6XL (25mL) Phenyl Agarose 6XL (25mL) Octyl Agarose 6XL (500mL) Hexyl Agarose 6XL (1L) Decyl Agarose 6XL Column Kit Mimetic Blue¬Æ 1 M P6XL (1L) DEAE PuraBead HF (5L) Fabsorbent‚Ñ¢ F1P HF (5L) MAbsorbent¬Æ A2P (5L) Mimetic Blue¬Æ 1 P6XL (5L) Mimetic Blue¬Æ AP A6XL (5L) Mimetic Blue¬Æ SA P6XL (5L) Insulin Adsorbent (5L) Insulin Adsorbent (25mL) Insulin Adsorbent (1000mL) DEAE PuraBead HF Column Kit EtoxiClear Slurry (100ml) Mimetic Red 2 A6XL (250-999 litres) Mimetic Red 3 A6XL (20-59 litres) Mimetic Orange 1 A6XL (20-59 litres) Mimetic Orange 1 A6XL (250-999 litres) Mimetic Orange 2 A6XL (20-59 litres) Mimetic Orange 3 A6XL (60-149 litres) Mimetic Yellow 1 A6XL (250-999 litres) Mimetic Blue 1 A6XL (20-59 litres) Mimetic Blue AP A6XL (60-149 litres) Mimetic Blue AP A6XL (150-249 litres) Mimetic Blue 1 P6XL (20-59 litres) Mimetic Blue 1M P6XL (150-249 litres) Mimetic Blue SA P6XL (20-59 litres) Mimetic Blue SA P6XL (60-149 litres) Mimetic Blue SA P6XL (150-249 litres) Fabsorbent F1P HF (150-249 litres) Aminophenylboronate Agarose 6XL (20-59 litres) Aminophenylboronate Agarose 6XL (150-249 litres) p-Aminobenzamidine Agarose 6XL (250-999 litres) Phenyl Agarose 6XL (20-59 litres) Hexyl Agarose 6XL (20-59 litres) Hexyl Agarose 6XL (150-249 litres) Decyl Agarose 6XL (20-59 litres) Perfluorosorb S (60-149 litres) Perfluorosorb S (150-249 litres) Aldehyde activated Purabead¬Æ 6HF Small Bead DEAE PuraBead HF (150-249 litres) AlbuPure (60-149 litres) Insulin Adsorbent (20-59 litres) Insulin Adsorbent (150-249 litres) Insulin Adsorbent (250-999 litres) Mimetic Blue¬Æ SA P6XL PuraPlate (3120) Mimetic Blue 1M P6XL (60-149 litres) EtoxiClear Slurry (60-149L) Initial Study for the Immobilisation and use of r Protein G for antibody purification Analysis of 3 PrioClear B samples for prion binding SPARES KIT, P250 COLUMN P250 ADJUSTER CELL KIT WITH FITTED ANTI JET Mimetic Blue¬Æ SA P6XL (1L) MAbsorbent¬Æ A2P (500mL) Fabsorbent‚Ñ¢ F1P HF (100mL) Mimetic Red¬Æ 2 A6XL (500mL) Mimetic Yellow¬Æ 2 A6XL (25mL) Mimetic Orange¬Æ 3 A6XL (25mL) Aminophenylboronate A6XL LL (100mL) p-Aminobenzamidine A6XL (100mL) Mimetic Blue¬Æ AP A6XL Column Kit Mimetic Blue¬Æ 1 A6XL Column Kit Mimetic Blue¬Æ SA HL P6XL PuraPlate (3125) MAbsorbent¬Æ A2P P6HF (3903) Mimetic Green¬Æ 1 A6XL Column Kit Aminophenylboronate Agarose P6XL Column Kit DEAE PuraBead HF (25mL) SP PuraBead¬Æ HF PuraPlate (3453) Butyl Agarose 6XL (5L) Octyl Agarose 6XL (5L) Phenyl Agarose 6XL (5L) Mimetic Red 2 A6XL (20-59 litres) Mimetic Red 3 A6XL (250-999 litres) Mimetic Red 2 A6XL (150-249 litres) Mimetic Orange 2 A6XL (250-999 litres) Mimetic Yellow 1 A6XL (150-249 litres) Mimetic Yellow 2 A6XL(20-59 litres) Mimetic Green 1 A6XL (150-249 litres) Mimetic Blue SA HL P6XL (150-249 litres) MAbsorbent A2P (150-249 litres) Butyl Agarose 6XL (150-249 litres) Butyl Agarose 6XL (250-999 litres) Mimetic Blue¬Æ SA P6XL (100mL) Mimetic Blue¬Æ SA P6XL (500mL) AlbuPure¬Æ (25mL) Mimetic Blue¬Æ SA HL P6XL (1L) MAbsorbent¬Æ A1P (25mL) Fabsorbent‚Ñ¢ F1P HF (500mL) Mimetic Red¬Æ 2 A6XL (25mL) Mimetic Blue¬Æ AP A6XL (25mL) Mimetic Blue¬Æ 1 P6XL Column Kit Mimetic Blue¬Æ SA P6XL Column Kit MAbsorbent¬Æ A1P (5L) AlbuPure¬Æ Column Kit Mimetic Orange¬Æ 2 A6XL PuraPlate (0040) DEAE PuraBead HF (500mL) DEAE PuraBead HF (1L) DEAE PuraBead HF PuraPlate (3451) Insulin Adsorbent (1L) Insulin Adsorbent (500mL) p-Aminobenzamidine Agarose 6XL Column Kit Mimetic Red 2 A6XL (60-149 litres) Mimetic Orange 2 A6XL (150-249 litres) Mimetic Orange 3 A6XL (150-249 litres) Mimetic Orange 3 A6XL (250-999 litres) Evolve 250mm Column MAbsorbent¬Æ A1P (1L) Mimetic Green 1 A6XL (250-999 litres) Mimetic Blue 1 A6XL (60-149 litres) Mimetic Blue 1 A6XL (150-249 litres) Mimetic Blue SA HL P6XL (250-999 litres) Phenyl Agarose 6XL (250-999 litres) Perfluorosorb S (250-999 litres) DEAE PuraBead HF (60-149 litres) Analysis of 6 Samples CONNECTION KIT, P200 COLUMN SPARES KIT, P200 COLUMN P100 WETTED FLOWPATH KIT P140 BED SUPPORT KIT P100 ELASTOMER SEAL KIT FLUID CONNECTION KIT 140,200,250 COLUMNS MAbsorbent¬Æ A1P (500mL) EtoxiClear Slurry (250-999L) HSA Adsorbent Mimetic Orange 1 A6XL (150-249 litres) Evolve 140mm Column CONNECTION KIT, P140 COLUMN TOOLKIT, P200 COLUMN P200 ADJUSTER CELL KIT WITH FITTED ANTI JET P100 COLUMN RENEWAL KIT P250 COLUMN RENEWAL KIT Hexyl Agarose 6XL PuraPlate (0425) MAbsorbent¬Æ A2P (25mL) DEAE PuraBead HF (20-59 litres) Perfluorosorb S (20-59 litres) Mimetic Blue¬Æ 1 M P6XL (5L) Mimetic Yellow¬Æ 2 A6XL (5L) Aminophenylboronate P6XL (60-149 litres) SPARES KIT, P70 COLUMN Aminophenylboronate P6XL (25mL) Mimetic Orange¬Æ 2 A6XL Column Kit Mimetic Blue¬Æ 1 M P6XL (25mL) AlbuPure (250-999 litres) P250 WETTED FLOWPATH KIT MAbsorbent¬Æ A2P P6HF LL (1L) Mimetic Orange¬Æ 1 A6XL (1L) PRIOCLEAR B‚Ñ¢ Hexyl Agarose 6XL Column Kit custom Custom 0020-01000 0320-01000 3900-01000 3151-01000 AA10ACK 0060-00100 0445-00025 0425-05000 3903-01000 AB200505 AA07TK 0435-01000 3160-01000 Sample AA07CK 0060-00025 AA10BSK 0445-00100 2218 0425-01000 3900-00100 1013-00001 3090-01000 0445-01000 AA07WFK 0030-00500 0060-01000 0040-00100 4091-00001 0355-05000 0110-01000 3091-01000 AA10CK AA25FCK AA20BSK AA10TRK AB100505 0060-00500 2222 PC3408 0425-00100 0090-00100 0070-01000 2226 0320-05000 3250-01000 3904-01000 AAFHK1 9004-00250 3355-00100 2233 0050-00100 4250-00500 AA07BSK 0355-01000 0080-01000 2216 AAFCK1 AA14TK AATWK2 4250-00005 2234 2210 3125-00100 AA20FCK 2215 0050-01000 3125-01000 3901-01000 AA25CK AA14SK AA07TRK 3090-00500 0040-00500 AA07FCK AB070505 3904-00025 0435-00025 4250-00050 0090-01000 0110-00500 1020-00001 2209 1355-00001 3120-01000 0013-00025 3355-00500 2232 0090-05000 3125-05000 3355-05000 5003-05000 0405-01000 2204 0040-05000 3355-01000 AACTK 0100 3436-01000 3452-01000 3170-01000 3906-01000 3850-01000 9510 9302-01000 9302 CUSTOM 3408-01000 5620 9505 5600 3453-01000 3880-01000 3450-01000 9301 5520-01000 3890-01000 9301-01000 ASBK01 5512-01000 3407-01000 9509-01000 3453 N/A 3090-00025 3903-00100 0013-00100 0013-00500 0050-00500 0355-00500 0356-00025 0320-00500 5003-00100 0110-00100 2221 4125-00001 4900-00001 1060-00001 2212 2214 2090 1000-00001 3091-00100 3091-00500 3151-05000 0080-05000 0050-05000 0013-05000 0060-05000 3250-00010 N/a 3250-00025 3250-00500 0030-01000 0415-01000 3451-01000 0435-00100 5003-00500 2206 3903-05000 0040-01000 0425-00025 0090-00500 2203 3903-00025 0355-00100 1003-00001 1405-00001 2207 0445-05000 0020-05000 3160-00100 3901-00100 0013-01000 3906-00500 0020-00100 0070-00100 0030-00025 0080-00025 0445-00500 0355-00025 0040-00025 0320-00025 2236 2219 0030-05000 AA10TK AA10SK AA25TK AA25ESK AA20TRK AA14WFK AA07ESK AA14ESK AA14TRK AA25TRK AAFK AA07CRK AA20CRK 3355-07000 AA14ACK 3408-00060 AA20ESK AA07ACK AA10FCK 2101 AA25BSK 3090-00100 3125-00025 3125-00500 3151-00100 3151-00500 3903-00500 3906-00025 3906-00100 0070-00500 0030-00100 0080-00100 0080-00500 0405-00100 0405-00500 0415-00025 0415-00100 4160-00001 AA20WFK AA14FCK AATWK1 0415-00500 0425-00500 0356-00500 0356-01000 5003-00025 5003-01000 0090-00025 4901-00001 4903-00001 4904-00001 1030-00001 1050-00001 1070-00001 2211 2217 1415-00001 1435-00001 2223 2225 1403-00001 3451-00100 AAFHK2 AA14CRK 3120-00025 0405-00025 0435-00500 1445-00001 3451-05000 3904-05000 3901-05000 3090-05000 0110-05000 3120-05000 3160-05000 3160-00025 4451-00001 3250-00100 3012-01000 2220 AA25SK AA25ACK 3901-00500 3904-00100 0020-00500 0070-00025 0050-00025 0356-00100 0320-00100 1110-00001 1090-00001 2231 2205 1080-00001 4355-00001 3451-00025 2208 0415-05000 0435-05000 0405-05000 3120-00100 3120-00500 3151-00025 3900-00025 3904-00500 0020-00025 0110-00025 4090-00001 4120-00001 3900-05000 4151-00001 2213 3451-00500 2202 3160-00500 1320-00001 AB250505 AA20CK AA20SK AA10WFK AA14BSK AA10ESK AAFCK2 3900-00500 PC9508 AB140505 AA14CK AA20TK AA20ACK AA10CRK AA25CRK 2224 3901-00025 3091-05000 0070-05000 AA07SK 3355-00025 1040-00001 3091-00025 AA25WFK 5520 1425-00001 Morphine dehydrogenase, MiaA tRNA prenyltransferase Serine proteases & endopeptidases:
+Acetyl cholinesterase, Aldehyde oxidase, Alkaline phosphatase, Collagenase/Clostripain, Enterokinase, Kallikrein
+Papain, Plasminogen (subspecies), thrombin, trypsin, urokinase Chymosin, Estradiol antibody Hydrophobic Interaction Chromatography Custom Products Dehyrdogenases, kinases, Human serum albumin, Thrombopoietin (TPO) Polyclonal antibodies (IgG) Peroxidase/anti-peroxidase antibody complexes, Thrombopoietin (TPO) Follicle stimulating hormone (FSH ‚Äì follitropin), MiaA tRNA prenyltransferase, Oxophytodienoate reductase (OPR 1) Follicle stimulating hormone (FSH ‚Äì follitropin), Atropine, Morphinone and Pentaerythritol Tetranitrate (PETN) reductase Mimetic SCREENING COLUMN KIT - PuraBead Single Media Plates - Hydrophobic Ligands Glycoproteins:
+EPO, membrane glycoproteins, fetuin, transferrin, arabinose, fructose, galactose, inositol, lactose, sorbitol, adenosine, deoxyadenosine, cytidine, guanosine, thymidine, uridine, oligonuclecotides, RNA Monoclonal antibody framents: 
+Fab, Fab‚Äô, F(ab‚Äô)2, svFv, VL domain antibody, whole molecule IgG1&4, kappa and lambda light chains ‚Äì human, ovine, murine & bovine sources (CHO and E.coli cell lines) Morphine dehydrogenase, Glucose oxidase (A.niger) (PBL Endotoxin Removal Adsorbent) Follicle stimulating hormone (FSH ‚Äì follitropin), Epoxide hydrolase (A.niger), Malic enzyme (isoforms III & IV), Thrombopoietin (TPO), Green Fluorescent Protein (GFP) Recombinant interferon-alpha-2b, human serum albumin, alpha ‚Äì 1 acid glycoprotein, Oxophytodienoate reductase (OPR 2 and 3) Contents: 
+Mimetic Red 2, Red 3, Orange 1, Orange 2, Orange 3, Yellow 1, Yellow 2 (A6XL)and Mimetic Blue 1, Blue SA (P6XL) Human serum albumin, albumin fusion proteins Alkaline phosphatase, IgG conjugated with alkaline phosphatase (IgG-AP) Monoclonal and polyclonal antibodies (IgG1-4) Factor VII adsorbent Synthesis of trial R&D batch of DigiFab affinity adsorbent Synthesis of 10L of DigiFab affinity adsorbent Synthesis of trial Manufacturing  batch of DigiFab affinity adsorbent Fees deducted from bank Preparation for TT and validation Albumin/albumin fusion proteins, Allergan Endopeptidase protein (Project 158)
+(Originally - Delta rHA Adsorbent) [Internal Reference - PBL-1067] Monoclonal and polyclonal antibodies (IgG) Low Ligand
+NB: Poor binding capacity seen with fetuin (February 2010 ‚Äì 79BG) compared to APB A6XL and P6XL West Nile virus DNA vaccine, Plasmid DNA PrPres removal ‚Äì human plasma, 25% human serum albumin, 3% IVIG SCREENING PLATE KITS GROUPED SCREENING COLUMN KIT Mimetic AFFINITY MEDIA - PuraBead PrPres removal ‚Äì 25% human serum albumin, 3% IVIG HYDROPHOBIC SCREENING COLUMN KITS - Agarose 6XL Albumin/albumin fusion proteins, Allergan Endopeptidase protein (Project 158) BSA, Human serum albumin, albumin fusion proteins 400ml 12 x 10ml 5 x 1ml Follicle stimulating hormone (FSH ‚Äì follitropin), Epoxide hydrolase (A.niger), Malic enzyme (isoforms III & IV), Thrombopoietin (TPO), Green Fluorescent Protein (GFP GROUPED SCREENING COLUMN KITS ION EXCHANGE MEDIA 25L ION EXCHANGE SCREENING COLUMN KITS - PuraBead HF Initial Study for the Immobilisation and use of r Protein G for antibody purification Single Media Plates - Ion Exchangers Polyclonal antibodies (IgG (25L) PrPres removal ‚Äì 25% human serum albumin, 3% IVIG
+5520 = Octapharma sales only
+5525 ‚Äì General sales        Custom Resins General Purification Bio-contaminant Removal Antibody & Antibody Fragments Albumin & Albumin-Fusion Proteins Bioprocess Column Insulin & Insulin Analogues Glycoprotein Separation Alkaline Phosphatase Nucleic Acid Purification Miscellaneous Custom Development PPPS       
+   		
+
+         "$ &( *,. 0 2$4 6 8 :(< >,  @0!$!B ""D ##F $$H %%J &&L ''N ((P ))R**< ++T4,,V --X..Z//\ 00^411` 22b 33 44d 55f 66h 7$7j888l<99d ::n@;;pD<< ==r >$>t ??vH@@x,AA BBz CC| DD~ EEÄDFFÇLGGÑPHHÜTIIà JJ4LKKäLLå MM\ NNv OOé PPê QQ. RR SSí TTî UUñ VVòLWWö,XXD YYú ZZû [[†<\\¢]]§D^^¶_(_®X``™aa¨b$bÆ8cc∞ dd≤$e$e¥8f$f∂8gg∏ hh∫ i$iº j,jæ kk¿ llb m0m  nn¬\ooƒ pp\ qqF rr s$s∆ tt» uu vv  wwÃ x4x  yyŒ z8z–`{{  |0|  }}“ ~8~  8  Ä4Ä dÅ8Å‘ ÇÇ÷ ÉÉÿ ÑÑ⁄ ÖÖ‹ Ü8Ü ááﬁ àà ââ  ä4ä hãã åå‡ ç8ç  é0é  èè‚ ê4ê  ëë í4í lìì‰ îîÊ ï8ïË ñ0ñ  ó0ó pòòÍ ô4ô töö õõ úúÏ ù8ùÓ û  üûÚ †üÙ ° †ˆ ¢ ,¯ £°˙ §:¢¸ •£  ¶ §˛ ß• M®¶x©ß}™®d<´©%¨™%≠´AÆ$¨
+9Ø$≠Å∞$Æ∆8±Ø≤,∞Ö≥± à¥(≤Yµ(≥Y∂¥U∑µ!∏∂π∑)∫∏Aª0π çº∫"ëΩ$ªt8æº$ïøΩ&ï¿æ(¡ø*¬¿,√¡.ƒ¬0≈√ ∆ƒ2«≈4»∆6…«8 »:À…¶ Ã  ÕÀê ŒÃ œÕd –$Œt —œ
+ “–
+ ”$—∆ ‘“¿ ’”<÷‘<◊’6 ÿ÷>Ÿ◊@⁄,ÿBÖ€ŸD‹⁄F›€Hﬁ‹4 ﬂ›J‡ﬁ6·ﬂL‚‡N!„· ‰$‚∆ Â„P}Ê‰<Á$ÂR9ËÊ òÈÁTQÍËVùÎ$ÈX9ÏÍZÌÎ\Ó Ï^ÔÌ`]Óê\ÒÔbÚbÛÒv ÙÚé ıÛê ˆÙ
+ ˜ıd}¯ˆf	˘˜h-˙¯j)˚˘lI¸√˝˙n˛$˚p9ˇ¸4  ˝b 5˛‹ ˇr- uàw°7 5› y•	{
+1 }	
+ÅÉÖ8 áâãçèëìï%óôõ©ùü°£≠ •!1› "ßM#©U$ ´U%!≠y&"Øy'#±}($|)%≥}*&µ}+'c%,(∑--)],.*π)/+I-0,ç@1-ªI2.ΩI3/ø40¡51¡62√73≈8!4«±95…:6À;7Õ<8œ=9=>:—?%;”Å@%<’ÅA/=◊ÖB->ŸÖC?òD@€E)AEXFB›]GCﬂ}HD·=IE„)JFÂAKGÁ-LHÈ%MIÎµNJÌùOKÔùPLÒ5QMÛ5RNıπSO˜ΩTP˘UQ˚VR˝UWSˇXTYU/ZVû[WGî\X]Y^Z	_[`)\a]b!^¬c!_d!`! ea∆fbgc	 hdcie;jf;kgIlhç mi= njß okE plE qm5 rnG so± tp± uq± vre w%su x%tu yu zv¡ {w/ |x/ }y7 ~-zŸ-{ŸÄ	|Å}?Ç~ É!! Ñ!Ä! Ö!Å! ÜÇVáÉG àÑc â5Ö»ä5Ü ãáåàçâ±Té¶xèä!^êã#>ëå%
+íç'.ìé)Bî%è+Çïê-ñ)ë/Zóí1òì3Vôî5~öï7Jõ%ñ9:úó;æùò=Œûô?üöA†õC°ú	 ¢ùc£û	 §üI•†= ¶°] ß¢w ®£è ©§ë ™•=´¶=¨ßEV≠®GVÆ©IzØ™èT∞´K“±¨M>≤≠O
+≥)ÆQZ¥ØSNµ∞UV∂±W∑≤Y¢∏≥[.π¥]æ∫µ?Ωª∂_Œº!∑!‘Ω!∏aæπcø∫	 ¿ªI¡ºç ¬Ωç √æeƒø ≈¿w ∆¡ß «¬ß »√è …ƒ¡  -≈ŸÀ∆?Ã5« Õ»gŒ…iœ k–Àm—Ão“Õq”Œs"‘œc ’9–u÷—;◊“wÿ”yŸ‘{⁄’}€÷‹◊Å›ÿÉ6ﬁŸÖ^ﬂ⁄?‡-€Ÿ·‹á‚›â„%ﬁ« ‰ﬂãÂ%‡ç:Ê·è.Á‚ëñË„ È‰ìÍÂ”|ÎÊ;)ÏÁï⁄ÌËóû

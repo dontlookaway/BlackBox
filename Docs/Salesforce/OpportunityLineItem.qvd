@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <QvdTableHeader>
+   <QvBuildNo>12904</QvBuildNo>
+   <CreatorDoc>C:\Users\cjohnson\Desktop\Salesforce\SalesForce_Prometic2_1.qvw</CreatorDoc>
+   <CreateUtcTime>2015-12-10 16:32:55</CreateUtcTime>
+   <SourceCreateUtcTime></SourceCreateUtcTime>
+   <SourceFileUtcTime></SourceFileUtcTime>
+   <SourceFileSize>-1</SourceFileSize>
+   <StaleUtcTime></StaleUtcTime>
+   <TableName>OpportunityLineItemRaw</TableName>
+   <Fields>
+     <QvdFieldHeader>
+       <FieldName>OpportunityId</FieldName>
+       <BitOffset>0</BitOffset>
+       <BitWidth>9</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>319</NoOfSymbols>
+       <Offset>0</Offset>
+       <Length>6380</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+         <String>$key</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>PricebookEntryId</FieldName>
+       <BitOffset>15</BitOffset>
+       <BitWidth>8</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>194</NoOfSymbols>
+       <Offset>6380</Offset>
+       <Length>3880</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+         <String>$key</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Opportunity Qty</FieldName>
+       <BitOffset>9</BitOffset>
+       <BitWidth>6</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>REAL</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>57</NoOfSymbols>
+       <Offset>10260</Offset>
+       <Length>321</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Opportunity Total Price</FieldName>
+       <BitOffset>23</BitOffset>
+       <BitWidth>9</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>290</NoOfSymbols>
+       <Offset>10581</Offset>
+       <Length>3148</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Opportunity Unit Price</FieldName>
+       <BitOffset>32</BitOffset>
+       <BitWidth>8</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>221</NoOfSymbols>
+       <Offset>13729</Offset>
+       <Length>2275</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Opportunity List Price</FieldName>
+       <BitOffset>40</BitOffset>
+       <BitWidth>8</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>146</NoOfSymbols>
+       <Offset>16004</Offset>
+       <Length>1441</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+   </Fields>
+   <Compression></Compression>
+   <RecordByteSize>6</RecordByteSize>
+   <NoOfRecords>439</NoOfRecords>
+   <Offset>17445</Offset>
+   <Length>2634</Length>
+   <Lineage>
+     <LineageInfo>
+       <Discriminator>INLINE</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpportunityLineItemRaw:
+LOAD
+    OpportunityId,
+    PricebookEntryId,
+    Quantity as [Opportunity Qty],
+    TotalPrice as [Opportunity Total Price],
+    UnitPrice as [Opportunity Unit Price],
+    ListPrice as [Opportunity List Price];SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpsRaw:
+LOAD Id as  OpportunityId, 
+	IsDeleted as  OpportunityIsDeleted, 
+	AccountId, 
+	Name as  OpportunityName, 
+	Description as  OpportunityDescription, 
+	StageName, 
+	Amount, 
+	ExpectedRevenue, 
+	TotalOpportunityQuantity, 
+	CloseDate as CloseDateRaw, 
+	Type, 
+	NextStep, 
+	LeadSource, 
+	if(IsClosed	='true',1,if(IsClosed	='false',0,IsClosed)) as IsClosed, 
+	if(IsWon		='true',1,if(IsWon		='false',0,IsWon)) as IsWon, 
+	ForecastCategory, 
+	ForecastCategoryName, 
+	CampaignId, 
+	HasOpportunityLineItem
+	, FiscalQuarter			
+	, FiscalYear
+	, CurrencyIsoCode as Op_Currency
+	, Probability/100 as Probability	;SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>PricebookEntryRaw:
+LOAD Id as PricebookEntryId,
+    Product2Id;Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>ProductRaw:
+LOAD 
+	Id as Product2Id,
+    Name as [Product Name],
+    ProductCode as [Product Code],
+    Description as [Product Description],
+    IsActive as Product2IsActive,
+    Family as Product2Family;SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>QuotesRaw:
+LOAD
+Id as QuoteId, 
+	IsDeleted as QuoteIsDeleted, 
+	Name as QuoteName, 
+	CurrencyIsoCode, 
+	Date(CreatedDate) as QuoteCreatedDate, 
+	LastModifiedDate, 
+	OpportunityId, 
+	Pricebook2Id, 
+	ContactId, 
+	QuoteNumber, 
+	ShippingHandling, 
+	Tax, 
+	Status, 
+	ExpirationDate, 
+	Description  as QuoteDescription, 
+	Subtotal as QuoteSubtotal, 
+	TotalPrice as QuoteTotalPrice, 
+	LineItemCount, 
+	Discount as QuoteDiscount, 
+	GrandTotal as QuoteGrandTotal
+	,date(MonthStart(Date(CreatedDate)),'MMM YY') as QuoteMonth;SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SFRaw:
+LOAD  
+	Id 					As AccountId, 
+	IsDeleted 			As AccountIsDeleted, 
+	Name				As AccountName, 
+	Type 				As AccountType, 
+	BillingStreet, 
+	BillingCity, 
+	BillingPostalCode, 
+	BillingCountry, 
+	
+	
+	ShippingStreet, 
+	ShippingCity, 
+	ShippingState, 
+	ShippingPostalCode, 
+	
+	
+	Phone 				As AccountPhone, 
+	Fax 					As AccountFax, 
+	if(AccountNumber='' or(AccountNumber=' '),Null(),AccountNumber)		As Customer, 
+	Website, 
+	Industry, 
+	Description 			As AccountDescription, 
+	Rating, 
+	Site, 
+	OwnerId 			As AccountOwnerId, 
+	CreatedDate 			As AccountCreatedDate, 
+	LastModifiedDate 	As AccountLastModifiedDate, 
+	LastActivityDate		As AccountLastActivityDate	, 
+	Total_Sales__c
+	;SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Opportunity.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - OpportunityLineItem.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Quotes.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - SalesForceAccounts.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+   </Lineage>
+   <Comment></Comment>
+ </QvdTableHeader>
+ 006D000000S57l7IAB 006D000000koyZKIAY 006D000000eDyUrIAK 006D000000i5b8JIAQ 006D000000itTY0IAM 006D000000k159UIAQ 006D000000koyO5IAI 006D000000V8xd3IAB 006D000000Y9ha0IAB 006D000000X7yZrIAJ 006D000000YDeiyIAD 006D000000Zb59RIAR 006D000000VybrAIAR 006D000000ZbAr4IAF 006D000000k2rUPIAY 006D000000k0HDJIA2 006D000000k00iBIAQ 006D000000k2rZ6IAI 006D000000iuFCoIAM 006D000000k144qIAA 006D000000k00g0IAA 006D000000k0srgIAA 006D000000iuFD3IAM 006D000000k0sneIAA 006D000000k2rPMIAY 006D000000k3UgiIAE 006D000000k3GioIAE 006D000000i5zkXIAQ 006D000000isJR1IAM 006D000000eCh9zIAC 006D000000eE431IAC 006D000000i5JNMIA2 006D000000X5JzjIAF 006D000000kpKxGIAU 006D000000X8gvOIAR 006D000000X57DiIAJ 006D000000X74FEIAZ 006D000000kp9rbIAA 006D000000V9HRcIAN 006D000000V8wz3IAB 006D000000Vz79IIAR 006D000000VxB7dIAF 006D000000Vwe0PIAR 006D000000bScjMIAS 006D000000X5JrqIAF 006D000000lIJlxIAG 006D000000YBcpdIAD 006D000000YAYfVIAX 006D000000i4PlaIAE 006D000000eE2mIIAS 006D000000iqfBnIAI 006D000000iqjnzIAA 006D000000h2urcIAA 006D000000aaTVbIAM 006D000000dEXVRIA4 006D000000YBIKLIA5 006D000000bPfaQIAS 006D000000k15BuIAI 006D000000hGHk0IAG 006D000000fGo6rIAC 006D000000fIBACIA4 006D000000ZbAf8IAF 006D000000V8LhjIAF 006D000000V9cHIIAZ 006D000000k11XpIAI 006D000000k38TLIAY 006D000000Vx2viIAB 006D000000k1g2NIAQ 006D000000k2lJWIAY 006D000000TiCEzIAN 006D000000k25EBIAY 006D000000k2gdcIAA 006D000000V7d2UIAR 006D000000X5r1ZIAR 006D000000VvTLlIAN 006D000000X5eKPIAZ 006D000000X6YObIAN 006D000000aacA6IAI 006D000000ZNAGsIAP 006D000000YCkFfIAL 006D000000gCUNCIA4 006D000000ir709IAA 006D000000gAFvcIAG 006D000000iuUXyIAM 006D000000fJ9wBIAS 006D000000iuV94IAE 006D000000iuVIQIA2 006D000000iuVLEIA2 006D000000iuVMVIA2 006D000000fHeQaIAK 006D000000TiCEuIAN 006D000000fJeqOIAS 006D000000eCaQDIA0 006D000000TiCDrIAN 006D000000iuVKaIAM 006D000000TkUIMIA3 006D000000hI4KtIAK 006D000000TjwpYIAR 006D000000fIJ7xIAG 006D000000iuVKBIA2 006D000000hGA6aIAG 006D000000i6RzJIAU 006D000000itSuGIAU 006D000000cZBSNIA4 006D000000i3rO8IAI 006D000000fJCOtIAO 006D000000fKDNIIA4 006D000000i67I0IAI 006D000000i2ogIIAQ 006D000000gAw1JIAS 006D000000hGmcnIAC 006D000000iuVJJIA2 006D000000fGo1rIAC 006D000000fJG7SIAW 006D000000TkUICIA3 006D000000fKQH2IAO 006D000000fHbAgIAK 006D000000h2loDIAQ 006D000000hGexnIAC 006D000000fIOCyIAO 006D000000eDK5gIAG 006D000000itIruIAE 006D000000iuVJTIA2 006D000000hGmFgIAK 006D000000fHDYGIA4 006D000000h2YOeIAM 006D000000g97uCIAQ 006D000000fGrHiIAK 006D000000TiCDIIA3 006D000000itUanIAE 006D000000TiCEaIAN 006D000000fHcejIAC 006D000000fHqKQIA0 006D000000TkUIbIAN 006D000000is4UPIAY 006D000000fHU7lIAG 006D000000i3QICIA2 006D000000ir8bUIAQ 006D000000hGIrkIAG 006D000000bRSKpIAO 006D000000hGosoIAC 006D000000i4dQMIAY 006D000000fHn6uIAC 006D000000hGIsTIAW 006D000000fJejcIAC 006D000000h1RhfIAE 006D000000iuVH3IAM 006D000000iuVJmIAM 006D000000gCvWCIA0 006D000000i4gd6IAA 006D000000hGwSfIAK 006D000000eCgETIA0 006D000000Tjwp9IAB 006D000000hFcuZIAS 006D000000i2vJhIAI 006D000000iuVHDIA2 006D000000iuVLrIAM 006D000000i5zluIAA 006D000000eENQxIAO 006D000000iupICIAY 006D000000TiCELIA3 006D000000eE452IAC 006D000000dFD3NIAW 006D000000YCrUqIAL 006D000000Zb61tIAB 006D000000bRThFIAW 006D000000fJiARIA0 006D000000dFPLgIAO 006D000000bRL9dIAG 006D000000aXkmDIAS 006D000000eCB7lIAG 006D000000aZfTJIA0 006D000000bSYtPIAW 006D000000iup2cIAA 006D000000kr4iGIAQ 006D000000kr4zLIAQ 006D000000kr4zQIAQ 006D000000kr5FmIAI 006D000000fHT73IAG 006D000000fKDRZIA4 006D000000kr5FnIAI 006D000000V7YnHIAV 006D000000V7TvJIAV 006D000000fJONPIA4 006D000000V6wJdIAJ 006D000000fIBivIAG 006D000000i2wAEIAY 006D000000i2V9eIAE 006D000000hGep1IAC 006D000000hGns7IAC 006D000000hH3zYIAS 006D000000hGWvuIAG 006D000000hGnrdIAC 006D000000hGY0QIAW 006D000000fIAA6IAO 006D000000fHbBUIA0 006D000000i5az2IAA 006D000000hGtNdIAK 006D000000isR2mIAE 006D000000aXGcBIAW 006D000000X6BunIAF 006D000000fIA43IAG 006D000000ThlROIAZ 006D000000fIADUIA4 006D000000i2KF5IAM 006D000000X6BkdIAF 006D000000i2ZRIIA2 006D000000fI05qIAC 006D000000fIAAzIAO 006D000000i2KC6IAM 006D000000ir71HIAQ 006D000000X6Bz8IAF 006D000000fHbBFIA0 006D000000aXGeRIAW 006D000000fIA8UIAW 006D000000bSl17IAC 006D000000X6BzcIAF 006D000000X6C0GIAV 006D000000fIAE8IAO 006D000000i6LR3IAM 006D000000fIA4SIAW 006D000000X6C06IAF 006D000000i5aj2IAA 006D000000bSkw2IAC 006D000000RLhJ0IAL 006D000000YA9q1IAD 006D000000aXGcpIAG 006D000000i4ggtIAA 006D000000hHNq2IAG 006D000000fGLwiIAG 006D000000cc1YJIAY 006D000000X6BzwIAF 006D000000fIABYIA4 006D000000isohNIAQ 006D000000bSkxZIAS 006D000000bSkv9IAC 006D000000fIAEhIAO 006D000000bSktDIAS 006D000000fIACWIA4 006D000000itUNjIAM 006D000000TiDKcIAN 006D000000i4ggBIAQ 006D000000fGSbwIAG 006D000000hHjpYIAS 006D000000TiCEpIAN 006D000000g9n23IAA 006D000000hFcxYIAS 006D000000itThgIAE 006D000000iuCpQIAU 006D000000ksFRaIAM 006D000000lII1yIAG 006D000000h1ge5IAA 006D000000kqwCHIAY 006D000000lIOWfIAO 006D000000VyBPqIAN 006D000000lIOWuIAO 006D000000VyBOUIA3 006D000000lIOWpIAO 006D000000lIOWkIAO 006D000000i4eZRIAY 006D000000k24dRIAQ 006D000000i51d1IAA 006D000000g9emBIAQ 006D000000fKEZoIAO 006D000000dGLcDIAW 006D000000h2NbFIAU 006D000000eEmBaIAK 006D000000gA9KNIA0 006D000000gCODfIAO 006D000000fGlcFIAS 006D000000h2pb7IAA 006D000000gClhSIAS 006D000000lomIzIAI 006D000000logzRIAQ 006D000000loWO3IAM 006D000000lonCFIAY 006D000000kpwieIAA 006D000000SauXiIAJ 006D000000TjuyzIAB 006D000000TjjYsIAJ 006D000000krEJHIA2 006D000000lZo93IAC 006D000000laX8OIAU 006D000000lZf4bIAC 006D000000lbVFBIA2 006D000000laProIAE 006D000000lb20MIAQ 006D000000lZDdwIAG 006D000000lZf3sIAC 006D000000lZf4RIAS 006D000000lZo6nIAC 006D000000lb26UIAQ 006D000000lZGfwIAG 006D000000lZc2aIAC 006D000000lZf3YIAS 006D000000lb23QIAQ 006D000000lZsuAIAS 006D000000lZo7HIAS 006D000000lZo8UIAS 006D000000lZf5AIAS 006D000000lZf3iIAC 006D000000lah9gIAA 006D000000lZDK1IAO 006D000000lbOk4IAE 006D000000lZf4qIAC 006D000000lb22XIAQ 006D000000lZahfIAC 006D000000lZf5PIAS 006D000000lZS9iIAG 006D000000lZf5FIAS 006D000000lZf3dIAC 006D000000lZDKGIA4 006D000000lb249IAA 006D000000lb228IAA 006D000000lZf4CIAS 006D000000lZneEIAS 006D000000lZf47IAC 006D000000kpA0sIAE 006D000000lb236IAA 01uD000000LMa84IAD 01uD000000LMbz8IAD 01uD000000LMaCaIAL 01uD000000RaFEPIA3 01uD000000RaFEQIA3 01uD000000RGK2KIAX 01uD000000LNQ09IAH 01uD000000LMaCpIAL 01uD000000Oav91IAB 01uD000000LMaD9IAL 01uD000000ObfWIIAZ 01uD000000LMZGzIAP 01uD000000LMZGBIA5 01uD000000OaUi4IAF 01uD000000LMZH9IAP 01uD000000LMbhdIAD 01uD000000LMZGqIAP 01uD000000LNUtJIAX 01uD000000LMaGbIAL 01uD000000LMbguIAD 01uD000000LMbzsIAD 01uD000000LMaB2IAL 01uD000000Ra4n0IAB 01uD000000RGK2JIAX 01uD000000OZftxIAD 01uD000000LMZGCIA5 01uD000000OZQzDIAX 01uD000000RG42BIAT 01uD000000OZQzGIAX 01uD000000OZfqPIAT 01uD000000RaFBGIA3 01uD000000RaFB1IAN 01uD000000LMbzYIAT 01uD000000Ra9hlIAB 01uD000000LMbw0IAD 01uD000000Ra4n1IAB 01uD000000RaFBWIA3 01uD000000RaFBBIA3 01uD000000RaFB6IAN 01uD000000RaFAnIAN 01uD000000OZfrhIAD 01uD000000RaFAwIAN 01uD000000LNUtKIAX 01uD000000LMaGhIAL 01uD000000LMaGrIAL 01uD000000LMaGcIAL 01uD000000LMaGmIAL 01uD000000LNQ3MIAX 01uD000000LMbygIAD 01uD000000OZfrmIAD 01uD000000LMZHAIA5 01uD000000LMa9VIAT 01uD000000LMaCVIA1 01uD000000OZQzVIAX 01uD000000LMZGRIA5 01uD000000LMaCkIAL 01uD000000OZfu2IAD 01uD000000Ra4n5IAB 01uD000000Ra4nAIAR 01uD000000OZQzRIAX 01uD000000RGK2TIAX 01uD000000LMZGbIAP 01uD000000OZQzCIAX 01uD000000OZftsIAD 01uD000000RGK4QIAX 01uD000000OZftiIAD 01uD000000T7ylBIAR 01uD000000LMbRMIA1 01uD000000LMaD8IAL 01uD000000OaUe1IAF 01uD000000RGK2jIAH 01uD000000RaJdDIAV 01uD000000OaY2gIAF 01uD000000OZggPIAT 01uD000000OZQzqIAH 01uD000000OaUcsIAF 01uD000000OaUi7IAF 01uD000000LMbzIIAT 01uD000000OcRgcIAF 01uD000000ObjISIAZ 01uD000000LMaCUIA1 01uD000000OZQzWIAX 01uD000000LMZGpIAP 01uD000000Ra9hHIAR 01uD000000Ra9hMIAR 01uD000000RaFEKIA3 01uD000000LMZGvIAP 01uD000000LMbheIAD 01uD000000RaFH9IAN 01uD000000LMa9QIAT 01uD000000LMZGgIAP 01uD000000RaFEAIA3 01uD000000RGK2AIAX 01uD000000OZQzMIAX 01uD000000LMa83IAD 01uD000000LMbRLIA1 01uD000000LMZHEIA5 01uD000000RaFEUIA3 01uD000000RaFEZIA3 01uD000000LMa8EIAT 01uD000000LMbTCIA1 01uD000000LMZGuIAP 01uD000000LMc01IAD 01uD000000LMZHZIA5 01uD000000OZfu7IAD 01uD000000LMbSYIA1 01uD000000LMZHeIAP 01uD000000LMbh9IAD 01uD000000LMbh4IAD 01uD000000LMbypIAD 01uD000000RaFEeIAN 01uD000000OZQzQIAX 01uD000000OZQzBIAX 01uD000000RaFAmIAN 01uD000000OZfvsIAD 01uD000000ObR34IAF 01uD000000ObR39IAF 01uD000000LMaCoIAL 01uD000000RGK24IAH 01uD000000OaUgQIAV 01uD000000OaUi6IAF 01uD000000RG0sTIAT 01uD000000OaUi2IAF 01uD000000OZQzLIAX 01uD000000LMZG1IAP 01uD000000LMZFwIAP 01uD000000Ra9hvIAB 01uD000000LNiHLIA1 01uD000000T8EmyIAF 01uD000000RGK2OIAX 01uD000000RGK2YIAX 01uD000000RGK7YIAX 01uD000000RGK2PIAX 01uD000000RGK25IAH 01uD000000RGK2iIAH 01uD000000Ra9hgIAB 01uD000000Ra9hbIAB 01uD000000Ra9hWIAR 01uD000000LNQ1vIAH 01uD000000LMZG7IAP 01uD000000Ra9hqIAB 01uD000000RaB9OIAV 01uD000000LMbzwIAD 01uD000000RaEWBIA3 01uD000000RaX35IAF 01uD000000OaUgOIAV 01uD000000RaX30IAF 01uD000000RaXkjIAF 01uD000000RaXkoIAF 01uD000000Ra1qfIAB 01uD000000Ra2bZIAR 01uD000000Ra2beIAB 01uD000000Ra2bjIAB 01uD000000Ra2boIAB 01uD000000RGK7KIAX 01uD000000OaUf8IAF 01uD000000OaUfmIAF 01uD000000RGNe0IAH 01uD000000RGK7TIAX 01uD000000OZfthIAD 01uD000000OaUe5IAF 01uD000000LMaCyIAL 01uD000000OaUe0IAF 01uD000000OaUdzIAF 01uD000000LMZGLIA5 01uD000000T9cYzIAJ 01uD000000LMZHYIA5 01uD000000cVQPSIA4 01uD000000cVQPXIA4 01uD000000cVQPcIAO 01uD000000cVQPhIAO 01uD000000LNiHKIA1 01uD000000LNQ1CIAX 01uD000000WB8RBIA1 01uD000000WBCjFIAX 01uD000000WBCjZIAX 01uD000000WBCivIAH 01uD000000OZQzHIAX 01uD000000WBCilIAH 01uD000000WB7roIAD 01uD000000WBCiqIAH 01uD000000RGK29IAH 01uD000000WB8R6IAL 01uD000000WBCjUIAX 01uD000000WBCjKIAX 01uD000000WBCjQIAX 01uD000000WBCjPIAX 01uD000000WBIKFIA5 01uD000000WB7pxIAD 01uD000000WBCibIAH 01uD000000WB8R2IAL 01uD000000WBCjtIAH 01uD000000WBCk8IAH 01uD000000WBCiWIAX                ÕÃÃÃÃÃ@   ˙   d   +   ,  À  £      ƒ  Ë  ﬁ              “   
+   (   2      -      n   K               »   <   H·zÆÁe@ÖÎQ∏=f@   F         @      @öôôôôôπ?         ‡?@   å   $   ffffff6@Ø   q  öôôôôô˘?^  Ó  A   ñ   ˙  762 c  355 ﬁ  990 òÛ  62360  ° 500000 î  4500 RÒ 192850 I  329     0 ‘  3540 8J  19000 ∆  1990   530   1045 ‹  5340 Ω  445 Å  385 l   108 h  8040 “   210 §  3492 `	  2400 x   120   3601 å
+  2700 
+E 1066250 ≠  4525 Ê  486 y;  15225    240 ‹   220 2‹  56370 Ç 426500 ¿  960 …´ 240585 Y  345 pÛ 390000 È 1108250 y 725625 Tû 892500 u  4725 ú? 409500 í	  2450 á 1738500 Ë£ 1025000 X 135000 jX 2054250 Zá  34650      ∞f@181.5 Q  849 ƒ  964 ¥  5556 Ñ  388 Æ  3246 Ñl  27780 l  876   1040   4610 Î  4075 <  5180 :  570 hë 102760 T  340 u  885 ∏  440 O  335 B  16911 ∫6  14010 &  5670 %  9480 N  3150   2835 03  13104 r  370 N  5710 ÷  1750 _ 941850 (  1320 \ 220400 ™  682 ç  6285 V  1110 “  54000 ¨  2220 ®a  25000 Íw  30698 ˛)  10750 ÊP  20710 Ø   175     @4√@9832.5 †  1440 R  850 –Ñ  34000 ÆG·˙ª†@2141.99 }& 140925 ◊   215 h  360 Î   235 Ã∆ 247500 D  5700 (ô  39208 ∞H  18608 L  1100 ﬂ  735  n  28160 òç 495000 `ÿ 252000 ¿E 280000 Ô  7407   2050 ˛  3070 TÉ  33620 ·(  10465 Å  1665 ˝  765 
+  2800 4  820 P  6480 ≥  435 ^  350 è¬ı($L‡@33377.13 “  4050 pq  29040 ÙN 544500 (#  9000 	  265 •(  10405 ô  665 √  7875 å   140 q=
+◊õv‡@33716.87 ÆG·zÓØ@4087.04 ¢0  12450 ñ  1430 =Ω 376125 Û¨  44275 8  1080 (
+  2600 *E  17706 b  1890 ò@  16536 ﬂ  2015 é  910  k 224000 Ü  390 N  590 *  6442 ÏQ∏Ò•@2808.51 îx  30868 ∫4  13498 –  2000 *  4650 Ô  495 ‹  1500 ˛¶  42750 P  20500 ^  6750 *Û  62250 »2  13000 “Z  23250 ˝>  16125 4!  8500 2  1330 d2  12900 §  42224 +  555      »@12320.25 Ì  3565 B  16920 lﬁ  56940 Ï  5100 Og  26447    24 B  6210     ‡?Ã@14463.75 ˙  6650 ∏ÖÎQô∞@4249.32 å(  10380 √⁄ 187075 J  1610 É"  8835 ö  1690 ﬁk 355294   540 pé 102000 ü  927 7  823 Ì&  9965 ¨  3500 
+  2565 Ü  2950 £  3235 Ú  4850 £  1699 $  4900 xÆ 110200 t§  42100 :R  21050 8gDi2 A311308.6028 àc]OJA316051.7777 ,L  19500 „  995 cA 82275 V^  24150 ÕÃÃÃ/ˇ@127728.3 ó  38896 ¶Ω  48550 p  6000 ;  315 ‘b  25300 òl  27800 \è¬ı(‰b@151.13 ù  6045 ÿ  5592 ÏQ∏ã¥@5259.02 ø  6335 ˜  3575 â	  2441 U  2133 ÿÕ 970200 `m  28000 É1  12675   3075 H  5960 0H  18480 6  13845 H  3400 "  2850 l   8300 âX  22665 [  3675     êﬂ@32320.25 ô  3225   3100 <  3900 ¿‘ 120000    25 µ*  10933 Ç0  12418 $b  25124 ¬> 147138 Ñ   132 5  1589   1050 ™   170 7d  25655 ’  2005 há 100200 ¬3  13250 Œ	  2510 Z
+  2650      ¥Ñ@662.5 Å  2945 [  1115 ’  4565 $   36 ß  42780 - 77070 3O  20275 ÄQ 86400 Fi  26950  ô  39200 ˆ¬  49910 ¬  450 xZ  23160 Ë 71400     32 —  465     ¿x«@12017.5 ‘  54288 fffffV„@39603.2 <ﬁ 253500 Vº 113750 *?  16170 Ÿ© 305625 ÙG  18420 r  1650 ·zÆ«”@19491.12 |  380 †  7840 x  1400 Í‡ 188650 x 270200 ﬁ( 534750 $Ó 126500 d¬ 115300 Dπ 178500 †™  43680 `À 117600 «  50960 ˙  762 c  355 ﬁ  990 òÛ  62360  ° 500000 î  4500 ûk  27550 I  329     0 u  885 ∂  950 ∆  1990   530   1045 ‹  5340 Ω  445 Å  385 l   108 h  8040 “   210 “  1746 `	  2400 x   120 öôôôôÅÜ@720.2 å
+  2700 ©  4265 â  905 Ê  486 y;  15225 ‹   220 n  28185 ¿  960 €  5595 Y  345   1300   1550 3  1075 §  1700 ±  945 '  1575 …  1225 ë  1425   1025 F  1350   2075      ∞f@181.5 Q  849 ƒ  964 ¥  5556 Ñ  388 Æ  3246 Ñl  27780 l  876   520   4610 Î  4075 <  5180 :  570 Zd  25690 T  340 O  335   5637 >  4670 X  3160 N  3150 é  910 „  995 r  370 N  5710 k  875 Ö  4485 Ñ   132 Ü  5510 ™  682 ç  6285 +  555 “  54000 ‚  1250 Íw  30698 ˛)  10750 ÊP  20710 Ø   175   1035 †  1440 ©  425 ÆG·˙ª†@2141.99 ◊   215 h  360 Î   235 V  4950 ‰  1508 ∞H  18608 L  1100 ﬂ  735  n  28160 ‡  5600 Ô  7407 ˛  3070 TÉ  33620 ·(  10465 Å  1665 ˝  765 
+  2800 4  820 P  6480 ≥  435 ^  350 è¬ı($L‡@33377.13 P
+  2640 Ñ  900 	  265 •(  10405 ô  665 å   140 q=
+◊õv‡@33716.87 ÆG·zÓè@1021.76 À  715 ó  5015 Û¨  44275   540 *E  17706 ò@  16536 ﬂ  2015 Ü  390 N  590 *  6442 ÏQ∏Ò•@2808.51 îx  30868 ∫4  13498 –  2000 Ô  495 Ó  750      »@12320.25 Ì  3565 4  564 é  2190 Og  26447    24 X  7000    20 ∏ÖÎQô∞@4249.32 Ñ  3460 eh  26725 J  1610 Å  2945 ö  1690 {ÆG·¡õ@1776.47   515 7  823 Ì&  9965 ¨  3500 
+  2565 Ü  2950 £  3235 Ú  4850 £  1699 $  4900 r  4210 d  6500 €  3291 ˆ(\è¬Çú@1824.69 Ë  1768 ”^  24275    800 ;  315 j1  12650 n  1390 \è¬ı(‰b@151.13 ù  6045 ÿ  5592 q=
+◊£Hâ@809.08 â	  2441   2050 U  2133   4620 b  4450 `m  28000 Å  4225 H  5960   4615 âX  22665     êﬂ@32320.25 ‡.  12000    25 µ*  10933 Ç0  12418 $b  25124 ñø  49046 5  1589   1050 ™   170 7d  25655 ’  2005   3340 ·  6625 Œ	  2510 -  1325      ¥Ñ@662.5 c   99 [  1115 ’  4565 $   36 3O  20275   539   784 …  713 ¬  450   772 ˛  510     32 —  465     ¿x«@12017.5 M  845 ä  650 È  489 f  614 r  1650 öôôô˘ «@12181.95 |  380 
+-  11530 †  672 4  820 c  355 ﬁ  990 ∏Õ 118200 ¿‚ 189120 î  4500 v  30225 h  360     0 é  910 ‘  980   2050 &  550 8  1080 £  3235 Ω  445 Å  385 x   120 “   210 ;  2875 ú	  2460 å
+  2700 ©  4265 â  905   540 y;  15225 ‹   220 Ö  5765 0  1584   1550 Ë  4840 ±  945 h  1640 F  7750 F  1350 é  4750 '  1575 »   200   1040 H  5960 T  340 ù  3485 ht  29800 h  4200 ‹  5340 N  590 ^  350 ù  6045   5360   4615 ¨  3500 „  995 ˝  5885   4620 Ñ   132 Ü  5510 c   99 P  6480 +  555 r  1650 ˛)  10750 ÊP  20710 Ø   175 .  1070 å  1420 π   185 §  1700 ÆG·˙ª†@2141.99 ◊   215 Î   235 V  4950 L  1100 ﬂ  735 ˛  3070 ˝  765 _
+  2655 Ô  495 U  3925 ≥  435 Ñ  900 •(  10405 ô  665 ?  575 À  715 ó  5015 ﬂ  2015 Ü  390 
+  2800 Ì  3565 M  845 é  2190 X  7000 z  2170 †   160 F  4166 J  1610 Å  2945 ö  1690 {ÆG·¡õ@1776.47 u  885 Ì&  9965 Ü  2950 Ú  4850 £  1699 $  4900 d  6500 €  3291 Ë  1768 ”^  24275 ;  315 n  1390 Å  4225 ï  405 b  4450 ‡.  12000    25 µ*  10933 Ç0  12418 $b  25124 ñø  49046 5  1589 Œ  1742 ™   170 7d  25655 Â  1253   3340 ·  6625 Œ	  2510 -  1325      ¥Ñ@662.5 [  1115 ’  4565 3O  20275 ‰  1508   539   784 …  713   772 ˛  510 —  465 ä  650 È  489 f  614 j1  12650 
+-  11530 †  672       ÄÄ  ÄÅ ÄÇÄÉ 	ÑÑ		
+
+
+ÄÖ ÄÜ Äá ÄàÄ	 â	à	
+ ä
+Ää
+ãÄåå çÄàà  É!" Å#í $ÄÉ!%"%ñè#%$%öê%%&%úë'%( %ûí)!% * %êì+"%",#%§î'$& -%&ÄÑ.	'Ä/&' ñ0''Ä1(' ó2)'Ä3*' ò4(5) î6#)Ä7+) ô8,Ä9-*É:+ ;,ÄÑ		-à . õ <./¶!=/0&ú!>00¶'0®"&0("&0¶ù"?11 #@22Äá0&ë#&3™$A	4àûB35 à$C6 %D47àå%E8¨&F59.†&G6:Ä;∞ 'H7< °'I8= à$C>ÄÉ?Ä!(J9@ÄáA¢(K:BÄ)LC¢)K:DÜ"*M;EÄÅ*NF #+O<GÄ£+P=H $,Q>IÆ§,R?J %9-HÄ%-S@K¶-TLÄ&,QAM'.%BNÄß.UCO/P ®/VDQÄ(0WR ©0XES( TÄÇU&V≤)1YFW2*1YFX2*1YFSÑí1)!Y¥*2ZZÄÅ2[[ +3\G\Ä´3]H]Ä4^^ê©4YF_6*5_F` ¨0Xa≤©5_FbÄ6`Sì6* c≤)1YFdÄ¨	e -7aIfÄ≠7bgÄ8chÄâ8di .9eJjÄÆ9fKk /:gLlÄØ:hMm 0;iNn õ;j.o2*1YFpÄ-<kq S¶ì<+"r≤©5_Fs∏0=lt∫©=YFu.1>mOm ¨>nvÄ1?oP` ≤ wÄ≤?pQUå@'P ¨@qxÄ-Ary≥AsRS(B,#z≤)1YF{à≥BtS|<4CuT}Ä≠Cv~ DwSà#'$SèD"ÄÄExÅà¥E&RÇÄFyÉ µFzUÑÄGA	Ö∞©G_FÜÄ5H{VÜ 6H{VáÄ∂H|-àÄI}â ∑I~äÄáãÄJåÄ≠JÄçÄ7KÅWS¶èK#é /LÇLèãLÉêÄá3]ëÄâ íê©4YFU( UæM)!UìM* UåN+"U>îN,#Uå@'$U.O"U¿èO#U@P$UåêP%ì≤)1YFîà2QpQïÄ≤?pQSBêQ$ñƒ*RZ2 ¢RK:óÄ-SÑò≤©5_Fô -7aIö  :g õê©4YFú2*1YFù ∏SÖXûæ8TÜYü4πTáZS¶U%†ÄÅUàq ,Vâ° /LÇL¢®§VR?£Ä9W£ ∫Wä[§®§VR?•Ä∫	¶ ª ßÄâ!®5©åªP%\< <ã]™Ä<Xå^´&∏XçX© $,Q>¨Yé< =ã]≠ÄΩYè_Æ&>Zê`ÆÄæZëaØå∞å±F?[íb≤ ç[w≥»;\%\≥ $,Q>¥F?[íbµ¢\ì:∂Ä?]îc∑ ¿]ïd∏ ©/VEπ ^ñ2∫Äã^óªÄâ ºÄÇΩÄ@_òeæ á_ôø4πTáZ¿Ä¡ A`öf¡Ä¡`õg¬ Baúh√2*1YFƒÉa≈ Baúh∆Æ)bùF∆™bùF«≤)1YF»J?cíb… Baúh ÆÀ BaúhÃÄ¬H|-ÕLøcíbŒåœ&Cdûi– #+O<—ÄûdB3— õ;j.“ŒCeüj”J?cíb‘2*1YF’2*1YF÷ Baúh◊≤)1YFÿJ?cíbŸLøcíb⁄ Baúh€Pƒe!‹ Baúh›P?f†bﬁ§ƒf°kﬂ2*1YF‡/·Eg¢l‚≤)1YF„“äg£‰ÄEh§mÂÄ@_òeÊ∆h•ÁLøcíbË BaúhÈÜFi¶nÍ≤)1YFÎ≤)1YFÏ BaúhÌê©4YFÓ BaúhÔ öißÔÄj®/Ä≠j©Ò‘
+k™ÚÇåkÛGltNÙÄÅl´ıÄÖ6¨ˆ 7m≠˜,åmÆ¯÷«ØX‘ *n∞F0&»n±o˘ ¶˙Ä»p˚¶'$˚&o* ˚ ño≤'¸ÑpÆ5˚¶ùp≥1˚àq%˚ Iq˚àíq)!˚¶'˚r,,˝X'˛ÄÅr¥ˇX'˚&s(  ÅÅsµ˚&t$˚àèt#Y'˚⁄…g∂r˚Z g∂r˚à+"˚&u"Y'%Æ…u∂r%. u∂rÅJv∑s¢RK:Àv∏tÅKwπuÃw∫vßLxªwº †xG6º MyºxÅÕyΩyÅΩYè_NzæzÅ	G;iN
+ÅŒzø{π O{¿|øœ{¡}	P|¬~Å–|√	Q}ƒÄÅ—}≈Å!∆8± 'H7R~ê`Å“~«Ç	S;iNÅS»ÉT»É¨…ÅT»ÉU»É®/VDC8ÄÖX©0XEÅ’[wÉ:ÅÉ'ÉÄ:VÅ Ñ›÷Å+Ö3WÇÀÜ≥◊ÇÃáÈ ,ÅÇQXÉÕàÅX0WÅÉa  :g !ÅÇ"≥)1YF#ÅŸ ¨ÉŒ$ÅÇ?YÑœâ%©Y"&_⁄Ñ–ä- ,Ö—&ÅÇ'Å⁄Ö“ã(FÜ”)a€ÜZÖ*„0á°+.9eJ,ÅX0W-Åâ .ÅÅ/ï€á‘Y/e\à’å/?◊àÀÜ/Á\â÷ç/?›â◊é0ÅÇÅ]äÿ1Å⁄Ö“ã2iﬁäŸ,ÅEh§m3ÅÇ4Å5ÅÇ",ã⁄6ÅÇØﬁãÃá7ÅÅ8Å9"åj::ÅÇ;_,Q><ÅÇ=k◊åÀÜ=kYçœâ=mÿçÕà=Ø_é•è=/‡é€ê=kZè–ä=Ô‡è‹ë=ÒWêÃá=ÔﬁêÃá>¢RK:

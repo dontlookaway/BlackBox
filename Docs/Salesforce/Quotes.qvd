@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <QvdTableHeader>
+   <QvBuildNo>12904</QvBuildNo>
+   <CreatorDoc>C:\Users\cjohnson\Desktop\Salesforce\SalesForce_Prometic2_1.qvw</CreatorDoc>
+   <CreateUtcTime>2015-12-10 16:32:55</CreateUtcTime>
+   <SourceCreateUtcTime></SourceCreateUtcTime>
+   <SourceFileUtcTime></SourceFileUtcTime>
+   <SourceFileSize>-1</SourceFileSize>
+   <StaleUtcTime></StaleUtcTime>
+   <TableName>QuotesRaw</TableName>
+   <Fields>
+     <QvdFieldHeader>
+       <FieldName>QuoteId</FieldName>
+       <BitOffset>0</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>121</NoOfSymbols>
+       <Offset>0</Offset>
+       <Length>2420</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteIsDeleted</FieldName>
+       <BitOffset>0</BitOffset>
+       <BitWidth>0</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>INTEGER</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>1</NoOfSymbols>
+       <Offset>2420</Offset>
+       <Length>5</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$integer</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteName</FieldName>
+       <BitOffset>25</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>110</NoOfSymbols>
+       <Offset>2425</Offset>
+       <Length>3066</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>CurrencyIsoCode</FieldName>
+       <BitOffset>39</BitOffset>
+       <BitWidth>1</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>2</NoOfSymbols>
+       <Offset>5491</Offset>
+       <Length>10</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteCreatedDate</FieldName>
+       <BitOffset>32</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>DATE</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt>DD/MM/YYYY</Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>121</NoOfSymbols>
+       <Offset>5501</Offset>
+       <Length>2420</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$timestamp</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>LastModifiedDate</FieldName>
+       <BitOffset>43</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>TIMESTAMP</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt>YYYY-MM-DD hh:mm:ss.ffffff</Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>119</NoOfSymbols>
+       <Offset>7921</Offset>
+       <Length>1071</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$timestamp</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>OpportunityId</FieldName>
+       <BitOffset>50</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>111</NoOfSymbols>
+       <Offset>8992</Offset>
+       <Length>2220</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+         <String>$key</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Pricebook2Id</FieldName>
+       <BitOffset>7</BitOffset>
+       <BitWidth>3</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>3</NoOfSymbols>
+       <Offset>11212</Offset>
+       <Length>60</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>ContactId</FieldName>
+       <BitOffset>57</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>79</NoOfSymbols>
+       <Offset>11272</Offset>
+       <Length>1580</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteNumber</FieldName>
+       <BitOffset>64</BitOffset>
+       <BitWidth>8</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>121</NoOfSymbols>
+       <Offset>12852</Offset>
+       <Length>1122</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>ShippingHandling</FieldName>
+       <BitOffset>10</BitOffset>
+       <BitWidth>5</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>30</NoOfSymbols>
+       <Offset>13974</Offset>
+       <Length>279</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Tax</FieldName>
+       <BitOffset>72</BitOffset>
+       <BitWidth>1</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>0</NoOfSymbols>
+       <Offset>14253</Offset>
+       <Length>0</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>Status</FieldName>
+       <BitOffset>40</BitOffset>
+       <BitWidth>3</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>6</NoOfSymbols>
+       <Offset>14253</Offset>
+       <Length>63</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$ascii</String>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>ExpirationDate</FieldName>
+       <BitOffset>80</BitOffset>
+       <BitWidth>8</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>DATE</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt>YYYY-MM-DD</Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>75</NoOfSymbols>
+       <Offset>14316</Offset>
+       <Length>571</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$timestamp</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteDescription</FieldName>
+       <BitOffset>15</BitOffset>
+       <BitWidth>5</BitWidth>
+       <Bias>-2</Bias>
+       <NumberFormat>
+         <Type>ASCII</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>19</NoOfSymbols>
+       <Offset>14887</Offset>
+       <Length>3377</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$text</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteSubtotal</FieldName>
+       <BitOffset>88</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>99</NoOfSymbols>
+       <Offset>18264</Offset>
+       <Length>1050</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteTotalPrice</FieldName>
+       <BitOffset>95</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>100</NoOfSymbols>
+       <Offset>19314</Offset>
+       <Length>1084</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>LineItemCount</FieldName>
+       <BitOffset>73</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>INTEGER</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>8</NoOfSymbols>
+       <Offset>20398</Offset>
+       <Length>40</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$integer</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteDiscount</FieldName>
+       <BitOffset>109</BitOffset>
+       <BitWidth>3</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>REAL</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>8</NoOfSymbols>
+       <Offset>20438</Offset>
+       <Length>56</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteGrandTotal</FieldName>
+       <BitOffset>102</BitOffset>
+       <BitWidth>7</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>MONEY</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt></Fmt>
+         <Dec>.</Dec>
+         <Thou>,</Thou>
+       </NumberFormat>
+       <NoOfSymbols>108</NoOfSymbols>
+       <Offset>20494</Offset>
+       <Length>1183</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+       </Tags>
+     </QvdFieldHeader>
+     <QvdFieldHeader>
+       <FieldName>QuoteMonth</FieldName>
+       <BitOffset>20</BitOffset>
+       <BitWidth>5</BitWidth>
+       <Bias>0</Bias>
+       <NumberFormat>
+         <Type>DATE</Type>
+         <nDec>0</nDec>
+         <UseThou>0</UseThou>
+         <Fmt>MMM YY</Fmt>
+         <Dec></Dec>
+         <Thou></Thou>
+       </NumberFormat>
+       <NoOfSymbols>25</NoOfSymbols>
+       <Offset>21677</Offset>
+       <Length>300</Length>
+       <Comment></Comment>
+       <Tags>
+         <String>$numeric</String>
+         <String>$integer</String>
+         <String>$timestamp</String>
+         <String>$date</String>
+       </Tags>
+     </QvdFieldHeader>
+   </Fields>
+   <Compression></Compression>
+   <RecordByteSize>14</RecordByteSize>
+   <NoOfRecords>121</NoOfRecords>
+   <Offset>21977</Offset>
+   <Length>1694</Length>
+   <Lineage>
+     <LineageInfo>
+       <Discriminator>INLINE</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpportunityLineItemRaw:
+LOAD
+    OpportunityId,
+    PricebookEntryId,
+    Quantity as [Opportunity Qty],
+    TotalPrice as [Opportunity Total Price],
+    UnitPrice as [Opportunity Unit Price],
+    ListPrice as [Opportunity List Price];SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>OpsRaw:
+LOAD Id as  OpportunityId, 
+	IsDeleted as  OpportunityIsDeleted, 
+	AccountId, 
+	Name as  OpportunityName, 
+	Description as  OpportunityDescription, 
+	StageName, 
+	Amount, 
+	ExpectedRevenue, 
+	TotalOpportunityQuantity, 
+	CloseDate as CloseDateRaw, 
+	Type, 
+	NextStep, 
+	LeadSource, 
+	if(IsClosed	='true',1,if(IsClosed	='false',0,IsClosed)) as IsClosed, 
+	if(IsWon		='true',1,if(IsWon		='false',0,IsWon)) as IsWon, 
+	ForecastCategory, 
+	ForecastCategoryName, 
+	CampaignId, 
+	HasOpportunityLineItem
+	, FiscalQuarter			
+	, FiscalYear
+	, CurrencyIsoCode as Op_Currency
+	, Probability/100 as Probability	;SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>PricebookEntryRaw:
+LOAD Id as PricebookEntryId,
+    Product2Id;Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>ProductRaw:
+LOAD 
+	Id as Product2Id,
+    Name as [Product Name],
+    ProductCode as [Product Code],
+    Description as [Product Description],
+    IsActive as Product2IsActive,
+    Family as Product2Family;SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>QuotesRaw:
+LOAD
+Id as QuoteId, 
+	IsDeleted as QuoteIsDeleted, 
+	Name as QuoteName, 
+	CurrencyIsoCode, 
+	Date(CreatedDate) as QuoteCreatedDate, 
+	LastModifiedDate, 
+	OpportunityId, 
+	Pricebook2Id, 
+	ContactId, 
+	QuoteNumber, 
+	ShippingHandling, 
+	Tax, 
+	Status, 
+	ExpirationDate, 
+	Description  as QuoteDescription, 
+	Subtotal as QuoteSubtotal, 
+	TotalPrice as QuoteTotalPrice, 
+	LineItemCount, 
+	Discount as QuoteDiscount, 
+	GrandTotal as QuoteGrandTotal
+	,date(MonthStart(Date(CreatedDate)),'MMM YY') as QuoteMonth;SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Opportunity</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM OpportunityLineItem</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Product2</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SELECT *
+FROM Quote</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>SFRaw:
+LOAD  
+	Id 					As AccountId, 
+	IsDeleted 			As AccountIsDeleted, 
+	Name				As AccountName, 
+	Type 				As AccountType, 
+	BillingStreet, 
+	BillingCity, 
+	BillingPostalCode, 
+	BillingCountry, 
+	
+	
+	ShippingStreet, 
+	ShippingCity, 
+	ShippingState, 
+	ShippingPostalCode, 
+	
+	
+	Phone 				As AccountPhone, 
+	Fax 					As AccountFax, 
+	if(AccountNumber='' or(AccountNumber=' '),Null(),AccountNumber)		As Customer, 
+	Website, 
+	Industry, 
+	Description 			As AccountDescription, 
+	Rating, 
+	Site, 
+	OwnerId 			As AccountOwnerId, 
+	CreatedDate 			As AccountCreatedDate, 
+	LastModifiedDate 	As AccountLastModifiedDate, 
+	LastActivityDate		As AccountLastActivityDate	, 
+	Total_Sales__c
+	;SELECT *
+FROM Account</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>Provider=QvSalesforceConnector.exe;mode=BULK;timeout=100;batchSize=500;ProxyAuthentication=0;</Discriminator>
+       <Statement>Select *
+FROM PricebookEntry</Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Opportunity.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - Quotes.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+     <LineageInfo>
+       <Discriminator>STORE - SalesForceAccounts.qvd (qvd)</Discriminator>
+       <Statement></Statement>
+     </LineageInfo>
+   </Lineage>
+   <Comment></Comment>
+ </QvdTableHeader>
+ 0Q0D0000001zOfjKAE 0Q0D0000001zaHeKAI 0Q0D0000001SymEKAS 0Q0D0000001Syp3KAC 0Q0D0000001SzE8KAK 0Q0D0000001SzHlKAK 0Q0D0000001xqLIKAY 0Q0D0000001xpWtKAI 0Q0D0000001yTIAKA2 0Q0D0000001yTiwKAE 0Q0D0000001SuO8KAK 0Q0D0000001xnRDKAY 0Q0D0000001ycIJKAY 0Q0D0000001yQrvKAE 0Q0D0000001yaW4KAI 0Q0D0000001yPjRKAU 0Q0D0000001yPQZKA2 0Q0D0000001zfqPKAQ 0Q0D0000001zkD3KAI 0Q0D0000001zkGbKAI 0Q0D00000011Bz1KAE 0Q0D00000011kcqKAA 0Q0D0000001xjEtKAI 0Q0D0000001yy5qKAA 0Q0D0000001yThoKAE 0Q0D0000001yURDKA2 0Q0D00000011HgAKAU 0Q0D00000011tPRKAY 0Q0D0000001T1WiKAK 0Q0D0000001SzmFKAS 0Q0D0000001SziIKAS 0Q0D0000001T0i4KAC 0Q0D0000001T472KAC 0Q0D0000001T3igKAC 0Q0D0000001T6SlKAK 0Q0D0000001T4AuKAK 0Q0D0000001T3hsKAC 0Q0D0000001T46nKAC 0Q0D0000001T5vmKAC 0Q0D0000001T4JhKAK 0Q0D0000001TBzBKAW 0Q0D0000001TAo2KAG 0Q0D0000001TCqPKAW 0Q0D0000001TBLQKA4 0Q0D0000001TFwzKAG 0Q0D0000001TFS6KAO 0Q0D0000001TFIGKA4 0Q0D0000001TK3VKAW 0Q0D0000001TNSnKAO 0Q0D0000001TQK3KAO 0Q0D0000001TLEeKAO 0Q0D0000001TPJxKAO 0Q0D0000001TQvxKAG 0Q0D00000011xXAKAY 0Q0D000000124KDKAY 0Q0D000000125pMKAQ 0Q0D000000128BFKAY 0Q0D000000129ZmKAI 0Q0D00000012Ei5KAE 0Q0D00000012UR0KAM 0Q0D00000012NgSKAU 0Q0D00000012D1KKAU 0Q0D00000012aZ5KAI 0Q0D0000001TTAkKAO 0Q0D0000001TSCfKAO 0Q0D0000001TRTLKA4 0Q0D0000001TSQ8KAO 0Q0D0000001TUpoKAG 0Q0D0000001TUxJKAW 0Q0D0000001TUxOKAW 0Q0D00000012oR5KAI 0Q0D00000012wueKAA 0Q0D00000012zNOKAY 0Q0D000000136c2KAA 0Q0D000000136jMKAQ 0Q0D0000001TVYoKAO 0Q0D0000001TWrmKAG 0Q0D0000001TXRGKA4 0Q0D0000001TXBrKAO 0Q0D0000001TXuhKAG 0Q0D00000013J9qKAE 0Q0D00000013YQ8KAM 0Q0D00000013QpAKAU 0Q0D00000013JYgKAM 0Q0D00000013eeaKAA 0Q0D00000013olWKAQ 0Q0D00000013nLIKAY 0Q0D00000013fgNKAQ 0Q0D00000013cI8KAI 0Q0D00000013ffyKAA 0Q0D0000001TZVeKAO 0Q0D0000001TagOKAS 0Q0D0000001TanKKAS 0Q0D0000001TaTKKA0 0Q0D00000013w9QKAQ 0Q0D00000013x8nKAA 0Q0D0000001TbcXKAS 0Q0D0000001Tbg0KAC 0Q0D0000001TcilKAC 0Q0D0000001TccnKAC 0Q0D0000001TcTqKAK 0Q0D0000001TccTKAS 0Q0D0000001TcUAKA0 0Q0D0000002GPthKAG 0Q0D0000002GPSbKAO 0Q0D0000002GPrvKAG 0Q0D0000002GQC5KAO 0Q0D0000002GQ5JKAW 0Q0D00000014S7sKAE 0Q0D0000002GRAtKAO 0Q0D0000002GS1EKAW 0Q0D0000002Zl0IKAS 0Q0D00000014z9bKAA 0Q0D00000014wXpKAI 0Q0D00000014zotKAA 0Q0D000000157VzKAI 0Q0D000000157VuKAI 0Q0D000000157VBKAY 0Q0D0000001z2FVKAY 0Q0D0000001z6WkKAI 0Q0D0000001zAvJKAU     Phenyl A6XL 12.5L @ Imtech 250ml Matrix 115 @ Merck 26L Octyl Agarose A6XL 200 Evolve @ Puralite Evolve 70mm Fabsorbent 1L APB A6XL @ Avid Bio Mimetic Yellow 1L Lee Bio Etoxiclear Evolve 140 @ BBI Mimetic Blue BMS NJ SAFC Mimetic Blue 700ml 15L DBA Rewash	@ Novozymes Etoxiclear 5ml Fabsorbent 25,100ml 30 litres Kappa XL MAbsorbent & PIKSI Kit @ Novartis Pharma S.A.S Absci Insulin adsorbent 25ml box@lonza Vasgene - Mimetic Blue SA P6XL - 1L, 20L, 100L 7L APB P6XL@ Richter Helm Insulin columns@NN Phenyl P6XL x 400ml & Samples @ Cadila Evolve 70 and 100mm BAC Set up and Manufacture of fcXL Adsorbent BioTechnology General Israel Mimetic Orange & Mimetic Blue SA P6XL x 100ml Mimetic Blue MabSorbent A2P 6 x 1L Mimetic Blue SA HL P6XL @ Novozymes Quotation Mimetic Blue, Albupure Merck, Insulin Adsorbent 500ml Purabead 6HF @ EMP AlbuPure Column Kit for Daichii Sanyo @ Scrum Evolve70@Cintrade 500L APB Custom Resin Quotation for BTG 101449 Generium rProteins Resin requote hemarina 01 Elisa Kit @ Sun Pharma Fabsorbent Column Kit @ UCB Pooled Resins 1L & 25ml of APB A6XL @ Maine Standards Fabsorbent Column Kit & EtoxiClear @ UCB Blank P6HF Epoxy Activated Purabead 200L APB Repligen Opus Richter Helm EtoxiClear 100mL x 2 Quote KBI Mimetic Blue APB x 10L @ Peregrine Advy Aminophenylboronate P6XL 100ml x 2 PABA 500ml Wockhardt Quote DEAE HF 25ml@ INTRAVACC FOC Samples for Cadilla PuraBead P6HF Small Bead x 10L @ BAC Aldehyde Activated Small Bead P6HF@ BAC Etoxiclear 5mL PPC @ Allergan - April 2014 Mimetic Blue ELISA and Puraplate Mimetic Blue AP Development Programme @Pfizer 500ml EtoxiClear Slurry @ Hemarina 26L Octyl @ CSL Fabsorbent Column Kit @ BioRad AbD Serotec evolve bed support kit Custom Analysis @ Octapharma Phenyl P6XL x 40L @ Shasun Analysis of 6 Samples 500ml AlbuPure @ CSL Aus Aldehyde Activated Small Bead P6HF @ BAC TT & VAL GILT RESIN 20L Phenyl A6XL @ Symmetrix albupure 25mL AlbuPure @ Silver Creek Pharma Albupure 5L Mimetic Blue SA @ Reliance 500ml EtoxiClear Slurry @ ImTech AlbuPure 25ml @ University of Kentucky APB P6XL25ml @ Xellia 200mL EtoxiClear @ FEG Cook APB 210L 20L HSA @ BAC 100ml Insulin Adsorbent @ Julphar 3.5L Mimetic Blue 1 P6XL @ San Tenki Hexyl 6XL, 5L APB A6XL 4L 25mL Aminophenylboronate A6XL @ University of Dartmouth Phenyl P6HF x 20L @ Shasun APB A6XL 10,20L 100ml APB P6XL Insulin 25ml 19Oct_requote rProteins Mimetic Blue SA HL P6XL 100ml @ Advy APB 2016 Proxcys Columns @ PBT Evolve 70mm Aldevron Matrix A & B at Octapharma Test ACCESSORY SUPPORT BRACKET KIT@BMS 1L AlbuPure @ University of Kentucky PPPS Q4 @ PBT 5ml EtoxiClear @ F-Star Camb Avitide Activated Resins Fabsorbent colum kit @ Regeneron Protein G Study @ Generon Analysis of 3 PrioClear B samples for prion binding @ Octapharma 25mL Fabsorbent @ UCB 10ml EtoxiClear Slurry @ UCB 100mm Evolve‚Ñ¢ Column @ A2S Technology 25ml AlbuPure @ Hyderabad University Albupure 25ml AD Biotech 500ml Aminophenylboronate A6XL @ Richter Helm GBP USD ô§Z;å‰@17/03/2015 ±˙ôŒµç‰@30/03/2015 “'}+ë‰@27/04/2015 ™µkå.ë‰@27/04/2015 Ú°ßÇ:ë‰@27/04/2015 ]Ñî<ë‰@27/04/2015 —^BªVÖ‰@22/01/2015 ™µk@Ö‰@22/01/2015 -ÓÒ‹Ü‰@03/02/2015 ”˚NÓÜ‰@04/02/2015 ∫ÁøB}è‰@13/04/2015 >ˇÖ‰@20/01/2015 OËtà‰@13/02/2015 æÑˆ“YÜ‰@30/01/2015 yV4í›á‰@11/02/2015 >ÙT‡9Ü‰@29/01/2015 ÃÌÚ3Ü‰@29/01/2015 ∂`v¨é‰@07/04/2015 (rÜè‰@10/04/2015 ˙§O˙è‰@10/04/2015 ◊òØP‰@22/11/2013 :xaµ∂X‰@30/01/2014 r«q0Ñ‰@13/01/2015 *Ftà‰@16/02/2015 yV4ÓÜ‰@04/02/2015 äQ√ü˝Ü‰@04/02/2015 ®˜1èQ‰@04/12/2013 ¶.∑pZ‰@13/02/2014 BÜ Œ:í‰@05/05/2015 ∑JâÚ^ë‰@28/04/2015 1uπ=Yë‰@28/04/2015 |˛+ƒ™ë‰@01/05/2015 :bﬂq<ì‰@13/05/2015 ˘≈í_ì‰@12/05/2015 hE#Aî‰@20/05/2015 """‚Kì‰@14/05/2015 «qì‰@12/05/2015 Ír˚C<ì‰@13/05/2015 ◊£pΩÌì‰@19/05/2015 `,˘ÖXì‰@14/05/2015 QŸa™ñ‰@05/06/2015 X˝L«¨ï‰@02/06/2015 ÅdùÎëñ‰@09/06/2015 ÚñÊ‡“ï‰@03/06/2015 Só€üúó‰@17/06/2015 $‡õózó‰@16/06/2015 .¬ jsó‰@16/06/2015 &©÷.+ô‰@30/06/2015 BÜ é4ö‰@08/07/2015 &¥ó–*õ‰@16/07/2015 K~±drô‰@02/07/2015 -ÓqÌö‰@14/07/2015 pSåöVõ‰@17/07/2015 t⁄@Á6[‰@19/02/2014 ﬂ«[Z≠\‰@03/03/2014 q'àì⁄\‰@04/03/2014 eù+œ5]‰@07/03/2014 ¬Í'Ø]‰@11/03/2014 yV4±^‰@19/03/2014 íjÌZÏa‰@14/04/2014 ÀSu`‰@02/04/2014 è¬ıËp^‰@17/03/2014 Â
+7c‰@24/04/2014 Jî3Ëú‰@23/07/2015 úLRm‘õ‰@21/07/2015 ç˘∫´õ‰@20/07/2015 ˚éÕÍõ‰@22/07/2015 OËtŒú‰@29/07/2015 z*0À‘ú‰@29/07/2015 ª∆|›‘ú‰@29/07/2015 >ˇ¬îf‰@21/05/2014 ~«f[qh‰@05/06/2014 eá©,i‰@11/06/2014 xaıÛ j‰@24/06/2014 ≠h$‡Ãj‰@24/06/2014 7–i√ ù‰@31/07/2015 m´î(ìû‰@12/08/2015 s¬ÍRü‰@18/08/2015 ëã0Ä2ü‰@17/08/2015 ê°≤W†‰@26/08/2015 1ÄzﬂYm‰@14/07/2014 =
+◊c
+q‰@13/08/2014 `!8‰o‰@28/07/2014 5¸Ìnm‰@15/07/2014 4(rQÀr‰@27/08/2014 àìIj≠t‰@11/09/2014 $Î\πåt‰@10/09/2014 z*Ûr‰@28/08/2014 'ûr‰@21/08/2014 Z‹	‚Ûr‰@28/08/2014 å%øò3¢‰@10/09/2015 ˇ CeÕ£‰@23/09/2015 ◊Æ1˝£‰@24/09/2015 vò∫úú£‰@21/09/2015 #a@v‰@22/09/2014 ›˛ C4v‰@23/09/2014 MR≠›~•‰@06/10/2015 l∂U
+é•‰@07/10/2015 s˚Éå*ß‰@20/10/2015 ˜¸Wàß‰@19/10/2015 AúLR∞¶‰@16/10/2015 Êˆôß‰@19/10/2015 	¯Ê¥¶‰@16/10/2015 œäFB¥©‰@09/11/2015 Ô„-Õ©‰@04/11/2015 /¨~Ê¨©‰@09/11/2015 ïÂÃ™‰@12/11/2015 Æ< Û©‰@11/11/2015 otœˇz‰@24/10/2014 ,áÙ´‰@20/11/2015 R≠]cê¨‰@02/12/2015 ﬂºö8å≠‰@10/12/2015 ù6–)Ä‰@11/12/2014 éÓ˘Ø∂‰@08/12/2014 î>È6Ä‰@12/12/2014 ò∫‹˛OÉ‰@06/01/2015 è¬ıËOÉ‰@06/01/2015 z5ÒlOÉ‰@06/01/2015 ù6êÓà‰@20/02/2015 X˝Lôâ‰@25/02/2015 rNä‰@03/03/2015 ^X˝åÏå‰@Ã‚Œµç‰@±Ôÿ,ë‰@Ë¥Åé.ë‰@úWè:ë‰@$‡õó<ë‰@ÖÎQlÖ‰@À¯–@Ö‰@ç˘∫—Î¢‰@ÄzØÔÜ‰@ª‹˛`}è‰@˚éÖ‰@[ª∆|à‰@Îg:‚YÜ‰@∂kÃó›á‰@fqÁ9Ü‰@%’⁄ı3Ü‰@v£{>Îì‰@*0ã{è‰@ˇÇè§‰@)QŒ‡*b‰@ß5º∂X‰@ûçƒ™‰@∂UJuà‰@´î(ß˝Ü‰@Á’ƒ3èQ‰@DOÊqZ‰@9É"◊:í‰@*0ã˚^ë‰@S¢úAYë‰@ägE#¨ë‰@˜¸Wà<ì‰@`!8dì‰@ YÁJî‰@PÔ„Kì‰@:m†ì‰@]nP<ì‰@ÖÎÔì‰@›Û_°Xì‰@£Üøñ‰@CpHqó‰@?”˚ëñ‰@+% Ÿ¨ú‰@^M<´Ãó‰@µÅNõúó‰@k‚Y—*õ‰@¸mä-ô‰@ôØù4ö‰@@≤Œïñ¨‰@-ÓqÌö‰@óÒ°ßVõ‰@R≠]#7[‰@@Ωè∑-]‰@£Üøµu‰@Ù_!xç]‰@ÂK~’]‰@y@≤Œ≤^‰@Ï;6€2b‰@0ñ¸"u`‰@gP‰"u`‰@wwwwe‰@±‰ú‰@-Óq©‰@ùAëK´õ‰@˝WŒÍõ‰@ﬂºöxŒú‰@úWœ‘ú‰@^M<Î‘ú‰@óÒ°Á
+h‰@Ír˚C4v‰@YÚã%,i‰@˝b…ØÀj‰@£{˛ÎÃj‰@∞“ ù‰@{o)ìû‰@˝b…ÔRü‰@P‰"å2ü‰@g[•W†‰@†ﬁánm‰@Z∆á^q‰@oiûo‰@≠sÂom‰@ÖÎQÀr‰@5¸m ≠t‰@,á¥çt‰@z*Ûr‰@OËÙr‰@Z‹	‚Ûr‰@—SÅô3¢‰@!8§eÕ£‰@û N&˝£‰@X˝L«ú£‰@¡,ÓDv‰@iY´x‰@CeáÈ~•‰@ı3Òß‰@s˚Éå*ß‰@Õ´âß‰@'àìâß‰@lÃ◊Õß‰@+% ¥¶‰@KsB¥©‰@ÌÛıå´‰@∑Jâ2™‰@ïÂÃ™‰@pSåÛ©‰@î>Èz‰@Ë¥Åñ¨‰@ûçDì¨‰@µvç9å≠‰@Ì0u9Ä‰@œäF∑‰@9É"6Ä‰@ˇÇ√ëí‰@|Ë©¿ëí‰@r«±Só‰@Ã◊çÆÓà‰@Xœ
+ôâ‰@ã;Aúmä‰@006D000000fGlcFIAS 006D000000gClhSIAS 006D000000hGWvuIAG 006D000000hGY0QIAW 006D000000hGep1IAC 006D000000hGexnIAC 006D000000fGo6rIAC 006D000000fGiTRIA0 006D000000fI8WXIA0 006D000000fIBivIAG 006D000000h2urcIAA 006D000000fGSbwIAG 006D000000fJONPIA4 006D000000fHqKQIA0 006D000000fJ9wBIAS 006D000000fHihlIAC 006D000000fHeQaIAK 006D000000h2NbFIAU 006D000000h2vWeIAI 006D000000V7YnHIAV 006D000000VxB7dIAF 006D000000eEmBaIAK 006D000000fJiARIA0 006D000000fIBACIA4 006D000000fIGKPIA4 006D000000V8OkWIAV 006D000000VybrAIAR 006D000000hHNq2IAG 006D000000hGmcnIAC 006D000000hGmFgIAK 006D000000hH3zYIAS 006D000000i2QvyIAE 006D000000i2KF5IAM 006D000000i36I7IAI 006D000000i2V9eIAE 006D000000i2KC6IAM 006D000000i2wAEIAY 006D000000i2ZRIIA2 006D000000i51d1IAA 006D000000i4PlaIAE 006D000000i5JNMIA2 006D000000i4eZRIAY 006D000000iqjnzIAA 006D000000iqfBnIAI 006D000000isR2mIAE 006D000000itUNjIAM 006D000000isohNIAQ 006D000000iuCpQIAU 006D000000itThgIAE 006D000000Vz79IIAR 006D000000X57DiIAJ 006D000000X5JzjIAF 006D000000X5eKPIAZ 006D000000V7d2UIAR 006D000000X6YObIAN 006D000000Y9ha0IAB 006D000000X5r1ZIAR 006D000000X7yZrIAJ 006D000000k0UESIA2 006D000000i5b8JIAQ 006D000000iup2cIAA 006D000000iupICIAY 006D000000k11XpIAI 006D000000k159UIAQ 006D000000k15BuIAI 006D000000YCrUqIAL 006D000000YDeiyIAD 006D000000ZNAGsIAP 006D000000Zb59RIAR 006D000000Zb61tIAB 006D000000k1GofIAE 006D000000k2gdcIAA 006D000000k38TLIAY 006D000000k2lJWIAY 006D000000koWY5IAM 006D000000ZbAf8IAF 006D000000aZfTJIA0 006D000000aXkmDIAS 006D000000ZbAr4IAF 006D000000aaTVbIAM 006D000000bRThFIAW 006D000000bRL9dIAG 006D000000bPfaQIAS 006D000000aacA6IAI 006D000000kpwieIAA 006D000000kr4iGIAQ 006D000000krEJHIA2 006D000000kqwCHIAY 006D000000bScjMIAS 006D000000ksDHUIA2 006D000000ksFRaIAM 006D000000lIJlxIAG 006D000000lII1yIAG 006D000000lIAPAIA4 006D000000lZc2aIAC 006D000000lZGfwIAG 006D000000lZahfIAC 006D000000lZneEIAS 006D000000dEXVRIA4 006D000000laX8OIAU 006D000000lb228IAA 006D000000lomIzIAI 006D000000eCaQDIA0 006D000000eCB7lIAG 006D000000eCh9zIAC 006D000000eE452IAC 006D000000eE431IAC 006D000000eE2mIIAS 006D000000fKEZoIAO 006D000000g97uCIAQ 006D000000g9emBIAQ 01sD00000007pWSIAY 01s200000000DdPAAU 01sD0000000QsSzIAK 003D0000017j0guIAA 003D000001nupsHIAQ 003D000001nve7xIAA 003D000001nvm0mIAA 003D000001nvmuuIAA 003D000000sOvMGIA0 003D000001QgD7bIAF 003D000001iaFEuIAM 003D000001mmNsDIAU 003D000001hUwRuIAK 003D000001PYUEJIA5 003D000001iZIrsIAG 003D000001Ved86IAB 003D000001iZ4fxIAC 003D000001FC82gIAD 003D000001laDOfIAM 003D000001GoI06IAF 0032000000MI885AAD 003D000001hTbUNIA0 0032000000enu87AAA 003D000001IzMlQIAV 003D0000017BAy3IAG 003D000001nw6CkIAI 003D000001ojtrfIAA 003D000001ojxOvIAI 003D000001d2syAIAQ 0032000000QDrIpAAL 003D000001olZ2gIAE 003D000001ZTZdkIAH 003D000001lXKtJIAW 003D000001q9z24IAA 003D000001q8dK4IAI 003D0000017ixXOIAY 003D000001epCqyIAE 003D000001GpGVGIA3 003D000001YYnkEIAT 003D000001FC8BxIAL 003D00000130Be6IAE 003D000001PZRr8IAH 003D000001FBZL7IAP 0032000000R0sd0AAB 00320000002NmtzAAC 003D000001SZ37yIAD 003D000001FC8DKIA1 003D000001sZ1cLIAS 003D000001sXxZnIAK 003D000001sYcxgIAC 003D000001tCyfzIAC 003D000001UqxfAIAR 0032000000UGpbcAAD 003D000001TE52PIAT 003D000001tkXM8IAM 003D000001WPUTEIA5 003D000001WQM52IAH 003D000001MehyCIAR 003D000001ZSSIYIA5 003D000001aXeUyIAK 003D000001KURvMIAX 003D000001tmXHKIA2 003D000001uo5qxIAA 003D000001uo8IgIAI 003D000001d3Mi6IAE 003D000001uqXPoIAM 003D000001vlOqcIAE 003D000001vl7P1IAI 003D000001vlNCyIAM 003D000001wAsXOIA0 003D000001wAYAWIA4 003D000001wArQnIAK 003D000001nwCasIAE 003D000001Mf97nIAB 003D000001wBmR4IAK 003D000001g7juyIAA 003D000001HjKsOIAV 00320000002FejcAAC 003D000001gANXgIAO 003D000001jTjC6IAK 003D000001jUVQfIAO 003D000001kTUskIAG 00000105 00000106 00000111 00000112 00000113 00000114 00000091 00000090 00000095 00000097 00000110 00000089 00000100 00000094 00000099 00000093 00000092 00000107 00000108 00000109 00000031 00000036 00000088 00000101 00000096 00000098 00000032 00000037 00000118 00000116 00000115 00000117 00000122 00000120 00000126 00000123 00000119 00000121 00000125 00000124 101451 101449 101452 101450 101455 101454 101453 101456 101458 101460 101457 101459 101461 00000038 00000043 00000044 00000045 00000046 00000049 00000051 00000050 00000048 00000052 101465 101463 101462 101464 101466 101467 101468 00000056 00000057 00000058 00000059 00000060 101469 101470 101472 101471 101473 00000061 00000064 00000063 00000062 00000067 00000072 00000071 00000069 00000065 00000068 101474 101477 101478 101476 00000074 00000075 101479 101480 101487 101486 101483 101485 101484 101490 101488 101489 101495 101491 00000076 101497 101498 101499 00000080 00000077 00000081 00000086 00000085 00000082 00000102 00000103 00000104 ·   225 Ω   189      l~@486.75 d   100 -   45 ^   94 (   40 9   57 ñ   150 Z   90 Ç   130 #   35 2   50 ¥   180 ∆  710 —  465 Ø   175 P   80 n   110 Î   235      êb@148.5 Ê   230 ^  350 x   120 †   160 õ   155 ™   170 <   60      –j@214.5    20 Accepted Draft Needs Review Approved In Review Presented ´™™™ﬁè‰@´™™™~ë‰@´™™™ï‰@´™™™ô‰@´™™™>ô‰@´™™™æç‰@X§  O§  ´™™™^í‰@ú¢  ‚¢  Û£  _§  a§  ´™™™~ï‰@>°  Ô¢  ´™™™û§‰@´™™™˛ú‰@´™™™ﬁó‰@´™™™>ó‰@´™™™˛†‰@´™™™æó‰@c•  ´™™™æê‰@´™™™>ö‰@´™™™~ô‰@´™™™ﬁ†‰@´™™™õ‰@Å•  ´™™™ü‰@´™™™^ù‰@ı¢  ´™™™˛`‰@´™™™~y‰@´™™™^a‰@´™™™~a‰@´™™™~b‰@´™™™ûe‰@´™™™^`‰@´™™™>b‰@´™™™æf‰@´™™™ûü‰@´™™™~ü‰@´™™™û†‰@´™™™>j‰@´™™™^l‰@´™™™ﬁl‰@´™™™~n‰@´™™™£‰@´™™™˛¢‰@D•  ´™™™>q‰@´™™™ﬁt‰@´™™™ﬁr‰@´™™™ûv‰@´™™™ûx‰@◊£  ´™™™ûu‰@´™™™¢‰@´™™™~ß‰@´™™™æy‰@´™™™˛y‰@K•  b•  W•  Ô¶  k•  p•  Ô£  §  §   §  9§  c§  Please note that the shipping cost may vary if the order is shipped in two dispatches. Delivery Schedule - Item 1, 2, and 4 can be dispatched within 5 days of receipt of acceptable order with advance. Item 3 can be dispatched in 6 weeks of receipt of acceptable order with advance
+Item 1 and Item 2 are from Batch No.FA-0969
+Payment terms are 30 days from Invoice. Amino Phenyl Boronate and Etoxiclear are supplied as Free of Charge samples for evaluation. Indicated price is for Custom purpose
+Courier by FedEx to Dholka, Gujarat (door to door)
+VAT not applicable for this export transaction
+Payment Terms: 100 percent advance with Purchase Order.
+Dispatch within 7 days of receipt of payment.
+Approximate weight: 1.2kg Customer to arrange for pickup from ProMEtic (details to be arranged with PO) ELISA Kit has to be transported in DRY ICE- Customer to arrange for suitable container when collected.
+100% Advance payment payment terms to:
+Barclays Bank PLC
+Sort Code: 20-26-74
+Account Number: 90105260
+SWIFTBIC: BARCGB22
+All bank charges to be paid by the buyer. To be used when purchasing 1L & 25mL together.
+Shipping & Handling to be added at time of order. 100% advance by TT 100% Advance Payment by TT Advance payment by TT
+Shipping Charges describe FedEx Charges from ProMetic to Cadila Facility. This will cover 4 months work with deliverables of:
+‚Ä¢ 3 x 1Litre batches of the selected Resin variant (less samples removed for testing).  
+‚Ä¢ Study report Dispatch Mode ‚Äì Chennai Airport BY AIR-Freight
+Payment terms ‚Äì 30 percent advance with order. Balance before dispatch of material. - 100% advance payment reaching Prometic BioSciences within 7 days of order. 
+- Air Freight to Delhi Airport. Silver Creek is a new customer.  They want to buy 25mL of AlbuPure - require a quote WITH SHIPPING FEES. - 100 percent payment by documents through bank, payable at sight of documents.
+- Order includes certificate of analysis.
+- Dispatch within one week of receipt of confirmed and acceptable order.
+- Insurance to be arranged by customer. - Shipping to be paid by ProMetic
+- Air-Freight to New Delhi
+- Port of Discharge = New Delhi Airport
+- Insurance to be arranged by Customer
+- 100% Advance Payment 100% Upfront Payment Pack Size:
+1 x 5L and 15 x 1L Payment Terms: 100 percent against delivery with documents through bank.
+Shipping Terms: Airfreight to Chennai Airport.
+Lead Time: 6-8 Weeks from receipt of PO. Delivery Instruction
+FedEx to Customer Address with Broker Select
+Insurance 
+To be arranged by Customer if required
+Delivery Schedule
+Within 1 week of receipt of advance payment
+Payment Terms
+100% Advance by Bank Transfer Delivery Type
+Dispatch using Customer Fed-Ex account. Charges to Customer Account
+Payment Terms
+100% advance with bank charges to:
+Sort Code: 20-26-74
+Account Number: 90105260
+Account Name: ProMetic BioSciences Limited
+SWIFTBIC: BARCGB22
+IBAN: GB95 BARC 2026 7490 1052 60
+Batch FA1128. Made: 17/10/13 Expires: Nov 2018 Courier to Hyderabad using FedEx
+Payment Terms: 100 % advance payment to:
+Bank Name	Barclays Bank PLC
+Bank Address	PO Box 9
+Douglas
+Isle of Man
+IM99 1AJ
+Sort Code	                20-26-74
+Account Number	90105260
+Account Name	        ProMetic BioSciences Limited
+SWIFTBIC	        BARCGB22
+IBAN	                GB95 BARC 2026 7490 1052 60      ß™@3411.5 [  1115 lﬁ  56940 ï  6549 M  6221 •(  10405 \ 220400   6165 æ  1470 Å  5505 Ó   8430 ø  6335 Ì&  9965 î  4500 5  3125     0 f  870 Ã3  13260 Å  385   1030 )6  13865 7d  25655 c  355 “  722 ∏$  9400 L  1100 ;  315 :  5690 À  715 £  3235 ú  1180 N  590 ˇ  1535 A  1345 
+  2565 ä  2132500 ¸ 195613 ∫6  14010 ‹   220 3  1075 ‡8  14560 ™
+  2730 Ë  1000 Æˆ  63150 {ÆG!4∏@6196.13 tm  28020     ÄT∑@5972.5 ` 924000   1040 …´ 240585 2‹  56370 R  850 O  1615 Ø   175 n(  10350 ‘  3540   3345 òÛ  62360 J  1610 Ω  445 ¨  1452 —V  22225 8J  19000 ÆG·˙ª†@2141.99 ∆  1990 B  6210 »   200 ÊP  20710 V  1110 ®a  25000 r  370 å(  10380 „!  8675   1045 “   210 _ 941850 –Ñ  34000   540 )  10525 èé  36495 t^  24180 T  340 fƒ 181350 ◊  55065 :/  12090 &  5670 ·zÆ«”@19491.12 N  5710 ÿò 170200 x  1400 TG  18260 ∆  710 ∏ÖÎQô∞@4249.32 y;  15225 Ô  495    240 N  3150 ™   170   4120      ·©@3312.5 [  1115 lﬁ  56940 ï  6549 M  6221 •(  10405 \ 220400   6165      :ë@1102.5 Å  5505 Ó   8430 ø  6335 Ì&  9965 î  4500 5  3125     0 f  870 Ã3  13260 Å  385 ü  927 )6  13865 7d  25655 c  355 ™  682 ∏$  9400 L  1100 ;  315 :  5690 À  715 £  3235 ú  1180 N  590 ˇ  1535 A  1345 
+  2565 ä  2132500 ¸ 195613 ∫6  14010 ‹   220 3  1075 03  13104 ™
+  2730 Ë  1000 Æˆ  63150 {ÆG!4∏@6196.13 tm  28020     ÄT∑@5972.5 ` 924000   1040 …´ 240585 2‹  56370 R  850 O  1615 Ø   175     @4√@9832.5 n(  10350 ‘  3540   3345 òÛ  62360 J  1610 Ω  445 (  1320     pû‘@21113.75 8J  19000 ÆG·˙ª†@2141.99 ∆  1990 B  6210 »   200 ÊP  20710 V  1110 ®a  25000 r  370 å(  10380 „!  8675   1045 “   210 _ 941850 –Ñ  34000   540 )  10525 èé  36495 ÕÃÃÃl“@18497.7 T  340 fƒ 181350 ◊  55065 :/  12090 &  5670 ·zÆ«”@19491.12 N  5710 ÿò 170200 x  1400 TG  18260 ∆  710 ∏ÖÎQô∞@4249.32 y;  15225 Ô  495    240 N  3150 ™   170   4120                          vöy017@       
+   NûT!)@   Î‡¢ã."@     Ä7@     £´@3537.5 [  1115 )ﬂ  57129 ï  6549 M  6221 •(  10405     ∂ˆ
+A220886.75   6165      :ë@1102.5 Â  5605 Ó   8430 ø  6335 Ì&  9965 î  4500 5  3125     0 f  870 Ã3  13260 Å  385 Ã  972 )6  13865 ïd  25749 ã  395 „  739 ∏$  9400 ‚  1250 ;  315 :  5690 À  715 ˝  3325 ú  1180 N  590 Â  485 ˇ  1535 A  1345 á
+  2695 ä  2132500 ¸ 195613 ∫6  14010 ˇ   255 3  1075 03  13104 ™
+  2730   1040 Æˆ  63150 {ÆG!4∏@6196.13   1050 (n  28200     ÄT∑@5972.5 ` 924000 t  1140 èÆ 241295 ﬁ  56835   1025 O  1615 n   110     ¿©√@10067.5 )  10500      —¨@3688.5   3345 òÛ  62360 r  1650 Rﬂ  57170 Í  490 (  1320     pû‘@21113.75 ñK  19350 ÆG·˙ª†@2141.99 >  2110 ‚  6370 »   200 ÊP  20710 ~  1150 Cb  25155   520 6)  10550 „!  8675   1045 "  290 j  1130 _ 941850 .Ü  34350   540 )  10525 èé  36495 ÕÃÃÃl“@18497.7 T  340 fƒ 181350 ˘  505   260 ◊  55065 Ω  445 :/  12090 &  5670 ·zÆ«”@19491.12 7d  25655 Ø   175     Ä$∑@5924.5 ÿò 170200 å  1420 TG  18260 ∆  710 ∏ÖÎQô∞@4249.32 y;  15225   535 N  3150 Ê   230 @  4160 P§  Mar 15 o§  Apr 15 §  Jan 15 4§  Feb 15 k¢  Nov 13 ®¢  Jan 14 â¢  Dec 13 «¢  Feb 14 ç§  May 15 ¨§  Jun 15  §  Jul 15 „¢  Mar 14 £  Apr 14  £  May 14 ?£  Jun 14 È§  Aug 15 ]£  Jul 14 |£  Aug 14 õ£  Sep 14 •  Sep 15 &•  Oct 15 E•  Nov 15 π£  Oct 14 c•  Dec 15 ˆ£  Dec 14  	          Å 	Å@ ÇÅ ÉÉ¡ ÑÑ!
+ !Ö
+Ö)ÖB!Ü Ü1 É!á á9á√!à0àA   Bâ0	J$	âD"ääQ(
+
+Ö"ã ãY,ã≈"å0a0#ç çi4 Bé0éq8çF#è èy<á#ê É@ 	è«#ë ãD"
+$ííë(
+ëH$ì"ìôH â$î@$§L$ì…dïP&ï©P& 
+%ñ (±T(ïJ%ó!0*ªX*ã%•1,A\  óÀÖô0.ô¡`&ö`0…d è«#õ)p2—h,ôL&úÄ4úŸl ç&ù4ù·p.õÕ&û6ûÈt0'ü-Ä8ıx ùN'†Ä:†˘|2 è'°Ä<°Å4!üœ'" Ä>"Ö "è«#£1Ä@#â6#(§Ä§ç8$ P(•Ä4•!ç8%°ê(¶1ÄB&*ë:&"—(ßÄDß1ï<'£)®êF(9ô>( $R)©êH©Eù )•í)™5êJ*K°@*&”)+íL+T•B+ß*¨ê¨Y©D,(Tj≠ê≠a©D-©î*Æ!êN.k≠F.*’*ØêP/q±H/´+∞Å¢R∞{µJ0,V+±9†T1k≠F1 *ï+≤=†V2ÅπH2!≠÷+≥†X3åΩL3 .,¥†Z¥ë¡N4ØW,µp\5ô≈P5"0ò,∂A∞^∂°…R6#±ÿ,∑E∞`∑©Õ7$2-8I≥b8±—T8%≥Y-9Å≥d9π’V9&4ö-∫M∞f:¡ŸX:'µ⁄);Qƒh;…› ;(è«-ºU¿j<—·Z<)6ÆΩ)∞l=ÿ·Z=*∂[.æY¿næ·Â.>+7ú.ø†pøÈÈ\?∏‹.¿Å§r@ÛÌ^@,9/¡!†tA˘Ò@A-∫]/¬]†vBˆ`B,Å/√†xC˙bC.;ﬁ/ƒ†ƒ˛
+DçF#≈†z≈Eº–∆–|F!eF/=_∞GaÂ~G)
+G0æü0»‡ÄH1H1?‡0…e‡ÇI9gI2¿ 1 i‡ÑJA[J Aa1À†ÀIiK¬°1ÃÜLT!LC‚1Õ!M["%M3ƒ"2NÌıàNc&N4Ec2œäœi*kO5è«#–)ç–q.mP6∆£2—qèQz2oQ7G‰2RÅëRÅ6qR8»$3SìSâ:S6Ie3‘©ï‘ë>sT9∆£2’M óUôBuU: •3÷- ôV°FwV 0ÿ3◊õ◊©J=W;K&4ÿaùX±N!X<Ãf4ŸõŸπJ=Y;K&4⁄0üZ√RyZ=Mß4€0°[ÀV{[>ŒÁ4‹0£‹—Z\O(5›0•›Ÿ^}]5–hıﬁ ßﬁ·b^?Q©5_·(©_È
+_@æü0‡@´‡Òf`“È5auI≠a˘jÅaA;6‚!@ØboÉbB&S6„@±„üÑcBS™6‰@≥‰üÑdBS™6eÅIµesáeC;ﬁ6Ê@∑Ê!wKfD‘*7ÁPπg+{âgEUk7ËPªË1ãhçF#ÈPΩi;Éçi÷´7ÍPøjAW(j ï 7ÎP¡ÎKáèkFµ8Ïy`√ÏQãslGWl8mP≈ÌYèëmBÿ¨8Ó}p«ncìnYÌ8Ôp…Ôlóìo⁄-9ÄÀqõïpH[n9ÒÄÕqyüóqI‹Æ9ÚÄœrÅ£ôrJ]Ô9Û! –sâßGsﬁ/:Ù} “të´GtK_p6ı ‘uôØõuK‡p:vu:÷v°≥ùvLa±:˜0ÿ˜©∑üwâ$¯! ⁄x≥ª°x‚Ò:
