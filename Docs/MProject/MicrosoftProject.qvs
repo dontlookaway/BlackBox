@@ -1,0 +1,520 @@
+﻿///$tab Main
+set vFileLoad = $(vFilename);
+
+///$tab Project
+Project:
+LOAD 
+     [Author]                   as [Author]
+    ,[Company]                  as [Company]
+    ,[CriticalSlackLimit]       as [CriticalSlackLimit]
+    ,[CurrencySymbol]           as [CurrencySymbol]
+    ,[CurrencyCode]				as [CurrencyCode]
+    ,time([DefaultStartTime])	as [DefaultStartTime]
+    ,time([DefaultFinishTime])	as [DefaultFinishTime]
+    ,Date#(replace([FinishDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ProjectFinishDate]
+    ,[LastSaved]				as [LastSaved]
+    ,[Name] 					as [ProjectName]
+    ,Date#(replace([CreationDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ProjectCreationDate]
+	,hour(time(time([DefaultFinishTime])-Time([DefaultStartTime])))*60+minute(time(time([DefaultFinishTime])-Time([DefaultStartTime])))
+								as [ProjectDefaultDayMinutes]
+	,[%Key_Project_59FE1CDD36903AAC]&'_'&'$(vFileLoad)' 
+								as [ProjectKey]
+    ,[SaveVersion]				as [SaveVersion]
+    ,Date#(replace([StartDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ProjectStartDate]
+    ,Date(MonthStart(Date#(replace([CreationDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [ProjectCreationMonth]
+    ,Date(MonthStart(Date#(replace([StartDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [ProjectStartMonth]
+	,Date(MonthStart(Date#(replace([FinishDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [ProjectFinishMonth]
+
+//	,[xmlns]
+//	,[ScheduleFromStart]
+//	,[FYStartDate]
+//	,[CurrencyDigits]
+//	,[CurrencySymbolPosition]
+//	,[CalendarUID]					
+//	,[MinutesPerDay]
+//	,[MinutesPerWeek]
+//	,[DaysPerMonth]
+//	,[DefaultTaskType]
+//	,[DefaultFixedCostAccrual]
+//	,[DefaultStandardRate]
+//	,[DefaultOvertimeRate]
+//	,[DurationFormat]
+//	,[WorkFormat]
+//	,[EditableActualCosts]
+//	,[HonorConstraints]
+//	,[InsertedProjectsLikeSummary]
+//	,[MultipleCriticalPaths]
+//	,[NewTasksEffortDriven]
+//	,[NewTasksEstimated]
+//	,[SplitsInProgressTasks]
+//	,[SpreadActualCost]
+//	,[SpreadPercentComplete]
+//	,[TaskUpdatesResource]
+//	,[FiscalYearStart]
+//	,[WeekStartDay]
+//	,[MoveCompletedEndsBack]
+//	,[MoveRemainingStartsBack]
+//	,[MoveRemainingStartsForward]
+//	,[MoveCompletedEndsForward]
+//	,[BaselineForEarnedValue]
+//	,[AutoAddNewResourcesAndTasks]
+//	,[CurrentDate]
+//	,[MicrosoftProjectServerURL]
+//	,[Autolink]
+//	,[NewTaskStartDate]
+//	,[NewTasksAreManual]
+//	,[DefaultTaskEVMethod]
+//	,[ProjectExternallyEdited]
+//	,[ExtendedCreationDate]
+//	,[ActualsInSync]
+//	,[RemoveFileProperties]
+//	,[AdminProject]
+//	,[UpdateManuallyScheduledTasksWhenEditingLinks]
+//	,[KeepTaskOnNearestWorkingTimeWhenMadeAutoScheduled]
+//	//Key for this table: Project
+//	,'$(vFileLoad)' 			as [ProjectFile]
+//	,CalendarUID&'-'&[%Key_Project_59FE1CDD36903AAC] as CalendarUIDExt
+FROM $(vFilename).xml  (XmlSimple, Table is [Project]);
+
+///$tab Calendar
+Calendar:
+LOAD 
+	 [BaseCalendarUID]			as [BaseCalendarUID]
+	,[%Key_Calendar_FD9CE055B3853312]&'_'&'$(vFileLoad)' 
+								as [CalendarKey]
+	,[Name] 					as [CalendarName]
+	,FABS([UID])&'_'&'$(vFileLoad)'	
+								as [CalendarUID]
+    ,[IsBaseCalendar]			as [IsBaseCalendar]
+    ,[IsBaselineCalendar]		as [IsBaselineCalendar]
+	,%Key_Project_59FE1CDD36903AAC&'_'&'$(vFileLoad)' 
+								as [ProjectKey]
+	//%Key_Calendar_FD9CE055B3853312 as CalendarKey   // Key for this table: Project/Calendars/Calendar
+    //%Key_Project_59FE1CDD36903AAC as ProjectKey,    // Key to parent table: Project
+    //,UID&'-'&[%Key_Project_59FE1CDD36903AAC] as CalendarUIDExt
+	        //,UID&'-'&[%Key_Project_59FE1CDD36903AAC]&'_'&'$(vFileLoad)' as CalendarUIDExt
+	//CalendarUID&'-'&[%Key_Project_59FE1CDD36903AAC]&'_'&'$(vFileLoad)' as CalendarUIDExt
+	//,[UID]&'-'&'_'&'$(vFileLoad)' 	
+	//						as [CalendarUIDExt]
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Calendars/Calendar]);
+///$tab Exception
+Exception:
+LOAD 
+	 %Key_Calendar_FD9CE055B3853312&'_'&'$(vFileLoad)' 
+								as [CalendarKey]
+	,[EnteredByOccurrences]		as [EnteredByOccurrences]
+	,%Key_Exception_F4EDE73DA6E03762&'_'&'$(vFileLoad)' 
+								as [ExceptionKey]
+	,[Type] 					as [ExceptionType]
+    ,[DayWorking]				as [ExceptionDayWorking]
+	,Date#(replace([TimePeriod/FromDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ExceptionTimePeriodFromDate]
+    ,Date#(replace([TimePeriod/ToDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ExceptionTimePeriodToDate]
+	,[Occurrences]				as [Occurrences]
+	//%Key_Calendar_FD9CE055B3853312 as CalendarKey,    
+	// Key to parent table: Project/Calendars/Calendar
+    //%Key_Exception_F4EDE73DA6E03762 as ExceptionKey    
+	// Key for this table: Project/Calendars/Calendar/Exceptions/Exception
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Calendars/Calendar/Exceptions/Exception]);
+
+//'Exception/WorkingTimes/WorkingTime':
+ExceptionWorkingTime:
+LOAD 
+	 time([FromTime]) 			as [ExceptionFromTime]
+	,%Key_Exception_F4EDE73DA6E03762&'_'&'$(vFileLoad)' 
+								as [ExceptionKey]
+    ,time([ToTime])				as [ExceptionToTime]
+    //%Key_Exception_F4EDE73DA6E03762 as ExceptionKey    
+	// Key to parent table: Project/Calendars/Calendar/Exceptions/Exception
+	//[%Key_Exception_F4EDE73DA6E03762]&'_'&'$(vFileLoad)' as ExceptionKey
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Calendars/Calendar/Exceptions/Exception/WorkingTimes/WorkingTime]);
+
+///$tab Weekday
+WeekDay:
+LOAD 
+	 %Key_Calendar_FD9CE055B3853312&'_'&'$(vFileLoad)' 
+								as [CalendarKey]
+	,[DayType]					as [DayType]
+	,%Key_WeekDay_02B90FFE85635485&'_'&'$(vFileLoad)' 
+								as [WeekDayKey]
+    ,[DayWorking] 				as [WeekDayDayWorking]
+	,Date#(replace([TimePeriod/FromDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [WeekDayTimePeriodFromDate]
+    ,Date#(replace([TimePeriod/ToDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [WeekDayTimePeriodToDate]
+//	%Key_WeekDay_02B90FFE85635485  as WeekDayKey  // Key for this table: Project/Calendars/Calendar/WeekDays/WeekDay
+	//%Key_Calendar_FD9CE055B3853312 as CalendarKey,    // Key to parent table: Project/Calendars/Calendar
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Calendars/Calendar/WeekDays/WeekDay]);
+
+//'WeekDay/WorkingTimes/WorkingTime':
+WeekDayWorkingTime:
+LOAD 
+	[FromTime] 					as [WeekDayFromTime]
+	,[%Key_WeekDay_02B90FFE85635485]&'_'&'$(vFileLoad)' 
+								as [WeekDayKey]
+    ,[ToTime] 					as [WeekDayToTime]
+//%Key_WeekDay_02B90FFE85635485  as WeekDayKey    // Key to parent table: Project/Calendars/Calendar/WeekDays/WeekDay
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Calendars/Calendar/WeekDays/WeekDay/WorkingTimes/WorkingTime]);
+
+///$tab Task
+
+Task:
+LOAD 
+	 FABS([CalendarUID])&'_'&'$(vFileLoad)'	
+								as [CalendarUID]
+	,[CommitmentType]			as [CommitmentType]
+	,Date#(replace([ConstraintDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [ConstraintDate]
+	,[ConstraintType]			as [ConstraintType]
+	,[DisplayAsSummary]			as [DisplayAsSummary]
+	,[EffortDriven]				as [EffortDriven]
+	,[Estimated]				as [Estimated]
+	,[ExternalTask]				as [ExternalTask]
+	,[FinishSlack]				as [FinishSlack]
+    ,[FixedCost]/100			as [FixedCost]
+	,[FixedCostAccrual]			as [FixedCostAccrual]
+	,[FreeSlack]				as [FreeSlack]
+	,[IgnoreResourceCalendar]	as [IgnoreResourceCalendar]
+	,[IsPublished]				as [IsPublished]
+	,[IsSubproject]				as [IsSubproject]
+    ,[IsSubprojectReadOnly]		as [IsSubprojectReadOnly]
+	,[LevelAssignments]			as [LevelAssignments]
+    ,[LevelingCanSplit]			as [LevelingCanSplit]
+	,[OutlineLevel]				as [OutlineLevel]
+	,[OutlineNumber]			as [OutlineNumber]
+	,[ManualDuration]			as [ManualDuration]
+	,[PreLeveledFinish]			as [PreLeveledFinish]
+	,[PreLeveledStart]			as [PreLeveledStart]
+	,[Recurring]				as [Recurring]
+	,[Rollup]					as [Rollup]
+	,if(isnull([Active]),0,[Active])
+								as [TaskActive]
+	,[ActualCost]/100 			as [TaskActualCost]
+	,subfield(replace(replace(replace(replace([ActualDuration],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([ActualDuration],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([ActualDuration],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+								as [TaskActualDurationSeconds]
+	,[ActualOvertimeCost]/100 	as [TaskActualOvertimeCost]
+    ,[ActualOvertimeWork] 		as [TaskActualOvertimeWork]
+	,[ActualWork] 				as [TaskActualWork]
+	,[Baseline/Cost]/100		as [TaskBaselineCost]
+	,subfield(replace(replace(replace(replace([Baseline/Duration],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([Baseline/Duration],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([Baseline/Duration],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+								as [TaskBaselineDurationSeconds]	
+    ,Date#(replace([Baseline/Finish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskBaselineFinish]
+	,[Baseline/Number] 			as [TaskBaselineNumber]
+	,Date#(replace([Baseline/Start],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskBaselineStart]	
+    ,[Baseline/Work]			as [TaskBaselineWork]
+	,[Cost]/100					as [TaskCost]
+	,Date#(replace([CreateDate],'T','-'),'YYYY-MM-DD-hh:mm:ss') 
+								as [TaskCreateDate]
+	,[Critical]					as [TaskCritical]
+	,1-[Summary] 				as [TaskDetail]
+	,subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',1)
+								as [TaskDurationHours]
+	,subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',2)
+								as [TaskDurationMinutes]
+	,subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+								as [TaskDurationSeconds]
+	,subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([Duration],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+								as [TaskDurationTotalSeconds]
+	,Date#(replace([EarlyFinish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskEarlyFinish]
+	,Date#(replace([EarlyStart],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskEarlyStart]
+	,Date#(replace(Finish,'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskFinish]
+	,Date(MonthStart(Date#(replace([Finish],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [TaskFinishMonth]
+	,[FinishVariance]  			as [TaskFinishVariance]
+	,[ID] 						as [TaskID]
+	,[IsNull] 					as [TaskIsNull]
+	,[%Key_Task_889B0348918676C5]&'_'&'$(vFileLoad)' 
+								as [TaskKey]
+	,Date#(replace([LateFinish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskLateFinish]
+	,Date#(replace([LateStart],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskLateStart]
+	,[LevelingDelay] 			as [TaskLevelingDelay]
+	,Date#(replace([ManualFinish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskManualFinish]
+    ,Date(MonthStart(Date#(replace([ManualFinish],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [TaskManualFinishMonth]
+	,Date#(replace([ManualStart],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskManualStart]
+	,Date(MonthStart(Date#(replace([ManualStart],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [TaskManualStartMonth]
+	,[Milestone]  				as [TaskMilestone]
+	,[Name] 					as [TaskName]
+	,[OverAllocated] 			as [TaskOverAllocated]
+    ,[OvertimeCost]/100			as [TaskOvertimeCost]
+	,[OvertimeWork] 			as [TaskOvertimeWork]
+	,[PercentComplete]			as [TaskPercentComplete]
+	,if([PercentComplete]<25,'0-25%',
+		if([PercentComplete]<50,'25-50%',
+			if([PercentComplete]<75,'50-75%',
+				if([PercentComplete]<99.99999,'75-99%',
+					if([PercentComplete]=100,'100%')
+	))))						as [TaskPercentCompleteBands]
+	,[PercentWorkComplete] 		as [TaskPercentWorkComplete]
+	,if([PercentWorkComplete]<25,'0-25%',
+		if([PercentWorkComplete]<50,'25-50%',
+			if([PercentWorkComplete]<75,'50-75%',
+				if([PercentWorkComplete]<99.99999,'75-99%',
+					if([PercentWorkComplete]=100,'100%')
+	))))						as [TaskPercentWorkCompleteBands]
+	,[PhysicalPercentComplete]	as [TaskPhysicalPercentComplete]
+	,[Priority]					as [TaskPriority]
+	,[RegularWork] 				as [TaskRegularWork]
+	,[RemainingCost]/100		as [TaskRemainingCost]
+    ,[RemainingDuration]		as [TaskRemainingDurationOld]
+	,subfield(replace(replace(replace(replace([RemainingDuration],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([RemainingDuration],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([RemainingDuration],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+								as [TaskRemainingDurationSeconds]
+	,[RemainingOvertimeCost]/100
+								as [TaskRemainingOvertimeCost]
+    ,[RemainingOvertimeWork] 	as [TaskRemainingOvertimeWork]
+	,[RemainingWork] 			as [TaskRemainingWork]
+	,Date#(replace(Start,'T','-'),'YYYY-MM-DD-hh:mm:ss')
+								as [TaskStart]
+	,Date(MonthStart(Date#(replace([Start],'T','-'),'YYYY-MM-DD-hh:mm:ss')),'MMM YYYY')
+								as [TaskStartMonth]	
+	,[StartSlack]				as [TaskStartSlack]
+	,[StartVariance] 			as [TaskStartVariance]
+	,[Summary] 					as [TaskSummary]
+	,[TotalSlack]				as [TaskTotalSlack]
+	,[Type] 					as [TaskType]
+	,[UID]&'_'&'$(vFileLoad)' 	as [TaskUID]
+    ,[Work] 					as [TaskWork]
+	,subfield(replace(replace(replace(replace([Work],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([Work],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([Work],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+								as [TaskWorkTotalSeconds]
+	,[WorkVariance] 			as [TaskWorkVariance]
+	//,[EarnedValueMethod]		as [EarnedValueMethod]
+    //,[LevelingDelayFormat] 	as [TaskLevelingDelayFormat]
+    //,[HideBar]				as [HideBar]
+	//,[ResumeValid]			as [ResumeValid]
+	//,[DurationFormat] 		as [TaskDurationFormat]
+    //,[Manual]					as [Manual]
+	//,[WBS]					as [WBS]
+    //,[ACWP] 					as [TaskACWP]
+    //,[CV] 					as [TaskCV]
+    //,[CalendarUID]			as [CalendarUID]
+    //,[BCWS] 					as [TaskBCWS]
+    //,[BCWP] 					as [TaskBCWP]
+	//,%Key_Project_59FE1CDD36903AAC
+	//							as [ProjectKey]
+	//Key to parent table: Project
+    //,%Key_Task_889B0348918676C5  
+	//							as [TaskKey]  
+	//Key for this table: Project/Tasks/Task
+	//,[CalendarUID]&'-'&'_'&'$(vFileLoad)' 	
+	//							as [CalendarUIDExt]
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Tasks/Task]);
+
+///$tab Predecessor
+PredecessorLink:
+LOAD 
+	 [CrossProject]
+	,[LagFormat]
+	,[LinkLag]
+	,[Type] 				as [PredecessorLinkType]
+	,[PredecessorUID]&'_'&'$(vFileLoad)' 
+							as [PredecessorUID]
+    ,[%Key_Task_889B0348918676C5]&'_'&'$(vFileLoad)' 
+							as [TaskKey]
+	//%Key_Task_889B0348918676C5  
+	//						as [TaskKey]
+	// Key to parent table: Project/Tasks/Task
+FROM $(vFilename).xml (XmlSimple, Table is [Project/Tasks/Task/PredecessorLink]);
+
+///$tab Assignment
+Assignment:
+LOAD 
+	 [ActualCost]/100		as [AssignmentActualCost]
+    ,[ActualOvertimeCost]/100 	
+							as [AssignmentActualOvertimeCost]
+    ,[ActualOvertimeWork] 	as [AssignmentActualOvertimeWork]
+	,subfield(replace(replace(replace(replace([ActualOvertimeWork],'PT',''),'H',':'),'M',':'),'S',''),':',3)
+		+subfield(replace(replace(replace(replace([ActualOvertimeWork],'PT',''),'H',':'),'M',':'),'S',''),':',2)*60
+		+subfield(replace(replace(replace(replace([ActualOvertimeWork],'PT',''),'H',':'),'M',':'),'S',''),':',1)*3600
+							as [AssignmentActualOvertimeWorkTotalSeconds]
+    ,[ActualWork] 			as [AssignmentActualWork]
+    ,[BudgetCost]/100		as [AssignmentBudgetCost]
+	,[BudgetWork]			as [AssignmentBudgetWork]
+	,[Cost]/100 			as [AssignmentCost]
+    ,[CostVariance] 		as [AssignmentCostVariance]
+	,Date#(replace([CreationDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [AssignmentCreationDate]
+	,[Delay] 				as [AssignmentDelay]
+    ,Date#(replace([Finish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [AssignmentFinish]
+    ,[FinishVariance]  		as [AssignmentFinishVariance]
+	,%Key_Assignment_CFD215FFD20E4E1D&'_'&'$(vFileLoad)' 
+							as [AssignmentKey]
+    ,[Milestone] 			as [AssignmentMilestone]
+	,[Overallocated]		as [AssignmentOverallocated]
+	,[OvertimeCost]/100		as [AssignmentOvertimeCost]
+    ,[OvertimeWork] 		as [AssignmentOvertimeWork]
+	,[RemainingCost]/100	as [AssignmentRemainingCost]
+	,[RemainingWork] 		as [AssignmentRemainingWork]
+	,Date#(replace([Start],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [AssignmentStart]
+	,[StartVariance] 		as [AssignmentStartVariance]
+	,[UID]&'_'&'$(vFileLoad)' 
+							as [AssignmentUID]
+	,[Units] 				as [AssignmentUnits]
+	,[Work] 				as [AssignmentWork]
+	,[WorkVariance] 		as [AssignmentWorkVariance]
+	,[FixedMaterial]		as [FixedMaterial]
+    ,[LevelingDelay]        as [LevelingDelay]
+	,[PercentWorkComplete]  as [PercentWorkComplete]
+	,[ResourceUID]&'_'&'$(vFileLoad)'
+							as [ResourceUID]
+	,[TaskUID]&'_'&'$(vFileLoad)' 
+							as [TaskUID]
+    //	,%Key_Project_59FE1CDD36903AAC
+	//						as ProjectKey
+	//	Key to parent table: Project
+    //	,%Key_Assignment_CFD215FFD20E4E1D 
+	//						as AssignmentKey  
+	// 	Key for this table: Project/Assignments/Assignment
+	//	,WorkContour		as AssignmentWorkContour
+    //	,BCWS 				as AssignmentBCWS
+    //	,BCWP 				as AssignmentBCWP
+	//	,BookingType 		as AssignmentBookingType
+	//	,UpdateNeeded		as AssignmentUpdateNeeded
+	//	,VAC  				as AssignmentVAC
+	//	,ResponsePending	as AssignmentResponsePending
+    //	,RegularWork 		as AssignmentRegularWork
+	//	,LevelingDelayFormat
+	//						as AssignmentLevelingDelayFormat
+	//	,LinkedFields		as AssignmentLinkedFields
+    //	,ACWP 				as AssignmentACWP
+	//	,Confirmed			as AssignmentConfirmed
+	//	,CostRateTable		as CostRateTable
+	//	,RateScale			as CostRateScale
+    //	,CV 				as AssignmentCV
+	//	,HasFixedRateUnits	as AssignmentHasFixedRateUnits
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Assignments/Assignment]);
+
+///$tab Resource
+
+Resource:
+LOAD 
+	 [Initials]				as [Initials]
+	,[IsCostResource]		as [IsCostResource]
+	,[ActualCost]/100 		as [ResourceActualCost]
+	,[ActualOvertimeCost]/100
+							as [ResourceActualOvertimeCost]
+	,[ActualOvertimeWork] 	as [ResourceActualOvertimeWork]
+	,[ActualWork] 			as [ResourceActualWork]
+	,[Cost]/100 			as [ResourceCost]
+	,[CostPerUse]/100		as [ResourceCostPerUse]
+	,[CostVariance] 		as [ResourceCostVariance]
+	,Date#(replace([CreationDate],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [ResourceCreationDate]
+	,[ID] 					as [ResourceID]
+	,[%Key_Resource_C1A76132740B024A]&'_'&'$(vFileLoad)' 
+							as [ResourceKey]
+	,[Name]					as [ResourceName]
+	,[OverAllocated]		as [ResourceOverAllocated]
+	,[OvertimeCost]/100		as [ResourceOvertimeCost]
+	,[OvertimeRate] 		as [ResourceOvertimeRate]
+	,[OvertimeWork] 		as [ResourceOvertimeWork]
+	,[PercentWorkComplete] 	as [ResourcePercentWorkComplete]
+	,[Type] 				as [ResourceType]
+	,[RegularWork] 			as [ResourceRegularWork]
+	,[RemainingCost]/100	as [ResourceRemainingCost]
+	,[RemainingOvertimeCost]/100
+							as [ResourceRemainingOvertimeCost]
+	,[RemainingOvertimeWork] 
+							as [ResourceRemainingOvertimeWork]
+	,[RemainingWork] 		as [ResourceRemainingWork]
+	,[StandardRate] 		as [ResourceStandardRate]
+	,[UID]&'_'&'$(vFileLoad)'
+							as [ResourceUID]
+    ,[Work] 				as [ResourceWork]
+	,[WorkGroup]			as [ResourceWorkGroup]
+    ,[WorkVariance] 		as [ResourceWorkVariance]
+    //,[UID]&'-'&[%Key_Project_59FE1CDD36903AAC] 
+	//						as [CalendarUIDExt]
+    //,%Key_Project_59FE1CDD36903AAC
+	//Key to parent table: Project
+    //,%Key_Resource_C1A76132740B024A   
+	//						as [ResourceKey]
+	//Key for this table: Project/Resources/Resource
+	//,[IsBudget]
+	//,[SV]
+	//,[CV]
+	//,[ACWP]
+	//,[CalendarUID]
+	//,[BCWS]
+	//,[BCWP]
+	//,[IsGeneric]
+	//,[IsInactive]
+	//,[IsEnterprise]
+	//,[BookingType]
+	//,[OvertimeRateFormat] as [ResourceOvertimeRateFormat]
+	//,[StandardRateFormat] as [ResourceStandardRateFormat]
+	//,[CanLevel]
+	//,[AccrueAt]
+	//,[IsNull] 			as [ResourceIsNull]
+	//,[MaxUnits]
+	//,[PeakUnits]
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Resources/Resource]);
+
+Rate:
+LOAD 
+	 [OvertimeRate]			as [OvertimeRate]
+	,Date#(replace([RatesFrom],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [RatesFrom]
+    ,Date#(replace([RatesTo],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [RatesTo]
+	,[%Key_Resource_C1A76132740B024A]&'_'&'$(vFileLoad)' 
+							as [ResourceKey]
+	,[StandardRate]			as [StandardRate]
+	,[CostPerUse]			as [CostPerUse]
+	//,[RateTable]
+    //,[StandardRateFormat]
+    //,[OvertimeRateFormat]
+    //,%Key_Resource_C1A76132740B024A   
+	//						as [ResourceKey]
+	// Key to parent table: Project/Resources/Resource
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Resources/Resource/Rates/Rate]);
+
+///$tab TimephasedData
+TimephasedData:
+LOAD 
+     [%Key_Assignment_CFD215FFD20E4E1D]&'_'&'$(vFileLoad)' 
+							as [AssignmentKey]
+	,Date#(replace([Finish],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [TimephasedDataFinish]
+	,Date#(replace([Start],'T','-'),'YYYY-MM-DD-hh:mm:ss')
+							as [TimephasedDataStart]
+	,[Type] 				as [TimephasedDataType]
+    ,[UID]&'_'&'$(vFileLoad)'
+							as [TimephasedDataUID]
+    ,[Unit] 				as [TimephasedDataUnit]
+	,[Value]				as [TimephasedDataValue]
+    //,%Key_Assignment_CFD215FFD20E4E1D% 
+	//						as [AssignmentKey]
+	// Key to parent table: Project/Assignments/Assignment
+FROM $(vFilename).xml  (XmlSimple, Table is [Project/Assignments/Assignment/TimephasedData]);
+
+///$tab End
+let vFileLoad = Null();

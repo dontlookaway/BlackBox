@@ -1,0 +1,1 @@
+The Chapter 2 folder does not include a practice file. Instead, you create a new practice file as you complete Chapter 2.
