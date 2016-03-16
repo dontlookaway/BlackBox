@@ -1,0 +1,1 @@
+OLEDB CONNECT TO [Provider=SQLOLEDB.1;Persist Security Info=True;User ID=srs_reports;Initial Catalog=BlackBox;Data Source=10.100.125.61;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=BORN;Use Encryption for Data=False;Tag with column collation when possible=False] (XPassword is OAIZBIJOPLbKGaFNDLDA);

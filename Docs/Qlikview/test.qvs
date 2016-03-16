@@ -1,0 +1,305 @@
+﻿///$tab Main
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='£#,##0.00;-£#,##0.00';
+SET TimeFormat='hh:mm:ss';
+SET DateFormat='DD/MM/YYYY';
+SET TimestampFormat='DD/MM/YYYY hh:mm:ss[.fff]';
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+
+LET vLoadStart = Now();
+
+
+
+///$tab Glossary
+Glossary:
+LOAD * INLINE [
+    #FieldName, #Definition
+    Test, Test
+];
+///$tab SF Download
+IF vSalesForceLoad='Download' then
+Let  vLastLoadSF ='Download - '&OSUser();
+
+//Connection to SF held in separate file
+//$(Include=salesforce_connector.qvs);
+CUSTOM CONNECT TO "Provider=SalesForceDLL.dll;F26;XUserId=HTZdbQZFELYMXUVMTDQAHZdNNLZIXUNMOZYeWWZE;XPassword=OdBRbXZNFTMGDDdJVSUGFYJKPLTEDGJLVZYOHBBPCKNGHUFGUbMeGcEJTLeQE;";
+
+
+//Andy Load
+SFRaw:
+LOAD 
+	Id 					As AccountId, 
+	IsDeleted 			As AccountIsDeleted, 
+	Name				As AccountName, 
+	Type 				As AccountType, 
+	BillingStreet, 
+	BillingCity, 
+	BillingPostalCode, 
+	BillingCountry, 
+//	BillingStateCode, 
+//	BillingCountryCode, 
+	ShippingStreet, 
+	ShippingCity, 
+	ShippingState, 
+	ShippingPostalCode, 
+//	ShippingStateCode, 
+//	ShippingCountryCode, 
+	Phone 				As AccountPhone, 
+	Fax 					As AccountFax, 
+	if(AccountNumber='' or(AccountNumber=' '),Null(),AccountNumber)		As Customer, 
+	Website, 
+	Industry, 
+	Description 			As AccountDescription, 
+	Rating, 
+	Site, 
+	OwnerId 			As AccountOwnerId, 
+	CreatedDate 			As AccountCreatedDate, 
+	LastModifiedDate 	As AccountLastModifiedDate, 
+	LastActivityDate		As AccountLastActivityDate	, 
+	Total_Sales__c;
+SQL SELECT *
+FROM Account;
+
+
+//SFRaw:
+//LOAD  
+//	Id 					As AccountId, 
+//	IsDeleted 			As AccountIsDeleted, 
+//	Name				As AccountName, 
+//	Type 				As AccountType, 
+//	BillingStreet, 
+//	BillingCity, 
+//	BillingPostalCode, 
+//	BillingCountry, 
+//	BillingStateCode, 
+//	BillingCountryCode, 
+//	ShippingStreet, 
+//	ShippingCity, 
+//	ShippingState, 
+//	ShippingPostalCode, 
+//	ShippingStateCode, 
+//	ShippingCountryCode, 
+//	Phone 				As AccountPhone, 
+//	Fax 					As AccountFax, 
+//	if(AccountNumber='' or(AccountNumber=' '),Null(),AccountNumber)		As Customer, 
+//	Website, 
+//	Industry, 
+//	Description 			As AccountDescription, 
+//	Rating, 
+//	Site, 
+//	OwnerId 			As AccountOwnerId, 
+//	CreatedDate 			As AccountCreatedDate, 
+//	LastModifiedDate 	As AccountLastModifiedDate, 
+//	LastActivityDate		As AccountLastActivityDate	, 
+//	Total_Sales__c
+//	;
+//SELECT Id						, IsDeleted								, MasterRecordId, 
+//	Name						, Type									, ParentId, 
+//	BillingStreet					, BillingCity								, BillingState, 
+//	BillingPostalCode			, BillingCountry							, BillingStateCode, 
+//	BillingCountryCode			, BillingLatitude							, BillingLongitude, 
+//	ShippingStreet				, ShippingCity							, ShippingState, 
+//	ShippingPostalCode			, ShippingCountry							, ShippingStateCode, 
+//	ShippingCountryCode			, ShippingLatitude						, ShippingLongitude, 
+//	Phone						, Fax									, AccountNumber, 
+//	Website						, Sic										, Industry, 
+//	AnnualRevenue				, NumberOfEmployees					, Ownership, 
+//	TickerSymbol					, Description								, Rating, 
+//	Site							, CurrencyIsoCode							, OwnerId, 
+//	CreatedDate					, CreatedById								, LastModifiedDate, 
+//	LastModifiedById				, SystemModstamp						, LastActivityDate, 
+//	LastViewedDate				, LastReferencedDate						, Jigsaw, 
+//	JigsawCompanyId			, AccountSource							, SicDesc, 
+//	Total_Sales__c				, Agreements__c							, Agreement_Expiry_Date__c, 
+//	LID__LinkedIn_Company_Id__c	, Region__c								, Sample_s__c, 
+//	Contacts_Verified__c			, PPPS_Account__c							, mh_Gold_Sheet_Created_Date__c, 
+//	iv__InsideView_Created__c	, iv__InsideView_Date_Last_Updated__c	, iv__InsideView_User_Last_Updated__c, 
+//	Application_Area__c			, zisf__zoom_id__c						, Business_Stream__c, 
+//	zisf__zoom_lastupdated__c 
+//FROM Account;
+
+
+
+
+
+OpsRaw:
+LOAD Id as  OpportunityId, 
+	IsDeleted as  OpportunityIsDeleted, 
+	AccountId, 
+	Name as  OpportunityName, 
+	Description as  OpportunityDescription, 
+	StageName, 
+	Amount, 
+	ExpectedRevenue, 
+	TotalOpportunityQuantity, 
+	CloseDate, 
+	Type, 
+	NextStep, 
+	LeadSource, 
+	IsClosed, 
+	IsWon, 
+	ForecastCategory, 
+	ForecastCategoryName, 
+	CampaignId, 
+	HasOpportunityLineItem
+	, FiscalQuarter			
+	, FiscalYear
+	, CurrencyIsoCode as Op_Currency
+	, Probability/100 as Probability	;
+
+SELECT *
+FROM Opportunity;
+
+Id,
+    IsDeleted,
+    AccountId,
+    Name,
+    Description,
+    StageName,
+    Amount,
+    Probability,
+    ExpectedRevenue,
+    TotalOpportunityQuantity,
+    CloseDate,
+    Type,
+    NextStep,
+    LeadSource,
+    IsClosed,
+    IsWon,
+    ForecastCategory,
+    ForecastCategoryName,
+    CurrencyIsoCode,
+    CampaignId,
+    HasOpportunityLineItem,
+    Pricebook2Id,
+    OwnerId,
+    CreatedDate,
+    CreatedById,
+    LastModifiedDate,
+    LastModifiedById,
+    SystemModstamp,
+    LastActivityDate,
+    FiscalQuarter,
+    FiscalYear,
+    Fiscal,
+    SyncedQuoteId,
+    Development_Project__c,
+    Sample_s_Sent__c,
+    Shipping_Date__c,
+    Production_Scheduled__c,
+    Comments__c,
+    PushCount__c,
+    DB_Competitor__c;
+
+
+QuotesRaw:
+LOAD
+Id as QuoteId, 
+	IsDeleted as QuoteIsDeleted, 
+	Name as QuoteName, 
+	CurrencyIsoCode, 
+	Date(CreatedDate) as QuoteCreatedDate, 
+	LastModifiedDate, 
+	OpportunityId, 
+	Pricebook2Id, 
+	ContactId, 
+	QuoteNumber, 
+	ShippingHandling, 
+	Tax, 
+	Status, 
+	ExpirationDate, 
+	Description  as QuoteDescription, 
+	Subtotal as QuoteSubtotal, 
+	TotalPrice as QuoteTotalPrice, 
+	LineItemCount, 
+	Discount as QuoteDiscount, 
+	GrandTotal as QuoteGrandTotal
+	,date(MonthStart(Date(CreatedDate)),'MMM YY') as QuoteMonth
+	;
+SELECT *
+FROM Quote;
+
+
+STORE * from SFRaw 		into SalesForceAccounts.qvd (qvd);
+STORE * from OpsRaw 	into Opportunity.qvd (qvd);
+STORE * from QuotesRaw 	into Quotes.qvd (qvd);
+
+DROP Table SFRaw;
+DROP Table OpsRaw;
+DROP Table QuotesRaw;
+
+ENDIF
+///$tab QVDLoad
+SalesForceAccounts:
+LOAD *
+FROM SalesForceAccounts.qvd (qvd);
+
+Opportunities:
+LOAD *
+	,FiscalYear&'-Q'&FiscalQuarter as SfQuarter
+	,date(MonthStart(CloseDate),'MMM YYYY') as CloseMonth
+	,if(IsWon=0 and(IsClosed=1),'Lost',if(IsWon=1,'Won','Open')) as OppWonLost
+FROM Opportunity.qvd (qvd)
+where RowNo()<=1000; //Limit to only 100 opps
+
+Quotes:
+LOAD *
+FROM
+Quotes.qvd
+(qvd)
+where Exists(OpportunityId);
+
+
+
+///$tab DateCalendar
+let vLastQuarter=if(Ceil(Month(Today())/3)=1,Year(Today())-1,Year(Today()))&'-Q'&if(Ceil(Month(Today())/3)=1,4,Ceil(Month(Today())/3)-1);
+let vThisQuarter=Year(Today())&'-'&'Q' & Ceil (month(Today())/3);
+let vNextQuarter=if(Ceil(Month(Today())/3)=4,Year(Today())+1,Year(Today()))&'-Q'&if(Ceil(Month(Today())/3)=4,1,Ceil(Month(Today())/3)+1);
+let vThreeYearQuarterStart=(Year(Today())-3)&'-'&'Q' & Ceil (month(Today())/3);
+
+Quarters:
+LOAD  distinct SfQuarter
+	, if(SfQuarter='$(vLastQuarter)',1,0) as LastQuarter
+	, if(SfQuarter<='$(vLastQuarter)',1,0) as UpToLastQuarter
+//	, '$(vLastQuarter)' as LQ
+resident Opportunities;
+
+Left Join(Quarters)
+LOAD  SfQuarter
+	, if(SfQuarter='$(vThisQuarter)',1,0) as ThisQuarter
+	, if(SfQuarter<='$(vThisQuarter)',1,0) as UpToThisQuarter
+//	, '$(vThisQuarter)' as TQ
+resident Quarters;
+
+Left Join(Quarters)
+LOAD  SfQuarter
+	, if(SfQuarter='$(vNextQuarter)',1,0) as NextQuarter
+	, if(SfQuarter<='$(vNextQuarter)',1,0) as UpToNextQuarter
+//	, '$(vNextQuarter)' as NQ
+resident Quarters;
+
+Left Join(Quarters)
+LOAD  SfQuarter
+	, if(SfQuarter>'$(vThreeYearQuarterStart)',1,0) as ThreeYears
+resident Quarters;
+
+Left Join(Quarters)
+LOAD  SfQuarter
+	, LastQuarter+ThisQuarter+NextQuarter as ThreeQuarters
+resident Quarters;
+
+LET vLastQuarter	=	Null();
+let vThisQuarter	=	Null();
+let vNextQuarter	=	Null();
+let vThreeYearQuarterStart= Null();
+*/
+///$tab End
+LET vLoadEnd = Now();
+LET vLoadTime = vLoadEnd-vLoadStart;
+//LET vSalesForceLoad='Local';
+LET  vLoadType='Local User';
+LET vSfPassword='';

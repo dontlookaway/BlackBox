@@ -1,0 +1,1 @@
+OLEDB CONNECT TO [Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=BlackBox;Data Source=(local);Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=BORN;Use Encryption for Data=False;Tag with column collation when possible=False];

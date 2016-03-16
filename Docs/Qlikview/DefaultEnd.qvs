@@ -1,0 +1,2 @@
+LET vLoadEnd = Now();
+LET  vLoadTime = Timestamp((vLoadEnd-vLoadStart), 'hh:mm:ss');

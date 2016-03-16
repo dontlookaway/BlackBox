@@ -1,0 +1,98 @@
+//Declare all variables
+Let vLoadColour1 = vLoadColour1;
+Let vLoadColour2 = vLoadColour2;
+Let vLoadColour3 = vLoadColour3;
+Let vLoadColour4 = vLoadColour4;
+Let vLoadColour5 = vLoadColour5;
+Let vLoadColour6 = vLoadColour6;
+Let vLoadColour7 = vLoadColour7;
+Let vLoadColour8 = vLoadColour8;
+Let vLoadColour9 = vLoadColour9;
+Let vLoadColour10 = vLoadColour10;
+Let vLoadColour11 = vLoadColour11;
+Let vLoadColour12 = vLoadColour12;
+Let vLoadColour13 = vLoadColour13;
+Let vLoadColour14 = vLoadColour14;
+Let vLoadColour15 = vLoadColour15;
+Let vLoadColour16 = vLoadColour16;
+Let vLoadColour17 = vLoadColour17;
+Let vLoadColour18 = vLoadColour18;
+
+//When colours are blank then set to defaults
+if vLoadColour1='' or IsNull(vLoadColour1) then
+LET vLoadColour1 = '252,115,98';
+ENDIF
+if vLoadColour2='' or IsNull(vLoadColour2) then
+LET vLoadColour2 = '141,170,203';
+ENDIF
+if vLoadColour3='' or IsNull(vLoadColour3) then
+LET vLoadColour3 = '187,216,84';
+ENDIF
+if vLoadColour4='' or IsNull(vLoadColour4) then
+LET vLoadColour4 = '164,99,168';
+ENDIF
+if vLoadColour5='' or IsNull(vLoadColour5) then
+LET vLoadColour5 = '102,194,150';
+ENDIF
+if vLoadColour6='' or IsNull(vLoadColour6) then
+LET vLoadColour6 = '180,180,180';
+ENDIF
+if vLoadColour7='' or IsNull(vLoadColour7) then
+LET vLoadColour7 = '231,138,210';
+ENDIF
+if vLoadColour8='' or IsNull(vLoadColour8) then
+LET vLoadColour8 = '229,182,142';
+ENDIF
+if vLoadColour9='' or IsNull(vLoadColour9) then
+LET vLoadColour9 = '166,216,277';
+ENDIF
+if vLoadColour10='' or IsNull(vLoadColour10) then
+LET vLoadColour10 = '171,233,188';
+ENDIF
+if vLoadColour11='' or IsNull(vLoadColour11) then
+LET vLoadColour11 = '27,125,256';
+ENDIF
+if vLoadColour12='' or IsNull(vLoadColour12) then
+LET vLoadColour12 = '178,36,36';
+ENDIF
+if vLoadColour13='' or IsNull(vLoadColour13) then
+LET vLoadColour13 = '196,214,170';
+ENDIF
+if vLoadColour14='' or IsNull(vLoadColour14) then
+LET vLoadColour14 = '109,180,40';
+ENDIF
+if vLoadColour15='' or IsNull(vLoadColour15) then
+LET vLoadColour15 = '120,120,120';
+ENDIF
+if vLoadColour16='' or IsNull(vLoadColour16) then
+LET vLoadColour16 = '180,140,100';
+ENDIF
+if vLoadColour17='' or IsNull(vLoadColour17) then
+LET vLoadColour17 = '94,74,132';
+ENDIF
+if vLoadColour18='' or IsNull(vLoadColour18) then
+LET vLoadColour18 = '175,150,10';
+ENDIF
+
+ColourTest:
+LOAD * INLINE [
+    ColourTestAmount, ColourTestDimension, ColourTestDimensionGroup
+    4, 1, 1
+    1, 2, 1
+    3, 3, 1
+    1, 4, 1
+    2, 5, 1
+    5, 6, 1
+    1, 7, 1
+    3, 8, 1
+    1, 9, 1
+    10, 10, 1
+    1, 11, 1
+    7, 12, 1
+    2, 13, 1
+    1, 14, 1
+    2, 15, 1
+    1, 16, 1
+    1, 17, 1
+    1, 18, 1
+];
