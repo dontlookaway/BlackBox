@@ -61,6 +61,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TrnQuantity] Numeric(20 , 8)
             , [TrnValue] Numeric(20 , 8)
             , [TrnType] Char(1)
+            , [JobPurchOrder] Varchar(20)
             );
         Create Table [#InvMaster]
             (
@@ -155,6 +156,7 @@ Stored procedure set out to query multiple databases with the same information a
 		        , [TrnQuantity]
 		        , [TrnValue]
 				, TrnType
+				, [JobPurchOrder]
 		        )
 				SELECT @DBCode
 					 , [LT].[Lot]
@@ -171,7 +173,8 @@ Stored procedure set out to query multiple databases with the same information a
              , [LT].[UnitCost]
              , [LT].[TrnQuantity]
              , [LT].[TrnValue]
-			 , [LT].TrnType FROM [LotTransactions] As [LT]
+			 , [LT].TrnType 
+			 , [LT].[JobPurchOrder] FROM [LotTransactions] As [LT]
 			End
 	End';
         Declare @SQLInvMaster Varchar(Max) = '
@@ -257,7 +260,7 @@ Stored procedure set out to query multiple databases with the same information a
                 )
                 Select Distinct
                         [LT].[Lot]
-                      , [LT].[Reference]
+                      , [LT].[JobPurchOrder]
                 From    [#LotTransactions] As [LT]
                 Where   [LT].[TrnType] = 'R'
                         And [LT].[Reference] <> '';
@@ -309,7 +312,10 @@ Stored procedure set out to query multiple databases with the same information a
                       , [LT].[UnitCost]
                       , [LT].[TrnQuantity]
                       , [LT].[TrnValue]
-                      , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob])=1 Then Convert(Varchar(30),Convert(Int,[LMJ].[MasterJob])) Else [LMJ].[MasterJob] End
+                      , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob]) = 1
+                                           Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
+                                           Else [LMJ].[MasterJob]
+                                      End
                 From    [#InvInspect] As [II]
                         Full Outer Join [#LotTransactions] As [LT] On [LT].[Lot] = [II].[Lot]
                                                               And [LT].[StockCode] = [II].[StockCode]
