@@ -1,0 +1,1797 @@
+<ExportReportConfiguration NodeName="gl_journal_report_alt" NodeText="gl_journal_report_alt">
+  <ControlFile Name="gl_journal_report_alt">
+    <ReportControl SaveValue="ctl_gl_journal_report_alt_system">
+      <Control BO="genqjr" SchemaIn="gl_journal_report" SchemaOut="gl_journal_report_out" XmlFile="gl_journal_report_out" Definition=".xml" SubReports="" Type="S" Template="tem_gl_journal_report_alt" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_gl_journal_report_alt.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_gl_journal_report_alt">
+      <Form FormSize="{Width=572, Height=669}" TabSize="{Width=572, Height=669}">
+        <TabPage Text="Report Options" Name="f5b721f4-6d3b-4125-9b16-9d7fb691fefd">
+          <GroupBox Name="grpType" Text="Journal type selection" Size="{Width=240, Height=102}" Location="{X=268,Y=16}" Tag="R" TabIndex="5">
+            <RadioButton Name="rbType0" Text="N - Normal" Size="{Width=156, Height=24}" Location="{X=8,Y=15}" Checked="True" TabIndex="2" />
+            <RadioButton Name="rbType1" Text="S - Standard" Size="{Width=143, Height=24}" Location="{X=8,Y=40}" Checked="False" TabIndex="3" />
+            <RadioButton Name="rbType2" Text="R - Recurring" Size="{Width=165, Height=24}" Location="{X=8,Y=65}" Checked="False" TabIndex="4" />
+          </GroupBox>
+          <GroupBox Name="938ae868-91b1-4091-8129-941929a773fc" Text="Standard journal selection" Size="{Width=240, Height=122}" Location="{X=268,Y=127}" Tag="S" TabIndex="6">
+            <GroupBox Name="grpStandardJournalSelection" Text="" Size="{Width=156, Height=34}" Location="{X=6,Y=13}" Tag="D" TabIndex="2">
+              <Label Name="lblcboStandardJournalSelection" Text="Journal:" Size="{Width=53, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboStandardJournalSelection" Size="{Width=100, Height=21}" Location="{X=67,Y=13}" TabIndex="1" SelectedIndex="0" Items="A - All;R - Range;" />
+            </GroupBox>
+            <GroupBox Name="grpStandardFrom" Text="" Size="{Width=226, Height=34}" Location="{X=6,Y=46}" Tag="D" TabIndex="3">
+              <Label Name="f3e84cb9-7cab-4bc9-9e3c-9ec5ae4d88ee" Text="From:" Size="{Width=42, Height=15}" Location="{X=8,Y=16}" Tag="R" />
+              <TextBox Name="txtSStandardFrom1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=10}" TabIndex="2" />
+              <Button Name="brwSStandardFrom[GenStdJnlCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=8}" TabIndex="3" ImageIndex="0" />
+            </GroupBox>
+            <GroupBox Name="grpStandardTo" Text="" Size="{Width=226, Height=34}" Location="{X=6,Y=80}" Tag="D" TabIndex="4">
+              <Label Name="0abe4cdc-9692-41e7-8057-605e0f8629a2" Text="To:" Size="{Width=42, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <TextBox Name="txtSStandardTo1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=12}" TabIndex="4" />
+              <Button Name="brwSStandardTo[GenStdJnlCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=10}" TabIndex="5" ImageIndex="0" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="754b7032-6cb8-4c97-83e2-89d46f18d652" Text="Recurring journal selection" Size="{Width=240, Height=122}" Location="{X=8,Y=255}" Tag="S" TabIndex="3">
+            <GroupBox Name="grpRecurringJournalSelection" Text="" Size="{Width=167, Height=36}" Location="{X=6,Y=13}" Tag="D" TabIndex="5">
+              <Label Name="lblcboRecurringJournalSelection" Text="Journal:" Size="{Width=49, Height=15}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboRecurringJournalSelection" Size="{Width=100, Height=21}" Location="{X=67,Y=13}" TabIndex="1" SelectedIndex="0" Items="A - All;R - Range;" />
+            </GroupBox>
+            <GroupBox Name="grpRecurringFrom" Text="" Size="{Width=223, Height=32}" Location="{X=6,Y=46}" Tag="D" TabIndex="6">
+              <Label Name="79225ac5-e240-4118-be9c-e73576496690" Text="From:" Size="{Width=48, Height=18}" Location="{X=8,Y=13}" Tag="R" />
+              <TextBox Name="txtSRecurringFrom1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=8}" TabIndex="2" />
+              <Button Name="brwSRecurringFrom[GenRecJnlCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=8}" TabIndex="3" ImageIndex="0" />
+            </GroupBox>
+            <GroupBox Name="grpRecurringTo" Text="" Size="{Width=223, Height=35}" Location="{X=6,Y=80}" Tag="D" TabIndex="7">
+              <Label Name="99080f2f-842f-441c-90e8-22e216ef5533" Text="To:" Size="{Width=46, Height=18}" Location="{X=8,Y=14}" Tag="R" />
+              <TextBox Name="txtSRecurringTo1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=11}" TabIndex="4" />
+              <Button Name="brwSRecurringTo[GenRecJnlCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=8}" TabIndex="5" ImageIndex="0" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="5364df10-b647-4b1a-ac66-acb9af3ad97b" Text="Normal journal selection" Size="{Width=240, Height=122}" Location="{X=8,Y=127}" Tag="S" TabIndex="2">
+            <GroupBox Name="grpJournalNumberSelection" Text="" Size="{Width=167, Height=36}" Location="{X=6,Y=13}" Tag="D" TabIndex="8">
+              <Label Name="lblcboJournalNumberSelection" Text="Journal:" Size="{Width=49, Height=15}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboJournalNumberSelection" Size="{Width=100, Height=21}" Location="{X=67,Y=11}" TabIndex="1" SelectedIndex="0" Items="A - All;R - Range;" />
+            </GroupBox>
+            <GroupBox Name="grpFromJournalNumber" Text="" Size="{Width=223, Height=35}" Location="{X=6,Y=46}" Tag="D" TabIndex="9">
+              <Label Name="dc8e8ea7-0a7b-4e5d-9fb2-0b3116614653" Text="From:" Size="{Width=42, Height=15}" Location="{X=8,Y=13}" Tag="R" />
+              <TextBox Name="txtSFromJournalNumber1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=10}" TabIndex="2" />
+              <Button Name="brwSFromJournalNumber[GenJournalCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=8}" TabIndex="3" ImageIndex="0" />
+            </GroupBox>
+            <GroupBox Name="grpToJournalNumber" Text="" Size="{Width=223, Height=31}" Location="{X=6,Y=82}" Tag="D" TabIndex="10">
+              <Label Name="b48ddb84-1e96-4985-887c-8a35317aed6f" Text="To:" Size="{Width=42, Height=18}" Location="{X=8,Y=13}" Tag="R" />
+              <TextBox Name="txtSToJournalNumber1" Text="" Size="{Width=100, Height=21}" Location="{X=67,Y=10}" TabIndex="4" />
+              <Button Name="brwSToJournalNumber[GenJournalCtl]" Text="" Size="{Width=28, Height=24}" Location="{X=175,Y=8}" TabIndex="5" ImageIndex="0" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="grpRecurringAuthJournals" Text="Recurring authorized journals selection" Size="{Width=240, Height=122}" Location="{X=268,Y=255}" Tag="R" TabIndex="7">
+            <RadioButton Name="rbRecurringAuthJournals0" Text="B - Both" Size="{Width=165, Height=24}" Location="{X=8,Y=23}" Checked="True" TabIndex="2" />
+            <RadioButton Name="rbRecurringAuthJournals1" Text="I - Only authorized journals" Size="{Width=178, Height=24}" Location="{X=8,Y=51}" Checked="False" TabIndex="3" />
+            <RadioButton Name="rbRecurringAuthJournals2" Text="E - Only unauthorized journals" Size="{Width=178, Height=24}" Location="{X=8,Y=80}" Checked="False" TabIndex="4" />
+          </GroupBox>
+          <GroupBox Name="grpReprint" Text="Print options" Size="{Width=240, Height=102}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <RadioButton Name="rbReprint0" Text="Y - Printed and unprinted journals" Size="{Width=192, Height=24}" Location="{X=8,Y=15}" Checked="True" TabIndex="2" />
+            <RadioButton Name="rbReprint1" Text="N - Unprinted journals" Size="{Width=179, Height=24}" Location="{X=8,Y=65}" Checked="False" TabIndex="3" />
+            <RadioButton Name="rbReprint2" Text="O - Printed journals" Size="{Width=179, Height=24}" Location="{X=8,Y=40}" Checked="False" TabIndex="4" />
+          </GroupBox>
+          <GroupBox Name="b38b2d05-dc07-42fc-8636-60c3e3d65826" Text="" Size="{Width=240, Height=37}" Location="{X=8,Y=381}" Tag="S" TabIndex="4">
+            <CheckBox Name="chkNewPagePerJournal" Text="New page per journal" Size="{Width=227, Height=17}" Location="{X=7,Y=15}" Checked="False" TabIndex="6" />
+          </GroupBox>
+          <GroupBox Name="199c7415-4f98-4868-a962-ef7fc66778de" Text="" Size="{Width=240, Height=37}" Location="{X=268,Y=381}" Tag="S" TabIndex="8">
+            <CheckBox Name="chkIncludeTemplateDetails" Text="Include template details" Size="{Width=203, Height=17}" Location="{X=6,Y=15}" Checked="False" TabIndex="9" />
+          </GroupBox>
+          <CheckBox Name="chkUpdatePrintedFlag" Text="UpdatePrintedFlag" Size="{Width=114, Height=17}" Location="{X=276,Y=396}" Checked="False" TabIndex="7" />
+        </TabPage>
+        <TabPage Text="Normal Journal Options" Name="ca13784e-2480-4a1b-88b8-68247961161f">
+          <GroupBox Name="c159846a-6cae-48a1-b33f-3d04cb82ed83" Text="Ledger year selection" Size="{Width=206, Height=58}" Location="{X=8,Y=16}" Tag="S" TabIndex="0">
+            <GroupBox Name="grpYear" Text="" Size="{Width=181, Height=35}" Location="{X=6,Y=17}" Tag="D" TabIndex="1">
+              <Label Name="5fefd5d3-471d-47f9-97ff-81e577569257" Text="Year:" Size="{Width=38, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <TextBox Name="txtSYear1" Text="" Size="{Width=100, Height=21}" Location="{X=52,Y=13}" TabIndex="1" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="11c2aff0-e6fe-44d9-b19b-47551e557aa5" Text="Period selection" Size="{Width=206, Height=106}" Location="{X=8,Y=100}" Tag="S" TabIndex="1">
+            <GroupBox Name="grpPeriodSelection" Text="" Size="{Width=181, Height=36}" Location="{X=6,Y=17}" Tag="D" TabIndex="3">
+              <Label Name="lblcboPeriodSelection" Text="Show:" Size="{Width=42, Height=18}" Location="{X=8,Y=13}" Tag="R" />
+              <ComboBox Name="cboPeriodSelection" Size="{Width=100, Height=21}" Location="{X=52,Y=10}" TabIndex="1" SelectedIndex="0" Items="A - All;S - Single;" />
+            </GroupBox>
+            <GroupBox Name="grpLedgerPeriod" Text="" Size="{Width=181, Height=42}" Location="{X=6,Y=53}" Tag="D" TabIndex="6">
+              <Label Name="lblcboLedgerPeriod" Text="Period:" Size="{Width=42, Height=18}" Location="{X=8,Y=16}" Tag="R" />
+              <ComboBox Name="cboLedgerPeriod" Size="{Width=100, Height=21}" Location="{X=52,Y=13}" TabIndex="1" SelectedIndex="0" Items="01;02;03;04;05;06;07;08;09;10;11;12;13;14;15;" />
+            </GroupBox>
+          </GroupBox>
+          <GroupBox Name="grpAuthorizedJournals" Text="Authorized journals" Size="{Width=249, Height=102}" Location="{X=249,Y=233}" Tag="R" TabIndex="4">
+            <RadioButton Name="rbAuthorizedJournals0" Text="B - Both" Size="{Width=104, Height=24}" Location="{X=8,Y=15}" Checked="True" TabIndex="2" />
+            <RadioButton Name="rbAuthorizedJournals1" Text="I - Only authorized journals" Size="{Width=173, Height=24}" Location="{X=8,Y=40}" Checked="False" TabIndex="3" />
+            <RadioButton Name="rbAuthorizedJournals2" Text="E - Only unauthorized journals" Size="{Width=173, Height=24}" Location="{X=8,Y=65}" Checked="False" TabIndex="4" />
+          </GroupBox>
+          <GroupBox Name="be1100f3-a29e-4092-a6e8-2cb3aa603a2f" Text="Journal type selection" Size="{Width=249, Height=213}" Location="{X=249,Y=14}" Tag="S" TabIndex="3">
+            <CheckBox Name="chkPrintNormalJournals" Text="Normal journals" Size="{Width=98, Height=17}" Location="{X=6,Y=23}" Checked="True" TabIndex="1" />
+            <CheckBox Name="chkPrintProvisionalJournals" Text="Provisional journals" Size="{Width=116, Height=17}" Location="{X=6,Y=46}" Checked="True" TabIndex="2" />
+            <CheckBox Name="chkPrintUserDefinedJournals" Text="User defined journals" Size="{Width=125, Height=17}" Location="{X=6,Y=69}" Checked="True" TabIndex="3" />
+            <CheckBox Name="chkPrintInterCompanyJournals" Text="Inter-company journals" Size="{Width=132, Height=17}" Location="{X=6,Y=93}" Checked="True" TabIndex="4" />
+            <CheckBox Name="chkPrintStatisticalJournals" Text="Statistical journals" Size="{Width=110, Height=17}" Location="{X=6,Y=164}" Checked="True" TabIndex="7" />
+            <CheckBox Name="chkPrintAlternateCurrencyJournals" Text="Alternate currency journals" Size="{Width=170, Height=17}" Location="{X=6,Y=187}" Checked="True" TabIndex="8" />
+            <CheckBox Name="chkPrintAuditorsAdjustments" Text="Auditors adjustments" Size="{Width=123, Height=17}" Location="{X=6,Y=141}" Checked="True" TabIndex="6" />
+            <CheckBox Name="chkPrintPeriodEndAdjustments" Text="Period end adjustments" Size="{Width=136, Height=17}" Location="{X=6,Y=118}" Checked="True" TabIndex="5" />
+          </GroupBox>
+          <GroupBox Name="68017153-b96f-4fc1-8d4d-53de61d995ce" Text="Journal status selection" Size="{Width=206, Height=109}" Location="{X=8,Y=226}" Tag="S" TabIndex="2">
+            <CheckBox Name="chkPrintJournalsNotPosted" Text="Journals not posted" Size="{Width=194, Height=17}" Location="{X=6,Y=19}" Checked="True" TabIndex="8" />
+            <CheckBox Name="chkPrintJournalsOnHold" Text="Journals on hold" Size="{Width=194, Height=17}" Location="{X=6,Y=42}" Checked="True" TabIndex="8" />
+            <CheckBox Name="chkPrintCancelledJournals" Text="Cancelled journals" Size="{Width=194, Height=17}" Location="{X=6,Y=65}" Checked="True" TabIndex="8" />
+            <CheckBox Name="chkPrintPostedJournals" Text="Posted journals" Size="{Width=194, Height=17}" Location="{X=6,Y=86}" Checked="True" TabIndex="8" />
+          </GroupBox>
+          <GroupBox Name="4e53f606-d176-4d9b-8215-e2fae257ecd8" Text="Sub module journals" Size="{Width=490, Height=159}" Location="{X=8,Y=341}" Tag="S" TabIndex="5">
+            <CheckBox Name="chkPrintApInvoiceJournals" Text="AP invoice journals" Size="{Width=116, Height=17}" Location="{X=6,Y=20}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintApPaymentJournals" Text="AP payment journals" Size="{Width=125, Height=17}" Location="{X=6,Y=43}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintArInvoiceJournals" Text="AR invoice journals" Size="{Width=117, Height=17}" Location="{X=6,Y=66}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintArCashJournals" Text="AR cash journals" Size="{Width=106, Height=17}" Location="{X=6,Y=89}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintAssetJournals" Text="Asset journals" Size="{Width=94, Height=17}" Location="{X=6,Y=112}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintCashbookJournals" Text="Cash book journals" Size="{Width=166, Height=17}" Location="{X=6,Y=135}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintWipPartBillingJournals" Text="WIP part billing journals" Size="{Width=139, Height=17}" Location="{X=247,Y=112}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintWipLaborJournals" Text="WIP labor journals" Size="{Width=114, Height=17}" Location="{X=247,Y=89}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintTpmJournals" Text="TPM journals" Size="{Width=87, Height=17}" Location="{X=247,Y=66}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintInventoryJournals" Text="Inventory journals" Size="{Width=115, Height=17}" Location="{X=247,Y=43}" Checked="False" TabIndex="6" />
+            <CheckBox Name="chkPrintGrnJournals" Text="GRN journals" Size="{Width=88, Height=17}" Location="{X=247,Y=20}" Checked="False" TabIndex="6" />
+          </GroupBox>
+        </TabPage>
+        <TabPage Text="Output Options" Name="61f045d1-0351-4330-834c-2adf1b59c304">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+      <Events>
+        <Declarations><![CDATA[//Removing any of this code may result in unpredictable results
+private TabControl tabControl = null;
+private String[] SystemVariablesArray = null;
+private Control[] control = null;
+private RadioButton rbType0 = null;
+private GroupBox GroupBox___Standard_journal_selection = null;
+private GroupBox GroupBox___Recurring_journal_selection = null;
+private GroupBox grpRecurringAuthJournals = null;
+private RadioButton rbType1 = null;
+private GroupBox GroupBox___Normal_journal_selection = null;
+private RadioButton rbType2 = null;
+private GroupBox GroupBox___Ledge_year_selection = null;
+private GroupBox GroupBox___Period_selection = null;
+private GroupBox grpAuthorizedJournals = null;
+private GroupBox GroupBox___Journal_type_selection = null;
+private GroupBox GroupBox___Journal_status_selection = null;
+private TextBox txtSFromJournalNumber1 = null;
+private Button Button___Blank = null;
+private Label Label___From = null;
+private ComboBox cboJournalNumberSelection = null;
+private ComboBox cboRecurringJournalSelection = null;
+private TextBox txtSRecurringFrom1 = null;
+private Button brwSRecurringFromGenRecJnlCtl = null;
+private TextBox txtSToJournalNumber1 = null;
+private Button brwSToJournalNumberGenJournalCtl = null;
+private TextBox txtSRecurringTo1 = null;
+private Button brwSRecurringToGenRecJnlCtl = null;
+private ComboBox cboStandardJournalSelection = null;
+private TextBox txtSStandardFrom1 = null;
+private Button brwSStandardFromGenStdJnlCtl = null;
+private TextBox txtSStandardTo1 = null;
+private Button brwSStandardToGenStdJnlCtl = null;
+private ComboBox cboPeriodSelection = null;
+private ComboBox cboLedgerPeriod = null;
+private TextBox txtSYear1 = null;
+private String GenCurrentYear = null;
+private String GenCurrentMonth = null;
+private CheckBox chkPrintNormalJournals = null;
+private CheckBox chkPrintProvisionalJournals = null;
+private CheckBox chkPrintUserDefinedJournals = null;
+private CheckBox chkPrintInterCompanyJournals = null;
+private CheckBox chkPrintAlternateCurrencyJournals = null;
+private CheckBox chkPrintStatisticalJournals = null;
+private CheckBox chkPrintAuditorsAdjustments = null;
+private CheckBox chkPrintPeriodEndAdjustments = null;
+private CheckBox chkUpdatePrintedFlag = null;
+private String SelectAll = null;
+private String DeselectAll = null;
+private GroupBox GroupBox___Sub_module_journals = null;
+private CheckBox chkPrintApInvoiceJournals = null;
+private CheckBox chkPrintApPaymentJournals = null;
+private CheckBox chkPrintArInvoiceJournals = null;
+private CheckBox chkPrintArCashJournals = null;
+private CheckBox chkPrintAssetJournals = null;
+private CheckBox chkPrintCashbookJournals = null;
+private CheckBox chkPrintWipPartBillingJournals = null;
+private CheckBox chkPrintWipLaborJournals = null;
+private CheckBox chkPrintTpmJournals = null;
+private CheckBox chkPrintInventoryJournals = null;
+private CheckBox chkPrintGrnJournals = null;
+
+//Constructor for class DO NOT REMOVE
+public void SetTabControl(ref TabControl ctlTabControl, ref String[] SystemVariables)
+{
+  tabControl = ctlTabControl;
+  SystemVariablesArray = SystemVariables;
+
+  //Declare variable for - rbType0
+  control = tabControl.Controls.Find("rbType0",true);
+  rbType0 = (RadioButton)control[0];
+
+  //Declare variable for - GroupBox___Standard_journal_selection
+  control = tabControl.Controls.Find("938ae868-91b1-4091-8129-941929a773fc",true);
+  GroupBox___Standard_journal_selection = (GroupBox)control[0];
+
+  //Declare variable for - GroupBox___Recurring_journal_selection
+  control = tabControl.Controls.Find("754b7032-6cb8-4c97-83e2-89d46f18d652",true);
+  GroupBox___Recurring_journal_selection = (GroupBox)control[0];
+
+  //Declare variable for - grpRecurringAuthJournals
+  control = tabControl.Controls.Find("grpRecurringAuthJournals",true);
+  grpRecurringAuthJournals = (GroupBox)control[0];
+
+  //Declare variable for - rbType1
+  control = tabControl.Controls.Find("rbType1",true);
+  rbType1 = (RadioButton)control[0];
+
+  //Declare variable for - GroupBox___Normal_journal_selection
+  control = tabControl.Controls.Find("5364df10-b647-4b1a-ac66-acb9af3ad97b",true);
+  GroupBox___Normal_journal_selection = (GroupBox)control[0];
+
+  //Declare variable for - rbType2
+  control = tabControl.Controls.Find("rbType2",true);
+  rbType2 = (RadioButton)control[0];
+
+  //Declare variable for - GroupBox___Ledge_year_selection
+  control = tabControl.Controls.Find("c159846a-6cae-48a1-b33f-3d04cb82ed83",true);
+  GroupBox___Ledge_year_selection = (GroupBox)control[0];
+
+  //Declare variable for - GroupBox___Period_selection
+  control = tabControl.Controls.Find("11c2aff0-e6fe-44d9-b19b-47551e557aa5",true);
+  GroupBox___Period_selection = (GroupBox)control[0];
+
+  //Declare variable for - grpAuthorizedJournals
+  control = tabControl.Controls.Find("grpAuthorizedJournals",true);
+  grpAuthorizedJournals = (GroupBox)control[0];
+
+  //Declare variable for - GroupBox___Journal_type_selection
+  control = tabControl.Controls.Find("be1100f3-a29e-4092-a6e8-2cb3aa603a2f",true);
+  GroupBox___Journal_type_selection = (GroupBox)control[0];
+
+  //Declare variable for - GroupBox___Journal_status_selection
+  control = tabControl.Controls.Find("68017153-b96f-4fc1-8d4d-53de61d995ce",true);
+  GroupBox___Journal_status_selection = (GroupBox)control[0];
+
+  //Declare variable for - txtSFromJournalNumber1
+  control = tabControl.Controls.Find("txtSFromJournalNumber1",true);
+  txtSFromJournalNumber1 = (TextBox)control[0];
+
+  //Declare variable for - Button___Blank
+  control = tabControl.Controls.Find("brwSFromJournalNumber[GenJournalCtl]",true);
+  Button___Blank = (Button)control[0];
+
+  //Declare variable for - Label___From
+  control = tabControl.Controls.Find("dc8e8ea7-0a7b-4e5d-9fb2-0b3116614653",true);
+  Label___From = (Label)control[0];
+
+  //Declare variable for - cboJournalNumberSelection
+  control = tabControl.Controls.Find("cboJournalNumberSelection",true);
+  cboJournalNumberSelection = (ComboBox)control[0];
+
+  //Declare variable for - cboRecurringJournalSelection
+  control = tabControl.Controls.Find("cboRecurringJournalSelection",true);
+  cboRecurringJournalSelection = (ComboBox)control[0];
+
+  //Declare variable for - txtSRecurringFrom1
+  control = tabControl.Controls.Find("txtSRecurringFrom1",true);
+  txtSRecurringFrom1 = (TextBox)control[0];
+
+  //Declare variable for - brwSRecurringFromGenRecJnlCtl
+  control = tabControl.Controls.Find("brwSRecurringFrom[GenRecJnlCtl]",true);
+  brwSRecurringFromGenRecJnlCtl = (Button)control[0];
+
+  //Declare variable for - txtSToJournalNumber1
+  control = tabControl.Controls.Find("txtSToJournalNumber1",true);
+  txtSToJournalNumber1 = (TextBox)control[0];
+
+  //Declare variable for - brwSToJournalNumberGenJournalCtl
+  control = tabControl.Controls.Find("brwSToJournalNumber[GenJournalCtl]",true);
+  brwSToJournalNumberGenJournalCtl = (Button)control[0];
+
+  //Declare variable for - txtSRecurringTo1
+  control = tabControl.Controls.Find("txtSRecurringTo1",true);
+  txtSRecurringTo1 = (TextBox)control[0];
+
+  //Declare variable for - brwSRecurringToGenRecJnlCtl
+  control = tabControl.Controls.Find("brwSRecurringTo[GenRecJnlCtl]",true);
+  brwSRecurringToGenRecJnlCtl = (Button)control[0];
+
+  //Declare variable for - cboStandardJournalSelection
+  control = tabControl.Controls.Find("cboStandardJournalSelection",true);
+  cboStandardJournalSelection = (ComboBox)control[0];
+
+  //Declare variable for - txtSStandardFrom1
+  control = tabControl.Controls.Find("txtSStandardFrom1",true);
+  txtSStandardFrom1 = (TextBox)control[0];
+
+  //Declare variable for - brwSStandardFromGenStdJnlCtl
+  control = tabControl.Controls.Find("brwSStandardFrom[GenStdJnlCtl]",true);
+  brwSStandardFromGenStdJnlCtl = (Button)control[0];
+
+  //Declare variable for - txtSStandardTo1
+  control = tabControl.Controls.Find("txtSStandardTo1",true);
+  txtSStandardTo1 = (TextBox)control[0];
+
+  //Declare variable for - brwSStandardToGenStdJnlCtl
+  control = tabControl.Controls.Find("brwSStandardTo[GenStdJnlCtl]",true);
+  brwSStandardToGenStdJnlCtl = (Button)control[0];
+
+  //Declare variable for - cboPeriodSelection
+  control = tabControl.Controls.Find("cboPeriodSelection",true);
+  cboPeriodSelection = (ComboBox)control[0];
+
+  //Declare variable for - cboLedgerPeriod
+  control = tabControl.Controls.Find("cboLedgerPeriod",true);
+  cboLedgerPeriod = (ComboBox)control[0];
+
+  //Declare variable for - txtSYear1
+  control = tabControl.Controls.Find("txtSYear1",true);
+  txtSYear1 = (TextBox)control[0];
+  GenCurrentYear = SystemVariablesArray[17];
+  GenCurrentMonth = SystemVariablesArray[18];
+
+  //Declare variable for - chkPrintNormalJournals
+  control = tabControl.Controls.Find("chkPrintNormalJournals",true);
+  chkPrintNormalJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintProvisionalJournals
+  control = tabControl.Controls.Find("chkPrintProvisionalJournals",true);
+  chkPrintProvisionalJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintUserDefinedJournals
+  control = tabControl.Controls.Find("chkPrintUserDefinedJournals",true);
+  chkPrintUserDefinedJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintInterCompanyJournals
+  control = tabControl.Controls.Find("chkPrintInterCompanyJournals",true);
+  chkPrintInterCompanyJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintAlternateCurrencyJournals
+  control = tabControl.Controls.Find("chkPrintAlternateCurrencyJournals",true);
+  chkPrintAlternateCurrencyJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintStatisticalJournals
+  control = tabControl.Controls.Find("chkPrintStatisticalJournals",true);
+  chkPrintStatisticalJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintAuditorsAdjustments
+  control = tabControl.Controls.Find("chkPrintAuditorsAdjustments",true);
+  chkPrintAuditorsAdjustments = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintPeriodEndAdjustments
+  control = tabControl.Controls.Find("chkPrintPeriodEndAdjustments",true);
+  chkPrintPeriodEndAdjustments = (CheckBox)control[0];
+
+  //Declare variable for - chkUpdatePrintedFlag
+  control = tabControl.Controls.Find("chkUpdatePrintedFlag",true);
+  chkUpdatePrintedFlag = (CheckBox)control[0];
+  SelectAll = SystemVariablesArray[46];
+  DeselectAll = SystemVariablesArray[47];
+
+  //Declare variable for - GroupBox___Sub_module_journals
+  control = tabControl.Controls.Find("4e53f606-d176-4d9b-8215-e2fae257ecd8",true);
+  GroupBox___Sub_module_journals = (GroupBox)control[0];
+
+  //Declare variable for - chkPrintApInvoiceJournals
+  control = tabControl.Controls.Find("chkPrintApInvoiceJournals",true);
+  chkPrintApInvoiceJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintApPaymentJournals
+  control = tabControl.Controls.Find("chkPrintApPaymentJournals",true);
+  chkPrintApPaymentJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintArInvoiceJournals
+  control = tabControl.Controls.Find("chkPrintArInvoiceJournals",true);
+  chkPrintArInvoiceJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintArCashJournals
+  control = tabControl.Controls.Find("chkPrintArCashJournals",true);
+  chkPrintArCashJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintAssetJournals
+  control = tabControl.Controls.Find("chkPrintAssetJournals",true);
+  chkPrintAssetJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintCashbookJournals
+  control = tabControl.Controls.Find("chkPrintCashbookJournals",true);
+  chkPrintCashbookJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintWipPartBillingJournals
+  control = tabControl.Controls.Find("chkPrintWipPartBillingJournals",true);
+  chkPrintWipPartBillingJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintWipLaborJournals
+  control = tabControl.Controls.Find("chkPrintWipLaborJournals",true);
+  chkPrintWipLaborJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintTpmJournals
+  control = tabControl.Controls.Find("chkPrintTpmJournals",true);
+  chkPrintTpmJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintInventoryJournals
+  control = tabControl.Controls.Find("chkPrintInventoryJournals",true);
+  chkPrintInventoryJournals = (CheckBox)control[0];
+
+  //Declare variable for - chkPrintGrnJournals
+  control = tabControl.Controls.Find("chkPrintGrnJournals",true);
+  chkPrintGrnJournals = (CheckBox)control[0];
+}
+]]></Declarations>
+        <ControlsEvents><![CDATA[//Function for rbType0_CheckedChanged
+public void rbType0_CheckedChanged ()
+{
+	if (rbType0.Checked)
+	  {
+		GroupBox___Standard_journal_selection.Enabled = false;
+		GroupBox___Recurring_journal_selection.Enabled = false;
+		grpRecurringAuthJournals.Enabled = false;
+		GroupBox___Normal_journal_selection.Enabled = true;
+		GroupBox___Ledge_year_selection.Enabled = true;
+		GroupBox___Period_selection.Enabled = true;
+		grpAuthorizedJournals.Enabled = true;
+		GroupBox___Journal_type_selection.Enabled = true;
+		GroupBox___Journal_status_selection.Enabled = true;
+		GroupBox___Sub_module_journals.Enabled = true;
+	  }
+}
+//Function for Form_Load
+public void Form_Load ()
+{
+	rbType0_CheckedChanged ();
+	rbType1_CheckedChanged ();
+	rbType2_CheckedChanged ();
+	cboJournalNumberSelection_SelectedIndexChanged ();
+	cboRecurringJournalSelection_SelectedIndexChanged ();
+	cboStandardJournalSelection_SelectedIndexChanged ();
+	cboPeriodSelection_SelectedIndexChanged ();
+	txtSYear1.Text = GenCurrentYear;
+	//Create Buttons
+	Button btnSelectAll = new Button();
+	btnSelectAll.Text = SelectAll;
+	btnSelectAll.Location = new Point(160,15);
+	btnSelectAll.Click += new EventHandler(btnSelectAll_Click);
+	btnSelectAll.TabIndex = 6;
+	GroupBox___Journal_type_selection.Controls.Add(btnSelectAll);
+	Button btnDeSelectAll = new Button();
+	btnDeSelectAll.Text = DeselectAll;
+	btnDeSelectAll.Location = new Point(160,40);
+	btnDeSelectAll.TabIndex = 7;
+	btnDeSelectAll.Click += new EventHandler(btnDeSelectAll_Click);	
+	GroupBox___Journal_type_selection.Controls.Add(btnDeSelectAll);
+	chkUpdatePrintedFlag.Checked = true;
+	chkUpdatePrintedFlag.Visible = false;
+
+	Button btnSelectAll1 = new Button();
+	btnSelectAll1.Text = SelectAll;
+	btnSelectAll1.Location = new Point(401,15);
+	btnSelectAll1.Click += new EventHandler(btnSelectAll1_Click);
+	btnSelectAll1.TabIndex = 6;
+	GroupBox___Sub_module_journals.Controls.Add(btnSelectAll1);
+	Button btnDeSelectAll1 = new Button();
+	btnDeSelectAll1.Text = DeselectAll;
+	btnDeSelectAll1.Location = new Point(401,40);
+	btnDeSelectAll1.TabIndex = 7;
+	btnDeSelectAll1.Click += new EventHandler(btnDeSelectAll1_Click);	
+	GroupBox___Sub_module_journals.Controls.Add(btnDeSelectAll1);
+
+
+}
+
+ private void btnSelectAll_Click(object sender, EventArgs e)
+{
+	chkPrintNormalJournals.Checked = true;
+	chkPrintProvisionalJournals.Checked = true;
+	chkPrintUserDefinedJournals.Checked = true;
+	chkPrintInterCompanyJournals.Checked = true;
+	chkPrintAlternateCurrencyJournals.Checked = true;
+	chkPrintStatisticalJournals.Checked = true;
+	chkPrintAuditorsAdjustments.Checked = true;
+	chkPrintPeriodEndAdjustments.Checked = true;
+}
+private void btnDeSelectAll_Click(object sender, EventArgs e)
+{
+	chkPrintNormalJournals.Checked = false;
+	chkPrintProvisionalJournals.Checked = false;
+	chkPrintUserDefinedJournals.Checked = false;
+	chkPrintInterCompanyJournals.Checked = false;
+	chkPrintAlternateCurrencyJournals.Checked = false;
+	chkPrintStatisticalJournals.Checked = false;
+	chkPrintAuditorsAdjustments.Checked = false;
+	chkPrintPeriodEndAdjustments.Checked = false;
+	
+}
+private void btnSelectAll1_Click(object sender, EventArgs e)
+{
+	chkPrintApInvoiceJournals.Checked = true;
+	chkPrintApPaymentJournals.Checked = true;
+	chkPrintArInvoiceJournals.Checked = true;
+	chkPrintArCashJournals.Checked = true;
+	chkPrintAssetJournals.Checked = true;
+	chkPrintCashbookJournals.Checked = true;
+	chkPrintWipPartBillingJournals.Checked = true;
+	chkPrintWipLaborJournals.Checked = true;
+	chkPrintTpmJournals.Checked = true;
+	chkPrintInventoryJournals.Checked = true;
+	chkPrintGrnJournals.Checked = true;
+}
+private void btnDeSelectAll1_Click(object sender, EventArgs e)
+{
+	chkPrintApInvoiceJournals.Checked = false;
+	chkPrintApPaymentJournals.Checked = false;
+	chkPrintArInvoiceJournals.Checked = false;
+	chkPrintArCashJournals.Checked = false;
+	chkPrintAssetJournals.Checked = false;
+	chkPrintCashbookJournals.Checked = false;
+	chkPrintWipPartBillingJournals.Checked = false;
+	chkPrintWipLaborJournals.Checked = false;
+	chkPrintTpmJournals.Checked = false;
+	chkPrintInventoryJournals.Checked = false;
+	chkPrintGrnJournals.Checked = false;
+
+	
+}
+
+
+//Function for rbType1_CheckedChanged
+public void rbType1_CheckedChanged ()
+{
+	if (rbType1.Checked)
+	{
+		GroupBox___Standard_journal_selection.Enabled = true;
+		GroupBox___Recurring_journal_selection.Enabled = false;
+		GroupBox___Normal_journal_selection.Enabled = false;
+		grpRecurringAuthJournals.Enabled = false;
+		GroupBox___Ledge_year_selection.Enabled = false;
+		GroupBox___Period_selection.Enabled = false;
+		grpAuthorizedJournals.Enabled = false;
+		GroupBox___Journal_type_selection.Enabled = false;
+		GroupBox___Journal_status_selection.Enabled = false;
+		GroupBox___Sub_module_journals.Enabled = false;
+	}
+}
+//Function for rbType2_CheckedChanged
+public void rbType2_CheckedChanged ()
+{
+	if (rbType2.Checked)
+	{
+		GroupBox___Standard_journal_selection.Enabled = false;
+		GroupBox___Recurring_journal_selection.Enabled = true;
+		GroupBox___Normal_journal_selection.Enabled = false;
+		grpRecurringAuthJournals.Enabled = true;
+		GroupBox___Ledge_year_selection.Enabled = false;
+		GroupBox___Period_selection.Enabled = false;
+		grpAuthorizedJournals.Enabled = false;
+		GroupBox___Journal_type_selection.Enabled = false;
+		GroupBox___Journal_status_selection.Enabled = false;
+		GroupBox___Sub_module_journals.Enabled = false;
+	}
+}
+//Function for cboJournalNumberSelection_SelectedIndexChanged
+public void cboJournalNumberSelection_SelectedIndexChanged ()
+{
+	if (cboJournalNumberSelection.SelectedIndex == 0)
+		{
+			txtSFromJournalNumber1.Enabled = false;
+			Button___Blank.Enabled = false;
+			txtSToJournalNumber1.Enabled = false;
+			brwSToJournalNumberGenJournalCtl.Enabled = false;
+		}
+	else
+		{
+			Label___From.Enabled = true;
+			txtSFromJournalNumber1.Enabled = true;
+			Button___Blank.Enabled = true;
+			txtSToJournalNumber1.Enabled = true;
+			brwSToJournalNumberGenJournalCtl.Enabled = true;
+		}
+}
+//Function for cboRecurringJournalSelection_SelectedIndexChanged
+public void cboRecurringJournalSelection_SelectedIndexChanged ()
+{
+	if (cboRecurringJournalSelection.SelectedIndex == 0)
+	{
+			txtSRecurringFrom1.Enabled = false;
+			brwSRecurringFromGenRecJnlCtl.Enabled = false;
+			txtSRecurringTo1.Enabled = false;
+			brwSRecurringToGenRecJnlCtl.Enabled = false;
+	}
+	else
+		{
+			txtSRecurringFrom1.Enabled = true;
+			brwSRecurringFromGenRecJnlCtl.Enabled = true;		
+			txtSRecurringTo1.Enabled = true;
+			brwSRecurringToGenRecJnlCtl.Enabled = true;
+		}
+}
+//Function for cboStandardJournalSelection_SelectedIndexChanged
+public void cboStandardJournalSelection_SelectedIndexChanged ()
+{
+	if (cboStandardJournalSelection.SelectedIndex == 0)
+		{
+			txtSStandardFrom1.Enabled = false;
+			brwSStandardFromGenStdJnlCtl.Enabled = false;
+			txtSStandardTo1.Enabled = false;
+			brwSStandardToGenStdJnlCtl.Enabled = false;
+		}
+	else
+		{
+			txtSStandardFrom1.Enabled = true;
+			brwSStandardFromGenStdJnlCtl.Enabled = true;
+			txtSStandardTo1.Enabled = true;
+			brwSStandardToGenStdJnlCtl.Enabled = true;	
+		}
+}
+//Function for cboPeriodSelection_SelectedIndexChanged
+public void cboPeriodSelection_SelectedIndexChanged ()
+{
+	if (cboPeriodSelection.SelectedIndex == 0)
+		{
+			cboLedgerPeriod.Enabled = false;
+		}
+else
+{
+	if (cboPeriodSelection.SelectedIndex == 1)
+		{	
+			cboLedgerPeriod.Enabled = true;
+			int myInt = int.Parse(GenCurrentMonth);
+			myInt = myInt -1;
+			cboLedgerPeriod.SelectedIndex = myInt;
+		}
+}
+}]]></ControlsEvents>
+        <Controls>
+          <rbType0>
+            <CheckedChanged EventName="rbType0_CheckedChanged" />
+          </rbType0>
+          <Form>
+            <Load EventName="Form_Load" />
+          </Form>
+          <rbType1>
+            <CheckedChanged EventName="rbType1_CheckedChanged" />
+          </rbType1>
+          <rbType2>
+            <CheckedChanged EventName="rbType2_CheckedChanged" />
+          </rbType2>
+          <cboJournalNumberSelection>
+            <SelectedIndexChanged EventName="cboJournalNumberSelection_SelectedIndexChanged" />
+          </cboJournalNumberSelection>
+          <cboRecurringJournalSelection>
+            <SelectedIndexChanged EventName="cboRecurringJournalSelection_SelectedIndexChanged" />
+          </cboRecurringJournalSelection>
+          <cboStandardJournalSelection>
+            <SelectedIndexChanged EventName="cboStandardJournalSelection_SelectedIndexChanged" />
+          </cboStandardJournalSelection>
+          <cboPeriodSelection>
+            <SelectedIndexChanged EventName="cboPeriodSelection_SelectedIndexChanged" />
+          </cboPeriodSelection>
+        </Controls>
+      </Events>
+    </ReportForm>
+  </FormFile>
+  <SchemaIn Name="gl_journal_report">
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Query">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="Option">
+            </xsd:element>
+            <xsd:element ref="Filter">
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Option">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="Type" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="Reprint" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="UpdatePrintedFlag" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="Year" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PeriodSelection" minOccurs="0">
+            </xsd:element>
+            <xsd:element name="LedgerPeriod" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="JournalNumberSelection" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="FromJournalNumber" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="ToJournalNumber" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="AuthorizedJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintNormalJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintProvisionalJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintUserDefinedJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintInterCompanyJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintPeriodEndAdjustments" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintAuditorsAdjustments" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintStatisticalJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintAlternateCurrencyJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintJournalsNotPosted" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintJournalsOnHold" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintCancelledJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintPostedJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintApInvoiceJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintApPaymentJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintArInvoiceJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintArCashJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintAssetJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintCashbookJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintGrnJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintInventoryJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintTpmJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintWipLaborJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="PrintWipPartBillingJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="StandardJournalSelection" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="StandardFrom" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="StandardTo" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="RecurringJournalSelection" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="RecurringFrom" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="RecurringTo" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="RecurringAuthJournals" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="NewPagePerJournal" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="IncludeTemplateDetails" minOccurs="0">
+            </xsd:element>
+            <xsd:element name="XslStylesheet" minOccurs="0">
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Filter">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="LedgerPeriod" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="JournalNumber" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="StandardJournal" minOccurs="0">
+            </xsd:element>
+            <xsd:element ref="RecurringJournal" minOccurs="0">
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Type" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Defines what type of journal will be printed. (N - normal journals, S - Standard journals and R - recurring journals) If no value is supplied then the default of 'N' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=Normal;S=Standard;R=Recurring">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="S">
+            </xsd:enumeration>
+            <xsd:enumeration value="R">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Reprint" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether journals that have already been printed should be reprinted. ('N'- No - only journals that have not been printed will be printed, 'Y' -Yes - both journals that have and have not been printed will be printed, O - Only - only journals that have already been printed will be printed). If no value is supplied then a default value of 'N' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="O">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="UpdatePrintedFlag" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether the update flag must be set to 'Y" for journals that are printed for the first time. (N - No, Y - Yes). If no value is supplied the the default value of 'N' will be used.  </xsd:documentation>
+          <xsd:appinfo source="screenItem=N">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Year" default=" ">
+        <xsd:annotation>
+          <xsd:documentation>Defines the financial year for which journals should be printed. If no value is supplied the current financial year will be used as a default.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PeriodSelection">
+        <xsd:annotation>
+          <xsd:documentation> Defines the period selection for journals to be printed. (A - All and S - Single). If no value is passed then the default value of 'A' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;A=All;S=Single">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="JournalNumberSelection" default="A">
+        <xsd:annotation>
+          <xsd:documentation>Defines the whether all journals or a range of journals should be printed. (A - all, S-Single,R - range). If no value is supplied then the default value of 'A' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;A=all;S=single;R=Range">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="A">
+            </xsd:enumeration>
+            <xsd:enumeration value="R">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="FromJournalNumber" default="1">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should start printing. If no value is supplied a default value of 1 will be used. If 'JournalNumberSelection' is 'A' then whatever value is supplied will be overwritten with a value of 1. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenJournalCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ToJournalNumber" default="99999">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should stop printing. If no value is supplied a default value of 99999will be used. If 'JournalNumberSelection' is 'A' then whatever value is supplied will be overwritten with a value of 99999. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenJournalCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="AuthorizedJournals" default="B">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether journals that have/havenot been authorized should be printed. You can also print a combination of both. (B- Both , I - include authorized journals, E - Exclude authorized journals). If no value has been passed then a default value of 'B' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;B=Both;I=Include;E=Exclude">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="B">
+            </xsd:enumeration>
+            <xsd:enumeration value="I">
+            </xsd:enumeration>
+            <xsd:enumeration value="E">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintNormalJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether normal journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintProvisionalJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether provisional journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintUserDefinedJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether user defined journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintInterCompanyJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether inter-company  journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintPeriodEndAdjustments" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether period end adjustments should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintAuditorsAdjustments" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether auditors adjustments  should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintStatisticalJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether statistical journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintAlternateCurrencyJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether alternate currency journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintJournalsNotPosted" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether journals that have not been posted should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintJournalsOnHold" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether journals that have not been put on hold should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintCancelledJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether journals that have not been cancelled should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintPostedJournals" default="Y">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether journals that have been posted should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="StandardJournalSelection" default="A">
+        <xsd:annotation>
+          <xsd:documentation>Defines the whether all journals or a range of journals should be printed. (A - all,S-Single, R - range). If no value is supplied then the default value of 'A' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;A=all;S=single;R=Range">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="A">
+            </xsd:enumeration>
+            <xsd:enumeration value="S">
+            </xsd:enumeration>
+            <xsd:enumeration value="R">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="StandardFrom">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should starts printing. If no value is supplied a default value of spaces will be used. If 'StandardJournalSelection' is 'A' then whatever value is supplied will be overwritten with a value of spaces. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenStdJnlCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="StandardTo">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should stop printing. If no value is supplied a default value of zzzzz will be used. If 'StandardJournalSelection' is 'A' then whatever value is supplied will be overwritten with a value of zzzzz. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenStdJnlCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="RecurringJournalSelection" default="A">
+        <xsd:annotation>
+          <xsd:documentation>Defines the whether all journals or a range of journals should be printed. (A - all,S-Single, R - range). If no value is supplied then the default value of 'A' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;A=all;S=single;R=Range">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="A">
+            </xsd:enumeration>
+            <xsd:enumeration value="S">
+            </xsd:enumeration>
+            <xsd:enumeration value="R">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="RecurringFrom">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should starts printing. If no value is supplied a default value of spaces will be used. If 'RecurringJournalSelection' is 'A' then whatever value is supplied will be overwritten with a value of spaces. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenRecJnlCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="RecurringTo">
+        <xsd:annotation>
+          <xsd:documentation>Defines at what journal number the report should stop printing. If no value is supplied a default value of zzzzz will be used. If 'RecurringJournalSelection' is 'A' then whatever value is supplied will be overwritten with a value of zzzzz. </xsd:documentation>
+          <xsd:appinfo source="screenItem=N;Browse=GenRecJnlCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="RecurringAuthJournals" default="B">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether journals that have/havenot been authorized should be printed. You can also print a combination of both. (B- Both , I - include authorized journals, E - Exclude authorized journals). If no value has been passed then a default value of 'B' will be used. </xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;B=Both;I=Include;E=Exclude">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="B">
+            </xsd:enumeration>
+            <xsd:enumeration value="I">
+            </xsd:enumeration>
+            <xsd:enumeration value="E">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="NewPagePerJournal" default="N">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether each journal should be printed on a new page. N - No or Y-Yes. If no value has been passed then the default value of 'N' would be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;Y=Yes;N=No">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve">
+            </xsd:whiteSpace>
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="IncludeTemplateDetails">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whethertemplate details should be included. N - No or Y-Yes. If no value has been passed then the default value of 'N' would be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="LedgerPeriod">
+        <xsd:annotation>
+          <xsd:documentation>Defines the period selection for journals to be printed. The period supplied cannot be higher than the number of GL financial periods + 1. If 'PeriodSelection' is 'A' then whatever is supplied in this element will be overwritten with zeroes. If 'PeriodSelection' = 'S' and no value is passed then the current financial period will be used as a default.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A">
+                </xsd:enumeration>
+                <xsd:enumeration value="R">
+                </xsd:enumeration>
+                <xsd:enumeration value="S">
+                </xsd:enumeration>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" use="optional" default="01">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="01">
+                </xsd:enumeration>
+                <xsd:enumeration value="02">
+                </xsd:enumeration>
+                <xsd:enumeration value="03">
+                </xsd:enumeration>
+                <xsd:enumeration value="04">
+                </xsd:enumeration>
+                <xsd:enumeration value="05">
+                </xsd:enumeration>
+                <xsd:enumeration value="06">
+                </xsd:enumeration>
+                <xsd:enumeration value="07">
+                </xsd:enumeration>
+                <xsd:enumeration value="08">
+                </xsd:enumeration>
+                <xsd:enumeration value="09">
+                </xsd:enumeration>
+                <xsd:enumeration value="10">
+                </xsd:enumeration>
+                <xsd:enumeration value="11">
+                </xsd:enumeration>
+                <xsd:enumeration value="12">
+                </xsd:enumeration>
+                <xsd:enumeration value="13">
+                </xsd:enumeration>
+                <xsd:enumeration value="14">
+                </xsd:enumeration>
+                <xsd:enumeration value="15">
+                </xsd:enumeration>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="JournalNumber">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether all journals or a range of journals should be printed. (A - all, S - Single , R - range). Any value supplied will overwrite the value supplied for JournalNumberSelection, FromJournalNumber and ToJournalNumber.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;A=all;S=Single;R=Range;Browse=GenJournalCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A">
+                </xsd:enumeration>
+                <xsd:enumeration value="R">
+                </xsd:enumeration>
+                <xsd:enumeration value="S">
+                </xsd:enumeration>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional">
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="StandardJournal">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether all journals or a range of journals should be printed. (A - all, S - Single,  R - range). Any value here will overwrite the value  supplied for StandardJournalSelection, StandardFrom and StandardTo.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;A=all;S=Single;R=Range;Browse=GenStdJnlCtl">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A">
+                </xsd:enumeration>
+                <xsd:enumeration value="R">
+                </xsd:enumeration>
+                <xsd:enumeration value="S">
+                </xsd:enumeration>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional">
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RecurringJournal">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether all journals or a range of journals should be printed. (A - all, S - Single ,  R - range). Any value supplied here will overwrite the RecurringJournalSelection, RecurringFrom and RecurringTo.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;A=all;S=Single;R=Range;Browse=GenRecJnlCt">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="FilterType" use="optional" default="A">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="A">
+                </xsd:enumeration>
+                <xsd:enumeration value="R">
+                </xsd:enumeration>
+                <xsd:enumeration value="S">
+                </xsd:enumeration>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="FilterValue" type="xsd:string" use="optional">
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="PrintApInvoiceJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether AP Invoice journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintApPaymentJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether AP Payment journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintArInvoiceJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether AR Invoice journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintArCashJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether AR Cash journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintAssetJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether Asset journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintCashbookJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether Cashbook journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintGrnJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether GRN journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintInventoryJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether Inventory journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintTpmJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether TPM journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintWipLaborJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether WIP Labor journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PrintWipPartBillingJournals">
+        <xsd:annotation>
+          <xsd:documentation>Defines whether WIP Part Billing journals should be printed. (Y - Yes, N - No). If no value is supplied then the default value of 'Y' will be used.</xsd:documentation>
+          <xsd:appinfo source="screenItem=Y;N=No;Y=Yes">
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="N">
+            </xsd:enumeration>
+            <xsd:enumeration value="Y">
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:schema>
+  </SchemaIn>
+  <SchemaOut Name="gl_journal_report_out">
+    <xsd:schema elementFormDefault="unqualified" attributeFormDefault="unqualified" id="GLJournalReport" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+      <xsd:element name="GLJournalReport" msdata:IsDataSet="true" msdata:Locale="en-US">
+        <xsd:complexType>
+          <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="SystemInformation">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="CssStyle" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Language" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DecFormat" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="DateFormat" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Role" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Version" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CompanyId" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CompanyName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorCode" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorGroup" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorEmailAddress" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorLocation" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LocalCurrency" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LocalCurrencyDesc" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="GlPrdPerYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ReportDate" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="UseSeparatorOnReports" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SeparatorToUse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="OperatorPrimaryRole" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NoOfDigits" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="DecCharToUse" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="BOMQtyPerDecimals" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="QueryOptions">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="Type" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_Type" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Reprint" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_Reprint" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="UpdatePrintedFlag" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Year" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PeriodSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PeriodSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LedgerPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalNumberSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_JournalNumberSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="FromJournalNumber" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ToJournalNumber" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AuthorizedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_AuthorizedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintNormalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintNormalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintProvisionalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintProvisionalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintUserDefinedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintUserDefinedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintInterCompanyJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintInterCompanyJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintPeriodEndAdjustments" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintPeriodEndAdjustments" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintAuditorsAdjustments" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintAuditorsAdjustments" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintStatisticalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintStatisticalJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintAlternateCurrencyJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintAlternateCurrencyJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintJournalsNotPosted" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintJournalsNotPosted" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintJournalsOnHold" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintJournalsOnHold" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintCancelledJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintCancelledJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintPostedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintPostedJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintApInvoiceJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintApInvoiceJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintApPaymentJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintApPaymentJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintArCashJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintArCashJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintArInvoiceJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintArInvoiceJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintAssetJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintAssetJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintCashbookJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintCashbookJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintGrnJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintGrnJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintInventoryJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintInventoryJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintTpmJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintTpmJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintWipLaborJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintWipLaborJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PrintWipPartBillingJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_PrintWipPartBillingJournals" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="IncludeTemplateDetails" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_IncludeTemplateDetails" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StandardJournalSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_StandardJournalSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StandardFrom" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StandardTo" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringJournalSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_RecurringJournalSelection" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringFrom" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringTo" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringAuthJournal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NewPagePerJournal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_NewPagePerJournal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalPeriodFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalPeriodFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalNumberFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalNumberFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StandardJournalFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="StandardJournalFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringJournalFilterType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="RecurringJournalFilterValue" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Translated_SubModule" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="JournalHeader" minOccurs="0" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="JournalNumber" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Edited_JournalNumber" minOccurs="0" />
+                  <xsd:element name="JournalDate" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LedgerPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Edited_LedgerPeriod" minOccurs="0" />
+                  <xsd:element name="LedgerYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LedgerPeriodYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalType" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalStatus" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Reference" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalSource" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalCode" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Frequency" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NextPostingPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NextPostingYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="NextPostingPeriodYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ExpiryPeriod" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="SourceCode" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Source" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalNotation" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CapturedBy" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="CaptureByName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AuthorizedBy" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="AuthorizedByName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PostedBy" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="PostedByName" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="LastJournalCreated" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalDetailLine" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="EntryNumber" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Edited_EntryNumber" minOccurs="0" />
+                        <xsd:element name="LedgerCode" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="LedgerDescription" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="DetailLineReference" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="DetailLineDate" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InterCompanyLine" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="DebitCredit" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Amount" type="xsd:double" minOccurs="0" />
+                        <xsd:element name="EditedDebitAmount" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="EditedCreditAmount" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InterCompanyID" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InterCompanyDebit" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="InterCompanyCredit" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="Comment" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="UnitOfMeasure" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="AlternateCurrency" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="LineType" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TransferPercentage" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TargetDrGlCode" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TargetDebitDescription" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TargetCrGlCode" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TargetCreditDescription" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="TemplateDetails" minOccurs="0" maxOccurs="unbounded">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="TemplateDetail" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                  <xsd:sequence>
+                                    <xsd:element name="TemplateEntryNumber" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="LedgerCode" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="LedgerDescription" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="Amount" type="xsd:double" minOccurs="0" />
+                                    <xsd:element name="EditedDebitTemplateAmount" type="xsd:string" minOccurs="0" />
+                                    <xsd:element name="EditedCreditTemplateAmount" type="xsd:string" minOccurs="0" />
+                                  </xsd:sequence>
+                                </xsd:complexType>
+                              </xsd:element>
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="ZeroTransactionWarning" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="BalanceWarning" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="ExpiryWarning" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalDebitTotal" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="EditedJournalDebitTotal" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalCreditTotal" type="xsd:double" minOccurs="0" />
+                  <xsd:element name="EditedJournalCreditTotal" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </SchemaOut>
+</ExportReportConfiguration>
