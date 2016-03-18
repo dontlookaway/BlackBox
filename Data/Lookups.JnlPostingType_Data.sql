@@ -1,0 +1,8 @@
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('A', 'Auditor''s adjustment')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('E', 'Period end adjustments')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('I', 'Inter-company Journal')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('L', 'Alternate currency Journal')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('N', 'Normal Journal')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('P', 'Provision Journal')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('S', 'Statistical Journal')
+INSERT INTO [Lookups].[JnlPostingType] ([JnlPostingType], [JnlPostingTypeDesc]) VALUES ('U', 'User-defined Journal')
