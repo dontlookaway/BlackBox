@@ -62,6 +62,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TrnValue] Numeric(20 , 8)
             , [TrnType] Char(1)
             , [JobPurchOrder] Varchar(20)
+            , [Customer] Varchar(15)
             );
         Create Table [#InvMaster]
             (
@@ -70,6 +71,14 @@ Stored procedure set out to query multiple databases with the same information a
             , [StockUom] Varchar(20)
             , [StockCode] Varchar(30)
             );
+        Create Table [#ArCustomer]
+            (
+              [DatabaseName] Varchar(150)
+            , [Customer] Varchar(15)
+            , [Name] Varchar(50)
+            );
+
+
 
 --create script to pull data from each db into the tables
         Declare @SQLInvInspect Varchar(Max) = '
@@ -157,6 +166,7 @@ Stored procedure set out to query multiple databases with the same information a
 		        , [TrnValue]
 				, TrnType
 				, [JobPurchOrder]
+				, Customer
 		        )
 				SELECT @DBCode
 					 , [LT].[Lot]
@@ -174,7 +184,8 @@ Stored procedure set out to query multiple databases with the same information a
              , [LT].[TrnQuantity]
              , [LT].[TrnValue]
 			 , [LT].TrnType 
-			 , [LT].[JobPurchOrder] FROM [LotTransactions] As [LT]
+			 , [LT].[JobPurchOrder]
+			 , [LT].Customer FROM [LotTransactions] As [LT]
 			End
 	End';
         Declare @SQLInvMaster Varchar(Max) = '
@@ -215,7 +226,43 @@ Stored procedure set out to query multiple databases with the same information a
              , [IM].[StockCode] FROM [InvMaster] As [IM]
 			End
 	End';
-
+        Declare @SQLArCustomer Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert  [#ArCustomer]
+						( [DatabaseName]
+						, [Customer]
+						, [Name]
+						)
+				Select  @DBCode
+					  , [AC].[Customer]
+					  , [AC].[Name]
+				From    [ArCustomer] As [AC];
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -223,6 +270,7 @@ Stored procedure set out to query multiple databases with the same information a
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvInspect;
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
         Exec [Process].[ExecForEachDB] @cmd = @SQLLotTransactions;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLArCustomer;
 
 --define the results you want to return
         Create Table [#Results]
@@ -245,6 +293,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TrnQuantity] Numeric(20 , 8)
             , [TrnValue] Numeric(20 , 2)
             , [MasterJob] Varchar(30)
+            , [CustomerName] Varchar(50)
             );
 
 --Placeholder to create indexes as required
@@ -287,6 +336,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [TrnQuantity]
                 , [TrnValue]
                 , [MasterJob]
+                , [CustomerName]
                 )
                 Select  [Company] = Coalesce([II].[DatabaseName] ,
                                              [LT].[DatabaseName])
@@ -316,9 +366,10 @@ Stored procedure set out to query multiple databases with the same information a
                                            Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
                                            Else [LMJ].[MasterJob]
                                       End
+                      , [CustomerName] = [AC].[Name]
                 From    [#InvInspect] As [II]
                         Full Outer Join [#LotTransactions] As [LT] On [LT].[Lot] = [II].[Lot]
-                                                              And [LT].[StockCode] = [II].[StockCode]
+                                                              --And [LT].[StockCode] = [II].[StockCode]
                                                               And [LT].[DatabaseName] = [II].[DatabaseName]
                         Left Join [#InvMaster] As [IM] On Coalesce([II].[StockCode] ,
                                                               [LT].[StockCode]) = [IM].[StockCode]
@@ -326,6 +377,8 @@ Stored procedure set out to query multiple databases with the same information a
                                                               [LT].[DatabaseName]) = [IM].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT] On [LT].[TrnType] = [LTT].[TrnType]
                         Left Join [#LotMasterJob] As [LMJ] On [LMJ].[Lot] = [LT].[Lot]
+                        Left Join [#ArCustomer] As [AC] On [AC].[Customer] = [LT].[Customer]
+                                                           And [AC].[DatabaseName] = [LT].[DatabaseName]
                 Where   Coalesce([II].[Lot] , [LT].[Lot] , '') <> ''
                 Order By [SupplierLotNumber] Desc
                       , Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
@@ -356,6 +409,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[TrnQuantity]
               , [R].[TrnValue]
               , [R].[MasterJob]
+              , [R].[CustomerName]
         From    [#Results] As [R]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[Company]
                 Left Join [Lookups].[Warehouse] As [W] On [W].[Warehouse] = [R].[Warehouse]
@@ -363,6 +417,9 @@ Stored procedure set out to query multiple databases with the same information a
         Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
                                               'Issue to a job' ,
                                               'Transfer of lot qty' ,
-                                              'Adjustment to lot qty' );
+                                              'Adjustment to lot qty' ,
+                                              'Dispatch note' );
+
+--SELECT * FROM [#ArCustomer] As [AC]
     End;
 GO
