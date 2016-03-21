@@ -14,7 +14,6 @@ As
 Template designed by Chris Johnson, Prometic Group September 2015												
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 Returns ApSupplierNar table for PO																				
---exec Report.UspResults_ApSupplierNar @Company =10,@Supplier ='K3SY01'
 */
         Set NoCount Off;
         If IsNumeric(@Company) = 0
@@ -94,42 +93,42 @@ Returns ApSupplierNar table for PO
 
 --define the results you want to return
 
-CREATE --Drop --Truncate 
-TABLE #Results
-([DatabaseName] Varchar(150)
-              , [Supplier] Varchar(15)
-              , [Invoice] Varchar(20)
-              , [NoteType] Char(1)
-              , [Line] int
-              , [Text] Varchar(100)
-    
-)
+        Create Table [#Results]
+            (
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(15)
+            , [Invoice] Varchar(20)
+            , [NoteType] Char(1)
+            , [Line] Int
+            , [Text] Varchar(100)
+            );
 --Placeholder to create indexes as required
 
 --script to combine base data and insert into results table
-Insert [#Results]
-        ( [DatabaseName]
-        , [Supplier]
-        , [Invoice]
-        , [NoteType]
-        , [Line]
-        , [Text]
-        )
-        Select  [Company] = [ASN].[DatabaseName]
-              , [ASN].[Supplier]
-              , [ASN].[Invoice]
-              , [ASN].[NoteType]
-              , [ASN].[Line]
-              , [ASN].[Text]
-        From    [#ApSupplierNar] As [ASN];
+        Insert  [#Results]
+                ( [DatabaseName]
+                , [Supplier]
+                , [Invoice]
+                , [NoteType]
+                , [Line]
+                , [Text]
+                )
+                Select  [Company] = [ASN].[DatabaseName]
+                      , [ASN].[Supplier]
+                      , [ASN].[Invoice]
+                      , [ASN].[NoteType]
+                      , [ASN].[Line]
+                      , [ASN].[Text]
+                From    [#ApSupplierNar] As [ASN];
 --return results
 
-SELECT [R].[DatabaseName]
-     , [R].[Supplier]
-     , [R].[Invoice]
-     , [R].[NoteType]
-     , [R].[Line]
-     , [R].[Text] FROM [#Results] As [R]
+        Select  [R].[DatabaseName]
+              , [R].[Supplier]
+              , [R].[Invoice]
+              , [R].[NoteType]
+              , [R].[Line]
+              , [R].[Text]
+        From    [#Results] As [R];
 
     End;
 
