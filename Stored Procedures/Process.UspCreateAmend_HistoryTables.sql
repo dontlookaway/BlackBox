@@ -4,61 +4,63 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspCreateAmend_HistoryTables] ( @Rebuild Bit ) 
-
-As /*
 -- if rebuild = 1 then drop and recreate
+-- if rebuild = 0 then 
+As /*
 Template designed by Chris Johnson, Prometic Group September 2015
-Stored procedure iterates through all electronic signatures and use the variable description to unpivot the data 
+Stored procedure iterates through all electronic signatures and use the variable description to unpivot the data
 */
+
 
     Set NoCount On;
 
-Create Table #TableList
+--create temporary tables
+    Create Table [#TableList]
         (
-          Tid Int Identity(1 , 1)
-        , TableName Varchar(150)
-        , Constraint tlname Primary Key NonClustered ( TableName )
+          [Tid] Int Identity(1 , 1)
+        , [TableName] Varchar(150)
+        , Constraint [tlname] Primary Key NonClustered ( [TableName] )
             With ( Ignore_Dup_Key = On )
         );
 
-    Create Table #ColumnListTemp
+    Create Table [#ColumnListTemp]
         (
-          Cid Int Identity(1 , 1)
-        , ColumnName Varchar(150)
-        , ColumnType Varchar(100)
-        , TableName Varchar(150)
-        , Constraint cltdetailstemp Primary Key NonClustered
-            ( ColumnName , ColumnType , TableName )
+          [Cid] Int Identity(1 , 1)
+        , [ColumnName] Varchar(150)
+        , [ColumnType] Varchar(100)
+        , [TableName] Varchar(150)
+        , Constraint [cltdetailstemp] Primary Key NonClustered
+            ( [ColumnName] , [ColumnType] , [TableName] )
             With ( Ignore_Dup_Key = On )
         );
 
-    Create Table #ColumnList
+    Create Table [#ColumnList]
         (
-          Cid Int Identity(1 , 1)
-        , ColumnName Varchar(150)
-        , ColumnType Varchar(100)
-        , TableName Varchar(150)
-        , Constraint cldetails Primary Key NonClustered
-            ( ColumnName , ColumnType , TableName )
+          [Cid] Int Identity(1 , 1)
+        , [ColumnName] Varchar(150)
+        , [ColumnType] Varchar(100)
+        , [TableName] Varchar(150)
+        , Constraint [cldetails] Primary Key NonClustered
+            ( [ColumnName] , [ColumnType] , [TableName] )
             With ( Ignore_Dup_Key = On )
         );
 
-    Create Table #CurrentColumns
+    Create Table [#CurrentColumns]
         (
-          ColumnName Varchar(150)
-        , TableName Varchar(150)
+          [ColumnName] Varchar(150)
+        , [TableName] Varchar(150)
         );
 
-    Insert  #CurrentColumns
-            ( ColumnName
-            , TableName
+    Insert  [#CurrentColumns]
+            ( [ColumnName]
+            , [TableName]
             )
-            Select  c.name
-                  , t.name
-            From    sys.columns c
-                    Inner Join sys.tables t On t.object_id = c.object_id
-                    Inner Join sys.schemas s On s.schema_id = t.schema_id
-                                                And s.name = 'History';
+            Select  [c].[name]
+                  , [t].[name]
+            From    [sys].[columns] [c]
+                    Inner Join [sys].[tables] [t] On [t].[object_id] = [c].[object_id]
+                    Inner Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                                                And [s].[name] = 'History';
 
     Declare @ListOfTables Varchar(Max) = 'AdmSignatureLogDet,AdmSignatureLog'; 
 
@@ -157,10 +159,9 @@ Create Table #TableList
     Exec [Process].[ExecForEachDB] @cmd = @SQLTable;
     Exec [Process].[ExecForEachDB] @cmd = @SQLColumn;
 
-    Update  #ColumnListTemp
-    Set     ColumnName = Upper(ColumnName);
+    Update  [#ColumnListTemp]
+    Set     [ColumnName] = Upper([ColumnName]);
 
---
     Declare @Tablecount Int
       , @CurrentTable Int = 1
       , @TableName Varchar(150)
@@ -171,15 +172,15 @@ Create Table #TableList
       , @ColumnType Varchar(150);
 
 --Number of tables to iterate through
-    Select  @Tablecount = Max(Tid)
-    From    #TableList;
+    Select  @Tablecount = Max([Tid])
+    From    [#TableList];
 
 --Run through each table
     While @CurrentTable <= @Tablecount
         Begin
-            Select  @TableName = TableName
-            From    #TableList
-            Where   Tid = @CurrentTable;
+            Select  @TableName = [TableName]
+            From    [#TableList]
+            Where   [Tid] = @CurrentTable;
 
 --drop the existing tables and recreate them
             If @Rebuild = 1
@@ -208,31 +209,31 @@ Create Table #TableList
                     Exec (@SQL);
 
 					--get 
-                    Insert  #ColumnList
-                            ( ColumnName
-                            , ColumnType
-                            , TableName
+                    Insert  [#ColumnList]
+                            ( [ColumnName]
+                            , [ColumnType]
+                            , [TableName]
                             )
                             Select Distinct
-                                    CT.ColumnName
-                                  , CT.ColumnType
+                                    [CT].[ColumnName]
+                                  , [CT].[ColumnType]
                                   , @TableName
-                            From    #ColumnListTemp CT
-                            Where   CT.TableName = @TableName;
+                            From    [#ColumnListTemp] [CT]
+                            Where   [CT].[TableName] = @TableName;
 
 
-                    Select  @ColumnCount = Max(Cid)
-                    From    #ColumnList;
+                    Select  @ColumnCount = Max([Cid])
+                    From    [#ColumnList];
 
                     Set @CurrentColumn = 1;
 					--SELECT * FROM #ColumnList
 
                     While @CurrentColumn <= @ColumnCount
                         Begin
-                            Select  @ColumnName = ColumnName
-                                  , @ColumnType = ColumnType
-                            From    #ColumnList
-                            Where   Cid = @CurrentColumn;
+                            Select  @ColumnName = [ColumnName]
+                                  , @ColumnType = [ColumnType]
+                            From    [#ColumnList]
+                            Where   [Cid] = @CurrentColumn;
 
                             Select  @SQL = 'alter table [History].['
                                     + @TableName + '] add ['
@@ -245,7 +246,7 @@ Create Table #TableList
                         End;
 
                     Set @CurrentTable = @CurrentTable + 1;
-                    Truncate Table #ColumnList;
+                    Truncate Table [#ColumnList];
                     Set @SQL = '';
                 End;
             If @Rebuild = 0
@@ -276,32 +277,32 @@ Create Table #TableList
                     Exec (@SQL);
 
 					--select only columns that do not exist
-                    Insert  #ColumnList
-                            ( ColumnName
-                            , ColumnType
-                            , TableName
+                    Insert  [#ColumnList]
+                            ( [ColumnName]
+                            , [ColumnType]
+                            , [TableName]
                             )
                             Select Distinct
-                                    CT.ColumnName
-                                  , CT.ColumnType
+                                    [CT].[ColumnName]
+                                  , [CT].[ColumnType]
                                   , @TableName
-                            From    #ColumnListTemp CT
-                                    Left Join #CurrentColumns C On C.ColumnName = CT.ColumnName
-                                                              And C.TableName = CT.TableName
-                            Where   CT.TableName = @TableName
-                                    And C.ColumnName Is Null;
+                            From    [#ColumnListTemp] [CT]
+                                    Left Join [#CurrentColumns] [C] On [C].[ColumnName] = [CT].[ColumnName]
+                                                              And [C].[TableName] = [CT].[TableName]
+                            Where   [CT].[TableName] = @TableName
+                                    And [C].[ColumnName] Is Null;
 
-                    Select  @ColumnCount = Max(Cid)
-                    From    #ColumnList;
+                    Select  @ColumnCount = Max([Cid])
+                    From    [#ColumnList];
 
                     Set @CurrentColumn = 1;
 
                     While @CurrentColumn <= @ColumnCount
                         Begin
-                            Select  @ColumnName = ColumnName
-                                  , @ColumnType = ColumnType
-                            From    #ColumnList
-                            Where   Cid = @CurrentColumn;
+                            Select  @ColumnName = [ColumnName]
+                                  , @ColumnType = [ColumnType]
+                            From    [#ColumnList]
+                            Where   [Cid] = @CurrentColumn;
 
                             Select  @SQL = 'alter table [History].['
                                     + @TableName + '] add [' + @ColumnName
@@ -315,7 +316,7 @@ Create Table #TableList
                     Set @CurrentTable = @CurrentTable + 1;
 
 					--remove values from #ColumnList for next table
-                    Truncate Table #ColumnList;
+                    Truncate Table [#ColumnList];
                     Set @SQL = '';
                 End;
         End;

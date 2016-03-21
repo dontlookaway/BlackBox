@@ -3,16 +3,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Process].[UspPopulate_HistoryTables] ( @RebuildBit Bit )
+-- if rebuild=1 then drop and recreate
+-- if rebuild=0 then only update
 As
     Set NoCount On;
 /* 
 Template designed by Chris Johnson,Prometic Group September 2015
 Stored procedure to unpivot data held in audit tables and move to blackbox history tables
---Exec Process.UspPopulate_HistoryTables  0
--- if rebuild=1 then drop and recreate
--- if rebuild=0 then only update
 */
 
     Declare @SqlExisting Varchar(Max);
@@ -189,8 +187,7 @@ Stored procedure to unpivot data held in audit tables and move to blackbox histo
 
 
 --Get distinct list of all table updates
-    Create --drop --alter 
-Table [#tables]
+    Create Table [#tables]
         (
           [tid] Int Identity(1 , 1)
         , [TableName] Varchar(150)
@@ -216,8 +213,7 @@ Table [#tables]
                   , [SignatureDateTime];
 
 --list of all field updates
-    Create --drop --alter 
-Table [#Variables]
+    Create Table [#Variables]
         (
           [vid] Int Identity(1 , 1)
         , [TableName] Varchar(150)
@@ -323,8 +319,6 @@ Table [#Variables]
 --Update Ranking
     Declare @SQLRank Varchar(Max); 
     Set @CurrentTable = 1;
---Print @CurrentTable
---Print @TotalTables
     While @CurrentTable <= @TotalTables
         Begin
             Select  @SQLRank = 'Update
