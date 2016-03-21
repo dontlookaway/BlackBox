@@ -20,7 +20,9 @@ CREATE TABLE [History].[WipInspect]
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WIPINSPECTKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CONCESSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[QUANTITY] [float] NULL
+[QUANTITY] [float] NULL,
+[ALTERNATEWAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[ALTWAREHOUSEFLAG] [float] NULL
 ) ON [PRIMARY]
 CREATE NONCLUSTERED INDEX [WipInspect_timeItem] ON [History].[WipInspect] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
 
