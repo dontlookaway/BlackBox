@@ -85,6 +85,9 @@ transaction types when relating to inventory changes
                                   Union
                                   Select    [TrnType] = 'S'
                                           , [AmountModifier] = -1
+                                  Union
+                                  Select    [TrnType] = 'D'
+                                          , [AmountModifier] = -1
                                 ) [t];
 
 	--Get list of all companies in use
