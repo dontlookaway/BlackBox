@@ -74,6 +74,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                                   Union
                                   Select    [Company] = '11'
                                           , [CompanyName] = 'Prometic Biotherapeutics Ltd'
+								  Union
+                                  Select    [Company] = '12'
+                                          , [CompanyName] = 'Prometic Pharma SMT Ltd'
                                   Union
                                   Select    [Company] = '20'
                                           , [CompanyName] = 'Prometic Biotherapeutics Inc'
