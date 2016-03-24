@@ -26,8 +26,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
            )
             Begin
                 Print 2;
-                Create --drop --alter 
-				Table [Lookups].[CompanyNames]
+                Create Table [Lookups].[CompanyNames]
                     (
                       [Company] Varchar(150)
                     , [CompanyName] Varchar(250)
@@ -52,8 +51,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                 Select  @LastUpdated = GetDate();
                 Print 4;
 	--create master list of how codes affect stock
-                Create --drop --alter 
-	Table [#CompanyList]
+                Create 	Table [#CompanyList]
                     (
                       [Company] Varchar(150)
                     , [CompanyName] Varchar(250)
@@ -77,6 +75,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 								  Union
                                   Select    [Company] = '12'
                                           , [CompanyName] = 'Prometic Pharma SMT Ltd'
+								  Union
+                                  Select    [Company] = '13'
+                                          , [CompanyName] = 'Prometic Pharma SMTH Ltd'
                                   Union
                                   Select    [Company] = '20'
                                           , [CompanyName] = 'Prometic Biotherapeutics Inc'
@@ -177,10 +178,6 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsPoStatus
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
 
                 Insert  [Lookups].[CompanyNames]
                         ( [Company]
