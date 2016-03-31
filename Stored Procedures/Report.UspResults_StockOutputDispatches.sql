@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -21,11 +22,19 @@ Template designed by Chris Johnson, Prometic Group March 2016
 
 		--Red tag
         Declare @RedTagDB Varchar(255)= Db_Name();
-        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+        Exec [BlackBox].[Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
             @StoredProcName = 'UspResults_StockOutputDispatches' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
+
+        Declare @Company2 Varchar(Max)
+          , @RedTagType2 Char(1)
+          , @RedTagUse2 Varchar(500);
+
+        Set @Company2 = @Company;
+        Set @RedTagType2 = @RedTagType;
+        Set @RedTagUse2 = @RedTagUse;
 
         Create Table [#Results]
             (
@@ -93,10 +102,9 @@ Template designed by Chris Johnson, Prometic Group March 2016
                 , [TranRank]
                 , [ContainerRank]
                 )
-                Exec [Report].[UspResults_StockOutput] @Company = @Company,
-                    @RedTagType = @RedTagType , @RedTagUse = @RedTagUse;
- -- varchar(500)
- 
+                Exec [BlackBox].[Report].[UspResults_StockOutput] @Company = @Company2 ,
+                    @RedTagType = @RedTagType2 , @RedTagUse = @RedTagUse2;
+  
         Insert  [#Results]
                 ( [Company]
                 , [CompanyName]
@@ -126,12 +134,11 @@ Template designed by Chris Johnson, Prometic Group March 2016
                 , [Uom]
                 , [Narration]
                 , [Reference]
-        --, [TranRank]
-        --, [ContainerRank]
+                , [TranRank]
+                , [ContainerRank]
                 )
-                Exec [Report].[UspResults_StockDispatches] @Company = @Company,
-                    @RedTagType = @RedTagType , @RedTagUse = @RedTagUse;
- -- varchar(500)
+                Exec [BlackBox].[Report].[UspResults_StockDispatches] @Company = @Company2 ,
+                    @RedTagType = @RedTagType2 , @RedTagUse = @RedTagUse2;
 
         Select  [R].[Company]
               , [R].[CompanyName]

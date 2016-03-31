@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -470,6 +471,8 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[StockUom]
               , [R].[Narration]
               , [R].[Reference]
+              , [TranRank] = 99
+              , [ContainerRank] = 99
         From    [#Results] As [R];
 
         Drop Table [#OriginalBatch];
