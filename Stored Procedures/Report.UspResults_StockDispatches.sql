@@ -35,7 +35,7 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @ListOfTables Varchar(Max) = 'AssetDepreciation,TblApTerms'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
-        Create Table [#LotTransactions]
+        Create Table [#LotTransactionsDispatches]
             (
               [DatabaseName] Varchar(150)
             , [Lot] Varchar(50)
@@ -57,20 +57,20 @@ Stored procedure set out to query multiple databases with the same information a
             , [Warehouse] Varchar(10)
             , [JobPurchOrder] Varchar(20)
             );
-        Create Table [#InvMaster]
+        Create Table [#InvMasterDispatches]
             (
               [DatabaseName] Varchar(150)
             , [StockCode] Varchar(30)
             , [Description] Varchar(50)
             , [StockUom] Varchar(10)
             );
-        Create Table [#ArCustomer]
+        Create Table [#ArCustomerDispatches]
             (
               [DatabaseName] Varchar(150)
             , [Customer] Varchar(15)
             , [Name] Varchar(50)
             );
-        Create Table [#WipMaster]
+        Create Table [#WipMasterDispatches]
             (
               [DatabaseName] Varchar(150)
             , [Job] Varchar(20)
@@ -78,13 +78,13 @@ Stored procedure set out to query multiple databases with the same information a
             , [JobClassification] Varchar(10)
             , [SellingPrice] Numeric(20 , 2)
             );
-        Create Table [#SorMaster]
+        Create Table [#SorMasterDispatches]
             (
               [DatabaseName] Varchar(150)
             , [SalesOrder] Varchar(20)
             , [CustomerPoNumber] Varchar(30)
             );
-        Create Table [#SorDetail]
+        Create Table [#SorDetailDispatches]
             (
               [DatabaseName] Varchar(150)
             , [SalesOrder] Varchar(20)
@@ -110,7 +110,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-				Insert [#LotTransactions]
+				Insert [#LotTransactionsDispatches]
 						( [DatabaseName]
 						, [Lot]
 						, [StockCode]
@@ -169,7 +169,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-				Insert [#InvMaster]
+				Insert [#InvMasterDispatches]
 						( [DatabaseName]
 						, [StockCode]
 						, [Description]
@@ -198,7 +198,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Insert [#ArCustomer]
+			Insert [#ArCustomerDispatches]
 			        ( [DatabaseName]
 			        , [Customer]
 			        , [Name]
@@ -225,7 +225,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Insert [#WipMaster]
+			Insert [#WipMasterDispatches]
 					( [DatabaseName]
 					, [Job]
 					, [JobDescription]
@@ -256,7 +256,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Insert [#SorMaster]
+			Insert [#SorMasterDispatches]
 			        ( [DatabaseName]
 			        , [SalesOrder]
 			        , [CustomerPoNumber]
@@ -283,7 +283,7 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			Insert [#SorDetail]
+			Insert [#SorDetailDispatches]
                 ( [DatabaseName]
                 , [SalesOrder]
                 , [SalesOrderLine]
@@ -310,7 +310,7 @@ Stored procedure set out to query multiple databases with the same information a
         End;
 
 --define the results you want to return
-        Create Table [#Results]
+        Create Table [#ResultsDispatches]
             (
               [Company] Varchar(150)
             , [CompanyName] Varchar(250)
@@ -358,11 +358,11 @@ Stored procedure set out to query multiple databases with the same information a
                         [LT].[Lot]
                       , [MasterJob] = [LT].[JobPurchOrder]
                       , [LT].[DatabaseName]
-                From    [#LotTransactions] As [LT]
+                From    [#LotTransactionsDispatches] As [LT]
                 Where   [LT].[TrnType] = 'R'
                         And [LT].[JobPurchOrder] <> '';
 --script to combine base data and insert into results table
-        Insert  [#Results]
+        Insert  [#ResultsDispatches]
                 ( [Company]
                 , [CompanyName]
                 , [OriginalBatch]
@@ -420,24 +420,24 @@ Stored procedure set out to query multiple databases with the same information a
                       , [IM].[StockUom]
                       , [LT].[Narration]
                       , [LT].[Reference]
-                From    [#LotTransactions] As [LT]
+                From    [#LotTransactionsDispatches] As [LT]
                         Left Join [#OriginalBatch] As [OB] On [OB].[Lot] = [LT].[Lot]
                                                               And [OB].[DatabaseName] = [LT].[DatabaseName]
-                        Left Join [#InvMaster] As [IM] On [IM].[StockCode] = [LT].[StockCode]
+                        Left Join [#InvMasterDispatches] As [IM] On [IM].[StockCode] = [LT].[StockCode]
                                                           And [IM].[DatabaseName] = [LT].[DatabaseName]
-                        Left Join [#ArCustomer] As [AC] On [AC].[Customer] = [LT].[Customer]
+                        Left Join [#ArCustomerDispatches] As [AC] On [AC].[Customer] = [LT].[Customer]
                                                            And [AC].[DatabaseName] = [LT].[DatabaseName]
-                        Left Join [#WipMaster] As [WM] On [WM].[Job] = [LT].[Job]
+                        Left Join [#WipMasterDispatches] As [WM] On [WM].[Job] = [LT].[Job]
                                                           And [WM].[DatabaseName] = [LT].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[TrnTypeAmountModifier]
                         As [TTAM] On [TTAM].[TrnType] = [LT].[TrnType]
                                      And [TTAM].[Company] = [LT].[DatabaseName]
-                        Left Join [#SorMaster] As [SM] On [SM].[SalesOrder] = [LT].[SalesOrder]
+                        Left Join [#SorMasterDispatches] As [SM] On [SM].[SalesOrder] = [LT].[SalesOrder]
                                                           And [SM].[DatabaseName] = [LT].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[Warehouse] As [W] On [W].[Warehouse] = [LT].[Warehouse]
                                                               And [W].[Company] = [LT].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = [LT].[DatabaseName]
-                        Left Join [#SorDetail] As [SD] On [SD].[SalesOrder] = [LT].[SalesOrder]
+                        Left Join [#SorDetailDispatches] As [SD] On [SD].[SalesOrder] = [LT].[SalesOrder]
                                                           And [SD].[SalesOrderLine] = [LT].[SalesOrderLine]
                                                           And [SD].[DatabaseName] = [LT].[DatabaseName]
                 Where   [LT].[TrnType] = 'D';
@@ -473,15 +473,15 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[Reference]
               , [TranRank] = 99
               , [ContainerRank] = 99
-        From    [#Results] As [R];
+        From    [#ResultsDispatches] As [R];
 
         Drop Table [#OriginalBatch];
-        Drop Table [#ArCustomer];
-        Drop Table [#InvMaster];
-        Drop Table [#LotTransactions];
-        Drop Table [#SorMaster];
-        Drop Table [#Results];
-        Drop Table [#WipMaster];
+        Drop Table [#ArCustomerDispatches];
+        Drop Table [#InvMasterDispatches];
+        Drop Table [#LotTransactionsDispatches];
+        Drop Table [#SorMasterDispatches];
+        Drop Table [#ResultsDispatches];
+        Drop Table [#WipMasterDispatches];
 
     End;
 
