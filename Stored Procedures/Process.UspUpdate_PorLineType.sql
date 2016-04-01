@@ -1,9 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-Create Proc [Process].[UspUpdate_PorLineType]
+CREATE Proc [Process].[UspUpdate_PorLineType]
     (
       @PrevCheck Int
     , @HoursBetweenUpdates Int
@@ -26,7 +26,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Begin
                 Create Table [Lookups].[PorLineType]
                     (
-                      [PorLineType] Int
+                      [PorLineType] Int Primary Key
                     , [PorLineTypeDesc] Varchar(150)
                     , [LastUpdated] DateTime2
                     );
