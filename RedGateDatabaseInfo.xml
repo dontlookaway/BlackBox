@@ -57,7 +57,7 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>9</Count>
+    <Count>10</Count>
     <DataFile>Lookups.GenJournalDetailSource_Data.sql</DataFile>
     <DataFile>Lookups.GenJournalType_Data.sql</DataFile>
     <DataFile>Lookups.LotTransactionTrnType_Data.sql</DataFile>
@@ -67,5 +67,6 @@
     <DataFile>Lookups.GenJournalCtlSource_Data.sql</DataFile>
     <DataFile>Lookups.JnlPostingType_Data.sql</DataFile>
     <DataFile>Lookups.JnlStatus_Data.sql</DataFile>
+    <DataFile>Lookups.PorLineType_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
