@@ -12,36 +12,55 @@ As
     Begin
 /*
 Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with Company Names
---exec  [Process].[UspUpdate_CompanyNames] 0,-1
+--exec  [Process].[UspUpdate_CompanyNames] 1,1
 */
-
-        Set NoCount On;
+--        Set NoCount On;
 
         Print 1;
---check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
-                          From      [INFORMATION_SCHEMA].[TABLES]
-                          Where     [TABLE_SCHEMA] = 'Lookups'
-                                    And [TABLE_NAME] = 'CompanyNames' )
+--check if table exists with latest field to drop if it doesn't
+        If ( Not Exists ( Select    1
+                          From      [sys].[tables] As [T]
+                                    Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                                    Left Join [sys].[columns] As [C] On [C].[object_id] = [T].[object_id]
+                          Where     [S].[name] = 'Lookups'
+                                    And [T].[name] = 'CompanyNames'
+                                    And [C].[name] = 'ShortName' )
            )
             Begin
-                Print 2;
+                Begin Try
+                    Print 2;
+                    Drop Table [Lookups].[CompanyNames];
+                End Try
+                Begin Catch
+                    Print 3;
+                    Print 'unable to drop table - may not exist';
+                End Catch;
+            End;	
+--check if table exists to create it
+        If ( Not Exists ( Select    1
+                          From      [sys].[tables] As [T]
+                                    Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                          Where     [S].[name] = 'Lookups'
+                                    And [T].[name] = 'CompanyNames' )
+           )
+            Begin
+                Print 4;
                 Create Table [Lookups].[CompanyNames]
                     (
                       [Company] Varchar(150)
                     , [CompanyName] Varchar(250)
-					, Currency Varchar(10)
+                    , [ShortName] Varchar(250)
+                    , [Currency] Varchar(10)
                     , [LastUpdated] DateTime2
                     );
             End;
 
-
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Print 3;
+        Print 5;
         Select  @LastDate = Max([LastUpdated])
-        From    [Lookups].[PurchaseOrderStatus];
+        From    [Lookups].[CompanyNames] As [CN];
 
         If @LastDate Is Null
             Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
@@ -49,145 +68,175 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--Set time of run
                 Declare @LastUpdated DateTime2;
                 Select  @LastUpdated = GetDate();
-                Print 4;
-	--create master list of how codes affect stock
+                Print 6;
+	--create master list of Company Names
                 Create 	Table [#CompanyList]
                     (
                       [Company] Varchar(150)
                     , [CompanyName] Varchar(250)
+                    , [ShortName] Varchar(250)
                     );
 
-                Print 5;
+                Print 7;
                 Insert  [#CompanyList]
                         ( [Company]
                         , [CompanyName]
+                        , [ShortName]
                         )
                         Select  [t].[Company]
                               , [t].[CompanyName]
+                              , [t].[ShortName]
                         From    ( Select    [Company] = '0'
                                           , [CompanyName] = 'Prometic BioSciences Ltd. TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = '10'
                                           , [CompanyName] = 'Prometic BioSciences Ltd'
+                                          , [ShortName] = 'PBL'
                                   Union
                                   Select    [Company] = '11'
                                           , [CompanyName] = 'Prometic Biotherapeutics Ltd'
-								  Union
+                                          , [ShortName] = 'PBT Ltd'
+                                  Union
                                   Select    [Company] = '12'
                                           , [CompanyName] = 'Prometic Pharma SMT Ltd'
-								  Union
+                                          , [ShortName] = 'PSM'
+                                  Union
                                   Select    [Company] = '13'
                                           , [CompanyName] = 'Prometic Pharma SMTH Ltd'
+                                          , [ShortName] = 'PSMH'
                                   Union
                                   Select    [Company] = '20'
                                           , [CompanyName] = 'Prometic Biotherapeutics Inc'
+                                          , [ShortName] = 'PBT'
                                   Union
                                   Select    [Company] = '21'
                                           , [CompanyName] = 'Pathogen Removal Device Tech'
+                                          , [ShortName] = 'PRDT'
                                   Union
                                   Select    [Company] = '22'
                                           , [CompanyName] = 'Nantpro'
+                                          , [ShortName] = 'Nantpro'
                                   Union
                                   Select    [Company] = '40'
                                           , [CompanyName] = 'Prometic Life Sciences Inc'
+                                          , [ShortName] = 'PLI'
                                   Union
                                   Select    [Company] = '41'
                                           , [CompanyName] = 'Prometic Biosciences Inc'
+                                          , [ShortName] = 'PBI'
                                   Union
                                   Select    [Company] = '42'
                                           , [CompanyName] = 'Prometic Manufacturing Inc'
+                                          , [ShortName] = 'PMI'
                                   Union
                                   Select    [Company] = '43'
                                           , [CompanyName] = 'Prometic Bioproduction Inc'
+                                          , [ShortName] = 'PBP'
                                   Union
                                   Select    [Company] = '44'
                                           , [CompanyName] = 'Prometic Plasma Resources Inc'
+                                          , [ShortName] = 'PPR'
                                   Union
                                   Select    [Company] = '70'
                                           , [CompanyName] = 'Prometic Biosciences Russia'
+                                          , [ShortName] = 'PBR Russia'
                                   Union
                                   Select    [Company] = '91'
                                           , [CompanyName] = 'Prometic Biosciences Inc'
+                                          , [ShortName] = 'PBI - Dec Y/E'
                                   Union
                                   Select    [Company] = '92'
                                           , [CompanyName] = 'Prometic Biotherapeutics Inc'
+                                          , [ShortName] = 'PBT Ltd'
                                   Union
                                   Select    [Company] = 'C'
                                           , [CompanyName] = 'Prometic Biotherapeutics TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'D'
                                           , [CompanyName] = 'Prometic Biosciences Inc TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'F'
                                           , [CompanyName] = 'Prometic Biosciences Inc TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'G'
                                           , [CompanyName] = 'Pathogen Removal Device Tech TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'H'
                                           , [CompanyName] = 'Prometic Biotherapeutics TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'P'
                                           , [CompanyName] = 'Prometic Bioproduction TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'Q'
                                           , [CompanyName] = 'Prometic Life Sciences TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'T'
                                           , [CompanyName] = 'Prometic Biosciences Ltd TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'U'
                                           , [CompanyName] = 'Prometic Manufacturing TEST'
+                                          , [ShortName] = 'N/A'
                                   Union
                                   Select    [Company] = 'V'
                                           , [CompanyName] = 'Pathogen Removal Device TEST'
+                                          , [ShortName] = 'N/A'
                                 ) [t];
 
 	--Get list of all companies in use
-
-	--create temporary tables to be pulled from different databases, including a column to id
-                Create Table [#CompanyNameTable1] ( [Company] Varchar(150),Currency Varchar(10) );
-                Print 6;
+                Create Table [#CompanyNameTable1]
+                    (
+                      [Company] Varchar(150)
+                    , [Currency] Varchar(10)
+                    );
+                Print 8;
 	--create script to pull data from each db into the tables
-                Declare @SQL Varchar(Max) = '
-		USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
-		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 		BEGIN				
-		Insert #CompanyNameTable1
-			( Company,Currency )
-		Select @DBCode,[TC].[Currency] FROM [dbo].[TblCurrency] As [TC]
+			Insert #CompanyNameTable1 
+				(Company, Currency)
+			Select 
+				@DBCode,[TC].[Currency] 
+			FROM [dbo].[TblCurrency] As [TC]
 		Where [TC].[BuyExchangeRate]=1
 		End';
-                Print 7;
+                Print 9;
 	--execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
-					
-	--all companies process the same way
                 Select  [T].[Company]
                       , [CompanyName] = Coalesce([cl].[CompanyName] ,
                                                  'Unknown')
-					  , [T].[Currency]
+                      , [ShortName] = Coalesce([cl].[ShortName] , 'Unknown')
+                      , [T].[Currency]
                 Into    [#ResultsCompanyName]
                 From    [#CompanyNameTable1] [T]
                         Left Join [#CompanyList] As [cl] On [cl].[Company] = [T].[Company];
 
 
 	--placeholder for anomalous results that are different to master list
-
                 Insert  [Lookups].[CompanyNames]
                         ( [Company]
                         , [CompanyName]
-						, Currency
+                        , [Currency]
+                        , [ShortName]
                         , [LastUpdated]
 	                    )
                         Select  [rcn].[Company]
                               , [rcn].[CompanyName]
-							  , [rcn].[Currency]
+                              , [rcn].[Currency]
+                              , [rcn].[ShortName]
                               , @LastUpdated
                         From    [#ResultsCompanyName] As [rcn];
 
@@ -202,7 +251,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 
                         Select  @PreviousCount = Count(*)
                         From    [Lookups].[CompanyNames] As [cn]
-                        Where   [cn].[LastUpdated] <> @LastDate;
+                        Where   [cn].[LastUpdated] <> @LastUpdated;
+
+
 	
                         If @PreviousCount > @CurrentCount
                             Begin
@@ -228,11 +279,13 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                         Where   [LastUpdated] <> @LastUpdated;
                         Print 'UspUpdate_CompanyNames - Update applied successfully';
                     End;
+
+            End;
+        If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+            Begin
+                Print 'UspUpdate_CompanyNames - Table was last updated at '
+                    + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
-        Begin
-            Print 'UspUpdate_CompanyNames - Table was last updated at '
-                + Cast(@LastDate As Varchar(255)) + ' no update applied';
-        End;
+
 GO
