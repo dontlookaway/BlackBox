@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_ClosingBalancesInterco]
+CREATE Proc [Report].[UspResults_ClosingBalancesInterco]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -103,7 +104,9 @@ Template designed by Chris Johnson, Prometic Group March 2016
 
         Select  [UA].[Company]
               , [CN].[CompanyName]
+			  , [CN].[ShortName]
               , [DueTo] = [CN2].[CompanyName]
+			  , [DueToShortName] = [CN2].[ShortName]
               , [GM].[GlGroup]
               , [UA].[GlCode]
               , [GlDescription] = [GM].[Description]
