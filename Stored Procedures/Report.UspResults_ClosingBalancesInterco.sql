@@ -130,7 +130,8 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               And [GM].[GlCode] = [UA].[GlCode]
                 Left Join [Lookups].[CompanyNames] As [CN2] On [CN2].[Company] = [UA].[DueToCode]
         Where   Upper(Left([GM].[GlGroup] , 3)) = 'ADV'
-                Or Upper(Left([GM].[GlGroup] , 5)) = 'LTDUE';
+                Or Upper(Left([GM].[GlGroup] , 5)) in ('LTDUE','INTAR')
+				Or Upper(Left([GM].[GlGroup] , 6)) ='INTPAY';
 
         Drop Table [#UnpivotAmounts];
 
