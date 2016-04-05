@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_PurchaseOrderWithHistory]
+CREATE Proc [Report].[UspResults_PurchaseOrderWithHistory]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -83,6 +84,12 @@ Stored procedure set out to query multiple databases with the same information a
             , [Supplier] Varchar(15)
             , [SupplierName] Varchar(50)
             );
+        Create Table [#GrnDetails]
+            (
+              [DatabaseName] Varchar(150)
+            , [Grn] Varchar(20)
+            , [DebitRecGlCode] Varchar(35)
+            );
 
 
 
@@ -143,6 +150,11 @@ Stored procedure set out to query multiple databases with the same information a
 				SELECT [DatabaseName]=@DBCode
 					 , [AS].[Supplier]
 					 , [AS].[SupplierName] FROM [ApSupplier] As [AS]
+				Insert [#GrnDetails] ( [DatabaseName], [Grn], [DebitRecGlCode])
+				Select  [DatabaseName] = @DBCode
+					  , [GD].[Grn]
+					  , [GD].[DebitRecGlCode]
+				From    [GrnDetails] As [GD];
 			End
 	End';
 
@@ -181,6 +193,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Reference] Varchar(30)
             , [CompleteFlag] Char(1)
             , [OrderStatus] Varchar(150)
+            , [DebitRecGlCode] Varchar(35)
             );
 
 --Placeholder to create indexes as required
@@ -213,6 +226,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [Reference]
                 , [CompleteFlag]
                 , [OrderStatus]
+                , [DebitRecGlCode]
                 )
                 Select  [PMD].[DatabaseName]
                       , [CN].[CompanyName]
@@ -251,6 +265,7 @@ Stored procedure set out to query multiple databases with the same information a
                                               Else [PMD].[MCompleteFlag]
                                          End
                       , [OrderStatus] = [POS].[OrderStatusDescription]
+                      , [GD].[DebitRecGlCode]
                 From    [#PorMasterDetail] As [PMD]
                         Left Join [#PorHistReceipt] As [PHR] On [PHR].[PurchaseOrder] = [PMD].[PurchaseOrder]
                                                               And [PMD].[Line] = [PHR].[PurchaseOrderLin]
@@ -265,6 +280,8 @@ Stored procedure set out to query multiple databases with the same information a
                         Left Join [#ApSupplier] As [AS] On [AS].[Supplier] = [PMH].[Supplier]
                                                            And [AS].[DatabaseName] = [PMH].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[PorLineType] As [PLT] On [PLT].[PorLineType] = [PMD].[LineType]
+                        Left Join [#GrnDetails] As [GD] On [PHR].[Reference] = [GD].[Grn]
+                                                           And [GD].[DatabaseName] = [PHR].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = [PMD].[DatabaseName];
 
 
@@ -295,7 +312,11 @@ Stored procedure set out to query multiple databases with the same information a
               , [Reference]
               , [CompleteFlag]
               , [OrderStatus]
-        From    [#Results];
+              , [GlCode] = [DebitRecGlCode]
+              , [GLDescription] = [GM].[Description]
+        From    [#Results]
+                Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [DebitRecGlCode] = [GM].[GlCode]
+                                                              And [DatabaseName] = [GM].[Company];
 
     End;
 
