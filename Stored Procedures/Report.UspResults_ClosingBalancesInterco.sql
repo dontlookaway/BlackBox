@@ -71,15 +71,8 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               1 , 20)
                       , [ClosingBalance]
                       , [DueToCode] = Case When [CBP].[Company] <> '10'
-                                           Then Case When Right([CBP].[GlCode] ,
-                                                              2) = '00'
-                                                     Then '40'
-                                                     Else Right([CBP].[GlCode] ,
-                                                              2)
-                                                End
+                                           Then Right([CBP].[GlCode] , 2)
                                            When Right([GM].[GlGroup] , 3) = 'PLI'
-                                           Then '40'
-                                           When Right([CBP].[GlCode] , 2) = '00'
                                            Then '40'
                                            Else Right([CBP].[GlCode] , 2)
                                       End
@@ -104,9 +97,9 @@ Template designed by Chris Johnson, Prometic Group March 2016
 
         Select  [UA].[Company]
               , [CN].[CompanyName]
-			  , [CN].[ShortName]
-              , [DueTo] = [CN2].[CompanyName]
-			  , [DueToShortName] = [CN2].[ShortName]
+              , [CN].[ShortName]
+              , [DueTo] = Coalesce([CN2].[CompanyName] , 'Unknown')
+              , [DueToShortName] = Coalesce([CN2].[ShortName] , 'Unknown')
               , [GM].[GlGroup]
               , [UA].[GlCode]
               , [GlDescription] = [GM].[Description]
@@ -130,8 +123,8 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               And [GM].[GlCode] = [UA].[GlCode]
                 Left Join [Lookups].[CompanyNames] As [CN2] On [CN2].[Company] = [UA].[DueToCode]
         Where   Upper(Left([GM].[GlGroup] , 3)) = 'ADV'
-                Or Upper(Left([GM].[GlGroup] , 5)) in ('LTDUE','INTAR')
-				Or Upper(Left([GM].[GlGroup] , 6)) ='INTPAY';
+                Or Upper(Left([GM].[GlGroup] , 5)) In ( 'LTDUE' , 'INTAR' )
+                Or Upper(Left([GM].[GlGroup] , 6)) = 'INTPAY';
 
         Drop Table [#UnpivotAmounts];
 
