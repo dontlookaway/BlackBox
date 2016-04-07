@@ -28,7 +28,7 @@ Procedure to return all Purchase Order Details
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_Template' ,
+            @StoredProcName = 'UspResults_PurchaseOrders' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 

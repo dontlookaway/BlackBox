@@ -13,8 +13,6 @@ CREATE Proc [Report].[UspResults_JobHeader_AllJobs]
     )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
-Stored procedure set out to query multiple databases with the same information and return it in a collated format
-Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-08-01', @EndDateText='2015-10-01'
 */
     Begin
 
@@ -35,7 +33,7 @@ Exec Report.[UspResults_JobHeader_AllJobs]   @Company=10, @StartDateText='2014-0
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_Template' ,
+            @StoredProcName = 'UspResults_JobHeader_AllJobs' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 

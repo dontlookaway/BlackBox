@@ -27,7 +27,7 @@ Stored procedure set out to bring back purchase orders which do not have receipt
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_Template' ,
+            @StoredProcName = 'UspResults_OutstandingPurchaseOrders' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 

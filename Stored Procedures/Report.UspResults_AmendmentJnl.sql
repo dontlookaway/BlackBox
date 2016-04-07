@@ -3,6 +3,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE Proc [Report].[UspResults_AmendmentJnl]
     (
       @Company Varchar(Max)
@@ -27,7 +28,7 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_Template' ,
+            @StoredProcName = 'UspResults_AmendmentJnl' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 
