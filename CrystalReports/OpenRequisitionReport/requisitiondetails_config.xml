@@ -8,7 +8,7 @@
     <ReportForm Type="1" SaveValue="_system" Name="frm_requisitiondetails">
       <Form FormSize="{Width=450, Height=455}" TabSize="{Width=450, Height=455}">
         <TabPage Text="Tab Page" Name="ce2e6dcc-aa09-410b-96cf-c03ecac1368b" />
-        <TabPage Text="Dynamic parameters" Name="255a2964-d9c3-44b5-876e-2ad8c35516d6" />
+        <TabPage Text="Dynamic parameters" Name="196a58a9-e0c4-4151-a13d-9b609890cd63" />
         <TabPage Text="Output Options" Name="0a5c8d55-2b3d-49ac-95af-c83bc5f6ccd9">
           <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
             <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
@@ -38,6 +38,16 @@
           <ColumnDescriptionName />
           <RecordLimit>1000</RecordLimit>
           <HierarchicalLinkColumnNameList />
+          <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
+          <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
+        </ParameterQueryInfo>
+        <ParameterQueryInfo>
+          <ParameterName>Company</ParameterName>
+          <DatabaseName>BlackBox</DatabaseName>
+          <SchemaName>Lookups</SchemaName>
+          <TableName>CompanyNames</TableName>
+          <ColumnKeyName>Company</ColumnKeyName>
+          <RecordLimit>1000</RecordLimit>
           <DefaultValueSortMethod>BasedOnValue</DefaultValueSortMethod>
           <DefaultValueSortOrder>AlphabeticalAscending</DefaultValueSortOrder>
         </ParameterQueryInfo>
