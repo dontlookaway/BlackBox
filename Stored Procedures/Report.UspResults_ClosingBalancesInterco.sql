@@ -21,7 +21,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_ClosingBalances' ,
+            @StoredProcName = 'UspResults_ClosingBalancesInterco' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 
