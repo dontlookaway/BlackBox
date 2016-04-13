@@ -143,7 +143,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                                           , [ShortName] = 'PBR Russia'
                                   Union
                                   Select    [Company] = '91'
-                                          , [CompanyName] = 'Prometic Biosciences Inc'
+                                          , [CompanyName] = 'Prometic Biosciences Inc - Dec Y/E'
                                           , [ShortName] = 'PBI - Dec Y/E'
                                   Union
                                   Select    [Company] = '92'
