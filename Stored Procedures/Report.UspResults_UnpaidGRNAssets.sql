@@ -267,6 +267,7 @@ End';
             , [PostCurrency] Char(3)
             , [ConvRate] Numeric(20 , 8)
             , [MultiDiv] Char(1)
+            , [ShortName] Varchar(250)
             );
 
 --Placeholder to create indexes as required
@@ -293,6 +294,7 @@ End';
                 , [PostCurrency]
                 , [ConvRate]
                 , [MultiDiv]
+                , [ShortName]
                 )
                 Select  [GrnPeriod] = @PeriodYYYYMM
                       , [CN].[CompanyName]
@@ -316,20 +318,24 @@ End';
                       , [GD].[PostCurrency]
                       , [GD].[ConvRate]
                       , [MultiDiv] = [GD].[MulDiv]
+                      , [CN].[ShortName]
                 From    [#GrnDets] [GD]
-                        Left Outer Join [#GrnAdjust] [GA] On [GD].[JournalEntry] = [GA].[OrigJournalEntry]
-                                                             And [GD].[Journal] = [GA].[OrigJournal]
-                                                             And [GD].[GrnSource] = [GA].[GrnSource]
-                                                             And [GD].[Supplier] = [GA].[Supplier]
-                                                             And [GD].[Grn] = [GA].[Grn]
-                                                             And [GA].[DatabaseName] = [GD].[DatabaseName]
-                        Left Outer Join [#GrnMatch] [GM] On [GD].[JournalEntry] = [GM].[EntryNumber]
-                                                            And [GD].[Journal] = [GM].[Journal]
-                                                            And [GD].[GrnSource] = [GM].[TransactionType]
-                                                            And [GD].[Supplier] = [GM].[Supplier]
-                                                            And [GD].[Grn] = [GM].[Grn]
-                                                            And [GM].[DatabaseName] = [GD].[DatabaseName]
-                        Left Join [BlackBox].[Lookups].[CompanyNames] [CN] On [CN].[Company] = [GD].[DatabaseName]
+                        Left Outer Join [#GrnAdjust] [GA]
+                            On [GD].[JournalEntry] = [GA].[OrigJournalEntry]
+                               And [GD].[Journal] = [GA].[OrigJournal]
+                               And [GD].[GrnSource] = [GA].[GrnSource]
+                               And [GD].[Supplier] = [GA].[Supplier]
+                               And [GD].[Grn] = [GA].[Grn]
+                               And [GA].[DatabaseName] = [GD].[DatabaseName]
+                        Left Outer Join [#GrnMatch] [GM]
+                            On [GD].[JournalEntry] = [GM].[EntryNumber]
+                               And [GD].[Journal] = [GM].[Journal]
+                               And [GD].[GrnSource] = [GM].[TransactionType]
+                               And [GD].[Supplier] = [GM].[Supplier]
+                               And [GD].[Grn] = [GM].[Grn]
+                               And [GM].[DatabaseName] = [GD].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
+                            On [CN].[Company] = [GD].[DatabaseName]
                 Group By [GD].[Supplier]
                       , [GD].[Grn]
                       , [GD].[DebitRecGlCode]
@@ -344,6 +350,7 @@ End';
                       , [GD].[ConvRate]
                       , [GD].[MulDiv]
                       , [CN].[CompanyName]
+                      , [CN].[ShortName]
                 Having  ( Sum([OrigGrnValue])
                           - IsNull(Sum(IsNull([GM].[MatchedValue] , 0)) , 0)
                           + Sum(IsNull([GA].[GrnAdjValue] , 0)) <> 0 );
@@ -373,6 +380,7 @@ End';
               , [PostCurrency]
               , [ConvRate]
               , [MultiDiv]
+              , [ShortName]
         From    [#Results];
 
     End;
