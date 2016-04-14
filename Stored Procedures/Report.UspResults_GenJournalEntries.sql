@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -70,33 +71,25 @@ Stored procedure set out to query multiple databases with the same information a
             , [GlJournal] Int
             , [GlPeriod] Int
             , [GlYear] Int
+            , [JournalSource] Char(2)
             );
 	
 --create script to pull data from each db into the tables
         Declare @SQLGenJournalDetail Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 					Insert [#GenJournalDetail]
@@ -173,6 +166,7 @@ Stored procedure set out to query multiple databases with the same information a
 							, [GlJournal]
 							, [GlPeriod]
 							, [GlYear]
+							, [JournalSource]
 							)
 					SELECT [DatabaseName]=@DBCode
 						 , [GJC].[JnlPrintFlag]
@@ -192,7 +186,8 @@ Stored procedure set out to query multiple databases with the same information a
 						 , [GJC].[Notation]
 						 , [GJC].[GlJournal]
 						 , [GJC].[GlPeriod]
-						 , [GJC].[GlYear] FROM [GenJournalCtl] As [GJC]
+						 , [GJC].[GlYear]
+						 , [GJC].[JournalSource] FROM [GenJournalCtl] As [GJC]
 			End
 	End';
 --Enable this function to check script changes (try to run script directly against db manually)
@@ -232,6 +227,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Authorised] Char(1)
             , [PostDate] Date
             , [Notation] Varchar(100)
+            , [JournalSource] Char(2)
             );
 
 --Placeholder to create indexes as required
@@ -264,6 +260,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [Authorised]
                 , [PostDate]
                 , [Notation]
+                , [JournalSource]
                 )
                 Select  [GJD].[DatabaseName]
                       , [GJD].[Journal]
@@ -291,11 +288,13 @@ Stored procedure set out to query multiple databases with the same information a
                       , [GJC].[Authorised]
                       , [GJC].[PostDate]
                       , [GJC].[Notation]
+                      , [GJC].[JournalSource]
                 From    [#GenJournalDetail] As [GJD]
-                        Left Join [#GenJournalCtl] As [GJC] On [GJC].[GlJournal] = [GJD].[Journal]
-                                                              And [GJC].[GlPeriod] = [GJD].[GlPeriod]
-                                                              And [GJC].[GlYear] = [GJD].[GlYear]
-                                                              And [GJC].[DatabaseName] = [GJD].[DatabaseName];
+                        Left Join [#GenJournalCtl] As [GJC]
+                            On [GJC].[GlJournal] = [GJD].[Journal]
+                               And [GJC].[GlPeriod] = [GJD].[GlPeriod]
+                               And [GJC].[GlYear] = [GJD].[GlYear]
+                               And [GJC].[DatabaseName] = [GJD].[DatabaseName];
 
 --return results
         Select  [R].[DatabaseName]
@@ -326,13 +325,21 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[Authorised]
               , [R].[PostDate]
               , [R].[Notation]
+              , [JournalSource] = [GJCJS].[GenJournalCtlJnlSourceDesc]
         From    [#Results] As [R]
-                Left Join [BlackBox].[Lookups].[JnlPostingType] [JPT] On [R].[JnlPostingType] = [JPT].[JnlPostingType]
-                Left Join [BlackBox].[Lookups].[JnlStatus] [JS] On [R].[JnlStatus] = [JS].[JnlStatus]
-                Left Join [BlackBox].[Lookups].[GenJournalCtlSource] [GJCS] On [R].[Source] = [GJCS].[Source]
-                Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[GlCode] = [R].[GlCode]
-                                                              And [GM].[Company] = [R].[DatabaseName]
-                Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[DatabaseName];
+                Left Join [BlackBox].[Lookups].[JnlPostingType] [JPT]
+                    On [R].[JnlPostingType] = [JPT].[JnlPostingType]
+                Left Join [BlackBox].[Lookups].[JnlStatus] [JS]
+                    On [R].[JnlStatus] = [JS].[JnlStatus]
+                Left Join [BlackBox].[Lookups].[GenJournalCtlSource] [GJCS]
+                    On [R].[Source] = [GJCS].[Source]
+                Left Join [SysproCompany40].[dbo].[GenMaster] As [GM]
+                    On [GM].[GlCode] = [R].[GlCode]
+                       And [GM].[Company] = [R].[DatabaseName]
+                Left Join [BlackBox].[Lookups].[CompanyNames] As [CN]
+                    On [CN].[Company] = [R].[DatabaseName]
+                Left Join [Lookups].[GenJournalCtlJnlSource] [GJCJS]
+                    On [R].[JournalSource] = [GJCJS].[GenJournalCtlJnlSource];
 
     End;
 
