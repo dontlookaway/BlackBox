@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -135,7 +136,7 @@ As
                           Where     Convert(Int , ParseName([GM].[GlCode] , 2)) Between @GLStart
                                                               And
                                                               @GLEnd
-	And [GT].[EntryValue]>0
+	And [GT].[EntryValue]<>0
                         ) [t]
                 Order By [t].[Company]
                       , [t].[GlCode]
