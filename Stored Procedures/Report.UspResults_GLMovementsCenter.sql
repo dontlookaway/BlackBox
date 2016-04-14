@@ -51,7 +51,8 @@ As
             , [Movement] Numeric(20 , 2)
             , [GlPeriod] Int
             , [GlYear] Int
-			, [Source] Varchar(100)
+            , [Source] Varchar(100)
+            , [Journal] Int
             );
         Create Table [#MovementsRaw]
             (
@@ -78,7 +79,8 @@ As
                 , [Movement]
                 , [GlPeriod]
                 , [GlYear]
-				, [Source]
+                , [Source]
+                , [Journal] 
                 )
                 Select  [t].[Company]
                       , [t].[ShortName]
@@ -90,7 +92,8 @@ As
                       , [t].[Movement]
                       , [t].[GlPeriod]
                       , [t].[GlYear]
-					  , [t].[Source]
+                      , [t].[Source]
+                      , [t].[Journal]
                 From    ( Select    [GM].[Company]
                                   , [CN].[ShortName]
                                   , [CN].[CompanyName]
@@ -101,7 +104,8 @@ As
                                   , [Movement] = ( [GH].[BeginYearBalance] )
                                   , [GlPeriod] = 0
                                   , [GH].[GlYear]
-								  , [Source]='History'
+                                  , [Source] = 'History'
+                                  , [Journal] = 0
                           From      [SysproCompany40]..[GenMaster] As [GM]
                                     Left Join [BlackBox].[Lookups].[CompanyNames]
                                         As [CN]
@@ -114,7 +118,7 @@ As
                                                               2)) Between @GLStart
                                                               And
                                                               @GLEnd
-                          Union
+                          Union All
                           Select    [GM].[Company]
                                   , [CN].[ShortName]
                                   , [CN].[CompanyName]
@@ -125,7 +129,8 @@ As
                                   , [Movement] = [GT].[EntryValue]
                                   , [GT].[GlPeriod]
                                   , [GT].[GlYear]
-								  , [Source]='Transactions'
+                                  , [Source] = 'Transactions'
+                                  , [GT].[Journal]
                           From      [SysproCompany40]..[GenMaster] As [GM]
                                     Left Join [SysproCompany40].[dbo].[GenTransaction] [GT]
                                         On [GT].[Company] = [GM].[Company]
@@ -136,7 +141,7 @@ As
                           Where     Convert(Int , ParseName([GM].[GlCode] , 2)) Between @GLStart
                                                               And
                                                               @GLEnd
-	And [GT].[EntryValue]<>0
+                                    And [GT].[EntryValue] <> 0
                         ) [t]
                 Order By [t].[Company]
                       , [t].[GlCode]
@@ -227,7 +232,8 @@ As
                 , [Movement]
                 , [GlPeriod]
                 , [GlYear]
-				, [Source]
+                , [Source]
+                , [Journal] 
                 )
                 Select  [MR].[Company]
                       , [MR].[ShortName]
@@ -239,7 +245,8 @@ As
                       , [MR].[Movement]
                       , [MR].[GlPeriod]
                       , [MR].[GlYear]
-					  , [Source]='Generated'
+                      , [Source] = 'Generated'
+                      , [Journal] = 0
                 From    [#MovementsRaw] [MR]
                         Left Join [#Movements] [M]
                             On [M].[Company] = [MR].[Company]
@@ -249,7 +256,7 @@ As
                 Where   [M].[Company] Is Null;
 
         --Remove null periods and generate
-		Delete  [#Movements]
+        Delete  [#Movements]
         Where   ( [GlYear] * 100 ) + [GlPeriod] > @GlYearPeriod
                 Or [GlPeriod] Is Null;
 
@@ -263,7 +270,8 @@ As
               , [M].[Movement]
               , [M].[GlPeriod]
               , [M].[GlYear]
-			  , [M].[Source]
+              , [M].[Source]
+              , [M].[Journal]
         From    [#Movements] [M]
         Order By [M].[ShortName]
               , [M].[GlCode]
