@@ -12,9 +12,16 @@ CREATE Proc [Report].[UspResults_GLMovementsCenter]
     )
 As
     Begin
-/*Current Assets*/
-        Select  @GLStart = Coalesce(@GLStart , 0);
-        Select  @GLEnd = Coalesce(@GLEnd , 0);
+--Red tag
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_GLMovementsCenter' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
+
+        Select  @GLStart = Coalesce(@GLStart , 0)
+              , @GLEnd = Coalesce(@GLEnd , 0);
 
         Set NoCount On;
 
