@@ -3,6 +3,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE Proc [Report].[UspResults_GLMovementsPBLRevCos]
     (
       @RedTagType Char(1)
@@ -81,9 +83,20 @@ As
                           , [M].[Journal]
                           , [RevGLCode] = [M].[GlCode]
                   From      [#Movements] [M]
-                  Where     [M].[GlGroup] = 'RESINREV'
-                            And ParseName([M].[GlCode] , 1) = '000'
-                            And ParseName([M].[GlCode] , 2) % 5 = 0
+                  Where     [M].[GlCode] In ( '101.50000.000' ,
+                                              '101.50005.000' ,
+                                              '101.50010.000' ,
+                                              '101.50015.000' ,
+                                              '101.50020.000' ,
+                                              '101.50025.000' ,
+                                              '101.50030.000' ,
+                                              '101.50035.000' ,
+                                              '101.50040.000' ,
+                                              '101.50050.000' ,
+                                              '101.50050.001' ,
+                                              '101.50055.000' ,
+                                              '101.50095.000' ,
+                                              '101.50095.001' )
                   Union All
                   Select    [M].[Company]
                           , [M].[ShortName]
@@ -97,12 +110,41 @@ As
                           , [M].[GlYear]
                           , [M].[Source]
                           , [M].[Journal]
-                          , [RevGLCode] = '101.5'
-                            + Right(ParseName([M].[GlCode] , 2) , 4) + '.000'
+                          , [RevGLCode] = Case When [M].[GlCode] = '101.60050.100'
+                                               Then '101.50050.001'
+                                               When [M].[GlCode] = '101.60095.002'
+                                               Then '101.50095.001'
+                                               Else '101.5'
+                                                    + Right(ParseName([M].[GlCode] ,
+                                                              2) , 4) + '.000'
+                                          End
                   From      [#Movements] [M]
-                  Where     [M].[GlGroup] = 'RESINCOS'
-                            And ParseName([M].[GlCode] , 1) In ( '000' , '001' )
-                            And ParseName([M].[GlCode] , 2) % 5 = 0
+                  Where     [M].[GlCode] In ( '101.60000.000' ,
+                                              '101.60000.001' ,
+                                              '101.60005.000' ,
+                                              '101.60005.001' ,
+                                              '101.60010.000' ,
+                                              '101.60010.000' ,
+                                              '101.60015.000' ,
+                                              '101.60015.001' ,
+                                              '101.60020.000' ,
+                                              '101.60020.001' ,
+                                              '101.60025.000' ,
+                                              '101.60025.001' ,
+                                              '101.60030.000' ,
+                                              '101.60030.001' ,
+                                              '101.60035.000' ,
+                                              '101.60035.001' ,
+                                              '101.60040.000' ,
+                                              '101.60040.001' ,
+                                              '101.60050.000' ,
+                                              '101.60050.001' ,
+                                              '101.60050.100' ,
+                                              '101.60055.000' ,
+                                              '101.60055.001' ,
+                                              '101.60095.000' ,
+                                              '101.60095.001' ,
+                                              '101.60095.002' )
                 ) [t]
                 Left Join [SysproCompany40]..[GenMaster] [GM]
                     On [t].[RevGLCode] = [GM].[GlCode]
