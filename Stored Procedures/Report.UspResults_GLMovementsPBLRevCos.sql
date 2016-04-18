@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_GLMovementsPBLRevCos]
+CREATE Proc [Report].[UspResults_GLMovementsPBLRevCos]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -52,7 +53,7 @@ As
                 Exec [Report].[UspResults_GLMovements] @RedTagType = @RedTagType , -- char(1)
                     @RedTagUse = @RedTagUse;
  
-         Select  [t].[Company]
+        Select  [t].[Company]
               , [t].[ShortName]
               , [t].[CompanyName]
               , [t].[Currency]
@@ -65,6 +66,7 @@ As
               , [t].[Source]
               , [t].[Journal]
               , [t].[RevGLCode]
+              , [RevGLDescription] = [GM].[Description]
         From    ( Select    [M].[Company]
                           , [M].[ShortName]
                           , [M].[CompanyName]
@@ -79,7 +81,9 @@ As
                           , [M].[Journal]
                           , [RevGLCode] = [M].[GlCode]
                   From      [#Movements] [M]
-                  Where     [M].[GlGroup] = 'RESINREV' And ParseName([M].[GlCode],1)='000'
+                  Where     [M].[GlGroup] = 'RESINREV'
+                            And ParseName([M].[GlCode] , 1) = '000'
+                            And ParseName([M].[GlCode] , 2) % 5 = 0
                   Union All
                   Select    [M].[Company]
                           , [M].[ShortName]
@@ -93,14 +97,20 @@ As
                           , [M].[GlYear]
                           , [M].[Source]
                           , [M].[Journal]
-                          , [RevGLCode] = '101.5' + Right(ParseName([M].[GlCode] ,
-                                                              2) , 4) + '.000'
+                          , [RevGLCode] = '101.5'
+                            + Right(ParseName([M].[GlCode] , 2) , 4) + '.000'
                   From      [#Movements] [M]
-                  Where     [M].[GlGroup] = 'RESINCOS' And ParseName([M].[GlCode],1) In ('000','001')
+                  Where     [M].[GlGroup] = 'RESINCOS'
+                            And ParseName([M].[GlCode] , 1) In ( '000' , '001' )
+                            And ParseName([M].[GlCode] , 2) % 5 = 0
                 ) [t]
-				Order By [t].[RevGLCode], [t].[GlYear], [t].[GlPeriod];
+                Left Join [SysproCompany40]..[GenMaster] [GM]
+                    On [t].[RevGLCode] = [GM].[GlCode]
+        Order By [t].[RevGLCode]
+              , [t].[GlYear]
+              , [t].[GlPeriod];
 
-DROP TABLE [#Movements]
+        Drop Table [#Movements];
 
     End;
 GO
