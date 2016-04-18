@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_GLMovementsIntercoPL]
+CREATE Proc [Report].[UspResults_GLMovementsIntercoPL]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -67,13 +68,22 @@ As
               , [DueToCo] = Right([M].[GlCode] , 2)
               , [DueToShortName] = Coalesce([CN].[ShortName] , 'Unknown')
               , [DueToCompanyName] = Coalesce([CN].[CompanyName] , 'Unknown')
+              , [DateForCurrency] = Case When [M].[GlPeriod] > 12
+                                       Then DateFromParts([M].[GlYear] , 11 ,
+                                                          30)
+                                       Else DateAdd(Day , -1 ,
+                                                    DateFromParts([M].[GlYear] ,
+                                                              [M].[GlPeriod] ,
+                                                              1))
+                                  End
         From    [#Movements] [M]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [CN].[Company] = Right([M].[GlCode] , 2)
         Where   [M].[GlYear] = 2016
                 And [M].[ShortName] Is Not Null
                 And [M].[GlGroup] In ( 'INTERCOREV' , 'INTERCOEXP' ,
-                                       'RLTYINTRCO' , 'INTINTERCO' );
+                                       'RLTYINTRCO' , 'INTINTERCO' ,
+                                       'INTERCOCOS' );
 
     End;
 GO
