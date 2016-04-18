@@ -69,19 +69,20 @@ As
               , [DueToShortName] = Coalesce([CN].[ShortName] , 'Unknown')
               , [DueToCompanyName] = Coalesce([CN].[CompanyName] , 'Unknown')
               , [DateForCurrency] = Case When [M].[GlPeriod] > 12
-                                       Then DateFromParts([M].[GlYear] , 11 ,
-                                                          30)
-                                       Else DateAdd(Day , -1 ,
-                                                    DateFromParts([M].[GlYear] ,
+                                         Then DateFromParts([M].[GlYear] , 11 ,
+                                                            30)
+                                         When [M].[GlPeriod] = 0
+                                         Then DateFromParts(( [M].[GlYear] - 1 ) ,
+                                                            12 , 31)
+                                         Else DateAdd(Day , -1 ,
+                                                      DateFromParts([M].[GlYear] ,
                                                               [M].[GlPeriod] ,
                                                               1))
-                                  End
+                                    End
         From    [#Movements] [M]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [CN].[Company] = Right([M].[GlCode] , 2)
-        Where   [M].[GlYear] = 2016
-                And [M].[ShortName] Is Not Null
-                And [M].[GlGroup] In ( 'INTERCOREV' , 'INTERCOEXP' ,
+        Where   [M].[GlGroup] In ( 'INTERCOREV' , 'INTERCOEXP' ,
                                        'RLTYINTRCO' , 'INTINTERCO' ,
                                        'INTERCOCOS' );
 
