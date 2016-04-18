@@ -68,7 +68,7 @@ As
               , [DueToCo] = Right([M].[GlCode] , 2)
               , [DueToShortName] = Coalesce([CN].[ShortName] , 'Unknown')
               , [DueToCompanyName] = Coalesce([CN].[CompanyName] , 'Unknown')
-              , [DateForCurrency] = Case When [M].[GlPeriod] > 12
+              , [DateForCurrency] = Convert(DateTime,Case When [M].[GlPeriod] > 12
                                          Then DateFromParts([M].[GlYear] , 11 ,
                                                             30)
                                          When [M].[GlPeriod] = 0
@@ -78,7 +78,7 @@ As
                                                       DateFromParts([M].[GlYear] ,
                                                               [M].[GlPeriod] ,
                                                               1))
-                                    End
+                                    End)
         From    [#Movements] [M]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [CN].[Company] = Right([M].[GlCode] , 2)
