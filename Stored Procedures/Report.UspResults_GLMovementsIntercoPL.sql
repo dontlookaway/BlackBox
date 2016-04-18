@@ -76,7 +76,7 @@ As
                                                               1 , 31)
                                                             Else DateFromParts([M].[GlYear] ,
                                                               [M].[GlPeriod] ,
-                                                              1)
+                                                              28)
                                                        End)
         From    [#Movements] [M]
                 Left Join [Lookups].[CompanyNames] [CN]
