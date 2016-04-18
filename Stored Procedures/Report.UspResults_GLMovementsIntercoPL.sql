@@ -68,23 +68,21 @@ As
               , [DueToCo] = Right([M].[GlCode] , 2)
               , [DueToShortName] = Coalesce([CN].[ShortName] , 'Unknown')
               , [DueToCompanyName] = Coalesce([CN].[CompanyName] , 'Unknown')
-              , [DateForCurrency] = Convert(DateTime,Case When [M].[GlPeriod] > 12
-                                         Then DateFromParts([M].[GlYear] , 11 ,
-                                                            30)
-                                         When [M].[GlPeriod] = 0
-                                         Then DateFromParts(( [M].[GlYear] - 1 ) ,
-                                                            12 , 31)
-                                         Else DateAdd(Day , -1 ,
-                                                      DateFromParts([M].[GlYear] ,
+              , [DateForCurrency] = Convert(DateTime , Case When [M].[GlPeriod] > 12
+                                                            Then DateFromParts([M].[GlYear] ,
+                                                              12 , 31)
+                                                            When [M].[GlPeriod] = 0
+                                                            Then DateFromParts(( [M].[GlYear] ) ,
+                                                              1 , 31)
+                                                            Else DateFromParts([M].[GlYear] ,
                                                               [M].[GlPeriod] ,
-                                                              1))
-                                    End)
+                                                              1)
+                                                       End)
         From    [#Movements] [M]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [CN].[Company] = Right([M].[GlCode] , 2)
-        Where   [M].[GlGroup] In ( 'INTERCOREV' , 'INTERCOEXP' ,
-                                       'RLTYINTRCO' , 'INTINTERCO' ,
-                                       'INTERCOCOS' );
+        Where   [M].[GlGroup] In ( 'INTERCOREV' , 'INTERCOEXP' , 'RLTYINTRCO' ,
+                                   'INTINTERCO' , 'INTERCOCOS' );
 
     End;
 GO
