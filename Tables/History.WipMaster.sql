@@ -9,9 +9,13 @@ CREATE TABLE [History].[WipMaster]
 [ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
 [ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
 [AlreadyEntered] [bit] NULL,
+[AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [BINLOCATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CONDITIONDESCRIPTION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [COSTBASIS] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[COSTMULTIPLIERAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[COSTMULTIPLIERBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTCOMPANYDATE] [date] NULL,
 [CURRENTCOMPANYID] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTCOMPANYNAME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -57,8 +61,8 @@ CREATE TABLE [History].[WipMaster]
 [VERSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [WipMaster_timeItem] ON [History].[WipMaster] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
-
-GO
 ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+
+
+
 GO

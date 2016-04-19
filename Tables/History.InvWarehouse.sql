@@ -39,7 +39,7 @@ CREATE TABLE [History].[InvWarehouse]
 [UNITCOST] [float] NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [InvWarehouse_timeItem] ON [History].[InvWarehouse] ([DatabaseName], [SignatureDateTime], [ItemKey]) ON [PRIMARY]
+
 
 GO
 ALTER TABLE [History].[InvWarehouse] ADD CONSTRAINT [InvWarehouse_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]

@@ -63,7 +63,7 @@ Stored procedure set out to query multiple databases with the same information a
                     , [SignatureDate] Date
                     , [SignatureTime] Int
                     , [Operator] Varchar(20) Collate Latin1_General_BIN
-                    , [VariableDesc] Varchar(50) Collate Latin1_General_BIN
+                    , [VariableDesc] Varchar(100) Collate Latin1_General_BIN
                     , [ItemKey] Varchar(150) Collate Latin1_General_BIN
                     , [VariableType] Char(1)
                     , [VarAlphaValue] Varchar(255) Collate Latin1_General_BIN
@@ -125,6 +125,2340 @@ And [AD].[Operator] = [AL].[Operator]
 Left Join [BlackBox].[Lookups].[AdmTransactionIDs] [ATI] On [ATI].[TransactionId] = [AL].[TransactionId]
 Where   [AL].[TableName] <> ''''
 And [AD].[VariableDesc] <> ''''
+
+Insert  [BlackBox].[Process].[SysproTransactionsLogged]
+        ( [TransactionDescription]
+        , [DatabaseName]
+        , [SignatureDate]
+        , [SignatureTime]
+        , [Operator]
+        , [VariableDesc]
+        , [ItemKey]
+        , [VariableType]
+        , [VarAlphaValue]
+        , [VarNumericValue]
+        , [VarDateValue]
+        , [ComputerName]
+        , [ProgramName]
+        , [TableName]
+        , [ConditionName]
+        )
+        Select  [t].[TransactionDescription]
+              , [t].[DatabaseName]
+              , [t].[SignatureDate]
+              , [t].[SignatureTime]
+              , [t].[Operator]
+              , [VariableDesc] = Replace(Upper([VariableDesc]),'' '','''')
+              , [t].[ItemKey]
+              , [t].[VariableType]
+              , [t].[VarAlphaValue]
+              , [t].[VarNumericValue]
+              , [t].[VarDateValue]
+              , [t].[ComputerName]
+              , [t].[ProgramName]
+              , [t].[TableName]
+              , [t].[ConditionName]
+        From    ( Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Supplier]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''ApSupplier''
+                          , [ConditionName] = ''''
+                  From      [dbo].[ApAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Supplier]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''ApSupplier''
+                          , [ConditionName] = ''''
+                  From      [dbo].[ApAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Currency]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''TblCurrency''
+                          , [ConditionName] = ''''
+                  From      [dbo].[TblCurAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Currency]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''TblCurrency''
+                          , [ConditionName] = ''''
+                  From      [dbo].[TblCurAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Asset]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''AssetMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[AssetAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Asset]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''AssetMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[AssetAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [Operator]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Supplier]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''EftApSupplier''
+                          , [ConditionName] = ''''
+                  From      [dbo].[EftCbAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [Operator]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Supplier]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''EftApSupplier''
+                          , [ConditionName] = ''''
+                  From      [dbo].[EftCbAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldComVersion''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldComVersion]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewComVersion''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewComVersion]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldComRelease''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldComRelease]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewComRelease''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewComRelease]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldEccConsumption''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldEccConsumption]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewEccConsumption''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewEccConsumption]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldStructOnDate''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''D''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = [OldStructOnDate]
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewStructOnDate''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''D''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = [NewStructOnDate]
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewStructOffDate''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''D''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = [NewStructOffDate]
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldOpOffsetFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldOpOffsetFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewOpOffsetFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewOpOffsetFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldQtyPer''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldQtyPer]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewQtyPer''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewQtyPer]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldScrapPct''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldScrapPct]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewScrapPct''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewScrapPct]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldScrapQty''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldScrapQty]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewScrapQty''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewScrapQty]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldSoOptionFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldSoOptionFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewSoOptionFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewSoOptionFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldSoPrintFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldSoPrintFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewSoPrintFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewSoPrintFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldIncScrapFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldIncScrapFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewIncScrapFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewIncScrapFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldReasonForChg''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldReasonForChg]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewReasonForChg''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewReasonForChg]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldRefDesignator''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldRefDesignator]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewRefDesignator''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewRefDesignator]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldAssemblyPlace''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldAssemblyPlace]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewAssemblyPlace''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewAssemblyPlace]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldItemNumber''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldItemNumber]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewItemNumber''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewItemNumber]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldAutoNarrCode''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldAutoNarrCode]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewAutoNarrCode''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewAutoNarrCode]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldComponentType''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldComponentType]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewComponentType''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewComponentType]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldInclKitIssues''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldInclKitIssues]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewInclKitIssues''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewInclKitIssues]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldCreateSubJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldCreateSubJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewCreateSubJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewCreateSubJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldWetWeightPerc''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldWetWeightPerc]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewWetWeightPerc''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewWetWeightPerc]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldIncludeBatch''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldIncludeBatch]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewIncludeBatch''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewIncludeBatch]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldIncludeFromJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldIncludeFromJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewIncludeFromJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewIncludeFromJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldIncludeToJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldIncludeToJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewIncludeToJob''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewIncludeToJob]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldFixedQtyPerFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldFixedQtyPerFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewFixedQtyPerFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewFixedQtyPerFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldFixedQtyPer''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldFixedQtyPer]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewFixedQtyPer''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewFixedQtyPer]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldRollUpCostFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldRollUpCostFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewRollUpCostFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewRollUpCostFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldWarehouse''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldWarehouse]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewWarehouse''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewWarehouse]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldIgnoreFloorFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldIgnoreFloorFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewIgnoreFloorFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewIgnoreFloorFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldUomFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [OldUomFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewUomFlag''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [NewUomFlag]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldQtyPerEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldQtyPerEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewQtyPerEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewQtyPerEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldScrapQtyEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldScrapQtyEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewScrapQtyEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewScrapQtyEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''OldFixedQtyPerEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [OldFixedQtyPerEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorName]
+                          , [VariableDesc] = ''NewFixedQtyPerEnt''
+                          , [ItemKey] = [ParentPart] + ''_''
+                            + Coalesce([Version] , '''') + ''_''
+                            + Coalesce([SequenceNum] , '''') + ''_''
+                            + Coalesce([Component] , '''')
+                          , [VariableType] = ''N''
+                          , [VarAlphaValue] = Null
+                          , [VarNumericValue] = [NewFixedQtyPerEnt]
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''BomStructure''
+                          , [ConditionName] = ''''
+                  From      [dbo].[BomAmendmentJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [StockCode]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''InvMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[InvMastAmendJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [StockCode]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''InvMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[InvMastAmendJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Customer]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''ArCustomer''
+                          , [ConditionName] = ''''
+                  From      [dbo].[ArAmendmentJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Customer]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''ArCustomer''
+                          , [ConditionName] = ''''
+                  From      [dbo].[ArAmendmentJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Job]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''WipMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[WipJobAmendJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Job]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''WipMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[WipJobAmendJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''Before''
+                          , [ItemKey] = [Warehouse]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [Before]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''WipMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[InvWhAmendJnl]
+                  Union	 All
+                  Select    [TransactionDescription] = Case When [ChangeFlag] = ''A''
+                                                            Then ''Addition''
+                                                            When [ChangeFlag] = ''U''
+                                                            Then ''Update''
+                                                            When [ChangeFlag] = ''X''
+                                                            Then ''Deletion''
+                                                            When [ChangeFlag] = ''C''
+                                                            Then ''Change''
+                                                            Else ''Unknown''
+                                                       End
+                          , [DatabaseName] = Db_Name()
+                          , [SignatureDate] = [JnlDate]
+                          , [SignatureTime] = [JnlTime]
+                          , [Operator] = [OperatorCode]
+                          , [VariableDesc] = [ColumnName] + ''After''
+                          , [ItemKey] = [Warehouse]
+                          , [VariableType] = ''A''
+                          , [VarAlphaValue] = [After]
+                          , [VarNumericValue] = Null
+                          , [VarDateValue] = Null
+                          , [ComputerName] = ''''
+                          , [ProgramName] = ''''
+                          , [TableName] = ''WipMaster''
+                          , [ConditionName] = ''''
+                  From      [dbo].[InvWhAmendJnl]
+                ) [t];
 			End
 	End';
 
@@ -147,15 +2481,15 @@ And [AD].[VariableDesc] <> ''''
                     End;
             End;
 
-        If Len(@SQLTransactions) <= 2000 --only run script if less than 2000
-            Begin
+        --If Len(@SQLTransactions) <= 2000 --only run script if less than 2000
+            --Begin
                 Print 'Capturing Transactions';
                 Exec [Process].[ExecForEachDB] @cmd = @SQLTransactions;
-            End;
-        If Len(@SQLTransactions) > 2000 --if the script is greater than 2000 then the script will probably fail - raise an error
-            Begin
-                Raiserror (@ErrorMessage,16,1); -- With Log;
-            End;
+            --End;
+        --If Len(@SQLTransactions) > 2000 --if the script is greater than 2000 then the script will probably fail - raise an error
+            --Begin
+                --Raiserror (@ErrorMessage,16,1); -- With Log;
+            --End;
 
         If @RebuildBit = 1
             Begin
