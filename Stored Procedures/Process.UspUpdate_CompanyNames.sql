@@ -147,8 +147,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                                           , [ShortName] = 'PBI - Dec Y/E'
                                   Union
                                   Select    [Company] = '92'
-                                          , [CompanyName] = 'Prometic Biotherapeutics Ltd'
-                                          , [ShortName] = 'PBT Ltd'
+                                          , [CompanyName] = 'Prometic Biotherapeutics Inc'
+                                          , [ShortName] = 'PBT Inc'
                                   Union
                                   Select    [Company] = 'C'
                                           , [CompanyName] = 'Prometic Biotherapeutics TEST'
