@@ -66,33 +66,25 @@ List of all requisition users
             , [RequisitionGroup] Varchar(6)
             , [MaxApproveValue] Float
             , [UserForPorder] Varchar(20)
+            , [ProductClass] Varchar(20)
             );
 
 --create script to pull data from each db into the tables
         Declare @SQL1 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #ReqUser
@@ -127,27 +119,18 @@ List of all requisition users
         Declare @SQL2 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #ReqGroup
@@ -164,27 +147,18 @@ List of all requisition users
         Declare @SQL3 Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #ReqGroupAuthority
@@ -192,11 +166,13 @@ List of all requisition users
 						, RequisitionGroup
 						, MaxApproveValue
 						, UserForPorder
+						, [ProductClass]
 						)
 				Select @DBCode
 					 , RequisitionGroup
 					 , MaxApproveValue
 					 , UserForPorder
+					 , [ProductClass]
 				FROM  dbo.ReqGroupAuthority		
 			End
 	End';
@@ -225,6 +201,7 @@ List of all requisition users
             , [RequisitionGroup] Varchar(50)
             , [GroupMaxApproveValue] Float
             , [UserMaxApproveValue] Float
+            , [ProductClass] Varchar(20)
             );
 
 
@@ -245,6 +222,7 @@ List of all requisition users
                 , [RequisitionGroup]
                 , [GroupMaxApproveValue]
                 , [UserMaxApproveValue]
+                , [ProductClass]
                 )
                 Select  [RU].[DatabaseName]
                       , [RU].[UserCode]
@@ -259,44 +237,56 @@ List of all requisition users
                       , [RequisitionGroup] = [RG].[GroupDescription]
                       , [RGA].[MaxApproveValue]
                       , [RU].[MaxApproveValue]
+                      , [RGA].[ProductClass]
                 From    [#ReqUser] [RU]
-                        Left Join [#ReqGroup] [RG] On [RG].[DatabaseName] = [RU].[DatabaseName]
-                                                      And [RG].[RequisitionGroup] = [RU].[RequisitionGroup]
-                        Left Join [#ReqGroupAuthority] [RGA] On [RGA].[DatabaseName] = [RG].[DatabaseName]
-                                                              And [RGA].[RequisitionGroup] = [RU].[RequisitionGroup];
+                        Left Join [#ReqGroup] [RG]
+                            On [RG].[DatabaseName] = [RU].[DatabaseName]
+                               And [RG].[RequisitionGroup] = [RU].[RequisitionGroup]
+                        Left Join [#ReqGroupAuthority] [RGA]
+                            On [RGA].[DatabaseName] = [RG].[DatabaseName]
+                               And [RGA].[RequisitionGroup] = [RU].[RequisitionGroup];
 
 --return results
-        Select  [Company] = [DatabaseName]
-              , [UserCode]
-              , [UserName]
-              , [AuthorityLevel]
-              , [CanAddReqn]
-              , [CanAddReqnDetails]
-              , [CanChgReqnDetails]
-              , [CanApproveReqn]
-              , [CanCreateOrder]
-              , [RequisitionGroup] = Case When [RequisitionGroup] = ''
+        Select  [CN].[Company]
+              , [CN].[CompanyName]
+              , [CN].[ShortName]
+              , [CN].[Currency]
+              , [R].[UserCode]
+              , [R].[UserName]
+              , [R].[AuthorityLevel]
+              , [R].[CanAddReqn]
+              , [R].[CanAddReqnDetails]
+              , [R].[CanChgReqnDetails]
+              , [R].[CanApproveReqn]
+              , [R].[CanCreateOrder]
+              , [ProductClass] = Case When Coalesce([R].[ProductClass] , '') = ''
+                                      Then 'N/A'
+                                      Else [R].[ProductClass]
+                                 End
+              , [RequisitionGroup] = Case When [R].[RequisitionGroup] = ''
                                           Then 'No Group'
-                                          When [RequisitionGroup] Is Null
+                                          When [R].[RequisitionGroup] Is Null
                                           Then 'No Group'
-                                          Else [RequisitionGroup]
+                                          Else [R].[RequisitionGroup]
                                      End
-              , [AdminStopFlag] = Case When [AdminStopFlag] = '' Then Null
-                                       Else [AdminStopFlag]
+              , [AdminStopFlag] = Case When [R].[AdminStopFlag] = '' Then Null
+                                       Else [R].[AdminStopFlag]
                                   End
-              , [GroupMaxApproveValue] = Case When [GroupMaxApproveValue] = ''
+              , [GroupMaxApproveValue] = Case When [R].[GroupMaxApproveValue] = ''
                                               Then 0
-                                              When [GroupMaxApproveValue] Is Null
+                                              When [R].[GroupMaxApproveValue] Is Null
                                               Then 0
-                                              Else [GroupMaxApproveValue]
+                                              Else [R].[GroupMaxApproveValue]
                                          End
-              , [UserMaxApproveValue] = Case When [UserMaxApproveValue] = ''
+              , [UserMaxApproveValue] = Case When [R].[UserMaxApproveValue] = ''
                                              Then 0
-                                             When [UserMaxApproveValue] Is Null
+                                             When [R].[UserMaxApproveValue] Is Null
                                              Then 0
-                                             Else [UserMaxApproveValue]
+                                             Else [R].[UserMaxApproveValue]
                                         End
-        From    [#Results];
+        From    [#Results] As [R]
+                Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
+                    On [R].[DatabaseName] = [CN].[Company];
 
     End;
 
