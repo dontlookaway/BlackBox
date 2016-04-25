@@ -403,6 +403,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             , [OrderStatusDescription] Varchar(250)
             , [MCompleteFlag] Char(1)
             , [CompanyName] Varchar(200)
+            , [ShortName] Varchar(250)
             , [Company] Varchar(150)
             , [Currency] Varchar(10)
             , [CADDivision] Float
@@ -451,6 +452,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
                 , [OrderStatusDescription]
                 , [MCompleteFlag]
                 , [CompanyName]
+                , [ShortName]
                 , [Company]
                 , [Currency]
                 , [CADDivision]
@@ -550,6 +552,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
                       , [POS].[OrderStatusDescription]
                       , [PMD].[MCompleteFlag]
                       , [CN].[CompanyName]
+                      , [CN].[ShortName]
                       , [Company] = Coalesce([PMH].[DatabaseName] ,
                                              [RD].[DatabaseName])
                       , [CR].[Currency]
@@ -557,33 +560,42 @@ Template designed by Chris Johnson, Prometic Group February 2016
                       , [CR].[CADMultiply]
                       , [CR].[StartDateTime]
                 From    [#PorMasterDetail] As [PMD]
-                        Full Outer Join [#ReqDetail] As [RD] On [RD].[Requisition] = [PMD].[MRequisition]
-                                                              And [RD].[Line] = [PMD].[Line]
-                                                              And [RD].[DatabaseName] = [PMD].[DatabaseName]
-                        Left Join [#PorMasterHdr] As [PMH] On [PMH].[PurchaseOrder] = [PMD].[PurchaseOrder]
-                                                              And [PMH].[DatabaseName] = [PMD].[DatabaseName]
-                        Left Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[GlCode] = Coalesce([PMD].[MGlCode] ,
-                                                              [RD].[GlCode])
-                        Left Join [BlackBox].[Lookups].[ProductClass] As [PC] On [PC].[ProductClass] = Coalesce([PMD].[MProductClass] ,
+                        Full Outer Join [#ReqDetail] As [RD]
+                            On [RD].[Requisition] = [PMD].[MRequisition]
+                               And [RD].[Line] = [PMD].[Line]
+                               And [RD].[DatabaseName] = [PMD].[DatabaseName]
+                        Left Join [#PorMasterHdr] As [PMH]
+                            On [PMH].[PurchaseOrder] = [PMD].[PurchaseOrder]
+                               And [PMH].[DatabaseName] = [PMD].[DatabaseName]
+                        Left Join [SysproCompany40].[dbo].[GenMaster] As [GM]
+                            On [GM].[GlCode] = Coalesce([PMD].[MGlCode] ,
+                                                        [RD].[GlCode])
+                        Left Join [BlackBox].[Lookups].[ProductClass] As [PC]
+                            On [PC].[ProductClass] = Coalesce([PMD].[MProductClass] ,
                                                               [RD].[ProductClass])
-                                                              And [PC].[Company] = Coalesce([PMD].[DatabaseName] ,
-                                                              [RD].[ProductClass])
+                               And [PC].[Company] = Coalesce([PMD].[DatabaseName] ,
+                                                             [RD].[ProductClass])
                         Left Join [BlackBox].[Lookups].[PurchaseOrderStatus]
-                        As [POS] On [POS].[OrderStatusCode] = [PMH].[OrderStatus]
-                                    And [POS].[Company] = [PMH].[DatabaseName]
-                        Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = Coalesce([PMH].[DatabaseName] ,
-                                                              [RD].[DatabaseName])
-                        Left Join [BlackBox].[Lookups].[CurrencyRates] As [CR] On [CR].[Currency] = [CN].[Currency]
-                                                              And GetDate() Between [CR].[StartDateTime]
-                                                              And
-                                                              [CR].[EndDateTime]
-                        Left Join [#ProjectList] As [PL] On [PL].[Line] = [PMD].[Line]
-                                                            And [PL].[PurchaseOrder] = [PMD].[PurchaseOrder]
-                                                            And [PL].[DatabaseName] = [PMD].[DatabaseName]
-                        Left Join [#ReqUser] As [RU] On [RU].[Originator] = [RD].[Originator]
-                                                        And [RU].[DatabaseName] = [RD].[DatabaseName]
-                        Left Join [Lookups].[ReqnStatus] As [RS] On [RS].[ReqnStatusCode] = [RD].[ReqnStatus]
-                                                              And [RS].[Company] = [RD].[DatabaseName]
+                            As [POS]
+                            On [POS].[OrderStatusCode] = [PMH].[OrderStatus]
+                               And [POS].[Company] = [PMH].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[CompanyNames] As [CN]
+                            On [CN].[Company] = Coalesce([PMH].[DatabaseName] ,
+                                                         [RD].[DatabaseName])
+                        Left Join [BlackBox].[Lookups].[CurrencyRates] As [CR]
+                            On [CR].[Currency] = [CN].[Currency]
+                               And GetDate() Between [CR].[StartDateTime]
+                                             And     [CR].[EndDateTime]
+                        Left Join [#ProjectList] As [PL]
+                            On [PL].[Line] = [PMD].[Line]
+                               And [PL].[PurchaseOrder] = [PMD].[PurchaseOrder]
+                               And [PL].[DatabaseName] = [PMD].[DatabaseName]
+                        Left Join [#ReqUser] As [RU]
+                            On [RU].[Originator] = [RD].[Originator]
+                               And [RU].[DatabaseName] = [RD].[DatabaseName]
+                        Left Join [Lookups].[ReqnStatus] As [RS]
+                            On [RS].[ReqnStatusCode] = [RD].[ReqnStatus]
+                               And [RS].[Company] = [RD].[DatabaseName]
                 Where   Coalesce([PMD].[MPrice] , [RD].[Price]) <> 0;
 
 --return results
@@ -635,6 +647,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
               , [CADDivision]
               , [CADMultiply]
               , [StartDateTime]
+              , [ShortName]
         From    [#Results]
         Where   Coalesce([RequisitionStatus] , '') <> 'Cancelled'
         Order By [PurchaseOrder] Asc
