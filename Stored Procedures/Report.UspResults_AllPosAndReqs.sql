@@ -97,8 +97,13 @@ Template designed by Chris Johnson, Prometic Group February 2016
             , [Originator] Varchar(100)
             , [OriginatorName] Varchar(255)
             );
-    
-
+        Create Table [#ApSupplier]
+            (
+              [DatabaseName] Varchar(150)
+            , [Supplier] Varchar(30)
+            , [SupplierName] Varchar(150)
+            );
+	
 	
 --create script to pull data from each db into the tables
         Declare @SQLPorMasterDetail Varchar(Max) = '
@@ -352,6 +357,42 @@ Template designed by Chris Johnson, Prometic Group February 2016
 			From [dbo].[ReqUser]
 			End
 	End';
+        Declare @SQLApSupplier Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
+            + --Only query DBs beginning SysProCompany
+            '
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN'
+            + --only companies selected in main run, or if companies selected then all
+            '
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL'' and IsNumeric(@DBCode)=1
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT'
+            + --count number of tables requested (number of commas plus one)
+            '
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
+            + --Count of the tables requested how many exist in the db
+            '
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
+            + --only if the count matches (all the tables exist in the requested db) then run the script
+            '
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+			Insert [#ApSupplier]
+	        ( [DatabaseName]
+	        , [Supplier]
+	        , [SupplierName]
+	        )
+			SELECT [DatabaseName]=@DBCode
+				 , [AS].[Supplier]
+				 , [AS].[SupplierName] FROM  [ApSupplier] [AS]
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -361,6 +402,8 @@ Template designed by Chris Johnson, Prometic Group February 2016
         Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterHdr;
         Exec [Process].[ExecForEachDB] @cmd = @SQLProjectList;
         Exec [Process].[ExecForEachDB] @cmd = @SQLReqUser;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLApSupplier;
+		
 
 
 --define the results you want to return
@@ -409,6 +452,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
             , [CADDivision] Float
             , [CADMultiply] Float
             , [StartDateTime] DateTime2
+            , [SupplierName] Varchar(150)
             );
 
 --Placeholder to create indexes as required
@@ -458,6 +502,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
                 , [CADDivision]
                 , [CADMultiply]
                 , [StartDateTime]
+                , [SupplierName]
                 )
                 Select  [DatabaseName] = Coalesce([RD].[DatabaseName] ,
                                                   [PMD].[DatabaseName])
@@ -559,6 +604,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
                       , [CR].[CADDivision]
                       , [CR].[CADMultiply]
                       , [CR].[StartDateTime]
+                      , [AS].[SupplierName]
                 From    [#PorMasterDetail] As [PMD]
                         Full Outer Join [#ReqDetail] As [RD]
                             On [RD].[Requisition] = [PMD].[MRequisition]
@@ -596,6 +642,11 @@ Template designed by Chris Johnson, Prometic Group February 2016
                         Left Join [Lookups].[ReqnStatus] As [RS]
                             On [RS].[ReqnStatusCode] = [RD].[ReqnStatus]
                                And [RS].[Company] = [RD].[DatabaseName]
+                        Left Join [#ApSupplier] [AS]
+                            On [AS].[Supplier] = Coalesce([PMH].[Supplier] ,
+                                                          [RD].[Supplier])
+                               And [AS].[DatabaseName] = Coalesce([PMH].[DatabaseName] ,
+                                                              [RD].[DatabaseName])
                 Where   Coalesce([PMD].[MPrice] , [RD].[Price]) <> 0;
 
 --return results
@@ -648,6 +699,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
               , [CADMultiply]
               , [StartDateTime]
               , [ShortName]
+              , [SupplierName]
         From    [#Results]
         Where   Coalesce([RequisitionStatus] , '') <> 'Cancelled'
         Order By [PurchaseOrder] Asc
