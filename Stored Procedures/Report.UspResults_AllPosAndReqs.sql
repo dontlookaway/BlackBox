@@ -321,6 +321,9 @@ Template designed by Chris Johnson, Prometic Group February 2016
 					Left Join [dbo].[GenAnalysisCode] As GAC On [GAT].[AnalysisCode1] = [GAC].[AnalysisCode]
 																		  And [GAC].[AnalysisType] = 1
 			Where   [GAC].[Description] Is Not Null
+			Group By [GD].[PurchaseOrder]
+				  , [GD].[PurchaseOrderLin]
+				  , [GAC].[Description];
 			End
 	End';
         Declare @SQLReqUser Varchar(Max) = '
