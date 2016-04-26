@@ -623,7 +623,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
                             On [PC].[ProductClass] = Coalesce([PMD].[MProductClass] ,
                                                               [RD].[ProductClass])
                                And [PC].[Company] = Coalesce([PMD].[DatabaseName] ,
-                                                             [RD].[ProductClass])
+                                                             [RD].[DatabaseName])
                         Left Join [BlackBox].[Lookups].[PurchaseOrderStatus]
                             As [POS]
                             On [POS].[OrderStatusCode] = [PMH].[OrderStatus]
