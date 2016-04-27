@@ -1,14 +1,14 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_TrialBalance]
+CREATE Proc [Report].[UspResults_TrialBalance]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
-As
-/*
+As /*
 Template designed by Chris Johnson, Prometic Group April 2016
 */
     Begin
@@ -68,6 +68,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
                     On [GM].[Company] = [GH].[Company]
                        And [GM].[GlCode] = [GH].[GlCode]
                 Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
-                    On [CN].[Company] = [GH].[Company];
+                    On [CN].[Company] = [GH].[Company]
+        Where   [GH].[GlCode] Not In ( 'RETAINED' , 'FORCED' );
     End;
 GO
