@@ -1,8 +1,9 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Process].[UspUpdate_GenJournalCtlJnlSource]
+CREATE Proc [Process].[UspUpdate_GenJournalCtlJnlSource]
 (@PrevCheck INT
 ,@HoursBetweenUpdates int)
 As
@@ -51,9 +52,6 @@ Select [GenJournalCtlJnlSource] ='AR'
 Union
 Select [GenJournalCtlJnlSource] ='AS'
      , [GenJournalCtlJnlSourceDesc] = 'Assets/Assets Register'
-Union
-Select [GenJournalCtlJnlSource] ='CS'
-     , [GenJournalCtlJnlSourceDesc] = 'Cash book'
 Union
 Select [GenJournalCtlJnlSource] ='GR'
      , [GenJournalCtlJnlSourceDesc] = 'Grn/Grn Matching'
