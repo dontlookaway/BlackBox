@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -13,28 +14,27 @@ CREATE Proc [Process].[UspInsert_RedTagLogs]
     )
 As /*
 Created by Chris Johnson 2nd February 2016
-
 Stored proc to insert logs
 */
     Begin
 		--create schemas if needed
         If Not Exists ( Select  1
-                    From    [sys].[schemas] As [S]
-                    Where   [S].[name] = 'Reports' )
+                        From    [sys].[schemas] As [S]
+                        Where   [S].[name] = 'Reports' )
             Begin
                 Declare @Schema1 Varchar(500)= 'Create Schema Reports';
                 Exec (@Schema1);
             End;
         If Not Exists ( Select  1
-                    From    [sys].[schemas] As [S]
-                    Where   [S].[name] = 'History' )
+                        From    [sys].[schemas] As [S]
+                        Where   [S].[name] = 'History' )
             Begin
                 Declare @Schema2 Varchar(500)= 'Create Schema History';
                 Exec (@Schema2);
             End;
         If Not Exists ( Select  1
-                    From    [sys].[schemas] As [S]
-                    Where   [S].[name] = 'Lookups' )
+                        From    [sys].[schemas] As [S]
+                        Where   [S].[name] = 'Lookups' )
             Begin
                 Declare @Schema3 Varchar(500)= 'Create Schema Lookups';
                 Exec (@Schema2);
@@ -42,7 +42,8 @@ Stored proc to insert logs
 		--create tables to capture logs
         If Not Exists ( Select  1
                         From    [sys].[tables] As [T]
-                                Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                                Left Join [sys].[schemas] As [S]
+                                    On [S].[schema_id] = [T].[schema_id]
                         Where   [T].[name] = 'RedTagsUsedByType'
                                 And [S].[name] = 'Lookups' )
             Begin
@@ -81,7 +82,8 @@ Stored proc to insert logs
             End;
         If Not Exists ( Select  1
                         From    [sys].[tables] As [T]
-                                Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                                Left Join [sys].[schemas] As [S]
+                                    On [S].[schema_id] = [T].[schema_id]
                         Where   [T].[name] = 'RedTagLogs'
                                 And [S].[name] = 'History' )
             Begin
@@ -106,7 +108,8 @@ Stored proc to insert logs
 		--Insert logs
         If Exists ( Select  1
                     From    [sys].[tables] As [T]
-                            Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                            Left Join [sys].[schemas] As [S]
+                                On [S].[schema_id] = [T].[schema_id]
                     Where   [T].[name] = 'RedTagLogs'
                             And [S].[name] = 'History' )
             Begin		
@@ -122,7 +125,9 @@ Stored proc to insert logs
                             Select  @StoredProcDb
                                   , @StoredProcSchema
                                   , @StoredProcName
-                                  , @UsedByType
+                                  , Case When @UsedByType = '' Then 'X'
+                                         Else @UsedByType
+                                    End
                                   , @UsedByName
                                   , @UsedByDb;
                 End Try
@@ -133,7 +138,8 @@ Stored proc to insert logs
         --Raise Error if table doesn't exist
         If Not Exists ( Select  1
                         From    [sys].[tables] As [T]
-                                Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                                Left Join [sys].[schemas] As [S]
+                                    On [S].[schema_id] = [T].[schema_id]
                         Where   [T].[name] = 'RedTagLogs'
                                 And [S].[name] = 'History' )
             Begin
