@@ -104,7 +104,7 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLGenJournalDetail Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
-	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
 	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
@@ -169,7 +169,7 @@ Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJS
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
-	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
 	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
