@@ -12,7 +12,7 @@ CREATE Proc [Report].[UspResults_GenJournalEntries]
 As
     Begin
 /*
-Template designed by Chris Johnson, Prometic Group September 2015
+Template designed by Chris Johnson, Prometic Group May 2016
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 */
         If IsNumeric(@Company) = 0
@@ -49,6 +49,15 @@ Stored procedure set out to query multiple databases with the same information a
             , [EntryValue] Numeric(20 , 2)
             , [EntryDate] Date
             , [EntryPosted] Char(1)
+            , [InterCompanyFlag] Char(1)
+            , [Company] Varchar(50)
+            , [CurrencyValue] Numeric(20 , 2)
+            , [PostCurrency] Varchar(10)
+            , [TypeDetail] Varchar(100)
+            , [CommitmentFlag] Char(1)
+            , [TransactionDate] Date
+            , [DocumentDate] Date
+            , [SubModJournal] Int
             );
         Create Table [#GenJournalCtl]
             (
@@ -73,10 +82,26 @@ Stored procedure set out to query multiple databases with the same information a
             , [GlYear] Int
             , [JournalSource] Char(2)
             );
-	
+        Create Table [#GrnMatching]
+            (
+              [DatabaseName] Varchar(300)
+            , [Grn] Varchar(20)
+            , [Invoice] Varchar(20)
+            );
+        Create Table [#InvJournalDet]
+            (
+              [DatabaseName] Varchar(300)
+            , [JnlYear] Int
+            , [GlPeriod] Int
+            , [Journal] Int
+            , [EntryNumber] Int
+            , [Supplier] Varchar(15)
+            , [PurchaseOrder] Varchar(20)
+            , [Reference] Varchar(30)
+            );
+
 --create script to pull data from each db into the tables
-        Declare @SQLGenJournalDetail Varchar(Max) = '
-	USE [?];
+        Declare @SQLGenJournalDetail Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -105,45 +130,56 @@ Stored procedure set out to query multiple databases with the same information a
 							, [EntryValue]
 							, [EntryDate]
 							, [EntryPosted]
+							, [InterCompanyFlag]
+							, [Company]
+							, [CurrencyValue]
+							, [PostCurrency]
+							, [TypeDetail]
+							, [CommitmentFlag]
+							, [TransactionDate]
+							, [DocumentDate]
+							, [SubModJournal]
 							)
 					SELECT [DatabaseName]=@DBCode
-						 , [GJD].[Journal]
-						 , [GJD].[GlYear]
-						 , [GJD].[GlPeriod]
-						 , [GJD].[EntryNumber]
-						 , [GJD].[EntryType]
-						 , [GJD].[GlCode]
-						 , [GJD].[Reference]
-						 , [GJD].[Comment]
-						 , [GJD].[EntryValue]
-						 , [GJD].[EntryDate]
-						 , [GJD].[EntryPosted] FROM [GenJournalDetail] As [GJD]
+							, [GJD].[Journal]
+							, [GJD].[GlYear]
+							, [GJD].[GlPeriod]
+							, [GJD].[EntryNumber]
+							, [GJD].[EntryType]
+							, [GJD].[GlCode]
+							, [GJD].[Reference]
+							, [GJD].[Comment]
+							, [GJD].[EntryValue]
+							, [GJD].[EntryDate]
+							, [GJD].[EntryPosted]
+							, [GJD].[InterCompanyFlag]
+							, [GJD].[Company]
+							, [GJD].[CurrencyValue]
+							, [GJD].[PostCurrency]
+							, [TypeDetail] = Coalesce([GJT].[TypeDetail],''No Type'')
+							, [GJD].[CommitmentFlag]
+							, [GJD].[TransactionDate]
+							, [GJD].[DocumentDate]
+							, [GJD].[SubModJournal] FROM [GenJournalDetail] As [GJD]
+Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
+	Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]
 			End
 	End';
         Declare @SQLGenJournalCtl Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 					Insert [#GenJournalCtl]
@@ -190,13 +226,75 @@ Stored procedure set out to query multiple databases with the same information a
 						 , [GJC].[JournalSource] FROM [GenJournalCtl] As [GJC]
 			End
 	End';
---Enable this function to check script changes (try to run script directly against db manually)
---Print @SQLGenJournalCtl
---Print @SQLGenJournalDetail
+        Declare @SQLGrnMatching Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#GrnMatching]
+				( [DatabaseName] , [Grn] , [Invoice] )
+				SELECT [DatabaseName]=@DBCode
+				, [GM].[Grn]
+				, [GM].[Invoice] 
+				FROM [GrnMatching] [GM]
+			End
+	End';
+        Declare @SQLInvJournalDet Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#InvJournalDet]
+						( [DatabaseName]
+						, [JnlYear]
+						, [GlPeriod]
+						, [Journal]
+						, [EntryNumber]
+						, [Supplier]
+						, [PurchaseOrder]
+						, [Reference]
+						)
+				SELECT [DatabaseName]=@DBCode
+					 , [IJD].[JnlYear]
+					 , [IJD].[GlPeriod]
+					 , [IJD].[Journal]
+					 , [IJD].[EntryNumber]
+					 , [IJD].[Supplier]
+					 , [IJD].[PurchaseOrder]
+					 , [IJD].[Reference]
+				FROM [InvJournalDet] [IJD]
+			End
+	End';
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalCtl;
         Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalDetail;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatching;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLInvJournalDet;
 
 --define the results you want to return
         Create Table [#Results]
@@ -228,6 +326,10 @@ Stored procedure set out to query multiple databases with the same information a
             , [PostDate] Date
             , [Notation] Varchar(100)
             , [JournalSource] Char(2)
+            , [Supplier] Varchar(15)
+            , [PurchaseOrder] Varchar(20)
+            , [Grn] Varchar(Max)
+            , [Invoice] Varchar(Max)
             );
 
 --Placeholder to create indexes as required
@@ -261,6 +363,10 @@ Stored procedure set out to query multiple databases with the same information a
                 , [PostDate]
                 , [Notation]
                 , [JournalSource]
+                , [Supplier]
+                , [PurchaseOrder]
+                , [Grn]
+                , [Invoice]
                 )
                 Select  [GJD].[DatabaseName]
                       , [GJD].[Journal]
@@ -289,12 +395,58 @@ Stored procedure set out to query multiple databases with the same information a
                       , [GJC].[PostDate]
                       , [GJC].[Notation]
                       , [GJC].[JournalSource]
+                      , [Supplier] = Case When [IJD].[Supplier] = '' Then Null
+                                          Else [IJD].[Supplier]
+                                     End
+                      , [PurchaseOrder] = Case When [IJD].[PurchaseOrder] = ''
+                                               Then Null
+                                               Else [IJD].[PurchaseOrder]
+                                          End
+                      , [Grn] = Stuff(( Select Distinct
+                                                ','
+                                                + Case When IsNumeric([GM].[Grn]) = 1
+                                                       Then Convert(Varchar(20) , Convert(BigInt , [GM].[Grn]))
+                                                       Else [GM].[Grn]
+                                                  End
+                                      From      [#GrnMatching] [GM]
+                                      Where     [IJD].[Reference] = [GM].[Grn]
+                                                And [GM].[DatabaseName] = [IJD].[DatabaseName]
+                                                And Coalesce([GM].[Invoice] ,
+                                                             '') <> ''
+                                    For
+                                      Xml Path('')
+                                    ) , 1 , 1 , '')
+                      , [Invoice] = Stuff(( Select Distinct
+                                                    ','
+                                                    + Case When IsNumeric([GM].[Invoice]) = 1
+                                                           Then Convert(Varchar(20) , Convert(BigInt , [GM].[Invoice]))
+                                                           Else [GM].[Invoice]
+                                                      End
+                                            From    [#GrnMatching] [GM]
+                                            Where   [IJD].[Reference] = [GM].[Grn]
+                                                    And [GM].[DatabaseName] = [IJD].[DatabaseName]
+                                                    And Coalesce([GM].[Invoice] ,
+                                                              '') <> ''
+                                          For
+                                            Xml Path('')
+                                          ) , 1 , 1 , '')
                 From    [#GenJournalDetail] As [GJD]
                         Left Join [#GenJournalCtl] As [GJC]
                             On [GJC].[GlJournal] = [GJD].[Journal]
                                And [GJC].[GlPeriod] = [GJD].[GlPeriod]
                                And [GJC].[GlYear] = [GJD].[GlYear]
-                               And [GJC].[DatabaseName] = [GJD].[DatabaseName];
+                               And [GJC].[DatabaseName] = [GJD].[DatabaseName]
+                        Left Join [#InvJournalDet] [IJD]
+                            On [IJD].[JnlYear] = [GJD].[GlYear]
+                               And [IJD].[GlPeriod] = [GJD].[GlPeriod]
+                               And [IJD].[Journal] = [GJD].[SubModJournal]
+                               And [IJD].[EntryNumber] = [GJD].[EntryNumber]
+                               And [IJD].[DatabaseName] = [GJD].[DatabaseName]
+                        /*Left Join [#GrnMatching] [GM]
+                            On [IJD].[Reference] = [GM].[Grn]
+                               And [GM].[DatabaseName] = [IJD].[DatabaseName]*/
+                        Left Join [Lookups].[CompanyNames] As [CN]
+                            On [CN].[Company] = [GJD].[DatabaseName];
 
 --return results
         Select  [R].[DatabaseName]
@@ -326,6 +478,10 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[PostDate]
               , [R].[Notation]
               , [JournalSource] = [GJCJS].[GenJournalCtlJnlSourceDesc]
+              , [R].[Supplier]
+              , [R].[PurchaseOrder]
+              , [R].[Grn]
+              , [R].[Invoice]
         From    [#Results] As [R]
                 Left Join [BlackBox].[Lookups].[JnlPostingType] [JPT]
                     On [R].[JnlPostingType] = [JPT].[JnlPostingType]
