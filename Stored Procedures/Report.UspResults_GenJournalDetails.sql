@@ -15,16 +15,21 @@ Stored procedure set out to query all live db's and return details of general le
     Set NoCount On;
 
 --Red tag
-    Declare @RedTagDB Varchar(255)= Db_Name();
+    Declare @RedTagDB Varchar(255)= Db_Name()
+      , @Company Varchar(255)= 'ALL';
     Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
         @StoredProcSchema = 'Report' ,
         @StoredProcName = 'UspResults_GenJournalDetails' ,
         @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
         @UsedByDb = @RedTagDB;
 
-    Create Table [#Results]
+--list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
+    Declare @ListOfTables Varchar(Max) = 'GenJournalDetail,GrnMatching,InvJournalDet'; 
+
+    Create Table [#GenJournalDetail]
         (
-          [SourceDetail] Varchar(100)
+          [DatabaseName] Varchar(300)
+        , [SourceDetail] Varchar(100)
         , [GlYear] Int
         , [GlPeriod] Int
         , [Journal] Int
@@ -44,22 +49,70 @@ Stored procedure set out to query all live db's and return details of general le
         , [CommitmentFlag] Char(1)
         , [TransactionDate] Date
         , [DocumentDate] Date
-        , [DatabaseName] Varchar(300)
+        , [SubModJournal] Int
+        );
+    Create Table [#GrnMatching]
+        (
+          [DatabaseName] Varchar(300)
+        , [Grn] Varchar(20)
+        , [Invoice] Varchar(20)
+        );
+    Create Table [#InvJournalDet]
+        (
+          [DatabaseName] Varchar(300)
+        , [JnlYear] Int
+        , [GlPeriod] Int
+        , [Journal] Int
+        , [EntryNumber] Int
+        , [Supplier] Varchar(15)
+        , [PurchaseOrder] Varchar(20)
+        , [Reference] Varchar(30)
         );
 
 
-    Declare @SQL Varchar(Max)= 'Use [?];
-
-If lower(db_name()) like ''sysprocompany%'' and lower(db_name()) not like ''%srs'' and Replace(Db_Name() , ''SysproCompany'' , '''') Not In ( ''A'' , ''B'' , ''C'' , ''D'' ,
-                                                      ''E'' , ''F'' , ''G'' , ''H'' ,
-                                                      ''P'' , ''Q'' , ''T'' , ''U'' ,
-                                                      ''V'' )
-begin
-If Exists (Select 1 From sys.[tables] As [T] Where [T].[name] =''GenJournalDetail'')
-	begin
-	declare @SubSQL varchar(2000) = ''
-	SELECT SourceDetail = Coalesce([GJDS].[GJSourceDetail],''''No Source'''')
-			,[GJD].[GlYear]
+    Declare @SQLGenJournalDetail Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+        + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+        + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+					Insert [#GenJournalDetail]
+		        ( [SourceDetail]
+		        , [GlYear]
+		        , [GlPeriod]
+		        , [Journal]
+		        , [EntryNumber]
+		        , [EntryType]
+		        , [GlCode]
+		        , [Reference]
+		        , [Comment]
+		        , [EntryValue]
+		        , [InterCompanyFlag]
+		        , [Company]
+		        , [EntryDate]
+		        , [EntryPosted]
+		        , [CurrencyValue]
+		        , [PostCurrency]
+		        , [TypeDetail]
+		        , [CommitmentFlag]
+		        , [TransactionDate]
+		        , [DocumentDate]
+		        , [DatabaseName]
+				, [SubModJournal]
+		        )
+				SELECT SourceDetail = Coalesce([GJDS].[GJSourceDetail],''No Source'')
+			 ,[GJD].[GlYear]
 			 , [GJD].[GlPeriod]
 			 , [GJD].[Journal]
 			 , [GJD].[EntryNumber]
@@ -74,72 +127,132 @@ If Exists (Select 1 From sys.[tables] As [T] Where [T].[name] =''GenJournalDetai
 			 , [GJD].[EntryPosted]
 			 , [GJD].[CurrencyValue]
 			 , [GJD].[PostCurrency]
-			 , [TypeDetail] = Coalesce([GJT].[TypeDetail],''''No Type'''')
+			 , [TypeDetail] = Coalesce([GJT].[TypeDetail],''No Type'')
 			 , [GJD].[CommitmentFlag]
 			 , [GJD].[TransactionDate]
 			 , [GJD].[DocumentDate] 
-			 , DatabaseName = db_name()
+			 , DatabaseName = @DBCode
+			 , [GJD].[SubModJournal]
 	From [dbo].[GenJournalDetail] As [GJD]
 	Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
 	Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]
-	And [GJD].[SubModWh]<>''''RM'''';''
+	And [GJD].[SubModWh]<>''RM'';
+			End
+	End';
+	Declare @SQLGrnMatching Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+        + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+        + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#GrnMatching]
+				( [DatabaseName] , [Grn] , [Invoice] )
+				SELECT [DatabaseName]=@DBCode
+				, [GM].[Grn]
+				, [GM].[Invoice] 
+				FROM [GrnMatching] [GM]
+			End
+	End';
+    Declare @SQLInvJournalDet Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+        + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+        + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+				Insert [#InvJournalDet]
+						( [DatabaseName]
+						, [JnlYear]
+						, [GlPeriod]
+						, [Journal]
+						, [EntryNumber]
+						, [Supplier]
+						, [PurchaseOrder]
+						, [Reference]
+						)
+				SELECT [DatabaseName]=@DBCode
+					 , [IJD].[JnlYear]
+					 , [IJD].[GlPeriod]
+					 , [IJD].[Journal]
+					 , [IJD].[EntryNumber]
+					 , [IJD].[Supplier]
+					 , [IJD].[PurchaseOrder]
+					 , [IJD].[Reference]
+				FROM [InvJournalDet] [IJD]
+			End
+	End';
+    
 
-
-	Insert [#Results]
-			( [SourceDetail]
-			, [GlYear]
-			, [GlPeriod]
-			, [Journal]
-			, [EntryNumber]
-			, [EntryType]
-			, [GlCode]
-			, [Reference]
-			, [Comment]
-			, [EntryValue]
-			, [InterCompanyFlag]
-			, [Company]
-			, [EntryDate]
-			, [EntryPosted]
-			, [CurrencyValue]
-			, [PostCurrency]
-			, [TypeDetail]
-			, [CommitmentFlag]
-			, [TransactionDate]
-			, [DocumentDate]
-			, DatabaseName
-			)
-	exec (@SubSQL)
-	end
-end';
-
-    Exec [Process].[ExecForEachDB] @cmd = @SQL;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalDetail;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatching;
+    Exec [Process].[ExecForEachDB] @cmd = @SQLInvJournalDet;
 
     Select  [CN].[CompanyName]
-          , [Co] = Replace([R].[DatabaseName] , 'SysproCompany' , '')
-          , [R].[SourceDetail]
-          , [R].[GlYear]
-          , [R].[GlPeriod]
-          , [R].[Journal]
-          , [R].[EntryNumber]
-          , [R].[EntryType]
-          , [R].[GlCode]
-          , [R].[Reference]
-          , [R].[Comment]
-          , [R].[EntryValue]
-          , [R].[InterCompanyFlag]
-          , [R].[Company]
-          , [R].[EntryDate]
-          , [R].[EntryPosted]
-          , [R].[CurrencyValue]
-          , [R].[PostCurrency]
-          , [R].[TypeDetail]
-          , [R].[CommitmentFlag]
-          , [R].[TransactionDate]
-          , [R].[DocumentDate]
-    From    [#Results] As [R]
-            Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = Replace([R].[DatabaseName] ,
-                                                              'SysproCompany' ,
-                                                              '');
+          , [CN].[ShortName]
+          , [Co] = [GJD].[DatabaseName]--Replace([R].[DatabaseName] , 'SysproCompany' , '')
+          , [GJD].[SourceDetail]
+          , [GJD].[GlYear]
+          , [GJD].[GlPeriod]
+          , [GJD].[Journal]
+          , [GJD].[EntryNumber]
+          , [GJD].[EntryType]
+          , [GJD].[GlCode]
+          , [GJD].[Reference]
+          , [GJD].[Comment]
+          , [GJD].[EntryValue]
+          , [GJD].[InterCompanyFlag]
+          , [GJD].[Company]
+          , [GJD].[EntryDate]
+          , [GJD].[EntryPosted]
+          , [GJD].[CurrencyValue]
+          , [GJD].[PostCurrency]
+          , [GJD].[TypeDetail]
+          , [GJD].[CommitmentFlag]
+          , [GJD].[TransactionDate]
+          , [GJD].[DocumentDate]
+          , [Supplier] = Case When [IJD].[Supplier] = '' Then Null
+                              Else [IJD].[Supplier]
+                         End
+          , [PurchaseOrder] = Case When [IJD].[PurchaseOrder] = '' Then Null
+                                   Else [IJD].[PurchaseOrder]
+                              End
+          , [GM].[Grn]
+          , [GM].[Invoice]
+    From    [#GenJournalDetail] As [GJD]
+            Left Join [#InvJournalDet] [IJD]
+                On [IJD].[JnlYear] = [GJD].[GlYear]
+                   And [IJD].[GlPeriod] = [GJD].[GlPeriod]
+                   And [IJD].[Journal] = [GJD].[SubModJournal]
+                   And [IJD].[EntryNumber] = [GJD].[EntryNumber]
+                   And [IJD].[DatabaseName] = [GJD].[DatabaseName]
+            Left Join [#GrnMatching] [GM]
+                On [IJD].[Reference] = [GM].[Grn]
+                   And [GM].[DatabaseName] = [IJD].[DatabaseName]
+            Left Join [Lookups].[CompanyNames] As [CN]
+                On [CN].[Company] = [GJD].[DatabaseName];
 
-    Drop Table [#Results];
+    Drop Table [#GenJournalDetail];
+    Drop Table [#GrnMatching];
+    Drop Table [#InvJournalDet];
 GO
