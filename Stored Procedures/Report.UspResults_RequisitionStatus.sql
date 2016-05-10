@@ -27,11 +27,12 @@ List of all requisitions and their statuses
         Set NoCount On;
 
 	--Red tag
-    Declare @RedTagDB Varchar(255)= Db_Name();
-    Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
-        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_RequisitionStatus' ,
-        @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
-        @UsedByDb = @RedTagDB;
+        Declare @RedTagDB Varchar(255)= Db_Name();
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResults_RequisitionStatus' ,
+            @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
+            @UsedByDb = @RedTagDB;
 
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
@@ -182,50 +183,60 @@ List of all requisitions and their statuses
                 , [CompanyName]
                 )
                 Select  [RH].[DatabaseName]
-                      , [s].[SupplierName]
-                      , [rd].[Buyer]
-                      , [rd].[CurrentHolder]
-                      , [rd].[DateReqnRaised]
-                      , [rd].[DueDate]
-                      , [rd].[Line]
-                      , [rd].[OrderQty]
-                      , [rd].[Originator]
-                      , [rd].[Price]
+                      , [APS].[SupplierName]
+                      , [RD].[Buyer]
+                      , [RD].[CurrentHolder]
+                      , [RD].[DateReqnRaised]
+                      , [RD].[DueDate]
+                      , [RD].[Line]
+                      , [RD].[OrderQty]
+                      , [RD].[Originator]
+                      , [RD].[Price]
                       , [ReqStatus] = [RS].[ReqnStatusDescription]
-                      , [rd].[StockCode]
-                      , [rd].[StockDescription]
-                      , [rd].[SupCatalogueNum]
+                      , [RD].[StockCode]
+                      , [RD].[StockDescription]
+                      , [RD].[SupCatalogueNum]
                       , [RH].[Requisition]
-                      , [cn].[CompanyName]
-                From    [#ReqHeader] [RH]
-                        Inner Join [#ReqDetail] [rd] On [rd].[Requisition] = [RH].[Requisition]
-                                                        And [rd].[DatabaseName] = [RH].[DatabaseName]
-                        Left Join [#ApSupplier] [s] On [s].[Supplier] = [rd].[Supplier]
-                                                       And [s].[DatabaseName] = [rd].[DatabaseName]
-                        Left Join [BlackBox].[Lookups].[ReqnStatus] [RS] On [RS].[ReqnStatusCode] = [rd].[ReqnStatus] Collate Latin1_General_BIN
-                                                              And [RS].[Company] = [rd].[DatabaseName] Collate Latin1_General_BIN
-                        Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [cn].[Company] = [RH].[DatabaseName] Collate Latin1_General_BIN;
+                      , [CN].[CompanyName]
+                From    [BlackBox].[Lookups].[CompanyNames] As [CN]
+                        Left Join [#ReqHeader] [RH]
+                            On [CN].[Company] = [RH].[DatabaseName] Collate Latin1_General_BIN
+                        left Join [#ReqDetail] [RD]
+                            On [RD].[Requisition] = [RH].[Requisition]
+                               And [RD].[DatabaseName] = [RH].[DatabaseName]
+                        Left Join [#ApSupplier] [APS]
+                            On [APS].[Supplier] = [RD].[Supplier]
+                               And [APS].[DatabaseName] = [RD].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[ReqnStatus] [RS]
+                            On [RS].[ReqnStatusCode] = [RD].[ReqnStatus] Collate Latin1_General_BIN
+                               And [RS].[Company] = [RD].[DatabaseName] Collate Latin1_General_BIN
+                Where   [CN].[Company] In (
+                        Select  [USS].[Value]
+                        From    [dbo].[udf_SplitString](@Company , ',') [USS] )
+                        Or @Company = 'ALL';
+
+
 
 --return results
-        Select  [Company] = [DatabaseName]
-              , [SupplierName]
-              , [Buyer] = Case When [Buyer] = '' Then 'Blank'
-                               Else Coalesce([Buyer] , 'Blank')
+        Select  [Company] = [RRS].[DatabaseName]
+              , [RRS].[SupplierName]
+              , [Buyer] = Case When [RRS].[Buyer] = '' Then 'Blank'
+                               Else Coalesce([RRS].[Buyer] , 'Blank')
                           End
-              , [CurrentHolder]
-              , [DateReqnRaised] = Cast([DateReqnRaised] As Date)
-              , [DueDate] = Cast([DueDate] As Date)
-              , [Line]
-              , [OrderQty]
-              , [Originator]
-              , [Price]
-              , [ReqStatus] = Coalesce([ReqStatus] , 'No Status')
-              , [StockCode]
-              , [StockDescription]
-              , [SupCatalogueNum]
-              , [Requisition]
-              , [CompanyName]
-        From    [#ResultsReqStatus];
+              , [RRS].[CurrentHolder]
+              , [DateReqnRaised] = Cast([RRS].[DateReqnRaised] As Date)
+              , [DueDate] = Cast([RRS].[DueDate] As Date)
+              , [RRS].[Line]
+              , [RRS].[OrderQty]
+              , [RRS].[Originator]
+              , [RRS].[Price]
+              , [ReqStatus] = Coalesce([RRS].[ReqStatus] , 'No Status')
+              , [RRS].[StockCode]
+              , [RRS].[StockDescription]
+              , [RRS].[SupCatalogueNum]
+              , [RRS].[Requisition]
+              , [RRS].[CompanyName]
+        From    [#ResultsReqStatus] [RRS];
 
     End;
 
