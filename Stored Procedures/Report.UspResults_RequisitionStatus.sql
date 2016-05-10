@@ -182,7 +182,7 @@ List of all requisitions and their statuses
                 , [Requisition]
                 , [CompanyName]
                 )
-                Select  [RH].[DatabaseName]
+                Select  CN.[Company]
                       , [APS].[SupplierName]
                       , [RD].[Buyer]
                       , [RD].[CurrentHolder]
