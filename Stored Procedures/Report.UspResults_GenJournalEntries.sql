@@ -406,25 +406,17 @@ Stored procedure set out to query multiple databases with the same information a
                                                Else [IJD].[PurchaseOrder]
                                           End
                       , [Grn] = Stuff(( Select Distinct
-                                                ','
-                                                + Case When IsNumeric([GM].[Grn]) = 1
-                                                       Then Convert(Varchar(20) , Convert(BigInt , [GM].[Grn]))
-                                                       Else [GM].[Grn]
-                                                  End
-                                      From      [#GrnMatching] [GM]
-                                      Where     [IJD].[Reference] = [GM].[Grn]
+                                                ',' + [GM].[Grn]
+                                        From    [#GrnMatching] [GM]
+                                        Where   [IJD].[Reference] = [GM].[Grn]
                                                 And [GM].[DatabaseName] = [IJD].[DatabaseName]
                                                 And Coalesce([GM].[Invoice] ,
                                                              '') <> ''
-                                    For
-                                      Xml Path('')
-                                    ) , 1 , 1 , '')
+                                      For
+                                        Xml Path('')
+                                      ) , 1 , 1 , '')
                       , [Invoice] = Stuff(( Select Distinct
-                                                    ','
-                                                    + Case When IsNumeric([GM].[Invoice]) = 1
-                                                           Then Convert(Varchar(20) , Convert(BigInt , [GM].[Invoice]))
-                                                           Else [GM].[Invoice]
-                                                      End
+                                                    ',' + [GM].[Invoice]
                                             From    [#GrnMatching] [GM]
                                             Where   [IJD].[Reference] = [GM].[Grn]
                                                     And [GM].[DatabaseName] = [IJD].[DatabaseName]
