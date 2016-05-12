@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -117,6 +116,32 @@ Stored procedure set out to query multiple databases with the same information a
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
+			Declare @SubSQL Varchar(1000)
+
+			Select @SubSQL=''SELECT [DatabaseName]=''+@DBCode+''
+							, [GJD].[Journal]
+							, [GJD].[GlYear]
+							, [GJD].[GlPeriod]
+							, [GJD].[EntryNumber]
+							, [GJD].[EntryType]
+							, [GJD].[GlCode]
+							, [GJD].[Reference]
+							, [GJD].[Comment]
+							, [GJD].[EntryValue]
+							, [GJD].[EntryDate]
+							, [GJD].[EntryPosted]
+							, [GJD].[InterCompanyFlag]
+							, [GJD].[Company]
+							, [GJD].[CurrencyValue]
+							, [GJD].[PostCurrency]
+							, [TypeDetail] = Coalesce([GJT].[TypeDetail],''''No Type'''')
+							, [GJD].[CommitmentFlag]
+							, [GJD].[TransactionDate]
+							, [GJD].[DocumentDate]
+							, [GJD].[SubModJournal] FROM [GenJournalDetail] As [GJD]
+			Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
+			Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]''
+
 					Insert [#GenJournalDetail]
 							( [DatabaseName]
 							, [Journal]
@@ -140,29 +165,7 @@ Stored procedure set out to query multiple databases with the same information a
 							, [DocumentDate]
 							, [SubModJournal]
 							)
-					SELECT [DatabaseName]=@DBCode
-							, [GJD].[Journal]
-							, [GJD].[GlYear]
-							, [GJD].[GlPeriod]
-							, [GJD].[EntryNumber]
-							, [GJD].[EntryType]
-							, [GJD].[GlCode]
-							, [GJD].[Reference]
-							, [GJD].[Comment]
-							, [GJD].[EntryValue]
-							, [GJD].[EntryDate]
-							, [GJD].[EntryPosted]
-							, [GJD].[InterCompanyFlag]
-							, [GJD].[Company]
-							, [GJD].[CurrencyValue]
-							, [GJD].[PostCurrency]
-							, [TypeDetail] = Coalesce([GJT].[TypeDetail],''No Type'')
-							, [GJD].[CommitmentFlag]
-							, [GJD].[TransactionDate]
-							, [GJD].[DocumentDate]
-							, [GJD].[SubModJournal] FROM [GenJournalDetail] As [GJD]
-Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
-	Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]
+					Exec (@SubSQL)
 			End
 	End';
         Declare @SQLGenJournalCtl Varchar(Max) = '
