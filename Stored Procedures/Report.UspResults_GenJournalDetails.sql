@@ -3,7 +3,6 @@ GO
 SET ANSI_NULLS ON
 GO
 
-
 CREATE Proc [Report].[UspResults_GenJournalDetails]
     (
       @RedTagType Char(1)
@@ -92,15 +91,12 @@ Stored procedure set out to query all live db's and return details of general le
         , [Description] Varchar(50)
         );
 
-
-
-
     Declare @SQLGenJournalDetail Varchar(Max) = '
-	USE [?];
-	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
-	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
-	BEGIN
+USE [?];
+Declare @DB varchar(150),@DBCode varchar(150)
+Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
         + Upper(@Company) + ''' = ''ALL''
 			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
@@ -112,66 +108,70 @@ Stored procedure set out to query all live db's and return details of general le
 			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-                    Insert  [#GenJournalDetail]
-                            ( [SourceDetail]
-                            , [GlYear]
-                            , [GlPeriod]
-                            , [Journal]
-                            , [EntryNumber]
-                            , [EntryType]
-                            , [GlCode]
-                            , [Reference]
-                            , [Comment]
-                            , [EntryValue]
-                            , [InterCompanyFlag]
-                            , [Company]
-                            , [EntryDate]
-                            , [EntryPosted]
-                            , [CurrencyValue]
-                            , [PostCurrency]
-                            , [TypeDetail]
-                            , [CommitmentFlag]
-                            , [TransactionDate]
-                            , [DocumentDate]
-                            , [DatabaseName]
-                            , [SubModJournal]
-                            , [AnalysisEntry]
-		                    )
-                            SELECT  SourceDetail = Coalesce([GJDS].[GJSourceDetail] ,
-                                                            ''No Source'')
-                                  , [GJD].[GlYear]
-                                  , [GJD].[GlPeriod]
-                                  , [GJD].[Journal]
-                                  , [GJD].[EntryNumber]
-                                  , [GJD].[EntryType]
-                                  , [GJD].[GlCode]
-                                  , [GJD].[Reference]
-                                  , [GJD].[Comment]
-                                  , [GJD].[EntryValue]
-                                  , [GJD].[InterCompanyFlag]
-                                  , [Company] = case when [GJD].[Company]='''' then @DBCode else [GJD].[Company] end
-                                  , [GJD].[EntryDate]
-                                  , [GJD].[EntryPosted]
-                                  , [GJD].[CurrencyValue]
-                                  , [GJD].[PostCurrency]
-                                  , [TypeDetail] = Coalesce([GJT].[TypeDetail] ,
-                                                            ''No Type'')
-                                  , [GJD].[CommitmentFlag]
-                                  , [GJD].[TransactionDate]
-                                  , [GJD].[DocumentDate]
-                                  , DatabaseName = @DBCode
-                                  , [GJD].[SubModJournal]
-                                  , [GJD].[AnalysisEntry]
-                            From    [dbo].[GenJournalDetail] As [GJD]
-                                    Left Join [BlackBox].[Lookups].[GenJournalDetailSource]
-                                        As [GJDS]
-                                        On [GJDS].[GJSource] = [GJD].[Source]
-                                    Left Join [BlackBox].[Lookups].[GenJournalType]
-                                        As [GJT]
-                                        On [GJD].[Type] = [GJT].[TypeCode]
-                                           And [GJD].[SubModWh] <> ''RM'';
-			End
-	End';
+			Declare @SubSQL Varchar(max)
+
+			Select @SubSQL=''SELECT  SourceDetail = Coalesce([GJDS].[GJSourceDetail] ,
+									''''No Source'''')
+			, [GJD].[GlYear]
+			, [GJD].[GlPeriod]
+			, [GJD].[Journal]
+			, [GJD].[EntryNumber]
+			, [GJD].[EntryType]
+			, [GJD].[GlCode]
+			, [GJD].[Reference]
+			, [GJD].[Comment]
+			, [GJD].[EntryValue]
+			, [GJD].[InterCompanyFlag]
+			, [Company] = case when [GJD].[Company]='''''''' then ''''''+@DBCode+'''''' else [GJD].[Company] end
+			, [GJD].[EntryDate]
+			, [GJD].[EntryPosted]
+			, [GJD].[CurrencyValue]
+			, [GJD].[PostCurrency]
+			, [TypeDetail] = Coalesce([GJT].[TypeDetail] ,
+									''''No Type'''')
+			, [GJD].[CommitmentFlag]
+			, [GJD].[TransactionDate]
+			, [GJD].[DocumentDate]
+			, DatabaseName = ''''''+@DBCode+''''''
+			, [GJD].[SubModJournal]
+			, [GJD].[AnalysisEntry]
+		From    [dbo].[GenJournalDetail] As [GJD]
+			Left Join [BlackBox].[Lookups].[GenJournalDetailSource]
+				As [GJDS]
+				On [GJDS].[GJSource] = [GJD].[Source]
+			Left Join [BlackBox].[Lookups].[GenJournalType]
+				As [GJT]
+				On [GJD].[Type] = [GJT].[TypeCode]
+					And [GJD].[SubModWh] <> ''''RM'''';''
+
+		Insert  [#GenJournalDetail]
+			( [SourceDetail]
+			, [GlYear]
+			, [GlPeriod]
+			, [Journal]
+			, [EntryNumber]
+			, [EntryType]
+			, [GlCode]
+			, [Reference]
+			, [Comment]
+			, [EntryValue]
+			, [InterCompanyFlag]
+			, [Company]
+			, [EntryDate]
+			, [EntryPosted]
+			, [CurrencyValue]
+			, [PostCurrency]
+			, [TypeDetail]
+			, [CommitmentFlag]
+			, [TransactionDate]
+			, [DocumentDate]
+			, [DatabaseName]
+			, [SubModJournal]
+			, [AnalysisEntry]
+			)
+		Exec (@SubSQL)
+	End
+End';
     Declare @SQLGrnMatching Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
@@ -310,7 +310,9 @@ Stored procedure set out to query all live db's and return details of general le
 			End
 	End';
 
-    Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalDetail;
+    Print @SQLGenJournalDetail
+	
+	Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalDetail;
     Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatching;
     Exec [Process].[ExecForEachDB] @cmd = @SQLInvJournalDet;
 	Exec [Process].[ExecForEachDB] @cmd = @SQLAnalysis;
