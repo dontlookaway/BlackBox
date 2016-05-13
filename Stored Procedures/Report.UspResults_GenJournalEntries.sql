@@ -19,9 +19,6 @@ Stored procedure set out to query multiple databases with the same information a
                 Select  @Company = Upper(@Company);
             End;
 
---remove nocount on to speed up query
-        Set NoCount On;
-
 --Red tag
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
@@ -57,6 +54,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TransactionDate] Date
             , [DocumentDate] Date
             , [SubModJournal] Int
+            , [AnalysisEntry] Int
             );
         Create Table [#GenJournalCtl]
             (
@@ -98,6 +96,27 @@ Stored procedure set out to query multiple databases with the same information a
             , [PurchaseOrder] Varchar(20)
             , [Reference] Varchar(30)
             );
+        Create Table [#GenAnalysisTrn]
+            (
+              [DatabaseName] Varchar(150)
+            , [AnalysisEntry] Int
+            , [GlPeriod] Int
+            , [GlYear] Int
+            , [AnalysisCategory] Varchar(10)
+            , [AnalysisCode1] Varchar(10)
+            , [AnalysisCode2] Varchar(10)
+            , [AnalysisCode3] Varchar(10)
+            , [AnalysisCode4] Varchar(10)
+            , [AnalysisCode5] Varchar(10)
+            );
+        Create Table [#GenAnalysisCode]
+            (
+              [DatabaseName] Varchar(150)
+            , [AnalysisCategory] Varchar(10)
+            , [AnalysisCode] Varchar(10)
+            , [AnalysisType] Int
+            , [Description] Varchar(50)
+            );
 
 --create script to pull data from each db into the tables
         Declare @SQLGenJournalDetail Varchar(Max) = 'USE [?];
@@ -138,7 +157,8 @@ Stored procedure set out to query multiple databases with the same information a
 							, [GJD].[CommitmentFlag]
 							, [GJD].[TransactionDate]
 							, [GJD].[DocumentDate]
-							, [GJD].[SubModJournal] FROM [GenJournalDetail] As [GJD]
+							, [GJD].[SubModJournal]
+							, [GJD].[AnalysisEntry] FROM [GenJournalDetail] As [GJD]
 			Left Join [BlackBox].[Lookups].[GenJournalDetailSource] As [GJDS] On [GJDS].[GJSource]=[GJD].[Source]
 			Left Join [BlackBox].[Lookups].[GenJournalType] As [GJT] On [GJD].[Type]=[GJT].[TypeCode]''
 
@@ -164,6 +184,7 @@ Stored procedure set out to query multiple databases with the same information a
 							, [TransactionDate]
 							, [DocumentDate]
 							, [SubModJournal]
+							, [AnalysisEntry]
 							)
 					Exec (@SubSQL)
 			End
@@ -292,12 +313,84 @@ Stored procedure set out to query multiple databases with the same information a
 				FROM [InvJournalDet] [IJD]
 			End
 	End';
+        Declare @SQLAnalysis Varchar(Max) = '
+	USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS'' and IsNumeric(Replace(Db_Name(),''SysproCompany'',''''))=1
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
+					, @RequiredCountOfTables INT
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
+			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
+			If @ActualCountOfTables=@RequiredCountOfTables
+			BEGIN
+                    Insert  [#GenAnalysisTrn]
+                            ( [DatabaseName]
+                            , [AnalysisEntry]
+                            , [GlPeriod]
+                            , [GlYear]
+                            , [AnalysisCategory]
+                            , [AnalysisCode1]
+                            , [AnalysisCode2]
+                            , [AnalysisCode3]
+                            , [AnalysisCode4]
+                            , [AnalysisCode5]
+							)
+                            Select  [DatabaseName] = @DBCode
+                                  , [GAT].[AnalysisEntry]
+                                  , [GAT].[GlPeriod]
+                                  , [GAT].[GlYear]
+                                  , [GAT].[AnalysisCategory]
+                                  , [AnalysisCode1] = Case When [GAT].[AnalysisCode1] = ''''
+                                                           Then Null
+                                                           Else [GAT].[AnalysisCode1]
+                                                      End
+                                  , [AnalysisCode2] = Case When [GAT].[AnalysisCode2] = ''''
+                                                           Then Null
+                                                           Else [GAT].[AnalysisCode2]
+                                                      End
+                                  , [AnalysisCode3] = Case When [GAT].[AnalysisCode3] = ''''
+                                                           Then Null
+                                                           Else [GAT].[AnalysisCode3]
+                                                      End
+                                  , [AnalysisCode4] = Case When [GAT].[AnalysisCode4] = ''''
+                                                           Then Null
+                                                           Else [GAT].[AnalysisCode4]
+                                                      End
+                                  , [AnalysisCode5] = Case When [GAT].[AnalysisCode5] = ''''
+                                                           Then Null
+                                                           Else [GAT].[AnalysisCode5]
+                                                      End
+                            From    [dbo].[GenAnalysisTrn] [GAT];
+
+                    Insert  [#GenAnalysisCode]
+                            ( [DatabaseName]
+                            , [AnalysisCategory]
+                            , [AnalysisCode]
+                            , [AnalysisType]
+                            , [Description]
+	                        )
+                            Select  [DatabaseName] = @DBCode
+                                  , [GAC].[AnalysisCategory]
+                                  , [GAC].[AnalysisCode]
+                                  , [GAC].[AnalysisType]
+                                  , [GAC].[Description]
+                            From    [SysproCompany10].[dbo].[GenAnalysisCode] [GAC];
+			End
+	End';
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalCtl;
         Exec [Process].[ExecForEachDB] @cmd = @SQLGenJournalDetail;
         Exec [Process].[ExecForEachDB] @cmd = @SQLGrnMatching;
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvJournalDet;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLAnalysis;
 
 --define the results you want to return
         Create Table [#Results]
@@ -333,6 +426,13 @@ Stored procedure set out to query multiple databases with the same information a
             , [PurchaseOrder] Varchar(20)
             , [Grn] Varchar(Max)
             , [Invoice] Varchar(Max)
+            , [AnalysisCategory] Varchar(10)
+            , [AnalysisCode1] Varchar(10)
+            , [Analysis1] Varchar(50)
+            , [AnalysisCode2] Varchar(10)
+            , [AnalysisCode3] Varchar(10)
+            , [AnalysisCode4] Varchar(10)
+            , [AnalysisCode5] Varchar(10)
             );
 
 --Placeholder to create indexes as required
@@ -370,6 +470,13 @@ Stored procedure set out to query multiple databases with the same information a
                 , [PurchaseOrder]
                 , [Grn]
                 , [Invoice]
+                , [AnalysisCategory]
+                , [AnalysisCode1]
+                , [Analysis1]
+                , [AnalysisCode2]
+                , [AnalysisCode3]
+                , [AnalysisCode4]
+                , [AnalysisCode5] 
                 )
                 Select  [GJD].[DatabaseName]
                       , [GJD].[Journal]
@@ -425,6 +532,13 @@ Stored procedure set out to query multiple databases with the same information a
                                           For
                                             Xml Path('')
                                           ) , 1 , 1 , '')
+                      , [GAT].[AnalysisCategory]
+                      , [GAT].[AnalysisCode1]
+                      , [Analysis1] = [GAC].[Description]
+                      , [GAT].[AnalysisCode2]
+                      , [GAT].[AnalysisCode3]
+                      , [GAT].[AnalysisCode4]
+                      , [GAT].[AnalysisCode5]
                 From    [#GenJournalDetail] As [GJD]
                         Left Join [#GenJournalCtl] As [GJC]
                             On [GJC].[GlJournal] = [GJD].[Journal]
@@ -441,7 +555,17 @@ Stored procedure set out to query multiple databases with the same information a
                             On [IJD].[Reference] = [GM].[Grn]
                                And [GM].[DatabaseName] = [IJD].[DatabaseName]*/
                         Left Join [Lookups].[CompanyNames] As [CN]
-                            On [CN].[Company] = [GJD].[DatabaseName];
+                            On [CN].[Company] = [GJD].[DatabaseName]
+                        Left Join [#GenAnalysisTrn] [GAT]
+                            On [GAT].[AnalysisEntry] = [GJD].[AnalysisEntry]
+                               And [GAT].[GlPeriod] = [GJD].[GlPeriod]
+                               And [GAT].[GlYear] = [GJD].[GlYear]
+                               And [GAT].[DatabaseName] = [GJD].[DatabaseName]
+                        Left Join [#GenAnalysisCode] [GAC]
+                            On [GAC].[AnalysisCategory] = [GAT].[AnalysisCategory]
+                               And [GAC].[AnalysisCode] = [GAT].[AnalysisCode1]
+                               And [GAC].[AnalysisType] = 1
+                               And [GAC].[DatabaseName] = [GAT].[DatabaseName];
 
 --return results
         Select  [R].[DatabaseName]
@@ -477,6 +601,13 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[PurchaseOrder]
               , [R].[Grn]
               , [R].[Invoice]
+              , [R].[AnalysisCategory]
+              , [R].[AnalysisCode1]
+              , [R].[Analysis1]
+              , [R].[AnalysisCode2]
+              , [R].[AnalysisCode3]
+              , [R].[AnalysisCode4]
+              , [R].[AnalysisCode5]
         From    [#Results] As [R]
                 Left Join [BlackBox].[Lookups].[JnlPostingType] [JPT]
                     On [R].[JnlPostingType] = [JPT].[JnlPostingType]
