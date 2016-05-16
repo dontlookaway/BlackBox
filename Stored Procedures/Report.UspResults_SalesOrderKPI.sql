@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -11,15 +10,12 @@ CREATE Proc [Report].[UspResults_SalesOrderKPI]
     )
 As
     Begin
-/*
-Template designed by Chris Johnson, Prometic Group September 2015
-Stored procedure set out to query multiple databases with the same information and return it in a collated format
-*/
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
             End;
 
+Set NoCount on
 --Red tag
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
@@ -27,11 +23,6 @@ Stored procedure set out to query multiple databases with the same information a
             @StoredProcName = 'UspResults_SalesOrderKPI' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
-
---remove nocount on to speed up query
-        Set NoCount On;
-
-
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
         Declare @ListOfTables Varchar(Max) = 'MdnMasterRep,CusSorMaster+'; 
@@ -110,27 +101,18 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLMdnMasterRep Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#MdnMasterRep]
@@ -159,27 +141,18 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLSorMaster Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 			Insert  [#SorMaster]
@@ -212,68 +185,49 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLCusSorMasterPlus Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
-			 Declare @SQL Varchar(250)= ''Select  ''''''+@DBCode+''''''
-                  , [CSMP].[SalesOrder]
-                  , [CSMP].[AcceptedDate]
-            From    dbo.[CusSorMaster+] As [CSMP];'';
-			
-                Insert  [#CusSorMasterPlus]
+			 Declare @SQLSub Varchar(2000)= ''Insert  [#CusSorMasterPlus]
                         ( [DatabaseName]
                         , [SalesOrder]
                         , [AcceptedDate]
 					    )
-                        Exec ( @SQL
-                            );
-
+						Select  ''''''+@DBCode+''''''
+                  , [CSMP].[SalesOrder]
+                  , [CSMP].[AcceptedDate]
+            From    dbo.[CusSorMaster+] As [CSMP];'';
+			
+                
+                Exec (@SQLSub);
 			End
 	End';
         Declare @SQLSorDetail Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 			Insert [#SorDetail]
@@ -298,27 +252,18 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLMdnDetail Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 			Insert  [#MdnDetail]
@@ -343,27 +288,18 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @SQLLotTransactions Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+            + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 			Insert  [#LotTransactions]
@@ -403,7 +339,7 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
+--Print @SQLCusSorMasterPlus
 
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLMdnMasterRep;
@@ -510,25 +446,30 @@ Stored procedure set out to query multiple databases with the same information a
                                                               Else [MMR].[DispatchComments4]
                                                             End , '')
                 From    [#SorMaster] As [SM]
-                        Inner Join [#MdnMasterRep] As [MMR] On [MMR].[SalesOrder] = [SM].[SalesOrder]
-                                                              And [MMR].[DatabaseName] = [SM].[DatabaseName]
-                        Left Join [#CusSorMasterPlus] As [CSM] On [CSM].[SalesOrder] = [MMR].[SalesOrder]
-                                                              And [CSM].[DatabaseName] = [MMR].[DatabaseName]
-                        Inner Join [#SorDetail] As [SD] On [SD].[SalesOrder] = [SM].[SalesOrder]
-                                                           And [SD].[LineType] <> 5
-                                                           And [SD].[DatabaseName] = [SM].[DatabaseName]
-                        Inner Join [#MdnDetail] As [MD] On [MD].[SalesOrder] = [SD].[SalesOrder]
-                                                           And [MD].[SalesOrderLine] = [SD].[SalesOrderLine]
-                                                           And [MD].[LineType] = [SD].[LineType]
-                                                           And [MD].[DatabaseName] = [SD].[DatabaseName]
-                        Left Join [#LotTransactions] As [LT] On [LT].[SalesOrder] = [SD].[SalesOrder]
-                                                              And [LT].[SalesOrderLine] = [SD].[SalesOrderLine]
-                                                              And [LT].[StockCode] = [SD].[MStockCode]
-                                                              And [LT].[DispatchNote] = [MD].[DispatchNote]
-                                                              And [LT].[Invoice] = [MMR].[Invoice]
-                                                              And [LT].[NewWarehouse] = [SM].[Warehouse]
-                                                              And [LT].[JnlYear] = [MD].[JnlYear]
-                                                              And [LT].[DatabaseName] = [MD].[DatabaseName]
+                        Inner Join [#MdnMasterRep] As [MMR]
+                            On [MMR].[SalesOrder] = [SM].[SalesOrder]
+                               And [MMR].[DatabaseName] = [SM].[DatabaseName]
+                        Left Join [#CusSorMasterPlus] As [CSM]
+                            On [CSM].[SalesOrder] = [MMR].[SalesOrder]
+                               And [CSM].[DatabaseName] = [MMR].[DatabaseName]
+                        Inner Join [#SorDetail] As [SD]
+                            On [SD].[SalesOrder] = [SM].[SalesOrder]
+                               And [SD].[LineType] <> 5
+                               And [SD].[DatabaseName] = [SM].[DatabaseName]
+                        Inner Join [#MdnDetail] As [MD]
+                            On [MD].[SalesOrder] = [SD].[SalesOrder]
+                               And [MD].[SalesOrderLine] = [SD].[SalesOrderLine]
+                               And [MD].[LineType] = [SD].[LineType]
+                               And [MD].[DatabaseName] = [SD].[DatabaseName]
+                        Left Join [#LotTransactions] As [LT]
+                            On [LT].[SalesOrder] = [SD].[SalesOrder]
+                               And [LT].[SalesOrderLine] = [SD].[SalesOrderLine]
+                               And [LT].[StockCode] = [SD].[MStockCode]
+                               And [LT].[DispatchNote] = [MD].[DispatchNote]
+                               And [LT].[Invoice] = [MMR].[Invoice]
+                               And [LT].[NewWarehouse] = [SM].[Warehouse]
+                               And [LT].[JnlYear] = [MD].[JnlYear]
+                               And [LT].[DatabaseName] = [MD].[DatabaseName]
                         Left Join ( Select Distinct
                                             [LT2].[Lot]
                                           , [LT2].[StockCode]
@@ -540,16 +481,20 @@ Stored procedure set out to query multiple databases with the same information a
                                     Where   [LT2].[TrnType] = 'R'
                                             And Coalesce([LT2].[JobPurchOrder] ,
                                                          [LT2].[Job] ,
-                                                         [LT2].[Reference] , '') <> ''
-                                  ) [LT3] On [LT].[Lot] = [LT3].[Lot]
-                                             And [LT].[StockCode] = [LT3].[StockCode]
-                                             And [LT3].[DatabaseName] = [LT].[DatabaseName]
-                        Left Join [Lookups].[CompanyNames] As [CN] On [SM].[DatabaseName] = [CN].[Company]
+                                                         [LT2].[Reference] ,
+                                                         '') <> ''
+                                  ) [LT3]
+                            On [LT].[Lot] = [LT3].[Lot]
+                               And [LT].[StockCode] = [LT3].[StockCode]
+                               And [LT3].[DatabaseName] = [LT].[DatabaseName]
+                        Left Join [Lookups].[CompanyNames] As [CN]
+                            On [SM].[DatabaseName] = [CN].[Company]
                 Where   [SM].[OrderStatus] In ( '0' , '1' , '2' , '3' , '4' ,
                                                 '8' , '9' )
                         And [LT].[Lot] Is Not Null
                 Order By [SM].[SalesOrder] Asc;
 
+Set NoCount Off
 --return results
         Select  [CompanyName]
               , [SalesOrder]
@@ -581,8 +526,8 @@ Stored procedure set out to query multiple databases with the same information a
                                                               Then 0
                                                               Else [Process].[Udf_WorkingDays]([AcceptedDate] ,
                                                               [ActualDeliveryDate] ,
-                                                              'UK')-1
-                                                            End
+                                                              'UK') - 1
+                                                              End
         From    [#Results];
 
     End;
