@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,12 +9,6 @@ CREATE Proc [Process].[UspUpdate_GlExpenseCode]
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to	Purchase Order Status details
-*/
-
-        Set NoCount On;
-
 
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    1
@@ -45,7 +38,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 	--create master list of how codes affect stock
                 Create Table [#OrdersGlExpenseCode]

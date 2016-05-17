@@ -2,48 +2,17 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Process].[UspUpdate_CurrencyRates]
---Exec [Process].[UspUpdate_CurrencyRates] @PrevCheck =0, @HoursBetweenUpdates =-1
     (
       @PrevCheck Int --if count is less than previous don't update
     , @HoursBetweenUpdates Int
     )
-
---Exec Report.UspResults_CurrencyRates
-As /*
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////	Written by Chris Johnson - Prometic Biosciences Ltd								/////
-/////	Stored procedure to grab currency rates and unpivot them						/////
-/////																					/////
-/////																					/////
-/////																					/////
-/////	Date			Amended By		Description										/////
-/////	14/01/2016		Chris Johnson	Original version written						/////
-/////	15/01/2016		Chris Johnson	Added grab of CHF from Co. 10					/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////	##/##/####		Enter Name														/////
-/////////////////////////////////////////////////////////////////////////////////////////////
-*/
-
+As
     Begin
-        Set NoCount On;
-
         Declare @MaxRank Int;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'CurrencyRates' )
@@ -109,7 +78,6 @@ As /*
                         , [EUR]
                         , [GBP]
                         , [CAD]
-                        --, [JnlRank]
                         )
                         Select  [JnlDate]
                               , [StartDateTime] = [JnlDateTime]
@@ -119,7 +87,6 @@ As /*
                               , [EUR]
                               , [GBP]
                               , [CAD] = 1.000000
-                              --, Rank() Over ( Order By [JnlDateTime] Asc )
                         From    ( Select    [TCAJ].[JnlDate]
                                           , [JnlDateTime] = DateAdd(Hour ,
                                                               Cast(Left([TCAJ].[JnlTime] ,
@@ -127,7 +94,6 @@ As /*
                                                               [TCAJ].[JnlDate])
                                           , [TCAJ].[Currency]
                                           , [TCAJ].[ColumnName]
-		--,[TCAJ].[Before]
                                           , [ExchangeRate] = Cast([TCAJ].[After] As Float)
                                   From      [SysproCompany40].[dbo].[TblCurAmendmentJnl]
                                             As [TCAJ]
@@ -147,7 +113,6 @@ As /*
                         , [GBP]
                         , [CAD]
                         , [CHF]
-			        --, [JnlRank]
 			            )
                         Select  [JnlDateTime]
                               , [StartDateTime] = [JnlDateTime]
@@ -158,7 +123,6 @@ As /*
                               , [GBP] = [CAD]
                               , [CAD] = [CAD] / [CAD]
                               , [CHF] = [CAD] / [CHF]
-                          --, Rank() Over ( Order By [JnlDateTime] Asc )
                         From    ( Select    [JnlDateTime] = [TCAJ].[JnlDate]
                                           , [TCAJ].[Currency]
                                           , [TCAJ].[ColumnName]
@@ -181,15 +145,16 @@ As /*
                         Inner Join ( Select [MCTa].[StartDateTime]
                                           , [Ranking] = Rank() Over ( Order By [MCTa].[StartDateTime] )
                                      From   [#MasterCurrencyTable] As [MCTa]
-                                   ) As [MCTb] On [MCTb].[StartDateTime] = [MCT].[StartDateTime];
+                                   ) As [MCTb]
+                            On [MCTb].[StartDateTime] = [MCT].[StartDateTime];
 
  --Set End Dates
                 Update  [MCT]
                 Set     [MCT].[EndDateTime] = DateAdd(Second , -1 ,
                                                       [MCT2].[StartDateTime])
                 From    [#MasterCurrencyTable] As [MCT]
-                        Left Join [#MasterCurrencyTable] As [MCT2] On [MCT2].[JnlRank] = [MCT].[JnlRank]
-                                                              + 1;
+                        Left Join [#MasterCurrencyTable] As [MCT2]
+                            On [MCT2].[JnlRank] = [MCT].[JnlRank] + 1;
 
  --Back fill null currencies by grabbing the next available rate
                 Update  [#MasterCurrencyTable]

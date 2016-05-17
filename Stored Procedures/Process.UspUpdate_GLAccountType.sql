@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -8,29 +7,9 @@ CREATE Proc [Process].[UspUpdate_GLAccountType]
       @PrevCheck Int --if count is less than previous don't update
     , @HoursBetweenUpdates Int
     )
-As --exec  [Process].[UspUpdate_GLAccountType] 0,-1
+As
     Begin
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with AccountType Names		///
-///																																	///
-///																																	///
-///			Version 1.0																												///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			18/11/2015	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
 
-        Set NoCount On;
-
-        Print 1;
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    *
                           From      [INFORMATION_SCHEMA].[TABLES]
@@ -38,9 +17,7 @@ As --exec  [Process].[UspUpdate_GLAccountType] 0,-1
                                     And [TABLE_NAME] = 'GLAccountType' )
            )
             Begin
-                Print 2;
-                Create --drop --alter 
-				Table [Lookups].[GLAccountType]
+                Create Table [Lookups].[GLAccountType]
                     (
                       [GLAccountType] Varchar(10)
                     , [GLAccountTypeDesc] Varchar(250)
@@ -52,7 +29,6 @@ As --exec  [Process].[UspUpdate_GLAccountType] 0,-1
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Print 3;
         Select  @LastDate = Max([LastUpdated])
         From    [Lookups].[GLAccountType];
 
@@ -62,16 +38,13 @@ As --exec  [Process].[UspUpdate_GLAccountType] 0,-1
 	--Set time of run
                 Declare @LastUpdated DateTime2;
                 Select  @LastUpdated = GetDate();
-                Print 4;
 	--create master list of how codes affect stock
-                Create --drop --alter 
-	Table [#GLAccountType]
+                Create Table [#GLAccountType]
                     (
                       [AccountType] Varchar(10) Collate Latin1_General_BIN
                     , [AccountTypeDescription] Varchar(250)
                     );
 
-                Print 5;
                 Insert  [#GLAccountType]
                         ( [AccountType]
                         , [AccountTypeDescription]
@@ -107,19 +80,15 @@ As --exec  [Process].[UspUpdate_GLAccountType] 0,-1
                                                  [GM].[AccountType])
                       , [AccountTypeDescription] = Coalesce([GAT].[AccountTypeDescription] ,
                                                             'Unknown')
-                Into
-                    #ResultsAccountTypeName 
+                Into    [#ResultsAccountTypeName]
                 From    [#GLAccountType] As [GAT]
-                        Full Outer Join [SysproCompany40].[dbo].[GenMaster] As [GM] On [GM].[AccountType] = [GAT].[AccountType]
+                        Full Outer Join [SysproCompany40].[dbo].[GenMaster] As [GM]
+                            On [GM].[AccountType] = [GAT].[AccountType]
                 Group By Coalesce([GAT].[AccountType] , [GM].[AccountType])
                       , Coalesce([AccountTypeDescription] , 'Unknown');
 
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsPoStatus
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
 
                 Insert  [Lookups].[GLAccountType]
                         ( [GLAccountType]

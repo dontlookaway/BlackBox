@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,41 +9,35 @@ CREATE Proc [Process].[UspUpdate_CompanyNames]
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with Company Names
---exec  [Process].[UspUpdate_CompanyNames] 1,1
-*/
---        Set NoCount On;
 
-        Print 1;
 --check if table exists with latest field to drop if it doesn't
         If ( Not Exists ( Select    1
                           From      [sys].[tables] As [T]
-                                    Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
-                                    Left Join [sys].[columns] As [C] On [C].[object_id] = [T].[object_id]
+                                    Left Join [sys].[schemas] As [S]
+                                        On [S].[schema_id] = [T].[schema_id]
+                                    Left Join [sys].[columns] As [C]
+                                        On [C].[object_id] = [T].[object_id]
                           Where     [S].[name] = 'Lookups'
                                     And [T].[name] = 'CompanyNames'
                                     And [C].[name] = 'ShortName' )
            )
             Begin
                 Begin Try
-                    Print 2;
                     Drop Table [Lookups].[CompanyNames];
                 End Try
                 Begin Catch
-                    Print 3;
                     Print 'unable to drop table - may not exist';
                 End Catch;
             End;	
 --check if table exists to create it
         If ( Not Exists ( Select    1
                           From      [sys].[tables] As [T]
-                                    Left Join [sys].[schemas] As [S] On [S].[schema_id] = [T].[schema_id]
+                                    Left Join [sys].[schemas] As [S]
+                                        On [S].[schema_id] = [T].[schema_id]
                           Where     [S].[name] = 'Lookups'
                                     And [T].[name] = 'CompanyNames' )
            )
             Begin
-                Print 4;
                 Create Table [Lookups].[CompanyNames]
                     (
                       [Company] Varchar(150)
@@ -58,8 +51,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
         Declare @LastDate DateTime2;
 
-        Print 5;
-        Select  @LastDate = Max([LastUpdated])
+        Select  @LastDate = Max([CN].[LastUpdated])
         From    [Lookups].[CompanyNames] As [CN];
 
         If @LastDate Is Null
@@ -68,7 +60,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--Set time of run
                 Declare @LastUpdated DateTime2;
                 Select  @LastUpdated = GetDate();
-                Print 6;
+
 	--create master list of Company Names
                 Create 	Table [#CompanyList]
                     (
@@ -77,7 +69,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                     , [ShortName] Varchar(250)
                     );
 
-                Print 7;
+
                 Insert  [#CompanyList]
                         ( [Company]
                         , [CompanyName]
@@ -197,7 +189,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                       [Company] Varchar(150)
                     , [Currency] Varchar(10)
                     );
-                Print 8;
+ 
 	--create script to pull data from each db into the tables
                 Declare @SQL Varchar(Max) = 'USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
@@ -211,7 +203,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 			FROM [dbo].[TblCurrency] As [TC]
 		Where [TC].[BuyExchangeRate]=1
 		End';
-                Print 9;
+
 	--execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
@@ -222,7 +214,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                       , [T].[Currency]
                 Into    [#ResultsCompanyName]
                 From    [#CompanyNameTable1] [T]
-                        Left Join [#CompanyList] As [cl] On [cl].[Company] = [T].[Company];
+                        Left Join [#CompanyList] As [cl]
+                            On [cl].[Company] = [T].[Company];
 
 
 	--placeholder for anomalous results that are different to master list

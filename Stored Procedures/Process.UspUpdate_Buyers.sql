@@ -9,14 +9,6 @@ CREATE Proc [Process].[UspUpdate_Buyers]
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group January 2016 to populate table with Buyers details	transaction types when relating to inventory changes
-exec [Process].[UspUpdate_Buyers]  @PrevCheck =0
-    , @HoursBetweenUpdates =0
-*/
-
---remove nocount on to speed up query
-        Set NoCount On;
 
 --check if table exists and create if it doesn't
         If ( Not Exists ( Select    *
@@ -28,7 +20,7 @@ exec [Process].[UspUpdate_Buyers]  @PrevCheck =0
                 Create Table [Lookups].[Buyers]
                     (
                       [Company] Varchar(150)
-                    , BuyerName Varchar(150)
+                    , [BuyerName] Varchar(150)
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -46,7 +38,7 @@ exec [Process].[UspUpdate_Buyers]  @PrevCheck =0
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
                 Declare @ListOfTables Varchar(Max) = 'InvBuyer'; 
@@ -93,9 +85,6 @@ exec [Process].[UspUpdate_Buyers]  @PrevCheck =0
 				From [InvBuyer]
 			End
 	End';
-
---Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
 
 --execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
