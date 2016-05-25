@@ -1,0 +1,30 @@
+<ExportReportConfiguration NodeName="reportsystemrefresh" NodeText="ReportSystemRefresh">
+  <ControlFile Name="reportsystemrefresh">
+    <ReportControl SaveValue="ctl_reportsystemrefresh_system">
+      <Control Type="3" Template="reportsystemrefresh" />
+    </ReportControl>
+  </ControlFile>
+  <FormFile Name="frm_reportsystemrefresh.xml">
+    <ReportForm Type="1" SaveValue="_system" Name="frm_reportsystemrefresh">
+      <Form FormSize="{Width=396, Height=417}" TabSize="{Width=396, Height=417}">
+        <TabPage Text="Tab Page" Name="223cc889-590f-466f-aa51-389c9996972f" />
+        <TabPage Text="Output Options" Name="823312e2-df23-434d-b739-daeff987ab19">
+          <GroupBox Name="grpStandardReportOptions" Text="" Size="{Width=260, Height=250}" Location="{X=8,Y=16}" Tag="R" TabIndex="0">
+            <Label Name="lblTheme" Text="Report Theme:" Size="{Width=100, Height=23}" Location="{X=10,Y=25}" Tag="R" />
+            <ComboBox Name="cboTheme" Size="{Width=120, Height=21}" Location="{X=120,Y=21}" TabIndex="1" SelectedIndex="0" Items="Default Theme;" />
+            <CheckBox Name="stdchkEmailReport" Text="Email report" Size="{Width=100, Height=24}" Location="{X=10,Y=50}" Checked="False" TabIndex="2" />
+            <Button Name="btnEmailReport" Text="Email Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=50}" TabIndex="3" ImageIndex="null" />
+            <CheckBox Name="stdchkExportReport" Text="Export report" Size="{Width=100, Height=24}" Location="{X=10,Y=80}" Checked="False" TabIndex="4" />
+            <Button Name="btnExportReport" Text="Export Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=80}" TabIndex="5" ImageIndex="null" />
+            <CheckBox Name="stdchkPrintReport" Text="Print report" Size="{Width=100, Height=24}" Location="{X=10,Y=110}" Checked="False" TabIndex="6" />
+            <Button Name="btnPrintReport" Text="Printer Options..." Size="{Width=120, Height=23}" Location="{X=120,Y=110}" TabIndex="7" ImageIndex="null" />
+            <CheckBox Name="stdchkPreviewReport" Text="Preview report" Size="{Width=100, Height=24}" Location="{X=10,Y=140}" Checked="False" TabIndex="8" />
+            <GroupBox Name="grpLine" Text="" Size="{Width=230, Height=2}" Location="{X=20,Y=175}" Tag="S" TabIndex="9" />
+            <CheckBox Name="stdchkSavePreferences" Text="Save report options" Size="{Width=135, Height=24}" Location="{X=10,Y=190}" Checked="False" TabIndex="10" />
+            <CheckBox Name="stdchkArchive" Text="Archive report" Size="{Width=135, Height=24}" Location="{X=10,Y=220}" Checked="False" TabIndex="11" />
+          </GroupBox>
+        </TabPage>
+      </Form>
+    </ReportForm>
+  </FormFile>
+</ExportReportConfiguration>
