@@ -384,7 +384,7 @@ Stored procedure set out to query multiple databases with the same information a
                                   , [GAC].[AnalysisCode]
                                   , [GAC].[AnalysisType]
                                   , [GAC].[Description]
-                            From    [SysproCompany10].[dbo].[GenAnalysisCode] [GAC];
+                            From    [dbo].[GenAnalysisCode] [GAC];
 			End
 	End';
 
