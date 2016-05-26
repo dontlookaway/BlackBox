@@ -108,6 +108,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [AnalysisCode3] Varchar(10)
             , [AnalysisCode4] Varchar(10)
             , [AnalysisCode5] Varchar(10)
+            , [EntryValue] Numeric(20 , 2)
             );
         Create Table [#GenAnalysisCode]
             (
@@ -341,6 +342,7 @@ Stored procedure set out to query multiple databases with the same information a
                             , [AnalysisCode3]
                             , [AnalysisCode4]
                             , [AnalysisCode5]
+							, [EntryValue]
 							)
                             Select  [DatabaseName] = @DBCode
                                   , [GAT].[AnalysisEntry]
@@ -367,6 +369,7 @@ Stored procedure set out to query multiple databases with the same information a
                                                            Then Null
                                                            Else [GAT].[AnalysisCode5]
                                                       End
+								  , [GAT].[EntryValue]
                             From    [dbo].[GenAnalysisTrn] [GAT];
 
                     Insert  [#GenAnalysisCode]
@@ -433,6 +436,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [AnalysisCode3] Varchar(10)
             , [AnalysisCode4] Varchar(10)
             , [AnalysisCode5] Varchar(10)
+            , [AnalysisEntryValue] Numeric(20 , 2)
             );
 
 --Placeholder to create indexes as required
@@ -476,7 +480,8 @@ Stored procedure set out to query multiple databases with the same information a
                 , [AnalysisCode2]
                 , [AnalysisCode3]
                 , [AnalysisCode4]
-                , [AnalysisCode5] 
+                , [AnalysisCode5]
+                , [AnalysisEntryValue]
                 )
                 Select  [GJD].[DatabaseName]
                       , [GJD].[Journal]
@@ -539,6 +544,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [GAT].[AnalysisCode3]
                       , [GAT].[AnalysisCode4]
                       , [GAT].[AnalysisCode5]
+                      , [GAT].[EntryValue]
                 From    [#GenJournalDetail] As [GJD]
                         Left Join [#GenJournalCtl] As [GJC]
                             On [GJC].[GlJournal] = [GJD].[Journal]
@@ -608,6 +614,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[AnalysisCode3]
               , [R].[AnalysisCode4]
               , [R].[AnalysisCode5]
+              , [R].[AnalysisEntryValue]
         From    [#Results] As [R]
                 Left Join [BlackBox].[Lookups].[JnlPostingType] [JPT]
                     On [R].[JnlPostingType] = [JPT].[JnlPostingType]
