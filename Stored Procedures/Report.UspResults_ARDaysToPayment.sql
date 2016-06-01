@@ -300,8 +300,7 @@ Stored procedure set out to query multiple databases with the same information a
                                     Then Null
                                     Else Max([R].[JournalDate])
                                End
-              , [DaysToClose] = DateDiff(Day , [R].[InvoiceDate] ,
-                                         Max([R].[JournalDate]))
+              , [DaysToClose] = [Process].[Udf_WorkingDays]([R].[InvoiceDate] ,Max([R].[JournalDate]),'UK')
               , [R].[CompanyName]
         From    [#Results] [R]
         Group By [R].[InvoiceDate]
