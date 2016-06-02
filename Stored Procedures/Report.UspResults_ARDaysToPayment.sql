@@ -45,6 +45,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [ConvRate] Numeric(20 , 6)
             , [MulDiv] Char(1)
             , [PostCurrency] Varchar(3)
+            , [DueDate] Date
             );
         Create Table [#ArInvoicePay]
             (
@@ -117,6 +118,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [ConvRate]
 						, [MulDiv]
 						, [PostCurrency]
+						, [DueDate]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [AI].[Customer]
@@ -126,7 +128,11 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [AI].[CurrencyValue]
 					 , [AI].[ConvRate]
 					 , [AI].[MulDiv]
-					 , [AI].[PostCurrency] FROM [ArInvoice] [AI]
+					 , [AI].[PostCurrency]
+					 , DueDate = DateAdd(Day,[TAT].[DueDays],[AI].[InvoiceDate])
+				From    [dbo].[ArInvoice] [AI]
+						Left Join [dbo].[TblArTerms] [TAT]
+							On [TAT].[TermsCode] = [AI].[TermsCode];
 
 				Insert [#ArInvoicePay]
 						( [DatabaseName]
@@ -184,6 +190,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [SalesOrder] Varchar(20)
             , [Invoice] Varchar(20)
             , [InvoiceDate] Date
+            , [DueDate] Date
             , [CurrencyValue] Numeric(20 , 2)
             , [ConvRate] Numeric(20 , 6)
             , [MulDiv] Varchar(1)
@@ -214,6 +221,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SalesOrder]
                 , [Invoice]
                 , [InvoiceDate]
+                , [DueDate]
                 , [CurrencyValue]
                 , [ConvRate]
                 , [MulDiv]
@@ -239,6 +247,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [AI].[SalesOrder]
                       , [AI].[Invoice]
                       , [AI].[InvoiceDate]
+                      , [AI].[DueDate]
                       , [AI].[CurrencyValue]
                       , [AI].[ConvRate]
                       , [AI].[MulDiv]
@@ -290,6 +299,7 @@ Stored procedure set out to query multiple databases with the same information a
         Set NoCount Off;
 
         Select  [R].[InvoiceDate]
+              , [R].[DueDate]
               , [R].[Invoice]
               , [R].[Customer]
               , [R].[LocalValue]
@@ -300,10 +310,15 @@ Stored procedure set out to query multiple databases with the same information a
                                     Then Null
                                     Else Max([R].[JournalDate])
                                End
-              , [DaysToClose] = [Process].[Udf_WorkingDays]([R].[InvoiceDate] ,Max([R].[JournalDate]),'UK')
+              , [DaysToCloseFromInvoiceDate] = DateDiff(Day ,
+                                                        [R].[InvoiceDate] ,
+                                                        Max([R].[JournalDate]))
+              , [DaysToCloseFromDueDate] = DateDiff(Day , [R].[DueDate] ,
+                                                    Max([R].[JournalDate]))
               , [R].[CompanyName]
         From    [#Results] [R]
         Group By [R].[InvoiceDate]
+              , [R].[DueDate]
               , [R].[Invoice]
               , [R].[Customer]
               , [R].[LocalValue]
