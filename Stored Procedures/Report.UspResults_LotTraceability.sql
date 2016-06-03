@@ -316,6 +316,7 @@ Stored procedure set out to query multiple databases with the same information a
 
         Create Index [LMJ] On [#LotMasterJob] ([Lot]);
 
+		--get the lot that was issued to a kitting job
         Update  [#LotMasterJob]
         Set     [TempLot] = [LT].[Lot]
         From    [#LotMasterJob] [LMJ]
@@ -324,6 +325,7 @@ Stored procedure set out to query multiple databases with the same information a
         Where   [LMJ].[MasterJob] Like 'KN%'
                 And [LT].[TrnType] = 'I';
 
+		--use the lot that was issued to update the master job
         Update  [LMJ]
         Set     [LMJ].[MasterJob] = [LMJ2].[MasterJob]
         From    [#LotMasterJob] [LMJ]
