@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -301,6 +300,7 @@ Stored procedure set out to query multiple databases with the same information a
             (
               [Lot] Varchar(50)
             , [MasterJob] Varchar(30)
+            , [TempLot] Varchar(50)
             );
 
         Insert  [#LotMasterJob]
@@ -315,6 +315,22 @@ Stored procedure set out to query multiple databases with the same information a
                         And [LT].[Reference] <> '';
 
         Create Index [LMJ] On [#LotMasterJob] ([Lot]);
+
+        Update  [#LotMasterJob]
+        Set     [TempLot] = [LT].[Lot]
+        From    [#LotMasterJob] [LMJ]
+                Left Join [#LotTransactions] [LT]
+                    On [LMJ].[MasterJob] = [LT].[Job]
+        Where   [LMJ].[MasterJob] Like 'KN%'
+                And [LT].[TrnType] = 'I';
+
+        Update  [LMJ]
+        Set     [LMJ].[MasterJob] = [LMJ2].[MasterJob]
+        From    [#LotMasterJob] [LMJ]
+                Left Join [#LotMasterJob] [LMJ2]
+                    On [LMJ2].[Lot] = [LMJ].[TempLot]
+        Where   [LMJ].[TempLot] Is Not Null;
+
 
 --script to combine base data and insert into results table
         Insert  [#Results]
@@ -368,17 +384,21 @@ Stored procedure set out to query multiple databases with the same information a
                                       End
                       , [CustomerName] = [AC].[Name]
                 From    [#InvInspect] As [II]
-                        Full Outer Join [#LotTransactions] As [LT] On [LT].[Lot] = [II].[Lot]
+                        Full Outer Join [#LotTransactions] As [LT]
+                            On [LT].[Lot] = [II].[Lot]
                                                               --And [LT].[StockCode] = [II].[StockCode]
-                                                              And [LT].[DatabaseName] = [II].[DatabaseName]
-                        Left Join [#InvMaster] As [IM] On Coalesce([II].[StockCode] ,
-                                                              [LT].[StockCode]) = [IM].[StockCode]
-                                                          And Coalesce([II].[DatabaseName] ,
-                                                              [LT].[DatabaseName]) = [IM].[DatabaseName]
-                        Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT] On [LT].[TrnType] = [LTT].[TrnType]
-                        Left Join [#LotMasterJob] As [LMJ] On [LMJ].[Lot] = [LT].[Lot]
-                        Left Join [#ArCustomer] As [AC] On [AC].[Customer] = [LT].[Customer]
-                                                           And [AC].[DatabaseName] = [LT].[DatabaseName]
+                               And [LT].[DatabaseName] = [II].[DatabaseName]
+                        Left Join [#InvMaster] As [IM]
+                            On Coalesce([II].[StockCode] , [LT].[StockCode]) = [IM].[StockCode]
+                               And Coalesce([II].[DatabaseName] ,
+                                            [LT].[DatabaseName]) = [IM].[DatabaseName]
+                        Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT]
+                            On [LT].[TrnType] = [LTT].[TrnType]
+                        Left Join [#LotMasterJob] As [LMJ]
+                            On [LMJ].[Lot] = [LT].[Lot]
+                        Left Join [#ArCustomer] As [AC]
+                            On [AC].[Customer] = [LT].[Customer]
+                               And [AC].[DatabaseName] = [LT].[DatabaseName]
                 Where   Coalesce([II].[Lot] , [LT].[Lot] , '') <> ''
                 Order By [SupplierLotNumber] Desc
                       , Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
@@ -411,9 +431,11 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[MasterJob]
               , [R].[CustomerName]
         From    [#Results] As [R]
-                Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[Company]
-                Left Join [Lookups].[Warehouse] As [W] On [W].[Warehouse] = [R].[Warehouse]
-                                                          And [W].[Company] = [R].[Company]
+                Left Join [Lookups].[CompanyNames] As [CN]
+                    On [CN].[Company] = [R].[Company]
+                Left Join [Lookups].[Warehouse] As [W]
+                    On [W].[Warehouse] = [R].[Warehouse]
+                       And [W].[Company] = [R].[Company]
         Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
                                               'Issue to a job' ,
                                               'Transfer of lot qty' ,
