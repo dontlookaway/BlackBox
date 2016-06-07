@@ -1,9 +1,8 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_AvailableLots]
+CREATE Proc [Report].[UspResults_AvailableLots_AmountRequired]
     (
       @Company Varchar(10)
     , @StockCode Varchar(150)
