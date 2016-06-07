@@ -2,6 +2,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE Proc [Report].[UspResults_AvailableStock]
     (
       @Company Varchar(Max)
@@ -108,7 +110,8 @@ As
 					 , [IWC].[Warehouse]
 					 , [IWC].[Description]
 					 , [Fax] = case when upper([IWC].[Fax]) not in (''N'',''Y'') then ''N'' else upper([IWC].[Fax]) end FROM [InvWhControl] [IWC]'
-            + Case When @IssueFromYN = 'Y' Then 'Where case when upper([IWC].[Fax]) not in (''N'',''Y'') then ''N'' else upper([IWC].[Fax]) end=''Y'''
+            + Case When @IssueFromYN = 'Y'
+                   Then 'Where case when upper([IWC].[Fax]) not in (''N'',''Y'') then ''N'' else upper([IWC].[Fax]) end=''Y'''
                    Else ''
               End + '			End
 	End';
@@ -178,7 +181,10 @@ As
 				SELECT [DatabaseName]=@DBCode
 					 , [IM].[Warehouse]
 					 , [IM].[MovementType]
-					 , [IM].[TrnType]
+					 , [TrnType] = Case When [IM].[TrnType] = ''''
+                                         Then [IM].[MovementType]
+                                         Else [IM].[TrnType]
+                                    End
 					 , [IM].[Reference]
 					 , [IM].[StockCode]
 					 , [IM].[TrnQty]
@@ -193,7 +199,7 @@ As
 --execute script against each db, populating the base tables
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvWhControl;
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLInvMovements;
+        Exec [Process].[ExecForEachDB] @cmd = @SQLInvMovements;
 
 
 --define the results you want to return
@@ -241,10 +247,7 @@ As
                       , [IssueFrom] = [IWC].[Fax]
                       , [IM].[MovementType]
                       , [TTAM].[AmountModifier]
-                      , [TrnType] = Case When [IM].[TrnType] = ''
-                                         Then [IM].[MovementType]
-                                         Else [IM].[TrnType]
-                                    End
+                      , [IM].[TrnType]
                       , [IM].[Reference]
                       , [IM].[StockCode]
                       , [StockDescription] = [IM2].[Description]
@@ -265,7 +268,7 @@ As
                             On [TTAM].[TrnType] = [IM].[TrnType]
                                And [TTAM].[Company] = [IM].[DatabaseName];
 
-Set NoCount Off
+        Set NoCount Off
 
 --return results
         Select  [AM].[Warehouse]
@@ -283,7 +286,8 @@ Set NoCount Off
                                        Then [AM].[EntryDateTime]
                                   End)
               , [LastEntryAmount] = Max(Case When [AM].[DescendingRank] = 1
-                                             Then [AM].[TrnQty]*[AM].[AmountModifier]
+                                             Then [AM].[TrnQty]
+                                                  * [AM].[AmountModifier]
                                         End)
               , [LastEntryType] = Max(Case When [AM].[DescendingRank] = 1
                                            Then [AM].[TrnType]
