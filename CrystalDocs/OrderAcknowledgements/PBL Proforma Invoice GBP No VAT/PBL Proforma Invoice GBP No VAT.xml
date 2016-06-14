@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<DocumentExport Language='05' Language2='EN' CssStyle='' DecFormat='1' DateFormat='01' Role='01' Version='7.0.028' OperatorPrimaryRole='   '>
+<TypeDetails>
+<DocumentType>Order acknowledgement</DocumentType>
+<SchemaFile>sample_so_acknowledgement_document.xsd</SchemaFile>
+<XmlFile>sample_so_acknowledgement_document.xml</XmlFile>
+<Custom>false</Custom>
+</TypeDetails>
+<DocumentDetails>
+<Description>PBL Proforma Invoice GBP No VAT</Description>
+<Template>order_acknowledgement_0005(3).rpt</Template>
+<MaximumAttachments>10</MaximumAttachments>
+<GroupFaxes>true</GroupFaxes>
+<GroupEmails>true</GroupEmails>
+<SingleAttachment>false</SingleAttachment>
+<SinglePrint>false</SinglePrint>
+<Archive>false</Archive>
+<ArchiveType>0</ArchiveType>
+<EmailType>0</EmailType>
+</DocumentDetails>
+</DocumentExport>
+ 

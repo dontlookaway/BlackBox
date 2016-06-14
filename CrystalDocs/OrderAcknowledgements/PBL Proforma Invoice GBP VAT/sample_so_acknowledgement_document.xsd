@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<!-- Copyright 1994-2010 SYSPRO Ltd.-->
+<!--
+     Schema for the SO Acknowledgement Document Printing Business Object
+-->
+<xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="Documents">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Document" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="SystemInformation" minOccurs="0">
+                <xsd:complexType>
+                  <xsd:all minOccurs="0">
+                    <xsd:element name="CssStyle" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Language" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DecFormat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DateFormat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Role" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Version" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyId" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorGroup" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorEmailAddress" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorLocation" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="LocalCurrency" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="LocalCurrencyDesc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="GlPrdPerYear" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ReportDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="UseSeparatorOnReports" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SeparatorToUse" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorPrimaryRole" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="NoOfDigits" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DecCharToUse" type="xsd:string" minOccurs="0"/>
+                  </xsd:all>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="HeaderData">
+                <xsd:complexType>
+                  <xsd:all>
+                    <xsd:element name="CompanyName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressOne" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressThree" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressLoc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressState" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressCountry" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressPost" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressGpsLat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyAddressGpsLon" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyTaxNumber" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="EdiSendReceive" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerCode" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Code' Table='ArCustomer' Column='Customer'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomerName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressOne" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressThre" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressFour" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressFive" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerPostCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressLoc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressGpsLat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerAddressGpsLon" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerStateCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Contact" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Telephone" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Extension" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Fax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Telex" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerEmail" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DocumentFax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DocumentFaxContact" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerPurchOrder" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Purchase Order' Table='ArInvoice' Column='CustomerPoNumber'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustTaxRegistration" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipCustomerName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressOne" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressThree" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressFour" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressFive" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressLoc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressGpsLat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipAddressGpsLon" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="EdiSenderCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="MultiShipCode" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="MasterAccount" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Master Account' Table='ArCustomer' Column='MasterAccount'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="StoreNumber" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPerson" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OrderDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OrderDateCymd" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Order Date' Table='SorMaster' Column='OrderDate'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ShipDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipDateCymd" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Ship Date' Table='SorMaster' Column='ReqShipDate'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="InvoiceDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SystemDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="PrintTime" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ShipInstructions" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SpecInstructions" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Invoice" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DispatchNote" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InternalSalesOrder" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Sales Order' Table='SorMaster' Column='SalesOrder' Default='yes' Mandatory='yes' AlignmentValue='Order'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="DeliveryInvCount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OrderType" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OrderTypeDesc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CreditAuth" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Branch" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressOne" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressThree" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressLoc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressCountry" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressPost" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressGpsLat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BranchAddressGpsLon" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="GeographicArea" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="GeographicAreaName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InvoiceTerms" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TaxExemption" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="GSTRegNumber" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CompanyRegNumber" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Currency" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CurrencyDescript" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InvoiceCredDeb" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Nationality" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DeliveryTerms" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DeliveryTermsDescription" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="NatureOfTrans" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="NatureOfTransDescription" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ModeOfTransport" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Process" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorOrder" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OperatorName" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomerComment" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="AlternateKey" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Alternate key' Table='SorMaster' Column='AlternateKey'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="GenDeliveryNote" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="GenDeliveryNoteFull" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ReprintMessage" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DocTypeMessage" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="BackOrderMessage" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SourceWarehouse" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SourceWhDesc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TargetWarehouse" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TargetWhDesc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="OrderStatus" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="Quote" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="RmaNumber" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonNameTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonThr" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonNameThr" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonFou" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesPersonNameFou" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="QuoteDescription" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="QuoteReminderDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CustomFieldOne" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field One' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldTwo" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Two' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldThr" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Three' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldFou" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Four' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldFiv" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Five' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldSix" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Six' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldSev" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Seven' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldEig" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Eight' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldNin" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Nine' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CustomFieldTen" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Custom Field Ten' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldOne" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field One' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldTwo" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Two' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldThr" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Three' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldFou" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Four' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldFiv" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Five' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldSix" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Six' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldSev" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Seven' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldEig" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Eight' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldNin" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Nine' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="CusCustomFieldTen" type="xsd:string" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:appinfo>Description='Customer Custom Field Ten' Table='AdmFormData' Column='AlphaValue'</xsd:appinfo>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Notepad" type="xsd:string" minOccurs="0"/>
+                  </xsd:all>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="DetailData" minOccurs="0">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="DetailLine" maxOccurs="unbounded">
+                      <xsd:complexType>
+                        <xsd:choice>
+                          <xsd:element name="General" minOccurs="0">
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element name="DetDetailLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetDetailLineFull" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetInitialLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetOrderQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetShipQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetBackorderQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetReservedQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetOrderUnitMeasure" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockUnitMeasure" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetOtherUnitMeasure" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockQtyShip" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockDescription" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockLngDescript" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetWarehouse" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetBinLoc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetJob" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetPriceCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUnitPrice" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetPriceUnitMeasure" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineDiscPercent" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSalesTaxLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetGrossAmount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineDiscAmount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetNetAfterDiscount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSalesTaxCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSalesTaxPercent" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetNetInclTax" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUnitFactor" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineMass" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineShipDate" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineMassWhole" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineMassRemaind" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineMassRounded" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineVolRounded" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockUnitVol" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineVolume" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetGrossProfitPerc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetPricingQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetNetUnitPrice" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUnitPriceInOrder" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetTariffCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockUnitMass" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCustStockCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCustRetailPrice" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCustTotalRetail" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetPricingContract" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSupplUnits" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetExtTaxCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetExtTaxRate" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetGSTCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetGSTAmount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetGSTPercMerch" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUserDefOne" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUserDefTwo" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUserDefThree" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUserDefFour" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUserDefFive" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetReceiptDate" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetDispatchNote" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetDispatchNoteLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetOrderLineUserDef" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetRequestShipDate" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUnitDiscount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetUnitPriceIncl" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCompMessage" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetOrderNumber" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetLineDiscUnit" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetProdClass" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetPalletSize" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetWhToUse" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCrnReason" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCrnReasonDesc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockRevision" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetStockRelease" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCountryOfOrigin" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCountryOfOrgName" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetInvAlternateOne" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetInvAlternateTwo" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetInvDrawing" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMerchCount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCommission" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetManPart" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldOne" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldTwo" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldThr" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldFou" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldFiv" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldSix" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldSev" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldEig" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldNin" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="StkCustomFieldTen" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldOne" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldTwo" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldThr" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldFou" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldFiv" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldSix" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldSev" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldEig" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldNin" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DtlCustomFieldTen" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetIndentComponent" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetIndentDescription" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="Lot_traceability" minOccurs="0" maxOccurs="unbounded">
+                                  <xsd:complexType>
+                                    <xsd:all>
+                                      <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetDetailLineFull" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetLot" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetVersion" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetReleaseLevel" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetCertificate" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetLotQuantity" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetLotExpiryDate" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetLotMessage" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="LotReportKey" type="xsd:string" minOccurs="0"/>
+                                    </xsd:all>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element name="Multiple_Bin" minOccurs="0" maxOccurs="unbounded">
+                                  <xsd:complexType>
+                                    <xsd:all>
+                                      <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetDetailLineFull" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetBin" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetBinQuantity" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetBinMessage" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="BinReportKey" type="xsd:string" minOccurs="0"/>
+                                    </xsd:all>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element name="Serial_number_tracking" minOccurs="0" maxOccurs="unbounded">
+                                  <xsd:complexType>
+                                    <xsd:all>
+                                      <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetDetailLineFull" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetSerialNumber" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetBatchQuantity" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetSerialDesc" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetSerialExpDate" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetSerialMessage" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="DetSerialLocation" type="xsd:string" minOccurs="0"/>
+                                      <xsd:element name="SerialReportKey" type="xsd:string" minOccurs="0"/>
+                                    </xsd:all>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element name="Comment" minOccurs="0">
+                            <xsd:complexType>
+                              <xsd:all>
+                                <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCommentLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetCommentDescript" type="xsd:string" minOccurs="0"/>
+                              </xsd:all>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element name="Miscellaneous_Freight_charges" minOccurs="0">
+                            <xsd:complexType>
+                              <xsd:all>
+                                <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetDetailLineFull" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscChargeLine" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscChargeDesc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscChargeAmt" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscChargeTaxAmt" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscNetAmount" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscSalesTaxCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscProductClass" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscServChrgeQty" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscServChrgePrc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscServChrgeStk" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscGSTPerc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscGSTCode" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetMiscGSTAmount" type="xsd:string" minOccurs="0"/>
+                              </xsd:all>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element name="Summary_Service_Charges" minOccurs="0">
+                            <xsd:complexType>
+                              <xsd:all>
+                                <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumProductClass" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumPrdClassDesc" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumQuantity" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumValue" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumUnitPrice" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumValueInclTax" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="DetSumTax" type="xsd:string" minOccurs="0"/>
+                              </xsd:all>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:choice>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="TotalData">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Sales_Tax" minOccurs="0">
+                      <xsd:complexType>
+                        <xsd:all>
+                          <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                          <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                          <xsd:element name="DetSalesTaxPerc" type="xsd:string" minOccurs="0"/>
+                          <xsd:element name="DetSalesTaxCde" type="xsd:string" minOccurs="0"/>
+                          <xsd:element name="DetAmtTaxable" type="xsd:string" minOccurs="0"/>
+                          <xsd:element name="DetSalesTaxAmount" type="xsd:string" minOccurs="0"/>
+                        </xsd:all>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="DocTypeNum" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="DocumentTypeNum" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="HashQuantity" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalMass" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalMassRounded" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalVolumeRounded" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesTaxPercentUS" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="AmtTaxableUS" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesTaxCodeUS" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalGrossAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalNetAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalLineDiscount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvDiscountAmt" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvDiscPerc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalNetAmtInclTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalSalesTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvoiceAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalFreightAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalMiscChargesAmt" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalCashDiscount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvLessDisc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CashDiscExpDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InvCredDebNote" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvAmtExclTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalVolume" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalCustRetail" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InvoiceDueDate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="SalesTaxAmountLocal" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ExchangeRate" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalGSTOutAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalGSTAmount" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvAmtExTaxLoc" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvAmtLocal" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalFrghtAmtIncTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalFreightTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalMiscChgIncTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalMiscChgTax" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalTaxBeforeRounding" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalInvBeforeRounding" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TaxRoundingValue" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="InvoiceRoundingValue" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalRoundingValue" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalHashQtyOrd" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalHashQtyShp" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalHashQtyUnits" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="TotalHashQtyPieces" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CommentTextOne" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CommentTextTwo" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CommentTextThree" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="CommentTextFour" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ContinuationMsg" type="xsd:string" minOccurs="0"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
