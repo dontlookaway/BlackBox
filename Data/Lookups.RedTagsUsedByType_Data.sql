@@ -1,6 +1,7 @@
-INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('X', 'Error - Type not selected')
+INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('T', 'Stationery Template')
 INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('E', 'Manual Excel')
 INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('M', 'Manual Run')
 INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('Q', 'Qlik')
 INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('R', 'Report')
 INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('S', 'Scheduled Run')
+INSERT INTO [Lookups].[RedTagsUsedByType] ([UsedByType], [UsedByDescription]) VALUES ('X', 'Error - Type not selected')
