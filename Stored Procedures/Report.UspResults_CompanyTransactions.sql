@@ -26,7 +26,7 @@ Stored procedure set out to query multiple databases with the same information a
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
-            @StoredProcName = 'UspResults_GenJournalEntries' ,
+            @StoredProcName = 'UspResults_CompanyTransactions' ,
             @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
             @UsedByDb = @RedTagDB;
 
