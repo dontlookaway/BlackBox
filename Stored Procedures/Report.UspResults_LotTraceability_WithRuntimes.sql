@@ -449,6 +449,7 @@ As
                        And [W].[Company] = [R].[Company]
                 Left Join [#Labour] [L]
                     On [L].[JobPurchOrder] = [R].[MasterJob]
+					And [L].[DatabaseName]=[R].[Company]
                        And [R].[TranRank] = 1
         /*Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
                                               'Issue to a job' ,
