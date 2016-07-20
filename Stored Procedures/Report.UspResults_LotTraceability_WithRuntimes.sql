@@ -223,8 +223,8 @@ As
 						( [DatabaseName] , [RunTime] , [Job] )
 				SELECT @DBCode
 					 , [WLJ].[RunTime]
-					 , [WLJ].[Job] FROM 
-				[WipLabJnl] [WLJ]
+					 , [WLJ].[Job] 
+				FROM [WipLabJnl] [WLJ]
 			End
 	End';
 
@@ -271,18 +271,18 @@ As
               [Lot] Varchar(50)
             , [MasterJob] Varchar(30)
             , [TempLot] Varchar(50)
-			, DatabaseName Varchar(150)
+            , [DatabaseName] Varchar(150)
             );
 
         Insert  [#LotMasterJob]
                 ( [Lot]
                 , [MasterJob]
-				, [DatabaseName]
+                , [DatabaseName]
                 )
                 Select Distinct
                         [LT].[Lot]
                       , [LT].[JobPurchOrder]
-					  , [LT].[DatabaseName]
+                      , [LT].[DatabaseName]
                 From    [#LotTransactions] As [LT]
                 Where   [LT].[TrnType] = 'R'
                         And [LT].[Reference] <> '';
@@ -313,10 +313,13 @@ As
                 , [RunTime]
                 , [DatabaseName]
                 )
-                Select  [lt].[Lot]
+                Select  [Lot] = Case When IsNumeric([lt].[Lot]) = 1
+                                     Then Convert(Varchar(50) , Convert(Int , [lt].[Lot]))
+                                     Else [lt].[Lot]
+                                End
                       , [lt].[JobPurchOrder]
                       , [RunTime] = Sum([wlj].[RunTime])
-                      , [wlj].[DatabaseName]
+                      , [lt].[DatabaseName]
                 From    ( Select Distinct
                                     [Lot]
                                   , [JobPurchOrder]
@@ -329,17 +332,20 @@ As
                                And [wlj].[DatabaseName] = [lt].[DatabaseName]
                 Group By [lt].[Lot]
                       , [lt].[JobPurchOrder]
-                      , [wlj].[DatabaseName];
+                      , [lt].[DatabaseName];
 
         Update  [#Labour]
         Set     [TotalLots] = [TL]
         From    [#Labour] As [l2]
                 Left Join ( Select  [l].[JobPurchOrder]
+                                  , [l].[DatabaseName]
                                   , [TL] = Count(Distinct [l].[Lot])
                             From    [#Labour] As [l]
                             Group By [l].[JobPurchOrder]
+                                  , [l].[DatabaseName]
                           ) [t]
-                    On [t].[JobPurchOrder] = [l2].[JobPurchOrder];
+                    On [t].[JobPurchOrder] = [l2].[JobPurchOrder]
+                       And [t].[DatabaseName] = [l2].[DatabaseName];
 
 --script to combine base data and insert into results table
         Insert  [#Results]
@@ -386,7 +392,7 @@ As
                       , [II].[TotalReceiptQty]
                       , [IM].[StockUom]
                       , [LT].[UnitCost]
-                      , [LT].[TrnQuantity]*[TTAM].[AmountModifier]
+                      , [LT].[TrnQuantity] * [TTAM].[AmountModifier]
                       , [LT].[TrnValue]
                       , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob]) = 1
                                            Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
@@ -406,12 +412,13 @@ As
                             On [LT].[TrnType] = [LTT].[TrnType]
                         Left Join [#LotMasterJob] As [LMJ]
                             On [LMJ].[Lot] = [LT].[Lot]
-							And [LMJ].[DatabaseName] = [LT].[DatabaseName]
+                               And [LMJ].[DatabaseName] = [LT].[DatabaseName]
                         Left Join [#ArCustomer] As [AC]
                             On [AC].[Customer] = [LT].[Customer]
                                And [AC].[DatabaseName] = [LT].[DatabaseName]
-						Left Join [Lookups].[TrnTypeAmountModifier] [TTAM] On [TTAM].[TrnType] = [LT].[TrnType]
-						And [TTAM].[Company]=[LT].[DatabaseName]
+                        Left Join [Lookups].[TrnTypeAmountModifier] [TTAM]
+                            On [TTAM].[TrnType] = [LT].[TrnType]
+                               And [TTAM].[Company] = [LT].[DatabaseName]
                 Where   Coalesce([II].[Lot] , [LT].[Lot] , '') <> ''
                 Order By [SupplierLotNumber] Desc
                       , Case When IsNumeric(Coalesce([II].[Lot] , [LT].[Lot])) = 1
@@ -453,8 +460,8 @@ As
                        And [W].[Company] = [R].[Company]
                 Left Join [#Labour] [L]
                     On [L].[JobPurchOrder] = [R].[MasterJob]
-					And [L].[Lot] = [R].[Lot]
-					And [L].[DatabaseName]=[R].[Company]
+                       And [L].[Lot] = [R].[Lot]
+                       And [L].[DatabaseName] = [R].[Company];
                        --And [R].[TranRank] = 1
         /*Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
                                               'Issue to a job' ,
@@ -462,6 +469,10 @@ As
                                               'Adjustment to lot qty' ,
                                               'Dispatch note' );*/
 
+        Select  *
+        From    [#Labour] [L];
 
+        Select  *
+        From    [#Results] [R];
     End;
 GO
