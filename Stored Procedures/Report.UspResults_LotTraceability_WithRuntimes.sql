@@ -271,15 +271,18 @@ As
               [Lot] Varchar(50)
             , [MasterJob] Varchar(30)
             , [TempLot] Varchar(50)
+			, DatabaseName Varchar(150)
             );
 
         Insert  [#LotMasterJob]
                 ( [Lot]
                 , [MasterJob]
+				, [DatabaseName]
                 )
                 Select Distinct
                         [LT].[Lot]
                       , [LT].[JobPurchOrder]
+					  , [LT].[DatabaseName]
                 From    [#LotTransactions] As [LT]
                 Where   [LT].[TrnType] = 'R'
                         And [LT].[Reference] <> '';
@@ -403,6 +406,7 @@ As
                             On [LT].[TrnType] = [LTT].[TrnType]
                         Left Join [#LotMasterJob] As [LMJ]
                             On [LMJ].[Lot] = [LT].[Lot]
+							And [LMJ].[DatabaseName] = [LT].[DatabaseName]
                         Left Join [#ArCustomer] As [AC]
                             On [AC].[Customer] = [LT].[Customer]
                                And [AC].[DatabaseName] = [LT].[DatabaseName]
@@ -449,13 +453,15 @@ As
                        And [W].[Company] = [R].[Company]
                 Left Join [#Labour] [L]
                     On [L].[JobPurchOrder] = [R].[MasterJob]
+					And [L].[Lot] = [R].[Lot]
 					And [L].[DatabaseName]=[R].[Company]
-                       And [R].[TranRank] = 1
+                       --And [R].[TranRank] = 1
         /*Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
                                               'Issue to a job' ,
                                               'Transfer of lot qty' ,
                                               'Adjustment to lot qty' ,
                                               'Dispatch note' );*/
+
 
     End;
 GO
