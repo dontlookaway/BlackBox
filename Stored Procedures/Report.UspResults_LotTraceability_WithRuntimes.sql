@@ -462,17 +462,5 @@ As
                     On [L].[JobPurchOrder] = [R].[MasterJob]
                        And [L].[Lot] = [R].[Lot]
                        And [L].[DatabaseName] = [R].[Company];
-                       --And [R].[TranRank] = 1
-        /*Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
-                                              'Issue to a job' ,
-                                              'Transfer of lot qty' ,
-                                              'Adjustment to lot qty' ,
-                                              'Dispatch note' );*/
-
-        Select  *
-        From    [#Labour] [L];
-
-        Select  *
-        From    [#Results] [R];
     End;
 GO
