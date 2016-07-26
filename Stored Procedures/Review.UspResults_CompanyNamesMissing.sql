@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Review].[UspResults_CompanyNamesMissing]
+CREATE Proc [Review].[UspResults_CompanyNamesMissing]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -32,9 +32,6 @@ Insert [#ListOfDbs]
         ( [DatabaseName] )
 Select replace(lower(db_name()),''sysprocompany'','''')
 end';
- -- nvarchar(max)
-
-        Print @SQLCmd;
 
         Exec [Process].[ExecForEachDB] @cmd = @SQLCmd;
 
@@ -49,6 +46,7 @@ end';
         Where   [CN].[Company] Is Null
                 And IsNumeric([LOD].[DatabaseName]) = 1;
 
+        Set NoCount On;
         Drop Table [#ListOfDbs];
     End;
 GO
