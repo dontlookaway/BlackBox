@@ -1581,9 +1581,9 @@ else
   </SchemaIn>
   <SchemaOut Name="gl_journal_report_out">
     <xsd:schema elementFormDefault="unqualified" attributeFormDefault="unqualified" id="GLJournalReport" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-      <xsd:element name="GLJournalReport" msdata:IsDataSet="true" msdata:Locale="en-US">
+      <xsd:element name="GLJournalReport">
         <xsd:complexType>
-          <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:sequence minOccurs="0" maxOccurs="unbounded">
             <xsd:element name="SystemInformation">
               <xsd:complexType>
                 <xsd:sequence>
@@ -1712,6 +1712,7 @@ else
                   <xsd:element name="Edited_LedgerPeriod" minOccurs="0" />
                   <xsd:element name="LedgerYear" type="xsd:string" minOccurs="0" />
                   <xsd:element name="LedgerPeriodYear" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="JournalPostDate" type="xsd:string" minOccurs="0" />
                   <xsd:element name="JournalType" type="xsd:string" minOccurs="0" />
                   <xsd:element name="JournalStatus" type="xsd:string" minOccurs="0" />
                   <xsd:element name="Reference" type="xsd:string" minOccurs="0" />
@@ -1789,7 +1790,7 @@ else
                 </xsd:sequence>
               </xsd:complexType>
             </xsd:element>
-          </xsd:choice>
+          </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:schema>
