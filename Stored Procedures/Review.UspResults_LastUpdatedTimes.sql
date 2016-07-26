@@ -2,9 +2,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Review].[UspResults_LastUpdatedTimes]
+CREATE Proc [Review].[UspResults_LastUpdatedTimes]
     (
-      @MinutesToCheck Bit
+      @MinutesToCheck int
     , @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
@@ -68,6 +68,9 @@ As
         Set NoCount Off;
         Select  [TNU].[TableName]
               , [TNU].[LastUpdated]
+              , [MinutesSinceRun] = DateDiff(Minute , [TNU].[LastUpdated] ,
+                                           GetDate())
+										   ,Test = @MinutesToCheck
         From    [#TablesNotUpdated] [TNU]
         Where   DateDiff(Minute , [TNU].[LastUpdated] , GetDate()) > @MinutesToCheck;
         Set NoCount On;
