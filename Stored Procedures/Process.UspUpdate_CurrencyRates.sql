@@ -5,7 +5,7 @@ GO
 CREATE Proc [Process].[UspUpdate_CurrencyRates]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5,2)
     )
 As
     Begin
@@ -46,7 +46,7 @@ As
         From    [Lookups].[CurrencyRates] As [CR];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > (@HoursBetweenUpdates*60)
             Begin
 --Set time of run
                 Declare @LastUpdated DateTime2;
@@ -409,7 +409,7 @@ As
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= (@HoursBetweenUpdates*60)
         Begin
             Print 'UspUpdate_CurrencyRates - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

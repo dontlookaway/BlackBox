@@ -1,88 +1,80 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspUpdate_MCompleteFlag]
-(@PrevCheck INT --if count is less than previous don't update
-,@HoursBetweenUpdates int
-)
+    (
+      @PrevCheck Int --if count is less than previous don't update
+    , @HoursBetweenUpdates Numeric(5 , 2)
+    )
 As
-Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
-Purchase MCompleteFlag
-*/
-
-Set NoCount On
+    Begin
+        Set NoCount On;
 
 --check if table exists and create if it doesn't
-If ( Not Exists ( Select
-                    *
-                  From
-                    INFORMATION_SCHEMA.TABLES
-                  Where
-                    TABLE_SCHEMA = 'Lookups'
-                    And TABLE_NAME = 'MCompleteFlag' )
-   )
-    Begin
-        Create --drop --alter 
-Table Lookups.MCompleteFlag
-            (
-              Company VARCHAR(150)
-            , MCompleteFlagCode CHAR(5)
-            , MCompleteFlagDescription VARCHAR(150)
-            , LastUpdated DATETIME2
-            );
-    End;
+        If ( Not Exists ( Select    1
+                          From      [INFORMATION_SCHEMA].[TABLES]
+                          Where     [TABLE_SCHEMA] = 'Lookups'
+                                    And [TABLE_NAME] = 'MCompleteFlag' )
+           )
+            Begin
+                Create Table [Lookups].[MCompleteFlag]
+                    (
+                      [Company] Varchar(150)
+                    , [MCompleteFlagCode] Char(5)
+                    , [MCompleteFlagDescription] Varchar(150)
+                    , [LastUpdated] DateTime2
+                    );
+            End;
 
 
 --check last time run and update if it's been longer than @HoursBetweenUpdates hours
-Declare @LastDate DATETIME2
+        Declare @LastDate DateTime2;
 
-Select @LastDate=MAX(LastUpdated)
-From Lookups.MCompleteFlag
+        Select  @LastDate = Max([LastUpdated])
+        From    [Lookups].[MCompleteFlag];
 
-If @LastDate Is Null Or DATEDIFF(Hour,@LastDate,GETDATE())>@HoursBetweenUpdates
-Begin
+        If @LastDate Is Null
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
+            Begin
 	--Set time of run
-	Declare @LastUpdated DATETIME2; Select @LastUpdated=GETDATE();
+                Declare @LastUpdated DateTime2;
+                Select  @LastUpdated = GetDate();
 
 	--create master list of how codes affect stock
-	Create --drop --alter 
-	Table #Orders
-		(
-		  MCompleteFlagCode VARCHAR(5)
-		, MCompleteFlagDescription VARCHAR(150)
-		);
+                Create Table [#Orders]
+                    (
+                      [MCompleteFlagCode] Varchar(5)
+                    , [MCompleteFlagDescription] Varchar(150)
+                    );
 
-	Insert  #Orders
-	        ( MCompleteFlagCode
-	        , MCompleteFlagDescription
-	        )
-			Select
-				MCompleteFlagCode
-			  , MCompleteFlagDescription
-			From
-				(
-				  Select MCompleteFlagCode = 'Y', MCompleteFlagDescription='Yes'
-				  Union
-				  Select MCompleteFlagCode = 'N', MCompleteFlagDescription='No'
-				  Union
-				  Select MCompleteFlagCode = ' ', MCompleteFlagDescription='No'
-				) t;
+                Insert  [#Orders]
+                        ( [MCompleteFlagCode]
+                        , [MCompleteFlagDescription]
+	                    )
+                        Select  [t].[MCompleteFlagCode]
+                              , [t].[MCompleteFlagDescription]
+                        From    ( Select    [MCompleteFlagCode] = 'Y'
+                                          , [MCompleteFlagDescription] = 'Yes'
+                                  Union
+                                  Select    [MCompleteFlagCode] = 'N'
+                                          , [MCompleteFlagDescription] = 'No'
+                                  Union
+                                  Select    [MCompleteFlagCode] = ' '
+                                          , [MCompleteFlagDescription] = 'No'
+                                ) [t];
 
 	--Get list of all companies in use
 
 	--create temporary tables to be pulled from different databases, including a column to id
-	Create Table #Table1
-		(
-		  CompanyName VARCHAR(150)
-		);
+                Create Table [#Table1]
+                    (
+                      [CompanyName] Varchar(150)
+                    );
 
 	--create script to pull data from each db into the tables
-	Declare @SQL VARCHAR(Max) = '
-		USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
 		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -93,70 +85,72 @@ Begin
 		End';
 
 	--execute script against each db, populating the base tables
-	Exec [Process].[ExecForEachDB] @cmd =    @SQL;
+                Exec [Process].[ExecForEachDB] @cmd = @SQL;
 
 	--all companies process the same way
-	Select
-		CompanyName
-	  , O.MCompleteFlagCode
-	  , O.MCompleteFlagDescription
-	Into
-		#ResultsMFlag
-	From
-		#Table1 T
-	Left Join #Orders O
-		On 1 = 1;
+                Select  [T].[CompanyName]
+                      , [O].[MCompleteFlagCode]
+                      , [O].[MCompleteFlagDescription]
+                Into    [#ResultsMFlag]
+                From    [#Table1] [T]
+                        Left Join [#Orders] [O]
+                            On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
 
-	Insert  Lookups.MCompleteFlag
-	        ( Company
-	        , MCompleteFlagCode
-	        , MCompleteFlagDescription
-	        , LastUpdated
-	        )
-			Select
-				CompanyName
-			  , MCompleteFlagCode
-			  , MCompleteFlagDescription
-			  , @LastUpdated
-			From
-				#ResultsMFlag;
+                Insert  [Lookups].[MCompleteFlag]
+                        ( [Company]
+                        , [MCompleteFlagCode]
+                        , [MCompleteFlagDescription]
+                        , [LastUpdated]
+	                    )
+                        Select  [CompanyName]
+                              , [MCompleteFlagCode]
+                              , [MCompleteFlagDescription]
+                              , @LastUpdated
+                        From    [#ResultsMFlag];
 
-	If @PrevCheck=1
-	Begin
-		Declare @CurrentCount INT, @PreviousCount INT
+                If @PrevCheck = 1
+                    Begin
+                        Declare @CurrentCount Int
+                          , @PreviousCount Int;
 	
-		Select @CurrentCount=COUNT(*) From Lookups.MCompleteFlag
-		Where LastUpdated=@LastUpdated
+                        Select  @CurrentCount = Count(*)
+                        From    [Lookups].[MCompleteFlag]
+                        Where   [LastUpdated] = @LastUpdated;
 
-		SELECT @PreviousCount=COUNT(*) From Lookups.MCompleteFlag
-		Where LastUpdated<>@LastUpdated
+                        Select  @PreviousCount = Count(*)
+                        From    [Lookups].[MCompleteFlag]
+                        Where   [LastUpdated] <> @LastUpdated;
 	
-		If @PreviousCount>@CurrentCount
-			Begin
-				Delete Lookups.MCompleteFlag
-				Where LastUpdated=@LastUpdated
-				Print 'UspUpdate_MCompleteFlag - Count has gone down since last run, no update applied'
-				Print 'Current Count = '+CAST(@CurrentCount As VARCHAR(5))+' Previous Count = '+CAST(@PreviousCount As VARCHAR(5))
-			End
-		If @PreviousCount<=@CurrentCount
-			Begin
-				Delete Lookups.MCompleteFlag
-				Where LastUpdated<>@LastUpdated
-				Print 'UspUpdate_MCompleteFlag - Update applied successfully'
-			End
-	end
-	If @PrevCheck=0
-		Begin
-			Delete Lookups.MCompleteFlag
-			Where LastUpdated<>@LastUpdated
-			Print 'UspUpdate_MCompleteFlag - Update applied successfully'
-		End
-	End
-End
-If DATEDIFF(Hour,@LastDate,GETDATE())<=@HoursBetweenUpdates
-Begin
-	Print 'UspUpdate_MCompleteFlag - Table was last updated at '+CAST(@LastDate As VARCHAR(255))+' no update applied'
-End
+                        If @PreviousCount > @CurrentCount
+                            Begin
+                                Delete  [Lookups].[MCompleteFlag]
+                                Where   [LastUpdated] = @LastUpdated;
+                                Print 'UspUpdate_MCompleteFlag - Count has gone down since last run, no update applied';
+                                Print 'Current Count = '
+                                    + Cast(@CurrentCount As Varchar(5))
+                                    + ' Previous Count = '
+                                    + Cast(@PreviousCount As Varchar(5));
+                            End;
+                        If @PreviousCount <= @CurrentCount
+                            Begin
+                                Delete  [Lookups].[MCompleteFlag]
+                                Where   [LastUpdated] <> @LastUpdated;
+                                Print 'UspUpdate_MCompleteFlag - Update applied successfully';
+                            End;
+                    End;
+                If @PrevCheck = 0
+                    Begin
+                        Delete  [Lookups].[MCompleteFlag]
+                        Where   [LastUpdated] <> @LastUpdated;
+                        Print 'UspUpdate_MCompleteFlag - Update applied successfully';
+                    End;
+            End;
+    End;
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
+        Begin
+            Print 'UspUpdate_MCompleteFlag - Table was last updated at '
+                + Cast(@LastDate As Varchar(255)) + ' no update applied';
+        End;
 GO

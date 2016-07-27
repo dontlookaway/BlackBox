@@ -2,10 +2,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Process].[UspUpdate_ArInvoicePayTrnType]
+CREATE Proc [Process].[UspUpdate_ArInvoicePayTrnType]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
@@ -17,8 +17,7 @@ As
                                     And [TABLE_NAME] = 'ArInvoicePayTrnType' )
            )
             Begin
-                Create --drop --alter 
-Table [Lookups].[ArInvoicePayTrnType]
+                Create Table [Lookups].[ArInvoicePayTrnType]
                     (
                       [TrnType] Char(1)
                     , [TrnTypeDesc] Varchar(250)
@@ -32,75 +31,78 @@ Table [Lookups].[ArInvoicePayTrnType]
 
         Select  @LastDate = Max([bt].[LastUpdated])
         From    [Lookups].[ArInvoicePayTrnType] As [bt];
-
-        Insert  [Lookups].[ArInvoicePayTrnType]
-                ( [TrnType]
-                , [TrnTypeDesc]
-                , [LastUpdated]
-                )
-                Select  [t].[TrnType]
-                      , [t].[TrnTypeDesc]
-                      , [LastUpdated] = @LastUpdate
-                From    ( Select    [TrnType] = 'A'
-                                  , [TrnTypeDesc] = 'Adjustment'
-                          Union
-                          Select    [TrnType] = 'C'
-                                  , [TrnTypeDesc] = 'Credit memo'
-                          Union
-                          Select    [TrnType] = 'D'
-                                  , [TrnTypeDesc] = 'Debit memo'
-                          Union
-                          Select    [TrnType] = 'P'
-                                  , [TrnTypeDesc] = 'Payment'
-                          Union
-                          Select    [TrnType] = 'V'
-                                  , [TrnTypeDesc] = 'Exchange rate revaluation'
-                          Union
-                          Select    [TrnType] = 'T'
-                                  , [TrnTypeDesc] = 'Tax relief adjustment'
-                        ) [t];
-
-        If @PrevCheck = 1
+        If DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                        * 60 )
             Begin
-                Declare @CurrentCount Int
-                  , @PreviousCount Int;
-	
-                Select  @CurrentCount = Count(*)
-                From    [Lookups].[ArInvoicePayTrnType]
-                Where   [LastUpdated] = @LastUpdate;
+                Insert  [Lookups].[ArInvoicePayTrnType]
+                        ( [TrnType]
+                        , [TrnTypeDesc]
+                        , [LastUpdated]
+                        )
+                        Select  [t].[TrnType]
+                              , [t].[TrnTypeDesc]
+                              , [LastUpdated] = @LastUpdate
+                        From    ( Select    [TrnType] = 'A'
+                                          , [TrnTypeDesc] = 'Adjustment'
+                                  Union
+                                  Select    [TrnType] = 'C'
+                                          , [TrnTypeDesc] = 'Credit memo'
+                                  Union
+                                  Select    [TrnType] = 'D'
+                                          , [TrnTypeDesc] = 'Debit memo'
+                                  Union
+                                  Select    [TrnType] = 'P'
+                                          , [TrnTypeDesc] = 'Payment'
+                                  Union
+                                  Select    [TrnType] = 'V'
+                                          , [TrnTypeDesc] = 'Exchange rate revaluation'
+                                  Union
+                                  Select    [TrnType] = 'T'
+                                          , [TrnTypeDesc] = 'Tax relief adjustment'
+                                ) [t];
 
-                Select  @PreviousCount = Count(*)
-                From    [Lookups].[ArInvoicePayTrnType]
-                Where   [LastUpdated] <> @LastUpdate;
-	
-                If @PreviousCount > @CurrentCount
+                If @PrevCheck = 1
                     Begin
-                        Delete  [Lookups].[ArInvoicePayTrnType]
+                        Declare @CurrentCount Int
+                          , @PreviousCount Int;
+	
+                        Select  @CurrentCount = Count(*)
+                        From    [Lookups].[ArInvoicePayTrnType]
                         Where   [LastUpdated] = @LastUpdate;
-                        Print 'UspUpdate_ArInvoicePayTrnType - Count has gone down since last run, no update applied';
-                        Print 'Current Count = '
-                            + Cast(@CurrentCount As Varchar(5))
-                            + ' Previous Count = '
-                            + Cast(@PreviousCount As Varchar(5));
+
+                        Select  @PreviousCount = Count(*)
+                        From    [Lookups].[ArInvoicePayTrnType]
+                        Where   [LastUpdated] <> @LastUpdate;
+	
+                        If @PreviousCount > @CurrentCount
+                            Begin
+                                Delete  [Lookups].[ArInvoicePayTrnType]
+                                Where   [LastUpdated] = @LastUpdate;
+                                Print 'UspUpdate_ArInvoicePayTrnType - Count has gone down since last run, no update applied';
+                                Print 'Current Count = '
+                                    + Cast(@CurrentCount As Varchar(5))
+                                    + ' Previous Count = '
+                                    + Cast(@PreviousCount As Varchar(5));
+                            End;
+                        If @PreviousCount <= @CurrentCount
+                            Begin
+                                Delete  [Lookups].[ArInvoicePayTrnType]
+                                Where   [LastUpdated] <> @LastUpdate;
+                                Print 'UspUpdate_ArInvoicePayTrnType - Update applied successfully';
+                            End;
                     End;
-                If @PreviousCount <= @CurrentCount
+                If @PrevCheck = 0
                     Begin
                         Delete  [Lookups].[ArInvoicePayTrnType]
                         Where   [LastUpdated] <> @LastUpdate;
                         Print 'UspUpdate_ArInvoicePayTrnType - Update applied successfully';
                     End;
             End;
-        If @PrevCheck = 0
+        If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates
+                                                         * 60 )
             Begin
-                Delete  [Lookups].[ArInvoicePayTrnType]
-                Where   [LastUpdated] <> @LastUpdate;
-                Print 'UspUpdate_ArInvoicePayTrnType - Update applied successfully';
+                Print 'UspUpdate_ArInvoicePayTrnType - Table was last updated at '
+                    + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
-    End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
-        Begin
-            Print 'UspUpdate_ArInvoicePayTrnType - Table was last updated at '
-                + Cast(@LastDate As Varchar(255)) + ' no update applied';
-        End;
-
+    End;	
 GO

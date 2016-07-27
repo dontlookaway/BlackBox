@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,19 +5,14 @@ GO
 CREATE Proc [Process].[UspUpdate_ReqnStatus]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to	
-Requisition Status details
-*/
-
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'ReqnStatus' )
@@ -41,7 +35,8 @@ Requisition Status details
         From    [Lookups].[ReqnStatus];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -110,7 +105,8 @@ Requisition Status details
                       , [O].[ReqnStatusDescription]
                 Into    [#ResultsReqStatus]
                 From    [#Table1ReqSC] [T]
-                        Left Join [#OrdersReqSC] [O] On 1 = 1;
+                        Left Join [#OrdersReqSC] [O]
+                            On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
                 Insert  [Lookups].[ReqnStatus]
@@ -163,7 +159,7 @@ Requisition Status details
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_ReqnStatus - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

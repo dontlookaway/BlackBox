@@ -1,13 +1,11 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Process].[UspUpdate_Bin]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5,2)
     )
 As
     Begin
@@ -42,7 +40,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
         From    [Lookups].[Bin];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > (@HoursBetweenUpdates*60)
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -60,8 +58,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 
 --create script to pull data from each db into the tables
                 Declare @Company Varchar(30) = 'All';
-                Declare @SQL Varchar(Max) = '
-	USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
                     + --Only query DBs beginning SysProCompany
@@ -148,7 +145,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= (@HoursBetweenUpdates*60)
         Begin
             Print 'UspUpdate_Bin - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

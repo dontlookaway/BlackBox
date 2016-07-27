@@ -5,13 +5,13 @@ GO
 CREATE Proc [Process].[UspUpdate_GLAccountType]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'GLAccountType' )
@@ -33,7 +33,8 @@ As
         From    [Lookups].[GLAccountType];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -139,7 +140,7 @@ As
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_GLAccountType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,18 +5,14 @@ GO
 CREATE Proc [Process].[UspUpdate_TrnTypeModifier]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
-transaction types when relating to inventory changes
-*/
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'TrnTypeAmountModifier' )
@@ -40,7 +35,7 @@ transaction types when relating to inventory changes
         From    [Lookups].[TrnTypeAmountModifier];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > (@HoursBetweenUpdates*60)
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -102,9 +97,7 @@ transaction types when relating to inventory changes
                 Declare @SQL Varchar(Max) = '
 		USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
-		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 		BEGIN				
 		Insert #Table1TTM
@@ -121,7 +114,8 @@ transaction types when relating to inventory changes
                       , [A].[amountmodifier]
                 Into    [#ResultsTTm]
                 From    [#Table1TTM] [T]
-                        Left Join [#AmountsTTM] [A] On 1 = 1;
+                        Left Join [#AmountsTTM] [A]
+                            On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
 
@@ -175,7 +169,7 @@ transaction types when relating to inventory changes
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= (@HoursBetweenUpdates*60)
         Begin
             Print 'UspUpdate_TrnTypeModifier - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

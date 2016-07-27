@@ -5,7 +5,7 @@ GO
 CREATE Proc [Process].[UspUpdate_Buyers]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
@@ -34,7 +34,8 @@ As
         From    [Lookups].[Buyers];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -52,30 +53,20 @@ As
 
 --create script to pull data from each db into the tables
                 Declare @Company Varchar(30) = 'All';
-                Declare @SQL Varchar(Max) = '
-	USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-                    + --only companies selected in main run, or if companies selected then all
-                    '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
                     + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+                    + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-                    + --count number of tables requested (number of commas plus one)
-                    '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-                    + --Count of the tables requested how many exist in the db
-                    '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_Bin From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-                    + --only if the count matches (all the tables exist in the requested db) then run the script
-                    '
+			Where name In (Select Value Collate Latin1_General_Bin From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #Table1
@@ -137,7 +128,7 @@ As
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_Buyers - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

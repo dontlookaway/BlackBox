@@ -1,15 +1,14 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResultsRefresh_TableTimes] ( @Exec Int )
-As 
+CREATE Proc [Report].[UspResultsRefresh_TableTimes]
+    (
+      @Exec Int
+    , @HoursBetweenEachRun Numeric(5 , 2)
+    )
+As
     Begin
-/*
-Template designed by Chris Johnson, Prometic Group September 2015
-Stored procedure update all history and lookup tables and return results about how long this takes to run
-*/
 
 --remove nocount on to speed up query
         Set NoCount On;
@@ -19,8 +18,7 @@ Stored procedure update all history and lookup tables and return results about h
           , @HistoryStart DateTime2
           , @HistoryEnd DateTime2;
 
-        Create --drop --alter 
-Table [#Results]
+        Create Table [#Results]
             (
               [SchemaName] Varchar(100)
             , [TableName] Varchar(100)
@@ -59,11 +57,15 @@ Table [#Results]
                           , [OldColumnCount] = Count([c].[name])
                           , [NewColumnCount] = Null
                     From    [sys].[tables] [t]
-                            Inner Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
-                            Inner Join [sys].[dm_db_partition_stats] As [I] On [t].[object_id] = [I].[object_id]
-                                                              And [I].[index_id] < 2
-                            Left Join [sys].[columns] [c] On [c].[object_id] = [t].[object_id]
-                            Left Join [sys].[dm_db_index_usage_stats] [iu] On [iu].[object_id] = [t].[object_id]
+                            Inner Join [sys].[schemas] [s]
+                                On [s].[schema_id] = [t].[schema_id]
+                            Inner Join [sys].[dm_db_partition_stats] As [I]
+                                On [t].[object_id] = [I].[object_id]
+                                   And [I].[index_id] < 2
+                            Left Join [sys].[columns] [c]
+                                On [c].[object_id] = [t].[object_id]
+                            Left Join [sys].[dm_db_index_usage_stats] [iu]
+                                On [iu].[object_id] = [t].[object_id]
                     Where   [s].[name] = 'Lookups'
                     Group By [s].[name]
                           , [t].[name]
@@ -73,7 +75,7 @@ Table [#Results]
             If @Exec = 1
                 Begin
 	--update tables
-                    Exec [Process].[UspLoad_LoadController] @HoursBetweenEachRun = 1;-- int    
+                    Exec [Process].[UspLoad_LoadController] @HoursBetweenEachRun = @HoursBetweenEachRun;-- numeric
                 End;
 
 	--add results
@@ -86,17 +88,21 @@ Table [#Results]
                                       , [Row_Count] = [I].[row_count]
                                       , [NewColumnCount] = Count([c].[name])
                                 From    [sys].[tables] [t]
-                                        Inner Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                                        Inner Join [sys].[schemas] [s]
+                                            On [s].[schema_id] = [t].[schema_id]
                                         Inner Join [sys].[dm_db_partition_stats]
-                                        As [I] On [t].[object_id] = [I].[object_id]
-                                                And [I].[index_id] < 2
-                                        Left Join [sys].[columns] [c] On [c].[object_id] = [t].[object_id]
+                                            As [I]
+                                            On [t].[object_id] = [I].[object_id]
+                                               And [I].[index_id] < 2
+                                        Left Join [sys].[columns] [c]
+                                            On [c].[object_id] = [t].[object_id]
                                 Where   [s].[name] = 'Lookups'
                                 Group By [s].[name]
                                       , [t].[name]
                                       , [I].[row_count]
-                              ) [t] On [t].[SchemaName] = [R].[SchemaName] Collate Latin1_General_BIN
-                                     And [t].[TableName] = [R].[TableName] Collate Latin1_General_BIN
+                              ) [t]
+                        On [t].[SchemaName] = [R].[SchemaName] Collate Latin1_General_BIN
+                           And [t].[TableName] = [R].[TableName] Collate Latin1_General_BIN
             Where   [t].[Row_Count] Is Not Null;
 
 
@@ -133,11 +139,15 @@ Table [#Results]
                           , [OldColumnCount] = Count([c].[name])
                           , [NewColumnCount] = Null
                     From    [sys].[tables] [t]
-                            Inner Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
-                            Inner Join [sys].[dm_db_partition_stats] As [I] On [t].[object_id] = [I].[object_id]
-                                                              And [I].[index_id] < 2
-                            Left Join [sys].[columns] [c] On [c].[object_id] = [t].[object_id]
-                            Left Join [sys].[dm_db_index_usage_stats] [iu] On [iu].[object_id] = [t].[object_id]
+                            Inner Join [sys].[schemas] [s]
+                                On [s].[schema_id] = [t].[schema_id]
+                            Inner Join [sys].[dm_db_partition_stats] As [I]
+                                On [t].[object_id] = [I].[object_id]
+                                   And [I].[index_id] < 2
+                            Left Join [sys].[columns] [c]
+                                On [c].[object_id] = [t].[object_id]
+                            Left Join [sys].[dm_db_index_usage_stats] [iu]
+                                On [iu].[object_id] = [t].[object_id]
                     Where   [s].[name] = 'History'
                     Group By [s].[name]
                           , [t].[name]
@@ -160,17 +170,21 @@ Table [#Results]
                                       , [Row_Count] = [I].[row_count]
                                       , [NewColumnCount] = Count(Distinct [c].[name])
                                 From    [sys].[tables] [t]
-                                        Inner Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                                        Inner Join [sys].[schemas] [s]
+                                            On [s].[schema_id] = [t].[schema_id]
                                         Inner Join [sys].[dm_db_partition_stats]
-                                        As [I] On [t].[object_id] = [I].[object_id]
-                                                And [I].[index_id] < 2
-                                        Left Join [sys].[columns] [c] On [c].[object_id] = [t].[object_id]
+                                            As [I]
+                                            On [t].[object_id] = [I].[object_id]
+                                               And [I].[index_id] < 2
+                                        Left Join [sys].[columns] [c]
+                                            On [c].[object_id] = [t].[object_id]
                                 Where   [s].[name] = 'History'
                                 Group By [s].[name]
                                       , [t].[name]
                                       , [I].[row_count]
-                              ) [t] On [t].[SchemaName] = [R].[SchemaName] Collate Latin1_General_BIN
-                                     And [t].[TableName] = [R].[TableName] Collate Latin1_General_BIN
+                              ) [t]
+                        On [t].[SchemaName] = [R].[SchemaName] Collate Latin1_General_BIN
+                           And [t].[TableName] = [R].[TableName] Collate Latin1_General_BIN
             Where   [t].[Row_Count] Is Not Null;
 
             Select  @HistoryEnd = GetDate();

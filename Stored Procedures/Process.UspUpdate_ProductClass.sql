@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,27 +5,22 @@ GO
 CREATE Proc [Process].[UspUpdate_ProductClass]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with ProductClass details
-transaction types when relating to inventory changes
-*/
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'ProductClass' )
            )
             Begin
-                Create 
-Table [Lookups].[ProductClass]
+                Create Table [Lookups].[ProductClass]
                     (
                       [Company] Varchar(150)
                     , [ProductClass] Varchar(150)
@@ -44,7 +38,8 @@ Table [Lookups].[ProductClass]
         From    [Lookups].[ProductClass];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 
 --Set time of run
@@ -64,30 +59,20 @@ Table [Lookups].[ProductClass]
 
 --create script to pull data from each db into the tables
                 Declare @Company Varchar(30) = 'All';
-                Declare @SQL Varchar(Max) = '
-	USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-                    + --only companies selected in main run, or if companies selected then all
-                    '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
                     + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+                    + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-                    + --count number of tables requested (number of commas plus one)
-                    '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-                    + --Count of the tables requested how many exist in the db
-                    '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-                    + --only if the count matches (all the tables exist in the requested db) then run the script
-                    '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #Table1PC
@@ -157,7 +142,7 @@ Table [Lookups].[ProductClass]
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_ProductClass - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

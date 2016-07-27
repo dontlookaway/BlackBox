@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,27 +5,22 @@ GO
 CREATE Proc [Process].[UspUpdate_PurchaseOrderInvoiceMapping]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with PurchaseOrderInvoiceMapping details	
-transaction types when relating to inventory changes
-*/
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'PurchaseOrderInvoiceMapping' )
            )
             Begin
-                Create --drop --alter 
-Table [Lookups].[PurchaseOrderInvoiceMapping]
+                Create Table [Lookups].[PurchaseOrderInvoiceMapping]
                     (
                       [Company] Varchar(150)
                     , [Grn] Varchar(20)
@@ -44,11 +38,12 @@ Table [Lookups].[PurchaseOrderInvoiceMapping]
         From    [Lookups].[PurchaseOrderInvoiceMapping];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
                 Declare @ListOfTables Varchar(Max) = 'GrnMatching,GrnDetails'; 
@@ -66,30 +61,20 @@ Table [Lookups].[PurchaseOrderInvoiceMapping]
 
 --create script to pull data from each db into the tables
                 Declare @Company Varchar(30) = 'All';
-                Declare @SQL Varchar(Max) = '
-	USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-                    + --only companies selected in main run, or if companies selected then all
-                    '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
                     + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+                    + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-                    + --count number of tables requested (number of commas plus one)
-                    '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-                    + --Count of the tables requested how many exist in the db
-                    '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-                    + --only if the count matches (all the tables exist in the requested db) then run the script
-                    '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 					Insert #Table1POIM
@@ -109,12 +94,8 @@ Table [Lookups].[PurchaseOrderInvoiceMapping]
 								On GD.Grn = GM.Grn
 							Full Outer Join dbo.PorMasterHdr PH
 								On PH.PurchaseOrder = GD.PurchaseOrder;
-
 			End
 	End';
-
---Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
 
 --execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
@@ -171,7 +152,7 @@ Table [Lookups].[PurchaseOrderInvoiceMapping]
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_PurchaseOrderInvoiceMapping - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

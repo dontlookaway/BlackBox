@@ -1,11 +1,10 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspLoad_LoadController]
     (
-      @HoursBetweenEachRun Int
+      @HoursBetweenEachRun Numeric(5,2)
     )
 As
     Begin

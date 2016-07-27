@@ -5,19 +5,16 @@ GO
 CREATE Proc [Process].[UspUpdate_GlAnalysisCategories]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with GlAnalysisCategories details transaction types when relating to inventory changes																	///
-*/
 
 --remove nocount on to speed up query
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'GlAnalysisCategory' )
@@ -40,11 +37,12 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
         From    [Lookups].[GlAnalysisCategory];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > ( @HoursBetweenUpdates
+                                                            * 60 )
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
-                    Select  @LastUpdated = GetDate();
+                Select  @LastUpdated = GetDate();
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
                 Declare @ListOfTables Varchar(Max) = 'GenAnalysisTrn'; 
@@ -66,18 +64,13 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
                     + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
+			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
+                    + '''
 					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-                    + --count number of tables requested (number of commas plus one)
-                    '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-                    + --Count of the tables requested how many exist in the db
-                    '
+					, @ActualCountOfTables INT
+			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
 			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-                    + --only if the count matches (all the tables exist in the requested db) then run the script
-                    '
+			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
 			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #Table1GLA
@@ -88,8 +81,6 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 			End
 	End';
 
---Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
 
 --execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
@@ -142,7 +133,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= ( @HoursBetweenUpdates * 60 )
         Begin
             Print 'UspUpdate_GlAnalysisCategories - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

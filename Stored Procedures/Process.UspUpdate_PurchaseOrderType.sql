@@ -1,26 +1,20 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Process].[UspUpdate_PurchaseOrderType]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5 , 2)
     )
 As
     Begin
-/*
-Stored procedure created by Chris Johnson, Prometic Group September 2015 to populate table with amounts relating to
-Purchase Order Type
-*/
 
         Set NoCount On;
 
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'PurchaseOrderType' )
@@ -43,7 +37,7 @@ Purchase Order Type
         From    [Lookups].[PurchaseOrderType];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > (@HoursBetweenUpdates*60)
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -84,9 +78,7 @@ Purchase Order Type
                 Declare @SQL Varchar(Max) = '
 		USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
-		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-                    + --Only query DBs beginning SysProCompany
-                    '
+		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 		BEGIN				
 		Insert #Table1POType
@@ -103,13 +95,10 @@ Purchase Order Type
                       , [O].[OrderTypeDescription]
                 Into    [#ResultsPOType]
                 From    [#Table1POType] [T]
-                        Left Join [#OrdersPOType] [O] On 1 = 1;
+                        Left Join [#OrdersPOType] [O]
+                            On 1 = 1;
 
 	--placeholder for anomalous results that are different to master list
-	--Update #ResultsPOType
-	--Set amountmodifier = 0--Set amount
-	--Where CompanyName = ''
-	--	And TrnType = '';
 
                 Insert  [Lookups].[PurchaseOrderType]
                         ( [Company]
@@ -161,7 +150,7 @@ Purchase Order Type
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= (@HoursBetweenUpdates*60)
         Begin
             Print 'UspUpdate_PurchaseOrderType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';

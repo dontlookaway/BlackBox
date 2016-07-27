@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,7 +5,7 @@ GO
 CREATE Proc [Process].[UspUpdate_PurchaseOrderStatus]
     (
       @PrevCheck Int --if count is less than previous don't update
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(5,2)
     )
 As
     Begin
@@ -17,7 +16,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
         Set NoCount On;
 
 --check if table exists and create if it doesn't
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'PurchaseOrderStatus' )
@@ -40,7 +39,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
         From    [Lookups].[PurchaseOrderStatus];
 
         If @LastDate Is Null
-            Or DateDiff(Hour , @LastDate , GetDate()) > @HoursBetweenUpdates
+            Or DateDiff(Minute , @LastDate , GetDate()) > (@HoursBetweenUpdates*60)
             Begin
 	--Set time of run
                 Declare @LastUpdated DateTime2;
@@ -160,7 +159,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
                     End;
             End;
     End;
-    If DateDiff(Hour , @LastDate , GetDate()) <= @HoursBetweenUpdates
+    If DateDiff(Minute , @LastDate , GetDate()) <= (@HoursBetweenUpdates*60)
         Begin
             Print 'UspUpdate_PurchaseOrderStatus - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
