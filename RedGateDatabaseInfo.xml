@@ -57,7 +57,7 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>11</Count>
+    <Count>26</Count>
     <DataFile>Lookups.GenJournalDetailSource_Data.sql</DataFile>
     <DataFile>Lookups.GenJournalType_Data.sql</DataFile>
     <DataFile>Lookups.LotTransactionTrnType_Data.sql</DataFile>
@@ -69,5 +69,20 @@
     <DataFile>Lookups.JnlStatus_Data.sql</DataFile>
     <DataFile>Lookups.PorLineType_Data.sql</DataFile>
     <DataFile>Lookups.RedTagsUsedByType_Data.sql</DataFile>
+    <DataFile>History.ApSupplier_Data.sql</DataFile>
+    <DataFile>History.ArCustomer_Data.sql</DataFile>
+    <DataFile>History.AssetMaster_Data.sql</DataFile>
+    <DataFile>History.BomStructure_Data.sql</DataFile>
+    <DataFile>History.InvMaster_Data.sql</DataFile>
+    <DataFile>History.InvWarehouse_Data.sql</DataFile>
+    <DataFile>History.PorMasterDetail_Data.sql</DataFile>
+    <DataFile>History.ReqDetail_Data.sql</DataFile>
+    <DataFile>History.ReqHeader_Data.sql</DataFile>
+    <DataFile>History.SorMaster_Data.sql</DataFile>
+    <DataFile>History.TblCurrency_Data.sql</DataFile>
+    <DataFile>History.WipInspect_Data.sql</DataFile>
+    <DataFile>History.WipJobAllLab_Data.sql</DataFile>
+    <DataFile>History.WipJobAllMat_Data.sql</DataFile>
+    <DataFile>History.WipMaster_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
