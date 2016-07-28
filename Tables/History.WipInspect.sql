@@ -20,8 +20,8 @@ CREATE TABLE [History].[WipInspect]
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WIPINSPECTKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [ALTERNATEWAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[ALTWAREHOUSEFLAG] [float] NULL,
-[QUANTITY] [float] NULL
+[QUANTITY] [float] NULL,
+[ALTWAREHOUSEFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[WipInspect] ADD CONSTRAINT [WipInspect_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
