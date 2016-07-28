@@ -3,26 +3,7 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspPopulate_UnpivotHistory] ( @Tables Varchar(Max) )
-As /*
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///			Template designed by Chris Johnson, Prometic Group January 2016															///
-///																																	///
-///			Stored procedure set out to insert data from transaction log into history tables										///
-///																																	///
-///																																	///
-///			Version 1.0.1																											///
-///																																	///
-///			Change Log																												///
-///																																	///
-///			Date		Person					Description																			///
-///			8/1/2016	Chris Johnson			Initial version created																///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///			??/??/201?	Placeholder				Placeholder																			///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/
+As 
     Begin
 --List of Tables insert into
         Create Table [#TablesToPopulate]
@@ -56,8 +37,8 @@ As /*
 
 
         Declare @MaxTables Int
-          , @CurrentTable Int = 1;
-        Declare @SQLPivot Varchar(Max)
+          , @CurrentTable Int = 1
+          , @SQLPivot Varchar(Max)
           , @Columns Varchar(Max)
           , @TableName Varchar(500)
           , @MaxTransactions Int
@@ -107,14 +88,7 @@ As /*
 --Insert All transactions
                 Set @SQLInsert = 'Insert [History].' + @TableName
                     + ' ( [TransactionDescription], [DatabaseName], [SignatureDateTime], [Operator], [ItemKey], [ComputerName], [ProgramName], [ConditionName])
-SELECT [TransactionDescription]
-        , [DatabaseName]
-        , [SignatureDateTime]
-        , [Operator]
-        , [ItemKey]
-        , [ComputerName]
-        , [ProgramName]
-        , [ConditionName] 
+SELECT [TransactionDescription], [DatabaseName], [SignatureDateTime], [Operator], [ItemKey], [ComputerName], [ProgramName], [ConditionName] 
 From [Process].[SysproTransactionsLogged] As [STL]
 Where [STL].[TableName]=''' + @TableName + '''
 and [AlreadyEntered]=0';
@@ -199,8 +173,8 @@ and [AlreadyEntered]=0';
                                 Where   [T].[TransactionRank] = @CurrentTransaction
                                         And [T].[VariableRank] = @CurrentVariable;	    
 
-                                Set @SQLUpdate = 'Update [History].'
-                                    + QuoteName(@TableName) + '
+                                Set @SQLUpdate = 'Begin Try
+								Update [History].' + QuoteName(@TableName) + '
 		Set ' + QuoteName(@VarName) + ' = '
                                     + Case When @VarNum Is Not Null
                                            Then 'Cast('''
@@ -211,17 +185,27 @@ and [AlreadyEntered]=0';
                                            When @VarDate Is Not Null
                                            Then 'Cast('''
                                                 + Cast(@VarDate As Varchar(500))
-                                                + '''as date)'
-                                      End + '
-				Where [DatabaseName]=''' + @VarDbName + '''
-				And [ItemKey] =''' + @VarItemKey + '''
-				And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
+                                                + '''as date)
+												'
+                                      End + 'Where [DatabaseName]='''
+                                    + @VarDbName + ''' And [ItemKey] ='''
+                                    + @VarItemKey
+                                    + ''' And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
                                     + Convert(Varchar(23) , @VarSignatureDateTime , 121)
-                                    + '''';
+                                    + '''
+								End Try
+Begin Catch
+    Update  [Process].[SysproTransactionsLogged]
+    Set     [IsError] = 1
+    Where   [DatabaseName] = ''' + @VarDbName + '''
+            And [ItemKey] = ''' + @VarItemKey + '''
+            And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
+                                    + Convert(Varchar(23) , @VarSignatureDateTime , 121)
+                                    + '''
+			And [VariableDesc] = ''' + @VarName + ''';
+End Catch';
 
-                                Print ( @SQLUpdate );
                                 Exec ( @SQLUpdate );
-								Print ( @SQLUpdate );
 
                                 Update  [Process].[SysproTransactionsLogged]
                                 Set     [AlreadyEntered] = 1
@@ -242,10 +226,6 @@ and [AlreadyEntered]=0';
 				
                 Print @TableName + ' unpivotted';
                 Truncate Table [#Transactions]; 
-
-                Update  [Process].[SysproTransactionsLogged]
-                Set     [AlreadyEntered] = 1
-                Where   [TableName] = @TableName;
                 Set @CurrentTable = @CurrentTable + 1;
             End;
     End;
