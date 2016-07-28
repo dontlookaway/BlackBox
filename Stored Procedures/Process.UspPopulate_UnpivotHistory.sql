@@ -2,8 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Process].[UspPopulate_UnpivotHistory] ( @Tables Varchar(Max) )
 As /*
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +35,7 @@ As /*
                 ( [TableName]
                 )
                 Select Distinct
-                        Replace([USS].[Value],' ','')
+                        Replace([USS].[Value] , ' ' , '')
                 From    [dbo].[udf_SplitString](@Tables , ',') As [USS];
 
 
@@ -86,7 +84,8 @@ As /*
                 From    [#TablesToPopulate] As [TTP]
                 Where   [TTP].[TID] = @CurrentTable;
 				
-                Print 'Unpivotting table '+@TableName + ' ' + Cast(@CurrentTable As Varchar(50));
+                Print 'Unpivotting table ' + @TableName + ' '
+                    + Cast(@CurrentTable As Varchar(50));
                 
                 Select  @Columns = Stuff(( Select Distinct
                                                     ', '
@@ -156,18 +155,21 @@ and [AlreadyEntered]=0';
                               , [TransactionRank] = Dense_Rank() Over ( Order By [STL].[TransactionDescription], [STL].[DatabaseName], [STL].[SignatureDateTime], [STL].[Operator], [STL].[ItemKey], [STL].[ComputerName], [STL].[ProgramName], [STL].[ConditionName] )
                         From    [Process].[SysproTransactionsLogged] As [STL]
                         Where   [STL].[TableName] = @TableName
-						And [STL].[AlreadyEntered]=0;
+                                And [STL].[AlreadyEntered] = 0;
 
                 Select  @MaxTransactions = Max([T].[TransactionRank])
                 From    [#Transactions] As [T];
 
-                Print Cast(@MaxTransactions As Varchar(50))+ ' transactions to iterate';
+                Print Cast(@MaxTransactions As Varchar(50))
+                    + ' transactions to iterate';
 
                 Set @CurrentTransaction = 1;
 
                 While @CurrentTransaction <= @MaxTransactions
                     Begin
-                        Print Cast(@CurrentTransaction As Varchar(50))+' out of '+Cast(@MaxTransactions As Varchar(50));
+                        Print Cast(@CurrentTransaction As Varchar(50))
+                            + ' out of '
+                            + Cast(@MaxTransactions As Varchar(50));
                         Select  @MaxVariables = Max([T].[VariableRank])
                         From    [#Transactions] As [T]
                         Where   [T].[TransactionRank] = @CurrentTransaction;
@@ -178,27 +180,28 @@ and [AlreadyEntered]=0';
                                 Set @VarNum = Null;
                                 Set @VarString = Null;
                                 Set @VarName = Null;
-
-
+								
                                 Select  @VarName = [T].[VariableDesc]
                                       , @VarNum = [STL].[VarNumericValue]
-                                      , @VarString = Replace([STL].[VarAlphaValue],'''','''''')
+                                      , @VarString = Replace([STL].[VarAlphaValue] ,
+                                                             '''' , '''''')
                                       , @VarDate = [STL].[VarDateValue]
                                       , @VarDbName = [STL].[DatabaseName]
                                       , @VarItemKey = [STL].[ItemKey]
                                       , @VarSignatureDateTime = [STL].[SignatureDateTime]
                                 From    [#Transactions] As [T]
                                         Left Join [Process].[SysproTransactionsLogged]
-                                        As [STL] On [STL].[DatabaseName] = [T].[DatabaseName]
-                                                    And [STL].[ItemKey] = [T].[ItemKey]
-                                                    And [STL].[SignatureDateTime] = [T].[SignatureDateTime]
-                                                    And [STL].[VariableDesc] = [T].[VariableDesc]
+                                            As [STL]
+                                            On [STL].[DatabaseName] = [T].[DatabaseName]
+                                               And [STL].[ItemKey] = [T].[ItemKey]
+                                               And [STL].[SignatureDateTime] = [T].[SignatureDateTime]
+                                               And [STL].[VariableDesc] = [T].[VariableDesc]
                                 Where   [T].[TransactionRank] = @CurrentTransaction
                                         And [T].[VariableRank] = @CurrentVariable;	    
 
                                 Set @SQLUpdate = 'Update [History].'
-                                    + @TableName + '
-		Set [' + @VarName + '] = '
+                                    + QuoteName(@TableName) + '
+		Set ' + QuoteName(@VarName) + ' = '
                                     + Case When @VarNum Is Not Null
                                            Then 'Cast('''
                                                 + Cast(@VarNum As Varchar(500))
@@ -216,14 +219,28 @@ and [AlreadyEntered]=0';
                                     + Convert(Varchar(23) , @VarSignatureDateTime , 121)
                                     + '''';
 
+                                Print ( @SQLUpdate );
                                 Exec ( @SQLUpdate );
+								Print ( @SQLUpdate );
+
+                                Update  [Process].[SysproTransactionsLogged]
+                                Set     [AlreadyEntered] = 1
+                                From    [Process].[SysproTransactionsLogged] [STL]
+                                        Inner Join [#Transactions] [T]
+                                            On [STL].[DatabaseName] = [T].[DatabaseName]
+                                               And [STL].[ItemKey] = [T].[ItemKey]
+                                               And [STL].[SignatureDateTime] = [T].[SignatureDateTime]
+                                               And [STL].[VariableDesc] = [T].[VariableDesc]
+                                Where   [T].[TransactionRank] = @CurrentTransaction
+                                        And [T].[VariableRank] = @CurrentVariable;
+
 
                                 Set @CurrentVariable = @CurrentVariable + 1;
                             End;
                         Set @CurrentTransaction = @CurrentTransaction + 1;
                     End;
 				
-				Print @TableName+' unpivotted'
+                Print @TableName + ' unpivotted';
                 Truncate Table [#Transactions]; 
 
                 Update  [Process].[SysproTransactionsLogged]
