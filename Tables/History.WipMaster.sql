@@ -59,10 +59,10 @@ CREATE TABLE [History].[WipMaster]
 [TOTALMATERIALISSUEDVALUE] [float] NULL,
 [UPDATESALESORDERLINEORDERQUANTITY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [VERSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DEFAULTBINAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DEFAULTBINBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+GO
 ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-
-
-
 GO
