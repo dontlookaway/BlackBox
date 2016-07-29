@@ -39,3 +39,5 @@ CREATE TABLE [Report].[Results_WipSubJobStock]
 [StockDecimals] [int] NULL
 ) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_Results_WipSubJobStock_StartTime] ON [Report].[Results_WipSubJobStock] ([StartTime]) INCLUDE ([AllocCompleted], [AvailableLot], [AvailableLotBin], [AvailableLotCreationDate], [AvailableLotExpiryDate], [AvailableLotQtyOnHand], [AvailableLotWarehouse], [FixedQtyPerFlag], [IssMultLotsFlag], [Job], [OperationOffset], [QtyIssuedEnt], [ReservedLot], [ReservedLotBin], [ReservedLotBleedDate], [ReservedLotBleedNumber], [ReservedLotDonorNumber], [ReservedLotOldLotNumber], [ReservedLotQty], [ReservedLotQtyIssued], [ReservedLotQtyReserved], [ReservedLotSerFlag], [ReservedLotVendorBatchNumber], [ReservedLotWarehouse], [SequenceNum], [StockCode], [StockDescription], [SubJob], [SubJobDescription], [SubJobQty], [SubJobQtyTotal], [SubJobUom], [UnitQtyReqdEnt], [Uom], [WorkCentre]) ON [PRIMARY]
+GO

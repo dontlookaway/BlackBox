@@ -26,3 +26,5 @@ CREATE TABLE [Report].[GrnInvoiceDetails]
 [LoadDate] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_GrnInvoiceDetails_LoadDate_DatabaseName] ON [Report].[GrnInvoiceDetails] ([LoadDate], [DatabaseName]) INCLUDE ([Approver], [Description], [EntryNumber], [GlCode], [Grn], [Invoice], [Journal], [MatchedDate], [MatchedMonth], [MatchedQty], [MatchedValue], [MatchedYear], [Operator], [OrigReceiptDate], [PurchaseOrder], [PurchaseOrderLine], [QtyReceived], [Requisition], [RequisitionLine], [StockCode], [Supplier], [TransactionType]) ON [PRIMARY]
+GO

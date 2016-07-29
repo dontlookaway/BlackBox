@@ -10,5 +10,9 @@ CREATE TABLE [History].[RedTagLogs]
 [UsedByDb] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_RedTagLogs_StoredProcName] ON [History].[RedTagLogs] ([StoredProcName]) INCLUDE ([UsedByName]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_RedTagLogs_StoredProcSchema] ON [History].[RedTagLogs] ([StoredProcSchema]) INCLUDE ([StoredProcName], [TagID], [UsedByName]) ON [PRIMARY]
+GO
 ALTER TABLE [History].[RedTagLogs] ADD CONSTRAINT [FK__RedTagLog__UsedB__3A779186] FOREIGN KEY ([UsedByType]) REFERENCES [Lookups].[RedTagsUsedByType] ([UsedByType])
 GO
