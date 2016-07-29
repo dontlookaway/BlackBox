@@ -66,7 +66,9 @@ CREATE TABLE [History].[AssetMaster]
 [USERDEF3AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [USERDEF3BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [VARYINGANNIVERSARYAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[VARYINGANNIVERSARYBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[VARYINGANNIVERSARYBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[USERDEF4AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[USERDEF4BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[AssetMaster] ADD CONSTRAINT [AssetMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
