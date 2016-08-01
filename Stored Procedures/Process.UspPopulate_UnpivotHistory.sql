@@ -3,7 +3,7 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE Proc [Process].[UspPopulate_UnpivotHistory] ( @Tables Varchar(Max) )
-As 
+As
     Begin
 --List of Tables insert into
         Create Table [#TablesToPopulate]
@@ -109,7 +109,8 @@ and [AlreadyEntered]=0';
                         , [VariableRank]
                         , [TransactionRank]
 				        )
-                        Select  [STL].[TransactionDescription]
+                        Select Top 10000 --limit to 10,000 at a time
+                                [STL].[TransactionDescription]
                               , [STL].[DatabaseName]
                               , [STL].[SignatureDateTime]
                               , [STL].[Operator]
@@ -134,16 +135,16 @@ and [AlreadyEntered]=0';
                 Select  @MaxTransactions = Max([T].[TransactionRank])
                 From    [#Transactions] As [T];
 
-                Print Cast(@MaxTransactions As Varchar(50))
-                    + ' transactions to iterate';
+                /*Print Cast(@MaxTransactions As Varchar(50))
+                    + ' transactions to iterate';*/
 
                 Set @CurrentTransaction = 1;
 
                 While @CurrentTransaction <= @MaxTransactions
                     Begin
-                        Print Cast(@CurrentTransaction As Varchar(50))
+                        /*Print Cast(@CurrentTransaction As Varchar(50))
                             + ' out of '
-                            + Cast(@MaxTransactions As Varchar(50));
+                            + Cast(@MaxTransactions As Varchar(50));*/
                         Select  @MaxVariables = Max([T].[VariableRank])
                         From    [#Transactions] As [T]
                         Where   [T].[TransactionRank] = @CurrentTransaction;
@@ -172,27 +173,32 @@ and [AlreadyEntered]=0';
                                                And [STL].[VariableDesc] = [T].[VariableDesc]
                                 Where   [T].[TransactionRank] = @CurrentTransaction
                                         And [T].[VariableRank] = @CurrentVariable;	    
-
-                                Set @SQLUpdate = 'Begin Try
+                                If Coalesce(@VarString ,
+                                            Convert(Varchar(500) , @VarNum) ,
+                                            Convert(Varchar(500) , @VarDate)) Is Not Null
+                                    Begin
+                                        Set @SQLUpdate = 'Begin Try
 								Update [History].' + QuoteName(@TableName) + '
 		Set ' + QuoteName(@VarName) + ' = '
-                                    + Case When @VarNum Is Not Null
-                                           Then 'Cast('''
-                                                + Cast(@VarNum As Varchar(500))
-                                                + '''as float)'
-                                           When @VarString Is Not Null
-                                           Then '''' + @VarString + ''''
-                                           When @VarDate Is Not Null
-                                           Then 'Cast('''
-                                                + Cast(@VarDate As Varchar(500))
-                                                + '''as date)
+                                            + Case When @VarNum Is Not Null
+                                                   Then 'Cast('''
+                                                        + Cast(@VarNum As Varchar(500))
+                                                        + '''as float)'
+                                                   When @VarString Is Not Null
+                                                   Then '''' + @VarString
+                                                        + ''''
+                                                   When @VarDate Is Not Null
+                                                   Then 'Cast('''
+                                                        + Cast(@VarDate As Varchar(500))
+                                                        + '''as date)
 												'
-                                      End + 'Where [DatabaseName]='''
-                                    + @VarDbName + ''' And [ItemKey] ='''
-                                    + @VarItemKey
-                                    + ''' And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
-                                    + Convert(Varchar(23) , @VarSignatureDateTime , 121)
-                                    + '''
+                                              End + 'Where [DatabaseName]='''
+                                            + @VarDbName
+                                            + ''' And [ItemKey] ='''
+                                            + @VarItemKey
+                                            + ''' And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
+                                            + Convert(Varchar(23) , @VarSignatureDateTime , 121)
+                                            + '''
 								End Try
 Begin Catch
     Update  [Process].[SysproTransactionsLogged]
@@ -200,13 +206,13 @@ Begin Catch
     Where   [DatabaseName] = ''' + @VarDbName + '''
             And [ItemKey] = ''' + @VarItemKey + '''
             And CONVERT(VARCHAR(23), [SignatureDateTime], 121)='''
-                                    + Convert(Varchar(23) , @VarSignatureDateTime , 121)
-                                    + '''
+                                            + Convert(Varchar(23) , @VarSignatureDateTime , 121)
+                                            + '''
 			And [VariableDesc] = ''' + @VarName + ''';
 End Catch';
 
-                                Exec ( @SQLUpdate );
-
+                                        Exec ( @SQLUpdate );
+                                    End;
                                 Update  [Process].[SysproTransactionsLogged]
                                 Set     [AlreadyEntered] = 1
                                 From    [Process].[SysproTransactionsLogged] [STL]
