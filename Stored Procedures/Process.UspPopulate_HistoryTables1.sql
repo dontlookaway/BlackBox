@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -2678,6 +2677,7 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                                                     + [STL].[TableName] + '' As Varchar(150))
                                           From      [Process].[SysproTransactionsLogged]
                                                     As [STL]
+											Where [STL].[AlreadyEntered]=0
                                         For
                                           Xml Path('')
                                         ) , 1 , 1 , '');

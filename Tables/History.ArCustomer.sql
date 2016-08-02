@@ -568,7 +568,9 @@ CREATE TABLE [History].[ArCustomer]
 [LEEHYOBIOSCIENCECO.,LTD.AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [LEEHYOBIOSCIENCECO.,LTD.BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [ZEPTEONAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[ZEPTEONBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[ZEPTEONBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[TESTAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[TESTBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[ArCustomer] ADD CONSTRAINT [ArCustomer_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]

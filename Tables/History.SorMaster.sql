@@ -30,7 +30,18 @@ CREATE TABLE [History].[SorMaster]
 [ORDERVALUE] [float] NULL,
 [SALESORDER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SALESORDERNUMBER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[SOURCEAPPLICATION] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[SOURCEAPPLICATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DELIVERYNOTENUMBER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DOCUMENTFORMAT] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DOCUMENTTYPE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[GTRNUMBERFORSCT] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[INVOICEDATE] [date] NULL,
+[INVOICENUMBER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[ORDERDATE] [date] NULL,
+[PRINTOREMAILFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[REPRINTFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[REQUESTEDSHIPDATE] [date] NULL,
+[TYPEOFORDER] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[SorMaster] ADD CONSTRAINT [SorMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
