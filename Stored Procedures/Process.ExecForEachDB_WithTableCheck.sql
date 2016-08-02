@@ -30,7 +30,7 @@ Amended 21st June to check for tables to run against before executing
           , @ValidQuery Int;
 
         Select  @ValidationQuery = @ValidationQuery
-                + Stuff((Select 'SELECT @Temp=max(1)  FROM ' + [Value] + '
+                + Stuff((Select 'SELECT @Temp=max(1)  FROM ' + QuoteName([Value]) + '
 '
                          From   [dbo].[udf_SplitString](@SchemaTablesToCheck ,
                                                         ',')
