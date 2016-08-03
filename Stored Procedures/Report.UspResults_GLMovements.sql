@@ -262,7 +262,10 @@ As
               , [M].[Journal]
               , [M].[ReportIndex1]
               , [M].[ReportIndex2]
-              , [M].[GLAccountTypeDesc]
+              , AccountType = [M].[GLAccountTypeDesc]
+			  , [Parse1] = ParseName([M].[GlCode],1)
+			  , [Parse2] = ParseName([M].[GlCode],2)
+			  , [Parse3] = ParseName([M].[GlCode],3)
         From    [#Movements] [M]
         Order By [M].[ShortName]
               , [M].[GlCode]
