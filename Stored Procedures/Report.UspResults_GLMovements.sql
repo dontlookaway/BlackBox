@@ -54,6 +54,9 @@ As
             , [GlYear] Int
             , [Source] Varchar(100)
             , [Journal] Int
+            , [ReportIndex1] Varchar(35)
+            , [ReportIndex2] Varchar(35)
+            , [GLAccountTypeDesc] Varchar(250)
             );
         Create Table [#MovementsRaw]
             (
@@ -67,6 +70,9 @@ As
             , [Movement] Numeric(20 , 2)
             , [GlPeriod] Int
             , [GlYear] Int
+            , [ReportIndex1] Varchar(35)
+            , [ReportIndex2] Varchar(35)
+            , [GLAccountTypeDesc] Varchar(250)
             );
 
         Insert  [#Movements]
@@ -81,7 +87,10 @@ As
                 , [GlPeriod]
                 , [GlYear]
                 , [Source]
-                , [Journal] 
+                , [Journal]
+                , [ReportIndex1]
+                , [ReportIndex2]
+                , [GLAccountTypeDesc]
                 )
                 Select  [t].[Company]
                       , [t].[ShortName]
@@ -95,6 +104,9 @@ As
                       , [t].[GlYear]
                       , [t].[Source]
                       , [t].[Journal]
+                      , [t].[ReportIndex1]
+                      , [t].[ReportIndex2]
+                      , [t].[GLAccountTypeDesc]
                 From    ( Select    [GM].[Company]
                                   , [CN].[ShortName]
                                   , [CN].[CompanyName]
@@ -107,6 +119,9 @@ As
                                   , [GH].[GlYear]
                                   , [Source] = 'History'
                                   , [Journal] = 0
+                                  , [GM].[ReportIndex1]
+                                  , [GM].[ReportIndex2]
+                                  , [GAT].[GLAccountTypeDesc]
                           From      [SysproCompany40]..[GenMaster] As [GM]
                                     Left Join [BlackBox].[Lookups].[CompanyNames]
                                         As [CN]
@@ -114,6 +129,8 @@ As
                                     Left Join [SysproCompany40].[dbo].[GenHistory] [GH]
                                         On [GH].[Company] = [GM].[Company]
                                            And [GH].[GlCode] = [GM].[GlCode]
+                                    Left Join [BlackBox].[Lookups].[GLAccountType] [GAT]
+                                        On [GAT].[GLAccountType] = [GM].[AccountType]
                           Where     [GH].[GlYear] >= 2013
                           Union All
                           Select    [GM].[Company]
@@ -128,6 +145,9 @@ As
                                   , [GT].[GlYear]
                                   , [Source] = 'Transactions'
                                   , [GT].[Journal]
+                                  , [GM].[ReportIndex1]
+                                  , [GM].[ReportIndex2]
+                                  , [GAT].[GLAccountTypeDesc]
                           From      [SysproCompany40]..[GenMaster] As [GM]
                                     Left Join [SysproCompany40].[dbo].[GenTransaction] [GT]
                                         On [GT].[Company] = [GM].[Company]
@@ -135,6 +155,8 @@ As
                                     Left Join [BlackBox].[Lookups].[CompanyNames]
                                         As [CN]
                                         On [CN].[Company] = [GM].[Company]
+                                    Left Join [BlackBox].[Lookups].[GLAccountType] [GAT]
+                                        On [GAT].[GLAccountType] = [GM].[AccountType]
                           Where     [GT].[EntryValue] <> 0
                         ) [t]
                 Order By [t].[Company]
@@ -157,6 +179,9 @@ As
                 , [Movement]
                 , [GlPeriod]
                 , [GlYear]
+                , [ReportIndex1]
+                , [ReportIndex2]
+                , [GLAccountTypeDesc]
                 )
                 Select  [GM].[Company]
                       , [CN].[ShortName]
@@ -168,10 +193,15 @@ As
                       , [Movement] = Convert(Numeric(20 , 4) , 0)
                       , [YP].[GlPeriod]
                       , [YP].[GlYear]
+                      , [GM].[ReportIndex1]
+                      , [GM].[ReportIndex2]
+                      , [GAT].[GLAccountTypeDesc]
                 From    [SysproCompany40]..[GenMaster] [GM]
                         Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
                             On [CN].[Company] = [GM].[Company]
-                        Cross Join [#YearPeriod] [YP];
+                        Cross Join [#YearPeriod] [YP]
+                        Left Join [Lookups].[GLAccountType] [GAT]
+                            On [GAT].[GLAccountType] = [GM].[AccountType];
 
         Insert  [#Movements]
                 ( [Company]
@@ -185,7 +215,10 @@ As
                 , [GlPeriod]
                 , [GlYear]
                 , [Source]
-                , [Journal] 
+                , [Journal]
+                , [ReportIndex1]
+                , [ReportIndex2]
+                , [GLAccountTypeDesc]
                 )
                 Select  [MR].[Company]
                       , [MR].[ShortName]
@@ -199,6 +232,9 @@ As
                       , [MR].[GlYear]
                       , [Source] = 'Generated'
                       , [Journal] = 0
+                      , [M].[ReportIndex1]
+                      , [M].[ReportIndex2]
+                      , [M].[GLAccountTypeDesc]
                 From    [#MovementsRaw] [MR]
                         Left Join [#Movements] [M]
                             On [M].[Company] = [MR].[Company]
@@ -224,6 +260,9 @@ As
               , [M].[GlYear]
               , [M].[Source]
               , [M].[Journal]
+              , [M].[ReportIndex1]
+              , [M].[ReportIndex2]
+              , [M].[GLAccountTypeDesc]
         From    [#Movements] [M]
         Order By [M].[ShortName]
               , [M].[GlCode]

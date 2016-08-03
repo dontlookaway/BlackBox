@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -36,6 +35,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
             , [Debit] Numeric(20 , 2)
             , [Credit] Numeric(20 , 2)
             , [Period] TinyInt
+            , [AccountType] Varchar(250)
             );
 
         Insert  [#Results]
@@ -53,6 +53,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
                 , [Debit]
                 , [Credit]
                 , [Period]
+                , [AccountType]
                 )
                 Select  [GH].[Company]
                       , [CN].[ShortName]
@@ -85,6 +86,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
                                                               'ClosingBalPer' ,
                                                               ''))
                                    End
+                      , [AccountType] = [GAT].[GLAccountTypeDesc]
                 From    [SysproCompany40].[dbo].[GenHistory] Unpivot ( [ClosingBalance] For [Period] In ( [BeginYearBalance] ,
                                                               [ClosingBalPer1] ,
                                                               [ClosingBalPer2] ,
@@ -106,6 +108,8 @@ Template designed by Chris Johnson, Prometic Group April 2016
                                And [GM].[GlCode] = [GH].[GlCode]
                         Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
                             On [CN].[Company] = [GH].[Company]
+                        Left Join [Lookups].[GLAccountType] [GAT]
+                            On [GM].[AccountType] = [GAT].[GLAccountType]
                 Where   [GH].[GlCode] Not In ( 'RETAINED' , 'FORCED' );
 
         Select  [R].[Company]
@@ -122,6 +126,10 @@ Template designed by Chris Johnson, Prometic Group April 2016
               , [R].[Debit]
               , [R].[Credit]
               , [R].[Period]
+              , [R].[AccountType]
+              , [Parse1] = ParseName([R].[GlCode] , 1)
+              , [Parse2] = ParseName([R].[GlCode] , 2)
+              , [Parse3] = ParseName([R].[GlCode] , 3)
         From    [#Results] [R];
 
         Drop Table [#Results];
