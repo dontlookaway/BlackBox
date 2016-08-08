@@ -14,6 +14,8 @@ As
 Template designed by Chris Johnson, Prometic Group May 2016
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 */
+Set NoCount On	
+
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -572,6 +574,8 @@ Stored procedure set out to query multiple databases with the same information a
                                And [GAC].[AnalysisCode] = [GAT].[AnalysisCode1]
                                And [GAC].[AnalysisType] = 1
                                And [GAC].[DatabaseName] = [GAT].[DatabaseName];
+
+Set NoCount Off
 
 --return results
         Select  [R].[DatabaseName]
