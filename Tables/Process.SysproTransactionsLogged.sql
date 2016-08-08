@@ -2,7 +2,6 @@ CREATE TABLE [Process].[SysproTransactionsLogged]
 (
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
 [DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] AS (dateadd(millisecond,CONVERT([int],substring(CONVERT([char](8),[SignatureTime],(0)),(7),(2)),(0)),dateadd(second,CONVERT([int],substring(CONVERT([char](8),[SignatureTime],(0)),(5),(2)),(0)),dateadd(minute,CONVERT([int],substring(CONVERT([char](8),[SignatureTime],(0)),(3),(2)),(0)),dateadd(hour,CONVERT([int],substring(CONVERT([char](8),[SignatureTime],(0)),(1),(2)),(0)),CONVERT([datetime],[SignatureDate],(0))))))),
 [SignatureDate] [date] NOT NULL,
 [SignatureTime] [int] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
@@ -17,7 +16,8 @@ CREATE TABLE [Process].[SysproTransactionsLogged]
 [TableName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
 [AlreadyEntered] [bit] NULL CONSTRAINT [DF__SysproTra__Alrea__3587F3E0] DEFAULT ((0)),
-[IsError] [bit] NULL CONSTRAINT [DF__SysproTra__IsErr__18427513] DEFAULT ((0))
+[IsError] [bit] NULL CONSTRAINT [DF__SysproTra__IsErr__18427513] DEFAULT ((0)),
+[SignatureDateTime] AS (dateadd(millisecond,CONVERT([int],substring(right('0'+CONVERT([varchar](10),[SignatureTime],(0)),(8)),(7),(2)),(0)),dateadd(second,CONVERT([int],substring(right('0'+CONVERT([varchar](10),[SignatureTime],(0)),(8)),(5),(2)),(0)),dateadd(minute,CONVERT([int],substring(right('0'+CONVERT([varchar](10),[SignatureTime],(0)),(8)),(3),(2)),(0)),dateadd(hour,CONVERT([int],substring(right('0'+CONVERT([varchar](10),[SignatureTime],(0)),(8)),(1),(2)),(0)),CONVERT([datetime],[SignatureDate],(0)))))))
 ) ON [PRIMARY]
 GO
 ALTER TABLE [Process].[SysproTransactionsLogged] ADD CONSTRAINT [TDR_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDate], [SignatureTime], [ItemKey], [Operator], [ProgramName], [VariableDesc], [TableName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
