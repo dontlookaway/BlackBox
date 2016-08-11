@@ -163,6 +163,7 @@ As
             , [QtyOnHand] Numeric(20 , 8)
             , [RunTimeTotal] Numeric(20 , 2)
             , [TimePerUnit] Float
+            , [JobQuantity] Numeric(20 , 8)
             );
 
 --Placeholder to create indexes as required
@@ -223,6 +224,7 @@ As
                                      Else Sum([LT].[TrnQuantity])
                                           / Convert(Float , [HPJ].[RunTime])
                                 End
+              , [JobQuantity] = Sum([LT].[TrnQuantity])
         Into    [#Test]
         From    [#LotTransactions] [LT]
                 Left Join [#HoursPerJob] [HPJ]
@@ -242,6 +244,7 @@ As
                 , [QtyOnHand]
                 , [RunTimeTotal]
                 , [TimePerUnit]
+                , [JobQuantity]
                 )
                 Select  [WL].[DatabaseCode]
                       , [WL].[StockCode]
@@ -250,6 +253,7 @@ As
                       , [QtyOnHand] = Sum([WL].[TrnQuantityMod])
                       , [RunTimeTotal] = Sum([HPJ].[RunTime])
                       , [T].[TimePerUnit]
+                      , [T].[JobQuantity]
                 From    [#WarehouseLevels] [WL]
                         Left Join [#HoursPerJob] [HPJ]
                             On [HPJ].[Job] = [WL].[JobPurchOrder]
@@ -281,6 +285,7 @@ As
               , [R].[QtyOnHand]
               , [R].[RunTimeTotal]
               , [R].[TimePerUnit]
+              , [R].[JobQuantity]
               , [CN].[CompanyName]
               , [CN].[ShortName]
         From    [#Results] [R]
