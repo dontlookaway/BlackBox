@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_StockWithRunTimes]
+CREATE Proc [Report].[UspResults_StockWithRunTimes]
     (
       @Company Varchar(Max)
     , @EndPeriod Date
@@ -162,6 +162,7 @@ As
             , [Warehouse] Varchar(10)
             , [QtyOnHand] Numeric(20 , 8)
             , [RunTimeTotal] Numeric(20 , 2)
+            , [TimePerUnit] Float
             );
 
 --Placeholder to create indexes as required
@@ -213,6 +214,23 @@ As
                       , [LT2].[JobPurchOrder]
                       , [LT2].[TrnDate];
 
+        Select  [LT].[DatabaseCode]
+              , [LT].[JobPurchOrder]
+              , [TimePerUnit] = Case When [HPJ].[RunTime] Is Null
+                                     Then Convert(Float , 0)
+                                     When [HPJ].[RunTime] = 0
+                                     Then Convert(Float , 0)
+                                     Else Sum([LT].[TrnQuantity])
+                                          / Convert(Float , [HPJ].[RunTime])
+                                End
+        Into    [#Test]
+        From    [#LotTransactions] [LT]
+                Left Join [#HoursPerJob] [HPJ]
+                    On [HPJ].[DatabaseCode] = [LT].[DatabaseCode]
+                       And [LT].[JobPurchOrder] = [HPJ].[Job]
+        Where   [LT].[TrnType] = 'R'
+        Group By [LT].[DatabaseCode]
+              , [LT].[JobPurchOrder];
 
 --script to combine base data and insert into results table
         Insert  [#Results]
@@ -222,6 +240,7 @@ As
                 , [Warehouse]
                 , [QtyOnHand]
                 , [RunTimeTotal]
+                , [TimePerUnit]
                 )
                 Select  [WL].[DatabaseCode]
                       , [WL].[StockCode]
@@ -229,12 +248,16 @@ As
                       , [WL].[Warehouse]
                       , [QtyOnHand] = Sum([WL].[TrnQuantityMod])
                       , [RunTimeTotal] = Sum([HPJ].[RunTime])
+                      , [T].[TimePerUnit]
                 From    [#WarehouseLevels] [WL]
                         Left Join [#HoursPerJob] [HPJ]
                             On [HPJ].[Job] = [WL].[JobPurchOrder]
                         Left Join [#InvMaster] [IM]
                             On [IM].[StockCode] = [WL].[StockCode]
                                And [IM].[DatabaseCode] = [WL].[DatabaseCode]
+                        Left Join [#Test] [T]
+                            On [T].[DatabaseCode] = [WL].[DatabaseCode]
+                               And [T].[JobPurchOrder] = [WL].[JobPurchOrder]
                 Group By [WL].[StockCode]
                       , [IM].[Description]
                       , [WL].[Warehouse]
@@ -254,6 +277,7 @@ As
               , [R].[Warehouse]
               , [R].[QtyOnHand]
               , [R].[RunTimeTotal]
+              , [R].[TimePerUnit]
               , [CN].[CompanyName]
               , [CN].[ShortName]
         From    [#Results] [R]
