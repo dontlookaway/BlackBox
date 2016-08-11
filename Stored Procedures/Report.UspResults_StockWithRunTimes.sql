@@ -230,7 +230,8 @@ As
                        And [LT].[JobPurchOrder] = [HPJ].[Job]
         Where   [LT].[TrnType] = 'R'
         Group By [LT].[DatabaseCode]
-              , [LT].[JobPurchOrder];
+              , [LT].[JobPurchOrder]
+              , [HPJ].[RunTime];
 
 --script to combine base data and insert into results table
         Insert  [#Results]
@@ -258,9 +259,11 @@ As
                         Left Join [#Test] [T]
                             On [T].[DatabaseCode] = [WL].[DatabaseCode]
                                And [T].[JobPurchOrder] = [WL].[JobPurchOrder]
-                Group By [WL].[StockCode]
+                Group By [WL].[DatabaseCode]
+                      , [WL].[StockCode]
                       , [IM].[Description]
                       , [WL].[Warehouse]
+                      , [T].[TimePerUnit]
                 Having  Sum([WL].[TrnQuantityMod]) <> 0;
 
         Drop Table [#HoursPerJob];
