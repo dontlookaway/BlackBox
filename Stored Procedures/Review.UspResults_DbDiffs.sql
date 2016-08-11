@@ -2,10 +2,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Review].[UspResults_DbDiffs]
+CREATE Proc [Review].[UspResults_DbDiffs]
     (
-      @IncludeNotes Bit
-    , @RedTagType Char(1)
+      @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
 As
