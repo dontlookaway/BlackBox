@@ -1,8 +1,9 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE Proc [Report].[UspResults_ApAgingInvoices]
     (
       @RunDate Date
@@ -52,7 +53,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
             , [MthInvBal2] Numeric(20 , 2)
             , [MthInvBal3] Numeric(20 , 2)
             , [ManualChqDate] Date
-            , [ManualChqNum] Int
+            , [ManualChqNum] BigInt
             , [DiscActiveFlag] Char(1)
             , [InvoiceStatus] Char(1)
             , [Currency] Varchar(10)
@@ -269,7 +270,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
             , [MthInvBal2] Numeric(20 , 2)
             , [MthInvBal3] Numeric(20 , 2)
             , [ManualChqDate] Date
-            , [ManualChqNum] Int
+            , [ManualChqNum] BigInt
             , [DiscActiveFlag] Char(1)
             , [InvoiceStatus] Char(1)
             , [Currency] Varchar(10)
