@@ -164,6 +164,7 @@ As
             , [RunTimeTotal] Numeric(20 , 2)
             , [TimePerUnit] Float
             , [JobQuantity] Numeric(20 , 8)
+            , [JobPurchOrder] Varchar(30)
             );
 
 --Placeholder to create indexes as required
@@ -221,8 +222,8 @@ As
                                      Then Convert(Float , 0)
                                      When [HPJ].[RunTime] = 0
                                      Then Convert(Float , 0)
-                                     Else Convert(Float , [HPJ].[RunTime]) / Convert(Float,Sum([LT].[TrnQuantity]))
-
+                                     Else Convert(Float , [HPJ].[RunTime])
+                                          / Convert(Float , Sum([LT].[TrnQuantity]))
                                 End
               , [JobQuantity] = Sum([LT].[TrnQuantity])
         Into    [#Test]
@@ -245,6 +246,7 @@ As
                 , [RunTimeTotal]
                 , [TimePerUnit]
                 , [JobQuantity]
+                , [JobPurchOrder]
                 )
                 Select  [WL].[DatabaseCode]
                       , [WL].[StockCode]
@@ -254,6 +256,7 @@ As
                       , [RunTimeTotal] = Sum([HPJ].[RunTime])
                       , [T].[TimePerUnit]
                       , [JobQuantity] = Sum([T].[JobQuantity])
+                      , [WL].[JobPurchOrder]
                 From    [#WarehouseLevels] [WL]
                         Left Join [#HoursPerJob] [HPJ]
                             On [HPJ].[Job] = [WL].[JobPurchOrder]
@@ -289,6 +292,7 @@ As
               , [R].[JobQuantity]
               , [CN].[CompanyName]
               , [CN].[ShortName]
+              , [MasterJob] = [R].[JobPurchOrder]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [R].[DatabaseCode] = [CN].[Company];
