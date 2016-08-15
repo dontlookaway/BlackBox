@@ -83,10 +83,19 @@ CREATE TABLE [History].[PorMasterDetail]
 [STOCKINGUNITOFMEASURE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SUPPLIER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SYSTEMPRICE] [float] NULL,
-[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[BUYER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[JOBALLOCATIONSCOMPLETE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[LOTONFILE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[ALLOCATIONLINE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[JOBCONFIRMED] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[JOBONHOLD] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[OPERATION] [float] NULL,
+[ORIGINATOR] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[REQUISITION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[REQUISITIONLINE] [float] NULL,
+[REQUISITIONUSER] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
+GO
 ALTER TABLE [History].[PorMasterDetail] ADD CONSTRAINT [PorMasterDetail_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-
-
-
 GO
