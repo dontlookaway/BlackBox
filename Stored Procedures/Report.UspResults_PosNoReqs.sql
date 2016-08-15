@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_PosNoReqs]
+CREATE Proc [Report].[UspResults_PosNoReqs]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -176,7 +176,9 @@ As
               , [OrderEntryDate]
               , [OrderDueDate]
               , [DatePoCompleted]
-              , [Buyer]
+              , [Buyer] = Case When [Buyer] = '' Then Null
+                               Else [Buyer]
+                          End
         From    [#Results]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [DatabaseName] = [CN].[Company];
