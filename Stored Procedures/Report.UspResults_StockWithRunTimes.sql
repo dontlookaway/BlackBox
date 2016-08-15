@@ -271,6 +271,7 @@ As
                       , [IM].[Description]
                       , [WL].[Warehouse]
                       , [T].[TimePerUnit]
+                      , [WL].[JobPurchOrder]
                       --, [T].[JobQuantity]
                 Having  Sum([WL].[TrnQuantityMod]) <> 0;
 
@@ -292,7 +293,10 @@ As
               , [R].[JobQuantity]
               , [CN].[CompanyName]
               , [CN].[ShortName]
-              , [MasterJob] = [R].[JobPurchOrder]
+              , [MasterJob] = Case When IsNumeric([R].[JobPurchOrder]) = 1
+                                   Then Convert(Varchar(30) , Convert(BigInt , [R].[JobPurchOrder]))
+                                   Else [R].[JobPurchOrder]
+                              End
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [R].[DatabaseCode] = [CN].[Company];
