@@ -221,8 +221,8 @@ As
                                      Then Convert(Float , 0)
                                      When [HPJ].[RunTime] = 0
                                      Then Convert(Float , 0)
-                                     Else Sum([LT].[TrnQuantity])
-                                          / Convert(Float , [HPJ].[RunTime])
+                                     Else Convert(Float , [HPJ].[RunTime]) / Convert(Float,Sum([LT].[TrnQuantity]))
+
                                 End
               , [JobQuantity] = Sum([LT].[TrnQuantity])
         Into    [#Test]
@@ -253,7 +253,7 @@ As
                       , [QtyOnHand] = Sum([WL].[TrnQuantityMod])
                       , [RunTimeTotal] = Sum([HPJ].[RunTime])
                       , [T].[TimePerUnit]
-                      , [T].[JobQuantity]
+                      , [JobQuantity] = Sum([T].[JobQuantity])
                 From    [#WarehouseLevels] [WL]
                         Left Join [#HoursPerJob] [HPJ]
                             On [HPJ].[Job] = [WL].[JobPurchOrder]
@@ -268,6 +268,7 @@ As
                       , [IM].[Description]
                       , [WL].[Warehouse]
                       , [T].[TimePerUnit]
+                      --, [T].[JobQuantity]
                 Having  Sum([WL].[TrnQuantityMod]) <> 0;
 
         Drop Table [#HoursPerJob];
