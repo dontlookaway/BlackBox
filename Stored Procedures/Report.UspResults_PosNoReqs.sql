@@ -167,21 +167,24 @@ As
 
         Set NoCount Off;
 --return results
-        Select  [DatabaseName]
+        Select  [R].[DatabaseName]
               , [CN].[CompanyName]
               , [CN].[ShortName]
-              , [PurchaseOrder]
-              , [OrderStatus]
-              , [Supplier]
-              , [OrderEntryDate]
-              , [OrderDueDate]
-              , [DatePoCompleted]
-              , [Buyer] = Case When [Buyer] = '' Then Null
-                               Else [Buyer]
+              , [PurchaseOrder] = Case When IsNumeric([R].[PurchaseOrder]) = 1
+                                       Then Convert(Varchar(20) , Convert(BigInt , [R].[PurchaseOrder]))
+                                       Else [R].[PurchaseOrder]
+                                  End
+              , [R].[OrderStatus]
+              , [R].[Supplier]
+              , [R].[OrderEntryDate]
+              , [R].[OrderDueDate]
+              , [R].[DatePoCompleted]
+              , [Buyer] = Case When [R].[Buyer] = '' Then Null
+                               Else [R].[Buyer]
                           End
-        From    [#Results]
+        From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
-                    On [DatabaseName] = [CN].[Company];
+                    On [R].[DatabaseName] = [CN].[Company];
 
     End;
 
