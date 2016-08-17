@@ -49,6 +49,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [SalesOrder] Varchar(20)
             , [Customer] Varchar(15)
             , [DocumentType] Varchar(10)
+            , [LastInvoice] Varchar(20)
             );
 
         Create Table [#SorDetail]
@@ -108,6 +109,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [SalesOrder]
 						, [Customer]
 						, [DocumentType]
+						, [LastInvoice]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [SM].[CustomerPoNumber]
@@ -115,7 +117,9 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [SM].[Currency]
 					 , [SM].[SalesOrder]
 					 , [SM].[Customer]
-					 , [SM].[DocumentType] FROM [SorMaster] [SM]
+					 , [SM].[DocumentType]
+					 , [LastInvoice]
+				FROM [SorMaster] [SM]
 			End
 	End';
         Declare @SQLSorDetail Varchar(Max) = 'USE [?];
@@ -200,6 +204,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [SalesOrder] Varchar(20)
             , [SOLine] Int
             , [DocumentType] Varchar(250)
+            , [LastInvoice] Varchar(20)
             );
 
 --Placeholder to create indexes as required
@@ -222,6 +227,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SalesOrder]
                 , [SOLine]
                 , [DocumentType]
+                , [LastInvoice]
                 )
                 Select  [AC].[DatabaseName]
                       , [AC].[Customer]
@@ -242,6 +248,10 @@ Stored procedure set out to query multiple databases with the same information a
                                        End
                       , [SOLine] = [SD].[SalesOrderLine]
                       , [DocumentType] = [SODT].[DocumentTypeDesc]
+                      , [LastInvoice] = Case When IsNumeric([SM].[LastInvoice]) = 1
+                                             Then Convert(Varchar(20) , Convert(BigInt , [SM].[LastInvoice]))
+                                             Else [SM].[LastInvoice]
+                                        End
                 From    [#ArCustomer] [AC]
                         Inner Join [#SorMaster] [SM]
                             On [SM].[Customer] = [AC].[Customer]
@@ -271,6 +281,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[SalesOrder]
               , [R].[SOLine]
               , [R].[DocumentType]
+              , [R].[LastInvoice]
               , [CN].[CompanyName]
               , [CN].[ShortName]
               , [CompanyCurrency] = [CN].[Currency]
