@@ -57,7 +57,7 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>26</Count>
+    <Count>27</Count>
     <DataFile>Lookups.GenJournalDetailSource_Data.sql</DataFile>
     <DataFile>Lookups.GenJournalType_Data.sql</DataFile>
     <DataFile>Lookups.LotTransactionTrnType_Data.sql</DataFile>
@@ -84,5 +84,6 @@
     <DataFile>History.WipJobAllLab_Data.sql</DataFile>
     <DataFile>History.WipJobAllMat_Data.sql</DataFile>
     <DataFile>History.WipMaster_Data.sql</DataFile>
+    <DataFile>Lookups.ProformaDocTypes_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
