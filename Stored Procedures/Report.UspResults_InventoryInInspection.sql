@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -32,7 +31,7 @@ Stored procedure set out to query multiple databases with the same information a
             @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables Varchar(Max) = 'AssetDepreciation,TblApTerms'; 
+        Declare @ListOfTables Varchar(Max) = 'InvInspect,InvMaster,PorMasterDetail'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvInspect]
@@ -66,31 +65,13 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --create script to pull data from each db into the tables
-        Declare @SQLInvInspect Varchar(Max) = '
-	USE [?];
+        Declare @SQLInvInspect Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#InvInspect]
 						( [DatabaseName]
@@ -117,34 +98,17 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [II].[QtyRejected]
 					 , [II].[InspectCompleted]
 					 , [II].[DeliveryDate]
-					 , [II].[PurchaseOrderLin] FROM [InvInspect] As [II]
+					 , [II].[PurchaseOrderLin] 
+				FROM [InvInspect] As [II]
 			End
 	End';
-        Declare @SQLPorMasterDetail Varchar(Max) = '
-	USE [?];
+        Declare @SQLPorMasterDetail Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#PorMasterDetail]
 						( [DatabaseName]
@@ -155,34 +119,18 @@ Stored procedure set out to query multiple databases with the same information a
 				SELECT [DatabaseName]=@DBCode
 					 , [PMD].[MStockingUom]
 					 , [PMD].[PurchaseOrder]
-					 , [PMD].[Line] FROM [PorMasterDetail] As [PMD]
+					 , [PMD].[Line] 
+				FROM [PorMasterDetail] As [PMD]
 			End
 	End';
         Declare @SQLInvMaster Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#InvMaster]
 						( [DatabaseName]
@@ -197,12 +145,17 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec [Process].[ExecForEachDB] @cmd = @SQLInvInspect;
-        Exec [Process].[ExecForEachDB] @cmd = @SQLPorMasterDetail;
-		Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLInvInspect ,
+            @SchemaTablesToCheck = @ListOfTables; 
+
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLPorMasterDetail , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
+
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLInvMaster , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
+
 
 --define the results you want to return
         Create Table [#Results]
@@ -254,10 +207,12 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[DeliveryDate]
                       , [IM].[Description]
                 From    [#InvInspect] As [II]
-                        Left  Join [#PorMasterDetail] As [PMD] On [PMD].[PurchaseOrder] = [II].[PurchaseOrder]
-                                                              And [PMD].[Line] = [II].[PurchaseOrderLin]
-                        Left Join [#InvMaster] As [IM] On [IM].[StockCode] = [II].[StockCode]
-                                                          And [IM].[DatabaseName] = [II].[DatabaseName]
+                        Left  Join [#PorMasterDetail] As [PMD]
+                            On [PMD].[PurchaseOrder] = [II].[PurchaseOrder]
+                               And [PMD].[Line] = [II].[PurchaseOrderLin]
+                        Left Join [#InvMaster] As [IM]
+                            On [IM].[StockCode] = [II].[StockCode]
+                               And [IM].[DatabaseName] = [II].[DatabaseName]
                 Where   Coalesce([II].[InspectCompleted] , 'N') <> 'Y';
 
 --return results
@@ -285,7 +240,8 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[DeliveryDate]
               , [R].[StockDescription]
         From    [#Results] [R]
-                Left Join [Lookups].[CompanyNames] As [CN] On [R].[DatabaseName] = [CN].[Company];
+                Left Join [Lookups].[CompanyNames] As [CN]
+                    On [R].[DatabaseName] = [CN].[Company];
 
     End;
 
