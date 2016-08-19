@@ -48,6 +48,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [InspectCompleted] Char(1)
             , [DeliveryDate] Date
             , [PurchaseOrderLin] Int
+            , [GrnReceiptDate] Date
             );
         Create Table [#PorMasterDetail]
             (
@@ -86,6 +87,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [InspectCompleted]
 						, [DeliveryDate]
 						, [PurchaseOrderLin]
+						, [GrnReceiptDate]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [II].[Grn]
@@ -99,6 +101,7 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [II].[InspectCompleted]
 					 , [II].[DeliveryDate]
 					 , [II].[PurchaseOrderLin] 
+					 , [II].[GrnReceiptDate]
 				FROM [InvInspect] As [II]
 			End
 	End';
@@ -173,6 +176,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [InspectCompleted] Char(1)
             , [DeliveryDate] Date
             , [StockDescription] Varchar(50)
+            , [ReceiptDate] Date
             );
 
 --Placeholder to create indexes as required
@@ -191,7 +195,8 @@ Stored procedure set out to query multiple databases with the same information a
                 , [MStockingUom]
                 , [InspectCompleted]
                 , [DeliveryDate]
-                , [StockDescription] 
+                , [StockDescription]
+                , [ReceiptDate] 
                 )
                 Select  [II].[DatabaseName]
                       , [II].[Grn]
@@ -206,6 +211,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[InspectCompleted]
                       , [II].[DeliveryDate]
                       , [IM].[Description]
+                      , [ReceiptDate] = [II].[GrnReceiptDate]
                 From    [#InvInspect] As [II]
                         Left  Join [#PorMasterDetail] As [PMD]
                             On [PMD].[PurchaseOrder] = [II].[PurchaseOrder]
@@ -239,6 +245,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[InspectCompleted]
               , [R].[DeliveryDate]
               , [R].[StockDescription]
+              , [R].[ReceiptDate]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] As [CN]
                     On [R].[DatabaseName] = [CN].[Company];
