@@ -205,9 +205,33 @@ Stored procedure set out to query multiple databases with the same information a
             , [SOLine] Int
             , [DocumentType] Varchar(250)
             , [LastInvoice] Varchar(20)
+            , [ProFormaDate] DateTime2
             );
 
 --Placeholder to create indexes as required
+        Create Table [#ProformaDates]
+            (
+              [DatabaseName] Varchar(150)
+            , [ProFormaDate] DateTime2
+            , [SalesOrder] Varchar(20)
+            );   
+	
+        Insert  [#ProformaDates]
+                ( [DatabaseName]
+                , [ProFormaDate]
+                , [SalesOrder]
+                )
+                Select  [DatabaseName] = Replace(Upper([SM2].[DatabaseName]) ,
+                                                 'SYSPROCOMPANY' , '')
+                      , [ProFormaDate] = Max([SM2].[SignatureDateTime])
+                      , [SM2].[SALESORDER]
+                From    [History].[SorMaster] [SM2]
+                        Inner Join [Lookups].[ProformaDocTypes] [PDT]
+                            On [PDT].[DOCUMENTFORMAT] = [SM2].[DOCUMENTFORMAT]
+                               And [PDT].[DOCUMENTTYPE] = [SM2].[DOCUMENTTYPE]
+                Group By Replace(Upper([SM2].[DatabaseName]) , 'SYSPROCOMPANY' ,
+                                 '')
+                      , [SM2].[SALESORDER];
 
 --script to combine base data and insert into results table
         Insert  [#Results]
@@ -228,6 +252,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SOLine]
                 , [DocumentType]
                 , [LastInvoice]
+                , [ProFormaDate]
                 )
                 Select  [AC].[DatabaseName]
                       , [AC].[Customer]
@@ -252,6 +277,7 @@ Stored procedure set out to query multiple databases with the same information a
                                              Then Convert(Varchar(20) , Convert(BigInt , [SM].[LastInvoice]))
                                              Else [SM].[LastInvoice]
                                         End
+                      , [PD].[ProFormaDate]
                 From    [#ArCustomer] [AC]
                         Inner Join [#SorMaster] [SM]
                             On [SM].[Customer] = [AC].[Customer]
@@ -261,6 +287,9 @@ Stored procedure set out to query multiple databases with the same information a
                             On [CSM].[SalesOrder] = [SM].[SalesOrder]
                         Left Join [BlackBox].[Lookups].[SalesOrderDocumentType] [SODT]
                             On [SODT].[DocumentType] = [SM].[DocumentType]
+                        Left Join [#ProformaDates] [PD]
+                            On [PD].[DatabaseName] = [SM].[DatabaseName]
+                               And [PD].[SalesOrder] = [SM].[SalesOrder]
                 Order By [SalesOrder] Desc;
 
         Set NoCount Off;
@@ -285,6 +314,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [CN].[CompanyName]
               , [CN].[ShortName]
               , [CompanyCurrency] = [CN].[Currency]
+              , [R].[ProFormaDate]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [R].[DatabaseName] = [CN].[Company];
