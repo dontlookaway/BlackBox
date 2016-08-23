@@ -23,6 +23,7 @@ As
                     (
                       [Company] Varchar(150)
                     , [StockCode] Varchar(150)
+                    , [StockDescription] Varchar(150)
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -42,13 +43,14 @@ As
                 Select  @LastUpdated = GetDate();
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-                Declare @ListOfTables Varchar(Max) = 'InvMovements'; 
+                Declare @ListOfTables Varchar(Max) = 'InvMaster'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1StockCode]
                     (
                       [Company] Varchar(150)
                     , [StockCode] Varchar(150)
+                    , [StockDescription] Varchar(150)
                     );
 
 --create script to pull data from each db into the tables
@@ -60,34 +62,30 @@ As
 	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
                     + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
-                    + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert #Table1StockCode
-					( Company, StockCode)
+					( Company, StockCode, [StockDescription])
 				Select distinct @DBCode
 				,StockCode
-				From InvMovements
+				,[Description]
+				From InvMaster
 			End
 	End';
 
 --execute script against each db, populating the base tables
-                Exec [Process].[ExecForEachDB] @cmd = @SQL;
+                Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL ,
+                    @SchemaTablesToCheck = @ListOfTables;
 
                 Insert  [Lookups].[StockCode]
                         ( [Company]
                         , [StockCode]
                         , [LastUpdated]
+                        , [StockDescription]
                         )
                         Select  [Company]
                               , [StockCode]
                               , @LastUpdated
+                              , [StockDescription]
                         From    [#Table1StockCode];
 
                 If @PrevCheck = 1
