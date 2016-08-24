@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Process].[UspUpdate_ApSupplier]
+CREATE Proc [Process].[UspUpdate_ApSupplier]
     (
       @PrevCheck Int
     , @HoursBetweenUpdates Numeric(5 , 2)
@@ -25,6 +25,7 @@ As
                     , [Supplier] Varchar(150)
                     , [SupplierName] Varchar(150)
                     , [LastUpdated] DateTime2
+					, [ActivePOFlag] bit
                     );
             End;
 
@@ -51,6 +52,7 @@ As
                       [Company] Varchar(150)
                     , [Supplier] Varchar(150)
                     , [SupplierName] Varchar(150)
+					, [ActivePOFlag] bit
                     );
 
 --create script to pull data from each db into the tables
@@ -60,12 +62,25 @@ As
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 			BEGIN
 				Insert #Table1Supplier
-					( Company, Supplier, [SupplierName])
-				Select distinct @DBCode
-				,Supplier
-				,[SupplierName]
-				From ApSupplier
-			End';
+					( Company, Supplier, [SupplierName], [ActivePOFlag])
+				Select @DBCode
+				,[APS].Supplier
+				,[APS].[SupplierName]
+				, [ActivePOFlag] = Max(Case When [PMD].[PurchaseOrder] Is Null Then 0
+                                Else 1
+                           End)
+From    [dbo].[ApSupplier] [APS]
+        Left Join [dbo].[PorMasterHdr] [PMH]
+            On [PMH].[Supplier] = [APS].[Supplier]
+               And [PMH].[CancelledFlag] <> ''Y''
+               And [PMH].[DatePoCompleted] Is Null
+        Left Join [dbo].[PorMasterDetail] [PMD]
+            On [PMD].[PurchaseOrder] = [PMH].[PurchaseOrder]
+               And [PMD].[MOrderQty] <> [PMD].[MReceivedQty]
+Group By [APS].[Supplier]
+      , [APS].[SupplierName];
+End
+';
 
 --execute script against each db, populating the base tables
                 Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL ,
@@ -76,11 +91,13 @@ As
                         , [Supplier]
                         , [LastUpdated]
                         , [SupplierName]
+						, [ActivePOFlag]
                         )
                         Select  [Company]
                               , [Supplier]
                               , @LastUpdated
                               , [SupplierName]
+							  , [ActivePOFlag]
                         From    [#Table1Supplier];
 
                 If @PrevCheck = 1
