@@ -4,6 +4,7 @@ CREATE TABLE [Lookups].[StockCode]
 [StockCode] [varchar] (150) COLLATE Latin1_General_BIN NULL,
 [StockDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
 [PartCategory] [varchar] (5) COLLATE Latin1_General_BIN NULL,
+[ActivePOFlag] [bit] NULL,
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO

@@ -2,8 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Process].[UspUpdate_StockCode]
     (
       @PrevCheck Int
@@ -27,6 +25,7 @@ As
                     , [StockCode] Varchar(150)
                     , [StockDescription] Varchar(150)
                     , [PartCategory] Varchar(5)
+                    , [ActivePOFlag] Bit
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -55,6 +54,7 @@ As
                     , [StockCode] Varchar(150)
                     , [StockDescription] Varchar(150)
                     , [PartCategory] Varchar(5)
+                    , [ActivePOFlag] Bit
                     );
 
 --create script to pull data from each db into the tables
@@ -65,15 +65,29 @@ As
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-                    + Upper(@Company) + ''' = ''ALL''
+                    + Upper(@Company)
+                    + ''' = ''ALL''
 			BEGIN
 				Insert #Table1StockCode
-					( Company, StockCode, [StockDescription],[PartCategory])
-				Select distinct @DBCode
+					( Company, StockCode, [StockDescription],[PartCategory], [ActivePOFlag])
+				Select @DBCode
 				,StockCode
 				,[Description]
 				,[PartCategory]
+				, [ActivePOFlag] = Max(Case When [PMH].[PurchaseOrder] Is Null Then 0
+                                Else 1
+                           End)
 				From InvMaster
+        Left Join [dbo].[PorMasterDetail] [PMD]
+            On PMD.[MStockCode]=[StockCode]
+               And [PMD].[MOrderQty] <> [PMD].[MReceivedQty]
+        Left Join [dbo].[PorMasterHdr] [PMH]
+            On [PMD].[PurchaseOrder] = [PMH].[PurchaseOrder] 
+               And [PMH].[CancelledFlag] <> ''Y''
+               And [PMH].[DatePoCompleted] Is Null
+Group By [StockCode]
+       , [Description]
+       , [PartCategory]
 			End
 	End';
 
@@ -87,12 +101,14 @@ As
                         , [LastUpdated]
                         , [StockDescription]
                         , [PartCategory]
+                        , [ActivePOFlag]
                         )
                         Select  [Company]
                               , [StockCode]
                               , @LastUpdated
                               , [StockDescription]
                               , [PartCategory]
+                              , [ActivePOFlag]
                         From    [#Table1StockCode];
 
                 If @PrevCheck = 1
