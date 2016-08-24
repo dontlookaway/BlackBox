@@ -205,7 +205,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [SOLine] Int
             , [DocumentType] Varchar(250)
             , [LastInvoice] Varchar(20)
-            , [ProFormaDate] DateTime2
+            , [ProFormaDate] DateTime
             );
 
 --Placeholder to create indexes as required
