@@ -2,10 +2,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create View [dbo].[vw_APSuppliersWithActivePO]
-as
+
+Create View [Lookups].[vw_APSuppliersWithActivePO]
+As
 Select Distinct [AS].[Supplier]
      , [AS].[SupplierName]
-FROM [Lookups].[ApSupplier] [AS]
+From [Lookups].[ApSupplier] [AS]
 Where [AS].[ActivePOFlag]=1
 GO
