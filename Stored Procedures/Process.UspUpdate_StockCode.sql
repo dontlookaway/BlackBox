@@ -2,6 +2,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE Proc [Process].[UspUpdate_StockCode]
     (
       @PrevCheck Int
@@ -24,6 +26,7 @@ As
                       [Company] Varchar(150)
                     , [StockCode] Varchar(150)
                     , [StockDescription] Varchar(150)
+                    , [PartCategory] Varchar(5)
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -51,6 +54,7 @@ As
                       [Company] Varchar(150)
                     , [StockCode] Varchar(150)
                     , [StockDescription] Varchar(150)
+                    , [PartCategory] Varchar(5)
                     );
 
 --create script to pull data from each db into the tables
@@ -64,10 +68,11 @@ As
                     + Upper(@Company) + ''' = ''ALL''
 			BEGIN
 				Insert #Table1StockCode
-					( Company, StockCode, [StockDescription])
+					( Company, StockCode, [StockDescription],[PartCategory])
 				Select distinct @DBCode
 				,StockCode
 				,[Description]
+				,[PartCategory]
 				From InvMaster
 			End
 	End';
@@ -81,11 +86,13 @@ As
                         , [StockCode]
                         , [LastUpdated]
                         , [StockDescription]
+                        , [PartCategory]
                         )
                         Select  [Company]
                               , [StockCode]
                               , @LastUpdated
                               , [StockDescription]
+                              , [PartCategory]
                         From    [#Table1StockCode];
 
                 If @PrevCheck = 1
