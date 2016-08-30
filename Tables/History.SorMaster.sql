@@ -54,7 +54,8 @@ CREATE TABLE [History].[SorMaster]
 [ORDERTYPE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SALESPERSON] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [SHIPPINGINSTRUCTIONS] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[SPECIALINSTRUCTIONS] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[SPECIALINSTRUCTIONS] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[REASONCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[SorMaster] ADD CONSTRAINT [SorMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -16,14 +15,16 @@ Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 --exec [Report].[UspResults_ApInvoicesWithPaymentDetails] @Company =10
 */
-        Set NoCount Off;
+        Set NoCount On;
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
             End;
-
---remove nocount on to speed up query
-        Set NoCount On;
+		
+        If @Company Like '%,%'
+            Begin
+                Select  @Company = Replace(@Company , ',' , ''',''');
+            End;
 
 --Red tag
         Declare @RedTagDB Varchar(255)= Db_Name();
@@ -68,29 +69,12 @@ Stored procedure set out to query multiple databases with the same information a
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 Varchar(Max) = '
-	USE [?];
+        Declare @SQL1 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
-		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
+	BEGIN
+		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApInvoice]
 						( [DatabaseName]
@@ -123,29 +107,12 @@ Stored procedure set out to query multiple databases with the same information a
 				From [ApInvoice] As [ai]
 			End
 	End';
-        Declare @SQL2 Varchar(Max) = '
-	USE [?];
+        Declare @SQL2 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
-		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
+	BEGIN
+		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApInvoicePay]
 						( [DatabaseName]
@@ -162,29 +129,12 @@ Stored procedure set out to query multiple databases with the same information a
 				From [ApInvoicePay] As [aip]
 			End
 	End';
-        Declare @SQL3 Varchar(Max) = '
-	USE [?];
+        Declare @SQL3 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
-		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
-            + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
+	BEGIN
+		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApSupplier]
 						( [DatabaseName]
@@ -202,11 +152,14 @@ Stored procedure set out to query multiple databases with the same information a
 
 --execute script against each db, populating the base tables
         --Print 1
-        Exec [Process].[ExecForEachDB] @cmd = @SQL1;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL1, -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
         --Print 2
-        Exec [Process].[ExecForEachDB] @cmd = @SQL2;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL2, -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
         --Print 3
-        Exec [Process].[ExecForEachDB] @cmd = @SQL3;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL3, -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
 		--Print 4
 --define the results you want to return
         Create Table [#Results]
@@ -280,11 +233,13 @@ Stored procedure set out to query multiple databases with the same information a
                       , [ai].[ConvRate]
                       , [ai].[Currency]
                 From    [#ApInvoice] As [ai]
-                        Left Join [#ApInvoicePay] As [aip] On [aip].[Supplier] = [ai].[Supplier]
-                                                              And [aip].[Invoice] = [ai].[Invoice]
-                                                              And [aip].[DatabaseName] = [ai].[DatabaseName]
-                        Left Join [#ApSupplier] As [as] On [as].[Supplier] = [ai].[Supplier]
-                                                           And [as].[DatabaseName] = [ai].[DatabaseName]
+                        Left Join [#ApInvoicePay] As [aip]
+                            On [aip].[Supplier] = [ai].[Supplier]
+                               And [aip].[Invoice] = [ai].[Invoice]
+                               And [aip].[DatabaseName] = [ai].[DatabaseName]
+                        Left Join [#ApSupplier] As [as]
+                            On [as].[Supplier] = [ai].[Supplier]
+                               And [as].[DatabaseName] = [ai].[DatabaseName]
                 Where   [ai].[DueDate] <= GetDate()
                 Group By [ai].[DatabaseName]
                       , [ai].[Supplier]
@@ -338,11 +293,14 @@ Stored procedure set out to query multiple databases with the same information a
               , [r].[MthInvBal3]
               , [r].[Currency]
               , [r].[ConvRate]
+              , [r].[DatabaseName]
         From    [#Results] [r]
-                Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [r].[DatabaseName] Collate Latin1_General_BIN
-                Left Join [#SupplierSummary] As [ss] On [ss].[Supplier] = [r].[Supplier]
-                                                        And [ss].[Currency] = [r].[Currency]
-                                                        And [ss].[DatabaseName] = [r].[DatabaseName]
+                Left Join [Lookups].[CompanyNames] As [cn]
+                    On [cn].[Company] = [r].[DatabaseName] Collate Latin1_General_BIN
+                Left Join [#SupplierSummary] As [ss]
+                    On [ss].[Supplier] = [r].[Supplier]
+                       And [ss].[Currency] = [r].[Currency]
+                       And [ss].[DatabaseName] = [r].[DatabaseName]
         Order By [DueDate];
 
     End;

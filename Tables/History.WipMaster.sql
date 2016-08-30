@@ -61,7 +61,9 @@ CREATE TABLE [History].[WipMaster]
 [VERSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [DEFAULTBINAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[DEFAULTBINBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[DEFAULTBINBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[USERFIELD3AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[USERFIELD3BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
