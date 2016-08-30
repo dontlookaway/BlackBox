@@ -33,7 +33,7 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables Varchar(Max) = 'MdnMasterRep,CusSorMaster+'; 
+        Declare @ListOfTables Varchar(Max) = 'MdnMasterRep,WipMaster,CusSorMaster+'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
 --[#InvInspect][#LotTransactions][#InvMaster]
@@ -76,8 +76,14 @@ Stored procedure set out to query multiple databases with the same information a
             , [Customer] Varchar(15)
             , [Name] Varchar(50)
             );
+        Create Table [#WipMaster]
+            (
+              [DatabaseName] Varchar(150)
+            , [Job] Varchar(20)
+            , [ActCompleteDate] Date
+            );
 
-
+			
 
 --create script to pull data from each db into the tables
         Declare @SQLInvInspect Varchar(Max) = '
@@ -262,6 +268,25 @@ Stored procedure set out to query multiple databases with the same information a
 				From    [ArCustomer] As [AC];
 			End
 	End';
+        Declare @SQLWipMaster Varchar(Max) = 'USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			BEGIN
+				Insert [#WipMaster]
+			        ( [DatabaseName]
+			        , [Job]
+			        , [ActCompleteDate]
+			        )
+				Select  @DBCode
+						,[WM].[Job]
+						,[WM].[ActCompleteDate]
+				From    [WipMaster] [WM];
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -270,6 +295,9 @@ Stored procedure set out to query multiple databases with the same information a
         Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
         Exec [Process].[ExecForEachDB] @cmd = @SQLLotTransactions;
         Exec [Process].[ExecForEachDB] @cmd = @SQLArCustomer;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLWipMaster ,
+            @SchemaTablesToCheck = @ListOfTables;
+		
 
 --define the results you want to return
         Create Table [#Results]
@@ -293,6 +321,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [TrnValue] Numeric(20 , 2)
             , [MasterJob] Varchar(30)
             , [CustomerName] Varchar(50)
+            , [MasterJobDate] Date
             );
 
 --Placeholder to create indexes as required
@@ -301,16 +330,22 @@ Stored procedure set out to query multiple databases with the same information a
               [Lot] Varchar(50)
             , [MasterJob] Varchar(30)
             , [TempLot] Varchar(50)
+            , [ActCompleteDate] Date
             );
 
         Insert  [#LotMasterJob]
                 ( [Lot]
                 , [MasterJob]
+                , [ActCompleteDate]
                 )
                 Select Distinct
                         [LT].[Lot]
                       , [LT].[JobPurchOrder]
+                      , [WM].[ActCompleteDate]
                 From    [#LotTransactions] As [LT]
+                        Left Join [#WipMaster] [WM]
+                            On [WM].[DatabaseName] = [LT].[DatabaseName]
+                               And [WM].[Job] = [LT].[JobPurchOrder]
                 Where   [LT].[TrnType] = 'R'
                         And [LT].[Reference] <> '';
 
@@ -355,6 +390,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [TrnValue]
                 , [MasterJob]
                 , [CustomerName]
+                , [MasterJobDate]
                 )
                 Select  [Company] = Coalesce([II].[DatabaseName] ,
                                              [LT].[DatabaseName])
@@ -385,6 +421,7 @@ Stored procedure set out to query multiple databases with the same information a
                                            Else [LMJ].[MasterJob]
                                       End
                       , [CustomerName] = [AC].[Name]
+                      , [LMJ].[ActCompleteDate]
                 From    [#InvInspect] As [II]
                         Full Outer Join [#LotTransactions] As [LT]
                             On [LT].[Lot] = [II].[Lot]
@@ -432,6 +469,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [R].[TrnValue]
               , [R].[MasterJob]
               , [R].[CustomerName]
+              , [R].[MasterJobDate]
         From    [#Results] As [R]
                 Left Join [Lookups].[CompanyNames] As [CN]
                     On [CN].[Company] = [R].[Company]
