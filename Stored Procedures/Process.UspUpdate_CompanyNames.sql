@@ -93,7 +93,7 @@ As
                                   Union
                                   Select    [Company] = '12'
                                           , [CompanyName] = 'Prometic Pharma SMT Ltd'
-                                          , [ShortName] = 'PSM'
+                                          , [ShortName] = 'PSMT'
                                   Union
                                   Select    [Company] = '13'
                                           , [CompanyName] = 'Prometic Pharma SMTH Ltd'
