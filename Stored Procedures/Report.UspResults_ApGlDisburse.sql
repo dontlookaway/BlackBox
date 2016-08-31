@@ -17,10 +17,8 @@ As
                 Select  @Company = Upper(@Company);
             End;
 
-        If @Company Like '%,%'
-            Begin
-                Select  @Company = Replace(@Company , ',' , ''',''');
-            End;
+        Declare @CompanyCommas Varchar(Max) = Replace(@Company , ',' , ''',''');
+
 
 --Red tag
         Declare @RedTagDB Varchar(255)= Db_Name();
@@ -65,7 +63,8 @@ As
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN
-		IF @DBCode in (''' + @Company + ''') or ''' + @Company + ''' = ''ALL''
+		IF @DBCode in (''' + @CompanyCommas + ''') or ''' + @Company
+            + ''' = ''ALL''
 			BEGIN
 				Insert [#ApGlDisburse]
 						( [DatabaseName]
