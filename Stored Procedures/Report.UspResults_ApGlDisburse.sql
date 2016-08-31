@@ -39,7 +39,7 @@ As
             , [GlCode] Varchar(35)
             , [GlIntPeriod] Int
             , [GlIntYear] Int
-            , [GlJournal] Int
+            , [GlJournal] BigInt
             , [GlPeriod] Int
             , [GlYear] Int
             , [PostConvRate] Float
@@ -52,7 +52,6 @@ As
             , [TriangMulDiv] Varchar(5)
             , [TrnValue] Numeric(20 , 3)
             , [Invoice] Varchar(20)
-            , [GlJournal] BigInt
             );
 
 		
@@ -86,7 +85,6 @@ As
 						, [TriangMulDiv]
 						, [TrnValue]
 						, [Invoice]
-						, [GlJournal]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [AGD].[DistrEntry]
@@ -106,7 +104,6 @@ As
 					 , [AGD].[TriangMulDiv]
 					 , [AGD].[TrnValue]
 					 , [AGD].[Invoice]
-					 , [AGD].[GlJournal]
 				FROM [ApGlDisburse] [AGD]
 			End
 	End';
@@ -147,7 +144,6 @@ As
               , [AGD].[TriangMulDiv]
               , [AGD].[TrnValue]
               , [AGD].[Invoice]
-              , [AGD].[GlJournal]
         From    [#ApGlDisburse] [AGD];
 
     End;

@@ -52,6 +52,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [MthInvBal3] Numeric(20 , 7)
             , [ConvRate] Numeric(20 , 7)
             , [Currency] Char(3)
+            , [Journal] BigInt
             );
         Create Table [#ApInvoicePay]
             (
@@ -74,7 +75,8 @@ Stored procedure set out to query multiple databases with the same information a
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN
-		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
+		IF @DBCode in (''' + @Company + ''') or '''
+            + Replace(QuoteName(@Company) , '''' , '') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApInvoice]
 						( [DatabaseName]
@@ -90,6 +92,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [MthInvBal3]
 						, [ConvRate] 
 						, [Currency] 
+						, [Journal]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [ai].[Supplier]
@@ -104,6 +107,7 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [ai].[MthInvBal3] 
 					 , [ai].[ConvRate] 
 					 , [ai].[Currency] 
+					 , [ai].[Journal]
 				From [ApInvoice] As [ai]
 			End
 	End';
@@ -112,7 +116,8 @@ Stored procedure set out to query multiple databases with the same information a
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN
-		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
+		IF @DBCode in (''' + @Company + ''') or '''
+            + Replace(QuoteName(@Company) , '''' , '') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApInvoicePay]
 						( [DatabaseName]
@@ -134,7 +139,8 @@ Stored procedure set out to query multiple databases with the same information a
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
 	BEGIN
-		IF @DBCode in (''' + @Company + ''') or ''' + Replace(QuoteName(@Company),'''','') + ''' = ''[ALL]''
+		IF @DBCode in (''' + @Company + ''') or '''
+            + Replace(QuoteName(@Company) , '''' , '') + ''' = ''[ALL]''
 			BEGIN
 				Insert [#ApSupplier]
 						( [DatabaseName]
@@ -152,14 +158,14 @@ Stored procedure set out to query multiple databases with the same information a
 
 --execute script against each db, populating the base tables
         --Print 1
-        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL1, -- nvarchar(max)
-            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL1 , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables; -- nvarchar(max)
         --Print 2
-        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL2, -- nvarchar(max)
-            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL2 , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables; -- nvarchar(max)
         --Print 3
-        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL3, -- nvarchar(max)
-            @SchemaTablesToCheck = @ListOfTables -- nvarchar(max)
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQL3 , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables; -- nvarchar(max)
 		--Print 4
 --define the results you want to return
         Create Table [#Results]
@@ -181,6 +187,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [MthInvBal3] Numeric(20 , 7)
             , [ConvRate] Numeric(20 , 7)
             , [Currency] Char(3)
+            , [Journal] BigInt
             );
         Create Table [#SupplierSummary]
             (
@@ -214,6 +221,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SupplierName]
                 , [ConvRate]
                 , [Currency]
+                , [Journal]
                 )
                 Select  [ai].[DatabaseName]
                       , [ai].[Supplier]
@@ -232,6 +240,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [as].[SupplierName]
                       , [ai].[ConvRate]
                       , [ai].[Currency]
+                      , [ai].[Journal]
                 From    [#ApInvoice] As [ai]
                         Left Join [#ApInvoicePay] As [aip]
                             On [aip].[Supplier] = [ai].[Supplier]
@@ -253,7 +262,8 @@ Stored procedure set out to query multiple databases with the same information a
                       , [ai].[MthInvBal3]
                       , [as].[SupplierName]
                       , [ai].[ConvRate]
-                      , [ai].[Currency];
+                      , [ai].[Currency]
+                      , [ai].[Journal];
 		
 		--Print 6
         Insert  [#SupplierSummary]
@@ -294,6 +304,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [r].[Currency]
               , [r].[ConvRate]
               , [r].[DatabaseName]
+              , [r].[Journal]
         From    [#Results] [r]
                 Left Join [Lookups].[CompanyNames] As [cn]
                     On [cn].[Company] = [r].[DatabaseName] Collate Latin1_General_BIN
