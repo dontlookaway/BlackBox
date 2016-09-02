@@ -43,7 +43,7 @@ As
                         Left Join [Lookups].[RedTagsUsedByType] [RTUBT]
                             On [RTUBT].[UsedByType] = [RTL].[UsedByType]
                 Where   [RTL].[UsedByName] Like 'Development%'
-                        or [RTL].[UsedByName] Like 'Chris Johnson%'
+                        Or [RTL].[UsedByName] Like 'Chris Johnson%'
                 Group By Convert(DateTime , ( Left(Convert(Varchar(255) , [RTL].[TagDatetime]) ,
                                                    18) + '0' ))
                       , [RTL].[UsedByName]
@@ -75,7 +75,7 @@ As
                                           End)
               , [1MonthPlus] = Count(Distinct Case When DateDiff(Month ,
                                                               [RR].[RunTime] ,
-                                                              GetDate()) >= 1
+                                                              GetDate()) > 1
                                                    Then [RR].[RunTime]
                                                    Else Null
                                               End)
