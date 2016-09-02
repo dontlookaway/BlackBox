@@ -428,6 +428,15 @@ As
                         End Asc
                       , [LT].[TrnDate];
 
+        Select  [R].[Company]
+              , [R].[MasterJob]
+              , [JobLeftQuantity] = Sum([R].[TrnQuantity])
+        Into    [#Results2]
+        From    [#Results] [R]
+		Where [R].[Warehouse]='Finished Goods'
+        Group By [R].[Company]
+              , [R].[MasterJob];
+
         Set NoCount Off;
 --return results
         Select  [CN].[CompanyName]
@@ -452,6 +461,7 @@ As
               , [R].[MasterJob]
               , [R].[CustomerName]
               , [RunTime] = Coalesce([L].[RunTime] , 0)
+              , [R2].[JobLeftQuantity]
         From    [#Results] As [R]
                 Left Join [Lookups].[CompanyNames] As [CN]
                     On [CN].[Company] = [R].[Company]
@@ -461,6 +471,9 @@ As
                 Left Join [#Labour] [L]
                     On [L].[JobPurchOrder] = [R].[MasterJob]
                        And [L].[Lot] = [R].[Lot]
-                       And [L].[DatabaseName] = [R].[Company];
+                       And [L].[DatabaseName] = [R].[Company]
+                Left Join [#Results2] [R2]
+                    On [R2].[Company] = [CN].[Company]
+                       And [R2].[MasterJob] = [R].[MasterJob];
     End;
 GO
