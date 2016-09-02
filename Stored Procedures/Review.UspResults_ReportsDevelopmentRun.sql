@@ -69,7 +69,7 @@ As
                                                              GetDate()) > 7
                                                     And DateDiff(Month ,
                                                               [RR].[RunTime] ,
-                                                              GetDate()) < 1
+                                                              GetDate()) <= 1
                                                Then [RR].[RunTime]
                                                Else Null
                                           End)
@@ -94,12 +94,12 @@ As
                 + Count(Distinct Case When DateDiff(Day , [RR].[RunTime] ,
                                                     GetDate()) > 7
                                            And DateDiff(Month , [RR].[RunTime] ,
-                                                        GetDate()) < 1
+                                                        GetDate()) <= 1
                                       Then [RR].[RunTime]
                                       Else Null
                                  End) * 2--1 month
                 + Count(Distinct Case When DateDiff(Month , [RR].[RunTime] ,
-                                                    GetDate()) >= 1
+                                                    GetDate()) > 1
                                       Then [RR].[RunTime]
                                       Else Null
                                  End)--1month plus
