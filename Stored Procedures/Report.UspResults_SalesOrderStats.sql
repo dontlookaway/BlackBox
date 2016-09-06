@@ -10,10 +10,7 @@ CREATE Proc [Report].[UspResults_SalesOrderStats]
     )
 As
     Begin
-/*
-Template designed by Chris Johnson, Prometic Group September 2015
-Stored procedure set out to query multiple databases with the same information and return it in a collated format
-*/
+
         Set NoCount On;
 
         If IsNumeric(@Company) = 0
@@ -50,6 +47,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Customer] Varchar(15)
             , [DocumentType] Varchar(10)
             , [LastInvoice] Varchar(20)
+            , [ShipAddress5] Varchar(40)
             );
 
         Create Table [#SorDetail]
@@ -110,6 +108,7 @@ Stored procedure set out to query multiple databases with the same information a
 						, [Customer]
 						, [DocumentType]
 						, [LastInvoice]
+						, [ShipAddress5]
 						)
 				SELECT [DatabaseName]=@DBCode
 					 , [SM].[CustomerPoNumber]
@@ -119,6 +118,7 @@ Stored procedure set out to query multiple databases with the same information a
 					 , [SM].[Customer]
 					 , [SM].[DocumentType]
 					 , [LastInvoice]
+					 , [ShipAddress5]
 				FROM [SorMaster] [SM]
 			End
 	End';
@@ -206,6 +206,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [DocumentType] Varchar(250)
             , [LastInvoice] Varchar(20)
             , [ProFormaDate] DateTime
+            , [Country] Varchar(40)
             );
 
 --Placeholder to create indexes as required
@@ -253,6 +254,7 @@ Stored procedure set out to query multiple databases with the same information a
                 , [DocumentType]
                 , [LastInvoice]
                 , [ProFormaDate]
+                , [Country]
                 )
                 Select  [AC].[DatabaseName]
                       , [AC].[Customer]
@@ -278,6 +280,10 @@ Stored procedure set out to query multiple databases with the same information a
                                              Else [SM].[LastInvoice]
                                         End
                       , [PD].[ProFormaDate]
+                      , [Country] = Case When [SM].[ShipAddress5] = ''
+                                         Then Null
+                                         Else [SM].[ShipAddress5]
+                                    End
                 From    [#ArCustomer] [AC]
                         Inner Join [#SorMaster] [SM]
                             On [SM].[Customer] = [AC].[Customer]
@@ -315,6 +321,7 @@ Stored procedure set out to query multiple databases with the same information a
               , [CN].[ShortName]
               , [CompanyCurrency] = [CN].[Currency]
               , [R].[ProFormaDate]
+              , [R].[Country]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [R].[DatabaseName] = [CN].[Company];
