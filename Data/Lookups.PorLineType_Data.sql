@@ -1,5 +1,0 @@
-INSERT INTO [Lookups].[PorLineType] ([PorLineType], [LastUpdated], [PorLineTypeDesc]) VALUES (1, '2016-08-26 14:07:07.6970000', 'Stocked line')
-INSERT INTO [Lookups].[PorLineType] ([PorLineType], [LastUpdated], [PorLineTypeDesc]) VALUES (4, '2016-08-26 14:07:07.6970000', 'Freight line')
-INSERT INTO [Lookups].[PorLineType] ([PorLineType], [LastUpdated], [PorLineTypeDesc]) VALUES (5, '2016-08-26 14:07:07.6970000', 'Other charges')
-INSERT INTO [Lookups].[PorLineType] ([PorLineType], [LastUpdated], [PorLineTypeDesc]) VALUES (6, '2016-08-26 14:07:07.6970000', 'CommentLine')
-INSERT INTO [Lookups].[PorLineType] ([PorLineType], [LastUpdated], [PorLineTypeDesc]) VALUES (7, '2016-08-26 14:07:07.6970000', 'Non-Stocked line')
