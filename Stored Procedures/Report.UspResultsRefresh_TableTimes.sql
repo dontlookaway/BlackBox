@@ -18,6 +18,19 @@ As
           , @HistoryStart DateTime2
           , @HistoryEnd DateTime2;
 
+        Declare @GeneratedUsedByNameStart Varchar(500)= 'Development > Report System Refresh > Exec: '
+            + Convert(Varchar(5) , @Exec) + '; Hours between each run: '
+            + Convert(Varchar(5) , @HoursBetweenEachRun) + '; Started: '
+            + Convert(Varchar(24) , GetDate() , 113);
+
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResultsRefresh_TableTimes' ,
+            @UsedByType = 'X' , @UsedByName = @GeneratedUsedByNameStart ,
+            @UsedByDb = 'BlackBox'; 
+
+
+
         Create Table [#Results]
             (
               [SchemaName] Varchar(100)
@@ -194,6 +207,20 @@ As
             Where   [SchemaName] = 'History';
         End;
 
+        Declare @GeneratedUsedByNameEnd Varchar(500)= 'Development > Report System Refresh > Exec: '
+            + Convert(Varchar(5) , @Exec) + '; Hours between each run: '
+            + Convert(Varchar(5) , @HoursBetweenEachRun) + '; Ended: '
+            + Convert(Varchar(24) , GetDate() , 113);
+
+        Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
+            @StoredProcSchema = 'Report' ,
+            @StoredProcName = 'UspResultsRefresh_TableTimes' ,
+            @UsedByType = 'X' , @UsedByName = @GeneratedUsedByNameEnd ,
+            @UsedByDb = 'BlackBox'; 
+
+
+
+        Set NoCount Off;
 
         Select  [SchemaName]
               , [TableName]
@@ -209,7 +236,7 @@ As
               , [HoursToRun] = DateDiff(Hour , [UpdateStart] , [UpdateEnd])
         From    [#Results];
 
-        Drop Table [#Results];
+        --Drop Table [#Results];
 
     End;
 
