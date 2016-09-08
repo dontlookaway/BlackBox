@@ -7,3 +7,5 @@ CREATE TABLE [Lookups].[ApSupplier]
 [ActivePOFlag] [bit] NULL
 ) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_ApSupplier_ActivePOFlag] ON [Lookups].[ApSupplier] ([ActivePOFlag]) INCLUDE ([Supplier], [SupplierName]) ON [PRIMARY]
+GO

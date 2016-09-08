@@ -8,3 +8,5 @@ CREATE TABLE [Lookups].[StockCode]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_StockCode_PartCategory] ON [Lookups].[StockCode] ([PartCategory]) INCLUDE ([Company], [StockCode], [StockDescription]) ON [PRIMARY]
+GO

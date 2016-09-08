@@ -22,6 +22,8 @@ CREATE TABLE [Process].[SysproTransactionsLogged]
 GO
 ALTER TABLE [Process].[SysproTransactionsLogged] ADD CONSTRAINT [TDR_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDate], [SignatureTime], [ItemKey], [Operator], [ProgramName], [VariableDesc], [TableName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_SysproTransactionsLogged_DatabaseName_Operator] ON [Process].[SysproTransactionsLogged] ([DatabaseName], [Operator]) INCLUDE ([AlreadyEntered], [ComputerName], [ConditionName], [IsError], [ItemKey], [ProgramName], [SignatureDate], [SignatureDateTime], [SignatureTime], [TableName], [TransactionDescription], [VarAlphaValue], [VarDateValue], [VariableDesc], [VariableType], [VarNumericValue]) ON [PRIMARY]
+GO
 CREATE NONCLUSTERED INDEX [IX_SysproTransactionsLogged_DatabaseName_SignatureDateTime_VariableDesc_ItemKey] ON [Process].[SysproTransactionsLogged] ([DatabaseName], [SignatureDateTime], [VariableDesc], [ItemKey]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_SysproTransactionsLogged_TableName] ON [Process].[SysproTransactionsLogged] ([TableName]) INCLUDE ([AlreadyEntered], [IsError]) ON [PRIMARY]
