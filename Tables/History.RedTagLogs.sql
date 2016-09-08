@@ -14,5 +14,7 @@ CREATE NONCLUSTERED INDEX [IX_RedTagLogs_StoredProcName] ON [History].[RedTagLog
 GO
 CREATE NONCLUSTERED INDEX [IX_RedTagLogs_StoredProcSchema] ON [History].[RedTagLogs] ([StoredProcSchema]) INCLUDE ([StoredProcName], [TagID], [UsedByName]) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_RedTagLogs_UsedByName] ON [History].[RedTagLogs] ([UsedByName]) INCLUDE ([TagDatetime], [UsedByType]) ON [PRIMARY]
+GO
 ALTER TABLE [History].[RedTagLogs] ADD CONSTRAINT [FK__RedTagLog__UsedB__3A779186] FOREIGN KEY ([UsedByType]) REFERENCES [Lookups].[RedTagsUsedByType] ([UsedByType])
 GO
