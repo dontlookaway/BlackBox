@@ -95,6 +95,7 @@ As
             , [AvgSecondsToRun] BigInt
             , [MaxSecondsToRun] BigInt
             , [MinSecondsToRun] BigInt
+            , [CountOfUnfinishedRuns] BigInt
             );
 
 --Placeholder to create indexes as required
@@ -111,6 +112,7 @@ As
                         , [AvgSecondsToRun]
                         , [MaxSecondsToRun]
                         , [MinSecondsToRun]
+                        , [CountOfUnfinishedRuns]
                         )
                         Select  [DatePartTime] = DateAdd(Hour ,
                                                          DateDiff(Hour , 0 ,
@@ -121,6 +123,11 @@ As
                               , [AvgSecondsToRun] = Avg([T].[SecondsToRun])
                               , [MaxSecondsToRun] = Max([T].[SecondsToRun])
                               , [MinSecondsToRun] = Min([T].[SecondsToRun])
+                              , [CountOfUnfinishedRuns] = Sum(Case
+                                                              When [T].[EndDate] Is Null
+                                                              Then 1
+                                                              Else 0
+                                                              End)
                         From    [#ListOfRuns] [T]
                         Group By DateAdd(Hour ,
                                          DateDiff(Hour , 0 , [T].[StartDate]) ,
@@ -135,6 +142,7 @@ As
                         , [AvgSecondsToRun]
                         , [MaxSecondsToRun]
                         , [MinSecondsToRun]
+                        , [CountOfUnfinishedRuns]
                         )
                         Select  [DatePartTime] = DateAdd(Day ,
                                                          DateDiff(Day , 0 ,
@@ -145,6 +153,11 @@ As
                               , [AvgSecondsToRun] = Avg([T].[SecondsToRun])
                               , [MaxSecondsToRun] = Max([T].[SecondsToRun])
                               , [MinSecondsToRun] = Min([T].[SecondsToRun])
+                              , [CountOfUnfinishedRuns] = Sum(Case
+                                                              When [T].[EndDate] Is Null
+                                                              Then 1
+                                                              Else 0
+                                                              End)
                         From    [#ListOfRuns] [T]
                         Group By DateAdd(Day ,
                                          DateDiff(Day , 0 , [T].[StartDate]) ,
@@ -159,6 +172,7 @@ As
                         , [AvgSecondsToRun]
                         , [MaxSecondsToRun]
                         , [MinSecondsToRun]
+                        , [CountOfUnfinishedRuns]
                         )
                         Select  [DatePartTime] = DateAdd(Week ,
                                                          DateDiff(Week , 0 ,
@@ -169,6 +183,11 @@ As
                               , [AvgSecondsToRun] = Avg([T].[SecondsToRun])
                               , [MaxSecondsToRun] = Max([T].[SecondsToRun])
                               , [MinSecondsToRun] = Min([T].[SecondsToRun])
+                              , [CountOfUnfinishedRuns] = Sum(Case
+                                                              When [T].[EndDate] Is Null
+                                                              Then 1
+                                                              Else 0
+                                                              End)
                         From    [#ListOfRuns] [T]
                         Group By DateAdd(Week ,
                                          DateDiff(Week , 0 , [T].[StartDate]) ,
@@ -183,6 +202,7 @@ As
                         , [AvgSecondsToRun]
                         , [MaxSecondsToRun]
                         , [MinSecondsToRun]
+                        , [CountOfUnfinishedRuns]
                         )
                         Select  [DatePartTime] = DateAdd(Month ,
                                                          DateDiff(Month , 0 ,
@@ -193,6 +213,11 @@ As
                               , [AvgSecondsToRun] = Avg([T].[SecondsToRun])
                               , [MaxSecondsToRun] = Max([T].[SecondsToRun])
                               , [MinSecondsToRun] = Min([T].[SecondsToRun])
+                              , [CountOfUnfinishedRuns] = Sum(Case
+                                                              When [T].[EndDate] Is Null
+                                                              Then 1
+                                                              Else 0
+                                                              End)
                         From    [#ListOfRuns] [T]
                         Group By DateAdd(Month ,
                                          DateDiff(Month , 0 , [T].[StartDate]) ,
@@ -207,6 +232,7 @@ As
                         , [AvgSecondsToRun]
                         , [MaxSecondsToRun]
                         , [MinSecondsToRun]
+                        , [CountOfUnfinishedRuns]
                         )
                         Select  [DatePartTime] = DateAdd(Year ,
                                                          DateDiff(Year , 0 ,
@@ -217,6 +243,11 @@ As
                               , [AvgSecondsToRun] = Avg([T].[SecondsToRun])
                               , [MaxSecondsToRun] = Max([T].[SecondsToRun])
                               , [MinSecondsToRun] = Min([T].[SecondsToRun])
+                              , [CountOfUnfinishedRuns] = Sum(Case
+                                                              When [T].[EndDate] Is Null
+                                                              Then 1
+                                                              Else 0
+                                                              End)
                         From    [#ListOfRuns] [T]
                         Group By DateAdd(Year ,
                                          DateDiff(Year , 0 , [T].[StartDate]) ,
@@ -232,7 +263,9 @@ As
               , [AvgSecondsToRun]
               , [MaxSecondsToRun]
               , [MinSecondsToRun]
-        From    [#Results];
+              , [CountOfUnfinishedRuns]
+        From    [#Results]
+		Order By [DatePartTime] Desc;
 
     End;
 
