@@ -27,7 +27,7 @@ As
             @UsedByDb = @RedTagDB;
 
 --list the tables that are to be pulled back from each DB - if they are not found the script will not be run against that db
-        Declare @ListOfTables Varchar(Max) = 'ArCustomer,SorMaster,SorDetail,CusSorMaster+'; 
+        Declare @ListOfTables Varchar(Max) = 'ArCustomer,SorMaster,SorDetail,GenJournalDetail,CusSorMaster+'; 
 
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ArCustomer]
@@ -36,7 +36,6 @@ As
             , [Customer] Varchar(15)
             , [Name] Varchar(50)
             );
-
         Create Table [#SorMaster]
             (
               [DatabaseName] Varchar(150)
@@ -49,7 +48,6 @@ As
             , [LastInvoice] Varchar(20)
             , [ShipAddress5] Varchar(40)
             );
-
         Create Table [#SorDetail]
             (
               [DatabaseName] Varchar(150)
@@ -61,13 +59,19 @@ As
             , [SalesOrderLine] Int
             , [SalesOrder] Varchar(20)
             );
-
         Create Table [#CusSorMasterPlus]
             (
               [DatabaseName] Varchar(150)
             , [AttentionOf] Varchar(60)
             , [AcceptedDate] DateTime
             , [SalesOrder] Varchar(20)
+            );
+        Create Table [#GenJournalDetail]
+            (
+              [DatabaseName] Varchar(150)
+            , [SubModArInvoice] Varchar(20)
+            , [Reference] Varchar(50)
+            , [EntryDate] Date
             );
 
 
@@ -170,7 +174,30 @@ As
 					 , [CSMP].[SalesOrder] FROM [CusSorMaster+] [CSMP]
 			End
 	End';
-
+        Declare @SQLGenJournalDetail Varchar(Max) = 'USE [?];
+	Declare @DB varchar(150),@DBCode varchar(150)
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
+	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
+	BEGIN
+		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
+            + Upper(@Company) + ''' = ''ALL''
+			BEGIN
+			Insert [#GenJournalDetail]
+			        ( [DatabaseName]
+			        , [SubModArInvoice]
+			        , [Reference]
+			        , [EntryDate]
+			        )
+			Select Distinct 
+					[DatabaseName]=@DBCode
+					, [SubModArInvoice]
+					, [Reference]
+					, [EntryDate]
+			From    [dbo].[GenJournalDetail]
+			Where   [Reference] = ''Invoice''
+			And [SubModArInvoice] <> ''''
+			End
+	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
@@ -183,7 +210,8 @@ As
             @SchemaTablesToCheck = @ListOfTables;
         Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLCusSorMasterPlus ,
             @SchemaTablesToCheck = @ListOfTables;
-
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLGenJournalDetail ,
+            @SchemaTablesToCheck = @ListOfTables;
 
 --define the results you want to return
         Create Table [#Results]
@@ -207,6 +235,7 @@ As
             , [LastInvoice] Varchar(20)
             , [ProFormaDate] DateTime
             , [Country] Varchar(40)
+            , [InvoiceEntryDate] Date
             );
 
 --Placeholder to create indexes as required
@@ -255,6 +284,7 @@ As
                 , [LastInvoice]
                 , [ProFormaDate]
                 , [Country]
+                , [InvoiceEntryDate] 
                 )
                 Select  [AC].[DatabaseName]
                       , [AC].[Customer]
@@ -284,6 +314,7 @@ As
                                          Then Null
                                          Else [SM].[ShipAddress5]
                                     End
+                      , [GJD].[EntryDate]
                 From    [#ArCustomer] [AC]
                         Inner Join [#SorMaster] [SM]
                             On [SM].[Customer] = [AC].[Customer]
@@ -296,6 +327,9 @@ As
                         Left Join [#ProformaDates] [PD]
                             On [PD].[DatabaseName] = [SM].[DatabaseName]
                                And [PD].[SalesOrder] = [SM].[SalesOrder]
+                        Left Join [#GenJournalDetail] [GJD]
+                            On [SM].[LastInvoice] = [GJD].[SubModArInvoice]
+                               And [GJD].[DatabaseName] = [SM].[DatabaseName]
                 Order By [SalesOrder] Desc;
 
         Set NoCount Off;
@@ -322,6 +356,7 @@ As
               , [CompanyCurrency] = [CN].[Currency]
               , [R].[ProFormaDate]
               , [R].[Country]
+              , [R].[InvoiceEntryDate]
         From    [#Results] [R]
                 Left Join [Lookups].[CompanyNames] [CN]
                     On [R].[DatabaseName] = [CN].[Company];
