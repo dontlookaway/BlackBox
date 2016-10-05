@@ -414,7 +414,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[TotalReceiptQty]
                       , [IM].[StockUom]
                       , [LT].[UnitCost]
-                      , [LT].[TrnQuantity]
+                      , [LT].[TrnQuantity]*[TTAM].[AmountModifier]
                       , [LT].[TrnValue]
                       , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob]) = 1
                                            Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
@@ -433,6 +433,9 @@ Stored procedure set out to query multiple databases with the same information a
                                             [LT].[DatabaseName]) = [IM].[DatabaseName]
                         Left Join [BlackBox].[Lookups].[LotTransactionTrnType] [LTT]
                             On [LT].[TrnType] = [LTT].[TrnType]
+                        Left Join [Lookups].[TrnTypeAmountModifier] [TTAM]
+                            On [LT].[DatabaseName] = [TTAM].[Company]
+                               And [TTAM].[TrnType] = [LT].[TrnType]
                         Left Join [#LotMasterJob] As [LMJ]
                             On [LMJ].[Lot] = [LT].[Lot]
                         Left Join [#ArCustomer] As [AC]
