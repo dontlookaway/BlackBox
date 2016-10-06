@@ -12,6 +12,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
 */
     Begin
 --Red tag
+Set NoCount On	
         Declare @RedTagDB Varchar(255)= Db_Name();
         Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
             @StoredProcSchema = 'Report' ,
@@ -108,10 +109,11 @@ Template designed by Chris Johnson, Prometic Group April 2016
                                And [GM].[GlCode] = [GH].[GlCode]
                         Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
                             On [CN].[Company] = [GH].[Company]
-                        Left Join [Lookups].[GLAccountType] [GAT]
+                        Left Join [BlackBox].[Lookups].[GLAccountType] [GAT]
                             On [GM].[AccountType] = [GAT].[GLAccountType]
                 Where   [GH].[GlCode] Not In ( 'RETAINED' , 'FORCED' );
 
+		Set NoCount Off
         Select  [R].[Company]
               , [R].[ShortName]
               , [R].[CompanyName]
@@ -132,6 +134,5 @@ Template designed by Chris Johnson, Prometic Group April 2016
               , [Parse3] = ParseName([R].[GlCode] , 3)
         From    [#Results] [R];
 
-        Drop Table [#Results];
     End;
 GO

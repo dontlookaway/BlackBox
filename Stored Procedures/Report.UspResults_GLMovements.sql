@@ -122,7 +122,7 @@ As
                                   , [GM].[ReportIndex1]
                                   , [GM].[ReportIndex2]
                                   , [GAT].[GLAccountTypeDesc]
-                          From      [SysproCompany40]..[GenMaster] As [GM]
+                          From      [SysproCompany40].dbo.[GenMaster] As [GM]
                                     Left Join [BlackBox].[Lookups].[CompanyNames]
                                         As [CN]
                                         On [CN].[Company] = [GM].[Company]
@@ -196,11 +196,11 @@ As
                       , [GM].[ReportIndex1]
                       , [GM].[ReportIndex2]
                       , [GAT].[GLAccountTypeDesc]
-                From    [SysproCompany40]..[GenMaster] [GM]
+                From    [SysproCompany40].dbo.[GenMaster] [GM]
                         Left Join [BlackBox].[Lookups].[CompanyNames] [CN]
                             On [CN].[Company] = [GM].[Company]
                         Cross Join [#YearPeriod] [YP]
-                        Left Join [Lookups].[GLAccountType] [GAT]
+                        Left Join [BlackBox].[Lookups].[GLAccountType] [GAT]
                             On [GAT].[GLAccountType] = [GM].[AccountType];
 
         Insert  [#Movements]
@@ -248,6 +248,7 @@ As
         Where   ( [GlYear] * 100 ) + [GlPeriod] > @GlYearPeriod
                 Or [GlPeriod] Is Null;
 
+		Set NoCount Off
         Select  [M].[Company]
               , [M].[ShortName]
               , [M].[CompanyName]

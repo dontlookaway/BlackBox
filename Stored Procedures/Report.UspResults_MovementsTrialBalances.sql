@@ -4,7 +4,7 @@ SET ANSI_NULLS ON
 GO
 --'Development > Chris Johnson > GL Balances And Mvmts';
 
-Create Proc [Report].[UspResults_MovementsTrialBalances]
+CREATE Proc [Report].[UspResults_MovementsTrialBalances]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -67,7 +67,9 @@ Stored procedure set out to query multiple databases with the same information a
             , [Parse2] Varchar(50)
             , [Parse3] Varchar(50)
             );
-        Insert  [#Movements]
+        
+		
+		Insert  [#Movements]
                 ( [Company]
                 , [ShortName]
                 , [CompanyName]
@@ -113,11 +115,12 @@ Stored procedure set out to query multiple databases with the same information a
                 )
                 Exec [Report].[UspResults_TrialBalance] @RedTagType = @RedTagType ,
                     @RedTagUse = @RedTagUse; 
- -- varchar(500)
+ -- varchar(500)*/
 
         Create NonClustered Index [tdf] On [#Balances] ([Company],[GlCode],[GlYear],[Period]);
         Create NonClustered Index [tfd] On [#Movements] ([Company],[GlCode],[GlYear],[GlPeriod]);
 
+		Set NoCount off
         Select  [B].[Company]
               , [B].[ShortName]
               , [B].[CompanyName]
@@ -132,10 +135,8 @@ Stored procedure set out to query multiple databases with the same information a
               , [B].[Debit]
               , [B].[Credit]
               , [B].[Period]
-              , [M].[Company]
               , [M].[Movement]
               , [M].[GlPeriod]
-              , [M].[GlYear]
               , [M].[Source]
               , [M].[Journal]
               , [B].[AccountType]
