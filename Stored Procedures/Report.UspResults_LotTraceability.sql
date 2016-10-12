@@ -2,6 +2,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE Proc [Report].[UspResults_LotTraceability]
     (
       @Company Varchar(Max)
@@ -414,7 +416,7 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[TotalReceiptQty]
                       , [IM].[StockUom]
                       , [LT].[UnitCost]
-                      , [LT].[TrnQuantity]*[TTAM].[AmountModifier]
+                      , [LT].[TrnQuantity] * [TTAM].[AmountModifier]
                       , [LT].[TrnValue]
                       , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob]) = 1
                                            Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
@@ -478,12 +480,12 @@ Stored procedure set out to query multiple databases with the same information a
                     On [CN].[Company] = [R].[Company]
                 Left Join [Lookups].[Warehouse] As [W]
                     On [W].[Warehouse] = [R].[Warehouse]
-                       And [W].[Company] = [R].[Company]
-        Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
-                                              'Issue to a job' ,
-                                              'Transfer of lot qty' ,
-                                              'Adjustment to lot qty' ,
-                                              'Dispatch note' );
+                       And [W].[Company] = [R].[Company];
+        --Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
+        --                                      'Issue to a job' ,
+        --                                      'Transfer of lot qty' ,
+        --                                      'Adjustment to lot qty' ,
+        --                                      'Dispatch note' );
 
 --SELECT * FROM [#ArCustomer] As [AC]
     End;
