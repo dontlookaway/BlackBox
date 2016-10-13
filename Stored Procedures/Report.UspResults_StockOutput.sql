@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -303,7 +302,7 @@ Details of where lots are distributed
             , [SalesOrderLine] Varchar(15)
             , [TrnQuantity] Numeric(20 , 7)
             , [TrnValue] Numeric(20 , 2)
-            , [TrnType] Varchar(10)
+            , [TrnType] Varchar(100)
             , [AmountModifier] Int
             , [TrnDate] DateTime2
             , [OldExpiryDate] DateTime2
@@ -367,7 +366,7 @@ Details of where lots are distributed
                       , [wm].[SalesOrderLine]
                       , [lt].[TrnQuantity]
                       , [lt].[TrnValue]
-                      , [lt].[TrnType]
+                      , [TrnType] = [LTTT].[TrnTypeDescription]--[lt].[TrnType]
                       , [ttam].[AmountModifier]
                       , [lt].[TrnDate]
                       , [lt].[OldExpiryDate]
@@ -381,20 +380,29 @@ Details of where lots are distributed
                       , [lt].[Narration]
                       , [lt].[Reference]
                 From    [#LotTransactions] As [lt]
-                        Inner Join [#Lots] As [l] On [l].[Lot] = [lt].[Lot] Collate Latin1_General_BIN
-                                                     And [l].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                        Left Join [#WipMaster] As [wm] On [wm].[Job] = [lt].[Job] Collate Latin1_General_BIN
-                                                          And [wm].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                        Left Join [#SorMaster] As [sm] On [sm].[SalesOrder] = [wm].[SalesOrder]
-                                                          And [sm].[DatabaseName] = [wm].[DatabaseName]
-                        Left Join [#InvMaster] As [im] On [im].[DatabaseName] = [lt].[DatabaseName]
-                                                          And [im].[StockCode] = [l].[StockCode]
+                        Inner Join [#Lots] As [l]
+                            On [l].[Lot] = [lt].[Lot] Collate Latin1_General_BIN
+                               And [l].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [#WipMaster] As [wm]
+                            On [wm].[Job] = [lt].[Job] Collate Latin1_General_BIN
+                               And [wm].[DatabaseName] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [#SorMaster] As [sm]
+                            On [sm].[SalesOrder] = [wm].[SalesOrder]
+                               And [sm].[DatabaseName] = [wm].[DatabaseName]
+                        Left Join [#InvMaster] As [im]
+                            On [im].[DatabaseName] = [lt].[DatabaseName]
+                               And [im].[StockCode] = [l].[StockCode]
                         Left Join [BlackBox].[Lookups].[TrnTypeAmountModifier]
-                        As [ttam] On [ttam].[TrnType] = [lt].[TrnType]  Collate Latin1_General_BIN
-                                     And [ttam].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                        Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
-                        Left Join [BlackBox].[Lookups].[Warehouse] As [w] On [w].[Warehouse] = [lt].[Warehouse]
-                                                              And [w].[Company] = [lt].[DatabaseName];
+                            As [ttam]
+                            On [ttam].[TrnType] = [lt].[TrnType]  Collate Latin1_General_BIN
+                               And [ttam].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [Lookups].[CompanyNames] As [cn]
+                            On [cn].[Company] = [lt].[DatabaseName] Collate Latin1_General_BIN
+                        Left Join [BlackBox].[Lookups].[Warehouse] As [w]
+                            On [w].[Warehouse] = [lt].[Warehouse]
+                               And [w].[Company] = [lt].[DatabaseName]
+                        Left Join [Lookups].[LotTransactionTrnType] [LTTT]
+                            On [LTTT].[TrnType] = [lt].[TrnType];
 
 --return results
         Select  [Company] = [DatabaseName]
