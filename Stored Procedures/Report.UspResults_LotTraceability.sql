@@ -2,8 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Report].[UspResults_LotTraceability]
     (
       @Company Varchar(Max)
@@ -16,6 +14,8 @@ As
 Template designed by Chris Johnson, Prometic Group September 2015
 Stored procedure set out to query multiple databases with the same information and return it in a collated format
 */
+        Set NoCount On;
+
         If IsNumeric(@Company) = 0
             Begin
                 Select  @Company = Upper(@Company);
@@ -88,31 +88,13 @@ Stored procedure set out to query multiple databases with the same information a
 			
 
 --create script to pull data from each db into the tables
-        Declare @SQLInvInspect Varchar(Max) = '
-	USE [?];
+        Declare @SQLInvInspect Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#InvInspect]
 	        ( [DatabaseName]
@@ -123,41 +105,23 @@ Stored procedure set out to query multiple databases with the same information a
 	        , [TotalReceiptQty]
 	        )
 				SELECT @DBCode
-					 , InspNarration = Case When [II].[InspNarration] = ''''
-                                           Then Null
-                                           Else [II].[InspNarration]
-                                      End
-         , [II].[Lot]
-         , [II].[GrnReceiptDate]
-         , [II].[StockCode]
-         , [II].[TotalReceiptQty] FROM [InvInspect] As [II]
+			, InspNarration = Case When [II].[InspNarration] = ''''
+								Then Null
+								Else [II].[InspNarration]
+							End
+			, [II].[Lot]
+			, [II].[GrnReceiptDate]
+			, [II].[StockCode]
+			, [II].[TotalReceiptQty] FROM [InvInspect] As [II]
 			End
 	End';
-        Declare @SQLLotTransactions Varchar(Max) = '
-	USE [?];
+        Declare @SQLLotTransactions Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#LotTransactions]
 		        ( [DatabaseName]
@@ -177,49 +141,31 @@ Stored procedure set out to query multiple databases with the same information a
 		        )
 				SELECT @DBCode
 					 , [LT].[Lot]
-             , [LT].[StockCode]
-             , [LT].[TrnDate]
-             , [LT].[Warehouse]
-             , [LT].[Bin]
-             , [Job] = Case When [LT].[Job] = '''' Then Null
-                             Else [LT].[Job]
-                        End
-             , [Reference] = Case When [LT].[Reference] = '''' Then Null
-                                   Else [LT].[Reference]
-                              End
-             , [LT].[UnitCost]
-             , [LT].[TrnQuantity]
-             , [LT].[TrnValue]
-			 , [LT].TrnType 
-			 , [LT].[JobPurchOrder]
-			 , [LT].Customer FROM [LotTransactions] As [LT]
+				 , [LT].[StockCode]
+				 , [LT].[TrnDate]
+				 , [LT].[Warehouse]
+				 , [LT].[Bin]
+				 , [Job] = Case When [LT].[Job] = '''' Then Null
+								 Else [LT].[Job]
+							End
+				 , [Reference] = Case When [LT].[Reference] = '''' Then Null
+									   Else [LT].[Reference]
+								  End
+				 , [LT].[UnitCost]
+				 , [LT].[TrnQuantity]
+				 , [LT].[TrnValue]
+				 , [LT].TrnType 
+				 , [LT].[JobPurchOrder]
+				 , [LT].Customer FROM [LotTransactions] As [LT]
 			End
 	End';
-        Declare @SQLInvMaster Varchar(Max) = '
-	USE [?];
+        Declare @SQLInvMaster Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert [#InvMaster]
 		        ( [DatabaseName]
@@ -228,36 +174,19 @@ Stored procedure set out to query multiple databases with the same information a
 		        , [StockCode]
 		        )
 				SELECT @DBCode
-					, [IM].[Description]
-             , [IM].[StockUom]
-             , [IM].[StockCode] FROM [InvMaster] As [IM]
+				, [IM].[Description]
+				, [IM].[StockUom]
+				, [IM].[StockCode] FROM [InvMaster] As [IM]
 			End
 	End';
         Declare @SQLArCustomer Varchar(Max) = '
 	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
-	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
-            + --Only query DBs beginning SysProCompany
-            '
+	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-	BEGIN'
-            + --only companies selected in main run, or if companies selected then all
-            '
+	BEGIN
 		IF @DBCode in (''' + Replace(@Company , ',' , ''',''') + ''') or '''
             + Upper(@Company) + ''' = ''ALL''
-			Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT'
-            + --count number of tables requested (number of commas plus one)
-            '
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')'
-            + --Count of the tables requested how many exist in the db
-            '
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) '
-            + --only if the count matches (all the tables exist in the requested db) then run the script
-            '
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 				Insert  [#ArCustomer]
 						( [DatabaseName]
@@ -284,19 +213,23 @@ Stored procedure set out to query multiple databases with the same information a
 			        , [ActCompleteDate]
 			        )
 				Select  @DBCode
-						,[WM].[Job]
-						,[WM].[ActCompleteDate]
-				From    [WipMaster] [WM];
+					,[WM].[Job]
+					,[WM].[ActCompleteDate]
+					From    [WipMaster] [WM];
 			End
 	End';
 --Enable this function to check script changes (try to run script directly against db manually)
 --Print @SQL
 
 --execute script against each db, populating the base tables
-        Exec [Process].[ExecForEachDB] @cmd = @SQLInvInspect;
-        Exec [Process].[ExecForEachDB] @cmd = @SQLInvMaster;
-        Exec [Process].[ExecForEachDB] @cmd = @SQLLotTransactions;
-        Exec [Process].[ExecForEachDB] @cmd = @SQLArCustomer;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLInvInspect , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLInvMaster , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLLotTransactions , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLArCustomer , -- nvarchar(max)
+            @SchemaTablesToCheck = @ListOfTables;
         Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLWipMaster ,
             @SchemaTablesToCheck = @ListOfTables;
 		
@@ -416,14 +349,15 @@ Stored procedure set out to query multiple databases with the same information a
                       , [II].[TotalReceiptQty]
                       , [IM].[StockUom]
                       , [LT].[UnitCost]
-                      , [LT].[TrnQuantity] * [TTAM].[AmountModifier]
+                      , [TrnQuantity] = [LT].[TrnQuantity]
+                        * [TTAM].[AmountModifier]
                       , [LT].[TrnValue]
                       , [MasterJob] = Case When IsNumeric([LMJ].[MasterJob]) = 1
                                            Then Convert(Varchar(30) , Convert(Int , [LMJ].[MasterJob]))
                                            Else [LMJ].[MasterJob]
                                       End
                       , [CustomerName] = [AC].[Name]
-                      , [LMJ].[ActCompleteDate]
+                      , [MasterJobDate] = [LMJ].[ActCompleteDate]
                 From    [#InvInspect] As [II]
                         Full Outer Join [#LotTransactions] As [LT]
                             On [LT].[Lot] = [II].[Lot]
@@ -454,6 +388,8 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --return results
+
+        Set NoCount Off;
         Select  [CN].[CompanyName]
               , [R].[Company]
               , [R].[SupplierLotNumber]
