@@ -1,3 +1,4 @@
+INSERT INTO [Lookups].[LotTransactionTrnType] ([TrnType], [TrnTypeDescription]) VALUES ('C', 'Change Cost')
 INSERT INTO [Lookups].[LotTransactionTrnType] ([TrnType], [TrnTypeDescription]) VALUES ('A', 'Adjustment to lot qty')
 INSERT INTO [Lookups].[LotTransactionTrnType] ([TrnType], [TrnTypeDescription]) VALUES ('B', 'Bin Transfer')
 INSERT INTO [Lookups].[LotTransactionTrnType] ([TrnType], [TrnTypeDescription]) VALUES ('D', 'Dispatch note')
