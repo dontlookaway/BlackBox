@@ -6,3 +6,5 @@ CREATE TABLE [Lookups].[GlExpenseCode]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Gl Expense code descriptions', 'SCHEMA', N'Lookups', 'TABLE', N'GlExpenseCode', NULL, NULL
+GO

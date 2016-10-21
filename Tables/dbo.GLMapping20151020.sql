@@ -15,3 +15,5 @@ CREATE TABLE [dbo].[GLMapping20151020]
 [Mapping5] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'General Ledger mapping as provided by finance', 'SCHEMA', N'dbo', 'TABLE', N'GLMapping20151020', NULL, NULL
+GO

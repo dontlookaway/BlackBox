@@ -13,4 +13,7 @@ As
             And [SC].[ActivePOFlag] = 1;
 
  
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'limit of StockCodes for use in look ups', 'SCHEMA', N'Lookups', 'VIEW', N'vw_StockCodes_Bought_ActivePO', NULL, NULL
 GO

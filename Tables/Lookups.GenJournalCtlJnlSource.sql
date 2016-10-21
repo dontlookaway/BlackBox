@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[GenJournalCtlJnlSource]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Description of GenJournal CtlJnlSource', 'SCHEMA', N'Lookups', 'TABLE', N'GenJournalCtlJnlSource', NULL, NULL
+GO

@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[GenTransactionSource]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Description of Gen Transaction Source', 'SCHEMA', N'Lookups', 'TABLE', N'GenTransactionSource', NULL, NULL
+GO

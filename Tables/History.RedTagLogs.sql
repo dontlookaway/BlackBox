@@ -18,3 +18,5 @@ CREATE NONCLUSTERED INDEX [IX_RedTagLogs_UsedByName] ON [History].[RedTagLogs] (
 GO
 ALTER TABLE [History].[RedTagLogs] ADD CONSTRAINT [FK__RedTagLog__UsedB__3A779186] FOREIGN KEY ([UsedByType]) REFERENCES [Lookups].[RedTagsUsedByType] ([UsedByType])
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'history of reports run', 'SCHEMA', N'History', 'TABLE', N'RedTagLogs', NULL, NULL
+GO

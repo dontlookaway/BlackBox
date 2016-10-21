@@ -6,3 +6,5 @@ CREATE TABLE [Lookups].[GlAccountCode]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Description of GL AccountCode', 'SCHEMA', N'Lookups', 'TABLE', N'GlAccountCode', NULL, NULL
+GO

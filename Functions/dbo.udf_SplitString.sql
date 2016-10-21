@@ -52,4 +52,7 @@ Returns @Table TABLE ( Value VARCHAR(250) )
 
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'function used to parse multiple values separated by a delimiter', 'SCHEMA', N'dbo', 'FUNCTION', N'udf_SplitString', NULL, NULL
 GO

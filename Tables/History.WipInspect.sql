@@ -27,3 +27,5 @@ CREATE TABLE [History].[WipInspect]
 GO
 ALTER TABLE [History].[WipInspect] ADD CONSTRAINT [WipInspect_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipInspect change logs', 'SCHEMA', N'History', 'TABLE', N'WipInspect', NULL, NULL
+GO

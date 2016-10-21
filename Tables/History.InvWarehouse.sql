@@ -39,8 +39,8 @@ CREATE TABLE [History].[InvWarehouse]
 [UNITCOST] [float] NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-
-
 GO
 ALTER TABLE [History].[InvWarehouse] ADD CONSTRAINT [InvWarehouse_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from InvWarehouse change logs', 'SCHEMA', N'History', 'TABLE', N'InvWarehouse', NULL, NULL
 GO

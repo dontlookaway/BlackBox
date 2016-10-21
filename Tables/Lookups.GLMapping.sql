@@ -15,3 +15,5 @@ CREATE TABLE [Lookups].[GLMapping]
 [Mapping5] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'GL Mapping as provided by finance 2015', 'SCHEMA', N'Lookups', 'TABLE', N'GLMapping', NULL, NULL
+GO

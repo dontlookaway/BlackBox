@@ -18,3 +18,5 @@ CREATE TABLE [Lookups].[CurrencyRates]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'history of currency rates', 'SCHEMA', N'Lookups', 'TABLE', N'CurrencyRates', NULL, NULL
+GO

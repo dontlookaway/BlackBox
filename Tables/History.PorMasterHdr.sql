@@ -42,3 +42,5 @@ CREATE TABLE [History].[PorMasterHdr]
 GO
 ALTER TABLE [History].[PorMasterHdr] ADD CONSTRAINT [PorMasterHdr_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from PorMasterHdr change logs', 'SCHEMA', N'History', 'TABLE', N'PorMasterHdr', NULL, NULL
+GO

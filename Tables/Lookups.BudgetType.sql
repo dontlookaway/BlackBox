@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[BudgetType]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of budget types to be used in reports', 'SCHEMA', N'Lookups', 'TABLE', N'BudgetType', NULL, NULL
+GO

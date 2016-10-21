@@ -202,3 +202,5 @@ CREATE TABLE [History].[ApSupplier]
 GO
 ALTER TABLE [History].[ApSupplier] ADD CONSTRAINT [ApSupplier_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from ApSupplier change logs', 'SCHEMA', N'History', 'TABLE', N'ApSupplier', NULL, NULL
+GO

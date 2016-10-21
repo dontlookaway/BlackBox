@@ -54,8 +54,8 @@ CREATE TABLE [History].[ReqDetail]
 [SUPPLIER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-
-
 GO
 ALTER TABLE [History].[ReqDetail] ADD CONSTRAINT [ReqDetail_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from ReqDetail change logs', 'SCHEMA', N'History', 'TABLE', N'ReqDetail', NULL, NULL
 GO

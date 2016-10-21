@@ -107,4 +107,7 @@ Return
     );
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'This function returns an integer table containing all integers in the range of @START_NUMBER through @END_NUMBER, inclusive. The maximum number of rows that this function can return is 16777216.', 'SCHEMA', N'dbo', 'FUNCTION', N'UdfResults_NumberRange', NULL, NULL
 GO

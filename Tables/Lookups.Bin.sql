@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[Bin]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of bins to be used in reports', 'SCHEMA', N'Lookups', 'TABLE', N'Bin', NULL, NULL
+GO

@@ -579,3 +579,5 @@ CREATE TABLE [History].[ArCustomer]
 GO
 ALTER TABLE [History].[ArCustomer] ADD CONSTRAINT [ArCustomer_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from ArCustomer change logs', 'SCHEMA', N'History', 'TABLE', N'ArCustomer', NULL, NULL
+GO

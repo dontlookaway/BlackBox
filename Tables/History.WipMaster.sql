@@ -68,3 +68,5 @@ CREATE TABLE [History].[WipMaster]
 GO
 ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipMaster change logs', 'SCHEMA', N'History', 'TABLE', N'WipMaster', NULL, NULL
+GO

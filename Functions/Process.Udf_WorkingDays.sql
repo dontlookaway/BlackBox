@@ -31,4 +31,7 @@ As
 
         Return @DaysToExclude;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'generates the number of working days between two dates', 'SCHEMA', N'Process', 'FUNCTION', N'Udf_WorkingDays', NULL, NULL
 GO

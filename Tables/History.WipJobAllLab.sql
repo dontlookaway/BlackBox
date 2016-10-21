@@ -19,8 +19,8 @@ CREATE TABLE [History].[WipJobAllLab]
 [WIPJOBALLLABKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WORKCENTER] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-
-
 GO
 ALTER TABLE [History].[WipJobAllLab] ADD CONSTRAINT [WipJobAllLab_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipJobAllLab change logs', 'SCHEMA', N'History', 'TABLE', N'WipJobAllLab', NULL, NULL
 GO

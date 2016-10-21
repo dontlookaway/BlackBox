@@ -99,3 +99,5 @@ CREATE TABLE [History].[PorMasterDetail]
 GO
 ALTER TABLE [History].[PorMasterDetail] ADD CONSTRAINT [PorMasterDetail_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from PorMaster change logs', 'SCHEMA', N'History', 'TABLE', N'PorMasterDetail', NULL, NULL
+GO

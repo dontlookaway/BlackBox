@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[Buyers]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all buyers', 'SCHEMA', N'Lookups', 'TABLE', N'Buyers', NULL, NULL
+GO

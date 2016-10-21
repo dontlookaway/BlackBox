@@ -5,3 +5,5 @@ CREATE TABLE [dbo].[ExecForEachDBLogs]
 [Cmd] [nvarchar] (2000) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'place to capture details of exec for each db', 'SCHEMA', N'dbo', 'TABLE', N'ExecForEachDBLogs', NULL, NULL
+GO

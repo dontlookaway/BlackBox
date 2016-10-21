@@ -19,8 +19,8 @@ CREATE TABLE [History].[ReqHeader]
 [ROUTEDTOREQUISITIONUSER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [VALUEOFREQUISITION] [float] NULL
 ) ON [PRIMARY]
-
-
 GO
 ALTER TABLE [History].[ReqHeader] ADD CONSTRAINT [ReqHeader_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from ReqHeader change logs', 'SCHEMA', N'History', 'TABLE', N'ReqHeader', NULL, NULL
 GO

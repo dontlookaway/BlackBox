@@ -5,3 +5,5 @@ CREATE TABLE [Lookups].[ArInvoicePayTrnType]
 [LastUpdated] [datetime2] NULL
 ) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'ArInvoicePay TrnType Descriptions for use in reports', 'SCHEMA', N'Lookups', 'TABLE', N'ArInvoicePayTrnType', NULL, NULL
+GO

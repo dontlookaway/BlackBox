@@ -73,3 +73,5 @@ CREATE TABLE [History].[AssetMaster]
 GO
 ALTER TABLE [History].[AssetMaster] ADD CONSTRAINT [AssetMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from AssetManager change logs', 'SCHEMA', N'History', 'TABLE', N'AssetMaster', NULL, NULL
+GO

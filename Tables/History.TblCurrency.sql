@@ -41,3 +41,5 @@ CREATE TABLE [History].[TblCurrency]
 GO
 ALTER TABLE [History].[TblCurrency] ADD CONSTRAINT [TblCurrency_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'Logs from TblCurrency change logs', 'SCHEMA', N'History', 'TABLE', N'TblCurrency', NULL, NULL
+GO

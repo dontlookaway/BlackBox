@@ -6,3 +6,5 @@ CREATE TABLE [Lookups].[JnlStatus]
 GO
 ALTER TABLE [Lookups].[JnlStatus] ADD CONSTRAINT [PK__JnlStatu__5CAFD7D463EA2AD9] PRIMARY KEY CLUSTERED  ([JnlStatus]) ON [PRIMARY]
 GO
+EXEC sp_addextendedproperty N'MS_Description', N'JnlStatus Description', 'SCHEMA', N'Lookups', 'TABLE', N'JnlStatus', NULL, NULL
+GO
