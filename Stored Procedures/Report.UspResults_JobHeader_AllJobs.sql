@@ -622,4 +622,7 @@ Template designed by Chris Johnson, Prometic Group September 2015
         Drop Table [#Results];
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'high level details of Job, for all jobs', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_JobHeader_AllJobs', NULL, NULL
 GO

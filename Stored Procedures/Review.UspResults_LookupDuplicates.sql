@@ -401,4 +401,7 @@ As
         Set NoCount On;
         Drop Table [#DupeCheck];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check lookup tables for duplicates (indicates that refresh failed)', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_LookupDuplicates', NULL, NULL
 GO

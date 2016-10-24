@@ -66,4 +66,7 @@ end catch';
                 Set @CurrentProc = @CurrentProc + 1;
             End;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Stored procedure to execute all stored procs marked as update ', 'SCHEMA', N'Process', 'PROCEDURE', N'UspLoad_LoadController', NULL, NULL
 GO

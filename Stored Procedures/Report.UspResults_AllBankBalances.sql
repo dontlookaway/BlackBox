@@ -410,4 +410,7 @@ End';
         Drop Table [#ApBank];
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns list of all bank balances', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllBankBalances', NULL, NULL
 GO

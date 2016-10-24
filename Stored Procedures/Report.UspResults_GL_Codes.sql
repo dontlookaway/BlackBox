@@ -75,4 +75,7 @@ Set NoCount Off
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of gl codes', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GL_Codes', NULL, NULL
 GO

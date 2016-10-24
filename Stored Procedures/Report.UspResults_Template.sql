@@ -91,4 +91,7 @@ Set NoCount Off
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'used to develop new stored procs (copy and paste code and alter as necessary)', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_Template', NULL, NULL
 GO

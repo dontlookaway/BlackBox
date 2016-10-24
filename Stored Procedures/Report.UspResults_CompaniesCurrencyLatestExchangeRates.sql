@@ -74,4 +74,7 @@ Left Join [Lookups].[CompanyNames] As [CN] On Replace([CC].[DatabaseName],'Syspr
 
 Drop Table [#CompanyCurrency]
 End
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns current exchange rates in use', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_CompaniesCurrencyLatestExchangeRates', NULL, NULL
 GO

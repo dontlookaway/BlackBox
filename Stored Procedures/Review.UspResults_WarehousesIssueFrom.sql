@@ -78,4 +78,7 @@ end';
         Where   [WR].[IssueFrom] Not In ( 'Y' , 'N' )
         Order By [WR].[RowType] Desc;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of warehouse that do not have issue from completed', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_WarehousesIssueFrom', NULL, NULL
 GO

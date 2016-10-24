@@ -129,4 +129,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
         Drop Table [#UnpivotAmounts];
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Return closing balances related to InterCompany payments for analysis', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ClosingBalancesInterco', NULL, NULL
 GO

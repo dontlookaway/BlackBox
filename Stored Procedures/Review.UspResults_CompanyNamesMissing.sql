@@ -49,4 +49,7 @@ end';
         Set NoCount On;
         Drop Table [#ListOfDbs];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check for missing company names in lookup', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_CompanyNamesMissing', NULL, NULL
 GO

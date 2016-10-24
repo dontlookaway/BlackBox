@@ -69,4 +69,7 @@ Template designed by Chris Johnson, Prometic Group April 2016
                     On [CN].[Company] = [GC].[Company];
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details from Gen Control tables, providing quick overview of ledger', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GeneralLedgerControlStats', NULL, NULL
 GO

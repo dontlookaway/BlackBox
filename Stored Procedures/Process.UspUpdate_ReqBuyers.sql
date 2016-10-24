@@ -137,4 +137,7 @@ From    [dbo].[ReqDetail] As [RD];
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_ReqBuyers', NULL, NULL
 GO

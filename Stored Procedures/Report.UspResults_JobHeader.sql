@@ -553,4 +553,7 @@ Stored procedure set out to query multiple databases with the same information a
         Drop Table [#Results];
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'high level details of Job', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_JobHeader', NULL, NULL
 GO

@@ -136,4 +136,7 @@ Stored procedure set out to query multiple databases with the same information a
     End;
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details from the amendment jnl', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AmendmentJnl', NULL, NULL
 GO

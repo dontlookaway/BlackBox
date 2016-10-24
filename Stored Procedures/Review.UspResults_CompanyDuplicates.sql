@@ -74,4 +74,7 @@ As
 		From [#CpReview] [CR]
 		Order By [CR].[RowType] Desc
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check for duplicates in companyname table', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_CompanyDuplicates', NULL, NULL
 GO

@@ -532,4 +532,7 @@ Set NoCount Off
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'data for sales order KPI report', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrderKPI', NULL, NULL
 GO

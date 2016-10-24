@@ -297,4 +297,7 @@ where lower(' + QuoteName([R].[ColumnName]) + ') like ''' + @TextToSearch
         Drop Table [#ColumnList];
         Drop Table [#Results];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'proc to search for text in dbs - warning this is server intensive', 'SCHEMA', N'Reports', 'PROCEDURE', N'UspResults_SearchForText', NULL, NULL
 GO

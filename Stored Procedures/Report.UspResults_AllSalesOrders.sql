@@ -493,4 +493,7 @@ Stored procedure set out to query multiple databases with the same information a
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all sales orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllSalesOrders', NULL, NULL
 GO

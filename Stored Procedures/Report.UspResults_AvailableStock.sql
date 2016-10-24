@@ -303,4 +303,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of stock available in each warehouse', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AvailableStock', NULL, NULL
 GO

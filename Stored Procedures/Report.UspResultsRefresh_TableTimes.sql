@@ -240,4 +240,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'used to refresh all the lookup and history table, in addition providing times for how long this takes', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResultsRefresh_TableTimes', NULL, NULL
 GO

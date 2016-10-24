@@ -140,4 +140,7 @@ Stored procedure set out to query multiple databases with the same information a
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of the general ledger distribution from accounts payable with journals', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApJnlGLDistrs', NULL, NULL
 GO

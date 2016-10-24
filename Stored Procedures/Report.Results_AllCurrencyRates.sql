@@ -40,4 +40,7 @@ query on currency (required to capture tags)
               , [CR].[LastUpdated]
         From    [Lookups].[CurrencyRates] As [CR];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'provides a list of currency rates for all time', 'SCHEMA', N'Report', 'PROCEDURE', N'Results_AllCurrencyRates', NULL, NULL
 GO

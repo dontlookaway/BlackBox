@@ -36,4 +36,7 @@ As
                     On [RTUBT].[UsedByType] = [RTL].[UsedByType]
         Order By [RTL].[TagID] Desc;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'review of red tag logs', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_LogStats', NULL, NULL
 GO

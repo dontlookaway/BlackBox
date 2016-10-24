@@ -78,4 +78,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'used to return AP supp narrative in documents', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApSuppNarr', NULL, NULL
 GO

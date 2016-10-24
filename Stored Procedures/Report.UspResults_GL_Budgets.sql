@@ -25,4 +25,7 @@ As
 				Where BudgetType='C'
 
     End
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of gl budget figures', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GL_Budgets', NULL, NULL
 GO

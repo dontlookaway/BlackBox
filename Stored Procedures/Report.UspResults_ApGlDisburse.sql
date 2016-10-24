@@ -148,4 +148,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of the general ledger distribution from accounts payable', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApGlDisburse', NULL, NULL
 GO

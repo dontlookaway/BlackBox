@@ -111,4 +111,7 @@ As
         Set NoCount On;
         Drop Table [#ReportRuns_NonDev];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of the most commonly used reports', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_ReportsMostRun', NULL, NULL
 GO

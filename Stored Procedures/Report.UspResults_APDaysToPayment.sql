@@ -279,4 +279,7 @@ Stored procedure set out to query multiple databases with the same information a
         Order By [R].[InvoiceDate] Desc;
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns details on how long it takes for AP to be settled', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_APDaysToPayment', NULL, NULL
 GO

@@ -90,4 +90,7 @@ From    [sys].[dm_db_missing_index_groups] [dm_mig]
     From    [#ResultSets] As [RS]
 	Where [RS].[TableName] Is Not Null
 	Order By [RS].[AvgEstimatedImpact] Desc;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'proc to evaluate any missing indexes that can be added', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SearchForMissingIndexes', NULL, NULL
 GO

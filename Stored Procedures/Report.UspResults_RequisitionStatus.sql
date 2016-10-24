@@ -240,4 +240,7 @@ List of all requisitions and their statuses
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions with status', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_RequisitionStatus', NULL, NULL
 GO

@@ -170,4 +170,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               End;
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'budgets vs actuals from GL', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_BudgetsActuals', NULL, NULL
 GO

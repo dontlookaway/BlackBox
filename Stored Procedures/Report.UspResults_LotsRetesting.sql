@@ -374,4 +374,7 @@ Stored procedure set out to query multiple databases with the same information a
     End;
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of lots and when they need to be retested', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_LotsRetesting', NULL, NULL
 GO

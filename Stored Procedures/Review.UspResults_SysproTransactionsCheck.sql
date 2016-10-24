@@ -26,4 +26,7 @@ As
                                         - Convert(Int , [STL].[AlreadyEntered]))
         From    [Process].[SysproTransactionsLogged] [STL];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check of non-entered audit logs into history tables', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_SysproTransactionsCheck', NULL, NULL
 GO

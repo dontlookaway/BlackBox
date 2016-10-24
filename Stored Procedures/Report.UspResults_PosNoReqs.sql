@@ -188,4 +188,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of Purchase orders without requisitions', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PosNoReqs', NULL, NULL
 GO

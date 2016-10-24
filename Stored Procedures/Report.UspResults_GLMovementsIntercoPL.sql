@@ -85,4 +85,7 @@ As
                                    'INTINTERCO' , 'INTERCOCOS' );
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Intercompany profit and loss general ledger', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovementsIntercoPL', NULL, NULL
 GO

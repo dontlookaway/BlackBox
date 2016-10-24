@@ -48,4 +48,7 @@ As
 
 
  Drop Table History.Banana*/
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'used to create tables and constraints (used for automatic creation of history tables)', 'SCHEMA', N'Process', 'PROCEDURE', N'UspCreate_Table', NULL, NULL
 GO

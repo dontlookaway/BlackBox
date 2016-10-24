@@ -594,4 +594,7 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'replaced by UspResults_AccPayable_AgedInvoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApAgingInvoices', NULL, NULL
 GO

@@ -267,4 +267,7 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of available lots up to the required amount entered, lots picked from oldest to newest', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AvailableLots_AmountRequired', NULL, NULL
 GO

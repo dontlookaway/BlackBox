@@ -155,4 +155,7 @@ As
         Drop Table [#Movements];
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'PBL Revenue and Cost of Sales', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovementsPBLRevCos', NULL, NULL
 GO

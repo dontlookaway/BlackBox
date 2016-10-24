@@ -236,4 +236,7 @@ End';
 
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of changes made to purchase orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrdersHistory', NULL, NULL
 GO

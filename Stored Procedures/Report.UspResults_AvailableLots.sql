@@ -321,4 +321,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all available lots', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AvailableLots', NULL, NULL
 GO

@@ -342,4 +342,7 @@ Stored procedure set out to query multiple databases with the same information a
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'journals for each company', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_CompanyTransactions', NULL, NULL
 GO

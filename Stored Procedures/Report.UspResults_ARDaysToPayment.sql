@@ -328,4 +328,7 @@ Stored procedure set out to query multiple databases with the same information a
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns details on how long it takes for AR to be settled', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ARDaysToPayment', NULL, NULL
 GO

@@ -109,4 +109,7 @@ As /*
             End;
 
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'works out which columns need to be added to tables for history generation', 'SCHEMA', N'Process', 'PROCEDURE', N'UspAlter_CheckAndAddColumns', NULL, NULL
 GO

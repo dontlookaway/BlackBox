@@ -709,4 +709,7 @@ Template designed by Chris Johnson, Prometic Group February 2016
               , [Line] Asc;
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all purchase orders and requisitions', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllPosAndReqs', NULL, NULL
 GO

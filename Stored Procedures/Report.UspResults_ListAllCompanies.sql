@@ -95,4 +95,7 @@ for use in report dropdowns
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all companies available', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ListAllCompanies', NULL, NULL
 GO

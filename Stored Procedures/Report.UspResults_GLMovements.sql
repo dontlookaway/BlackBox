@@ -279,4 +279,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of gl movements', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovements', NULL, NULL
 GO

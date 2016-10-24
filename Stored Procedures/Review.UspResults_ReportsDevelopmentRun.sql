@@ -111,4 +111,7 @@ As
         Set NoCount On;
         Drop Table [#ReportRuns_NonDev];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of reports in development run', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_ReportsDevelopmentRun', NULL, NULL
 GO

@@ -417,4 +417,7 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'purchase order details with invoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrdersInvoices', NULL, NULL
 GO

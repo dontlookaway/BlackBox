@@ -121,4 +121,7 @@ As /*
 	--select * from History.Apple
 	--drop table History.Apple
 	--drop table History.Banana
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'used to rename tables and drops indexes (used for automatic archiving of history tables)', 'SCHEMA', N'Process', 'PROCEDURE', N'UspAlter_TableName', NULL, NULL
 GO

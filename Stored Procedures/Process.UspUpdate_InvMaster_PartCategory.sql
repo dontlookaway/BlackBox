@@ -135,4 +135,7 @@ As
             Print 'UspUpdate_InvMaster_PartCategory - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_InvMaster_PartCategory', NULL, NULL
 GO

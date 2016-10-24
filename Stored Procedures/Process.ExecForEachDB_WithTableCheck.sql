@@ -181,4 +181,8 @@ Amended 21st June to check for tables to run against before executing
                 Deallocate [DbNames];
             End;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'The purpose of this stored procedure is to replace the undocumented procedure sp_MSforeachdb as this may be removed in future versions
+of SQL Server. The stored procedure iterates through all user databases and executes the code passed to it. In addition to this, proc checks that tables exist before executing (reducing error messages)', 'SCHEMA', N'Process', 'PROCEDURE', N'ExecForEachDB_WithTableCheck', NULL, NULL
 GO

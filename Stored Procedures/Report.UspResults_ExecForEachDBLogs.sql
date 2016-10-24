@@ -20,4 +20,7 @@ Group By Cast([EFEDL].[LogTime] As Date)
       , DateName(Weekday , [EFEDL].[LogTime])
 Order By [LogDate] Asc;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns details of how often exec for each db is being called, used to monitor code usage', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ExecForEachDBLogs', NULL, NULL
 GO

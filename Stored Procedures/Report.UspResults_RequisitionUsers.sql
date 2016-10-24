@@ -290,4 +290,7 @@ List of all requisition users
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions users', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_RequisitionUsers', NULL, NULL
 GO

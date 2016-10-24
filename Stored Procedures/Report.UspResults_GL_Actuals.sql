@@ -99,4 +99,7 @@ As
 
 --SELECT * FROM #Results As R
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of gl actual figures', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GL_Actuals', NULL, NULL
 GO

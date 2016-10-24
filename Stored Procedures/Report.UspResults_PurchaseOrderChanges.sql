@@ -247,4 +247,7 @@ Stored procedure set out to query multiple databases with the same information a
     End;
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of changes made to purchase orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrderChanges', NULL, NULL
 GO

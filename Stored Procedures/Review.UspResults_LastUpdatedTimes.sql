@@ -76,4 +76,7 @@ As
         Set NoCount On;
         Drop Table [#TablesNotUpdated];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check lookup and history tables for when last updated', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_LastUpdatedTimes', NULL, NULL
 GO

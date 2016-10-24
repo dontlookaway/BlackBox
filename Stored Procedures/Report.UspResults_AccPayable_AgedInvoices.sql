@@ -235,4 +235,7 @@ Replacement of aged AP analysis
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'returns details of aged accounts payable invoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AccPayable_AgedInvoices', NULL, NULL
 GO

@@ -365,4 +365,7 @@ As
                 Drop Table [#JournalDetail];
             End;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'unused procedure', 'SCHEMA', N'Report', 'PROCEDURE', N'Results_BudgetTest', NULL, NULL
 GO

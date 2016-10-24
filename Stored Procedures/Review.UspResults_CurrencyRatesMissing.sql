@@ -35,4 +35,7 @@ As
                 Select  [CurrencyStatus] = 'Current exchange rates';
             End;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'check that currency rates are available', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_CurrencyRatesMissing', NULL, NULL
 GO

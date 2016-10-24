@@ -314,4 +314,7 @@ Exec [Report].[UspResults_FixedAssets] 10
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of all fixed assets', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_FixedAssets', NULL, NULL
 GO

@@ -280,4 +280,7 @@ Stored procedure set out to bring back purchase orders which do not have receipt
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of purchase orders outstanding', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_OutstandingPurchaseOrders', NULL, NULL
 GO

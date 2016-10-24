@@ -302,4 +302,7 @@ Table #Results
     From
         #Results;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'budgets vs actuals from GL', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_BudgetsVsActuals', NULL, NULL
 GO

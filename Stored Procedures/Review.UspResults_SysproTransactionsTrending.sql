@@ -45,4 +45,7 @@ As
         Order By DateFromParts(DatePart(Year , [STL].[SignatureDateTime]) ,
                                DatePart(Month , [STL].[SignatureDateTime]) , 1) Desc;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'review of syspro audit logs captured in BlackBox', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_SysproTransactionsTrending', NULL, NULL
 GO

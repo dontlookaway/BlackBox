@@ -151,4 +151,7 @@ If Lower(Db_Name()) Not Like ''%_srs'' And Lower(Db_Name()) Like ''sysprocompany
 
         Drop Table [#ObjectsAndColumns];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'provide details of differences between databases', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_DbDiffs', NULL, NULL
 GO

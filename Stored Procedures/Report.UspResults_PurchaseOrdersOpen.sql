@@ -380,4 +380,7 @@ Returns details of all open (non cancelled & non fulfilled) PO's
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'purchase order details for open purchase orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrdersOpen', NULL, NULL
 GO

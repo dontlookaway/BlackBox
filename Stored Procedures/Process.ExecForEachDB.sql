@@ -138,4 +138,8 @@ Based off of http://sqlblog.com/blogs/aaron_bertrand/archive/2010/02/08/bad-habi
                 Deallocate [DbNames];
             End;
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'The purpose of this stored procedure is to replace the undocumented procedure sp_MSforeachdb as this may be removed in future versions
+of SQL Server. The stored procedure iterates through all user databases and executes the code passed to it.', 'SCHEMA', N'Process', 'PROCEDURE', N'ExecForEachDB', NULL, NULL
 GO

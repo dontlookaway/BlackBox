@@ -350,4 +350,7 @@ List of all Sales orders with details
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of sales orders ', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrders', NULL, NULL
 GO

@@ -363,4 +363,7 @@ As
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'data for sales order stats report', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrderStats', NULL, NULL
 GO

@@ -111,4 +111,7 @@ As
         Set NoCount On;
         Drop Table [#ProcsRun_NonDev];
     End;
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'details of the most commonly used stored procedures', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_ProcsMostRun', NULL, NULL
 GO

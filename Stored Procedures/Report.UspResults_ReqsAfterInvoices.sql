@@ -421,4 +421,7 @@ Proc to return where a requisition was created after an invoice was received
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions raised post invoices appearing in system', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ReqsAfterInvoices', NULL, NULL
 GO

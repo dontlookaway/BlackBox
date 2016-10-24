@@ -259,4 +259,7 @@ Stored procedure set out to query multiple databases with the same information a
  
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of reserved lots used (allocated blood)', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ReservedLots', NULL, NULL
 GO

@@ -568,4 +568,7 @@ Stored procedure for Payment run verify
     End;
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'data for Payment Run report', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PaymentRunVerify', NULL, NULL
 GO

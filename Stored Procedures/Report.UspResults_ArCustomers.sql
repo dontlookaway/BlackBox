@@ -141,4 +141,7 @@ Select @DBCode
 
     End;
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'list of all AR customers', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ArCustomers', NULL, NULL
 GO

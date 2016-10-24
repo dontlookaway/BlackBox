@@ -360,4 +360,7 @@ End';
     End;
 
 
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'purchase order details', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrders', NULL, NULL
 GO

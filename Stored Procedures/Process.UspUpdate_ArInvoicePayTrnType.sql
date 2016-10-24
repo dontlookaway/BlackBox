@@ -105,4 +105,7 @@ As
                     + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
     End;	
+
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_ArInvoicePayTrnType', NULL, NULL
 GO
