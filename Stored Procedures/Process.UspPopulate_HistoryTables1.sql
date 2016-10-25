@@ -464,8 +464,8 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                 Create Table [#TablesToRename]
                     (
                       [TID] Int Identity(1 , 1)
-                    , [SchemaName] Varchar(500)
-                    , [TableName] Varchar(500)
+                    , [SchemaName] Varchar(500)  Collate Latin1_General_BIN
+                    , [TableName] Varchar(500)  Collate Latin1_General_BIN
                     , [NewTableName] As 'Archive' + [TableName]
                         + Upper(Replace(Replace(Convert(Varchar(24) , GetDate() , 113) ,
                                                 ' ' , '') , ':' , '')) --new table name is old name plus the current timestamp
@@ -519,7 +519,7 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                 Create Table [#TablesToBeCreated]
                     (
                       [TID] Int Identity(1 , 1)
-                    , [TableName] Varchar(500)
+                    , [TableName] Varchar(500) Collate Latin1_General_BIN
                     );
 
                 Insert  [#TablesToBeCreated]
@@ -550,7 +550,7 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                         From    [#TablesToBeCreated] As [TTBC]
                         Where   [TTBC].[TID] = @CurrentTable;
 
-                        Set @Columns = 'TransactionDescription VARCHAR(150), DatabaseName VARCHAR(150), SignatureDateTime DATETIME2, Operator VARCHAR(20), ItemKey VARCHAR(150), ComputerName VARCHAR(150), ProgramName VARCHAR(100), ConditionName VARCHAR(15), AlreadyEntered BIT';
+                        Set @Columns = 'TransactionDescription VARCHAR(150)  Collate Latin1_General_BIN, DatabaseName VARCHAR(150)  Collate Latin1_General_BIN, SignatureDateTime DATETIME2, Operator VARCHAR(20)  Collate Latin1_General_BIN, ItemKey VARCHAR(150)  Collate Latin1_General_BIN, ComputerName VARCHAR(150) Collate Latin1_General_BIN, ProgramName VARCHAR(100) Collate Latin1_General_BIN, ConditionName VARCHAR(15)  Collate Latin1_General_BIN, AlreadyEntered BIT';
                         Set @Constraints = ' Constraint ' + @TableName
                             + '_AllKeys Primary Key NonClustered ( DatabaseName, SignatureDateTime, ItemKey, Operator, ProgramName ) With ( Ignore_Dup_Key = On )';
 
@@ -580,7 +580,7 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                 Create Table [#MissingTables]
                     (
                       [TID] Int Identity(1 , 1)
-                    , [TableName] Varchar(500)
+                    , [TableName] Varchar(500) Collate Latin1_General_BIN
                     );
 
                 Insert  [#MissingTables]
