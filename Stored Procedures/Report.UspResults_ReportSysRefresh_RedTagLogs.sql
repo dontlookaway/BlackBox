@@ -28,11 +28,11 @@ As
             (
               [TagID] Int
             , [TagDatetime] DateTime2
-            , [StoredProcDb] Varchar(255)
-            , [StoredProcSchema] Varchar(255)
-            , [StoredProcName] Varchar(255)
-            , [UsedByName] Varchar(500)
-            , [UsedByDb] Varchar(255)
+            , [StoredProcDb] Varchar(255) Collate Latin1_General_BIN
+            , [StoredProcSchema] Varchar(255) Collate Latin1_General_BIN
+            , [StoredProcName] Varchar(255) Collate Latin1_General_BIN
+            , [UsedByName] Varchar(500) Collate Latin1_General_BIN
+            , [UsedByDb] Varchar(255) Collate Latin1_General_BIN
             , [TranRank] BigInt
             );
         Create Table [#ListOfRuns]

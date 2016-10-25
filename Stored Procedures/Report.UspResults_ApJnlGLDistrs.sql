@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_ApJnlGLDistrs]
+CREATE Proc [Report].[UspResults_ApJnlGLDistrs]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -35,26 +35,25 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApJnlDists]
             (
-              [DatabaseName] Varchar(150)
-            , [Invoice] Varchar(20)
-            , [Supplier] Varchar(15)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
             , [TrnYear] Int
             , [TrnMonth] Int
             , [Journal] Int
             , [EntryNumber] Int
             , [SubEntry] Int
-            , [SupplierGlCode] Varchar(35)
+            , [SupplierGlCode] Varchar(35) Collate Latin1_General_BIN
             , [TrnDate] Date
-            , [ExpenseGlCode] Varchar(35)
+            , [ExpenseGlCode] Varchar(35) Collate Latin1_General_BIN
             , [DistrValue] Numeric(20 , 3)
-            , [Reference] Varchar(30)
+            , [Reference] Varchar(30) Collate Latin1_General_BIN
             );
 
         
 
 --create script to pull data from each db into the tables
-        Declare @SQL Varchar(Max) = '
-	USE [?];
+        Declare @SQL Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -139,7 +138,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#ApJnlDists] [AJD];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of the general ledger distribution from accounts payable with journals', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApJnlGLDistrs', NULL, NULL

@@ -21,8 +21,8 @@ As
 
         Create Table [#ReportRuns_NonDev]
             (
-              [ReportName] Varchar(500)
-            , [ReportType] Varchar(150)
+              [ReportName] Varchar(500) Collate Latin1_General_BIN
+            , [ReportType] Varchar(150) Collate Latin1_General_BIN
             , [RunTime] DateTime
             , [SPs] Int
             );
@@ -111,7 +111,6 @@ As
         Set NoCount On;
         Drop Table [#ReportRuns_NonDev];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of the most commonly used reports', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_ReportsMostRun', NULL, NULL
 GO

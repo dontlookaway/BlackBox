@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_ApInvoice]
+CREATE Proc [Report].[UspResults_ApInvoice]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -35,24 +35,24 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApInvoice]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
             , [JournalDate] Date
             , [Journal] Int
             , [InvoiceDate] Date
             , [DiscountDate] Date
             , [DueDate] Date
-            , [Reference] Varchar(30)
-            , [InvoiceStatus] Char(1)
-            , [Currency] Char(3)
+            , [Reference] Varchar(30) Collate Latin1_General_BIN
+            , [InvoiceStatus] Char(1) Collate Latin1_General_BIN
+            , [Currency] Char(3) Collate Latin1_General_BIN
             , [InvoiceYear] Int
             , [InvoiceMonth] Int
             , [ExchangeRate] Numeric(15 , 8)
             , [CurrencyValue] Numeric(20 , 2)
-            , [PostCurrency] Char(3)
+            , [PostCurrency] Char(3) Collate Latin1_General_BIN
             , [ConvRate] Numeric(15 , 8)
-            , [PaymentNumber] Varchar(15)
+            , [PaymentNumber] Varchar(15) Collate Latin1_General_BIN
             );
 
 
@@ -146,7 +146,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#ApInvoice] [AI];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of Ap Invoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApInvoice', NULL, NULL

@@ -23,8 +23,8 @@ As
             Begin
                 Create Table [Lookups].[GenJournalCtlJnlSource]
                     (
-                      [GenJournalCtlJnlSource] Char(2)
-                    , [GenJournalCtlJnlSourceDesc] Varchar(250)
+                      [GenJournalCtlJnlSource] Char(2) Collate Latin1_General_BIN
+                    , [GenJournalCtlJnlSourceDesc] Varchar(250) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -119,7 +119,6 @@ As
                     + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_GenJournalCtlJnlSource', NULL, NULL
 GO

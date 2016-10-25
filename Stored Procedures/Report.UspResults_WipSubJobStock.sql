@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -26,7 +25,8 @@ Stored procedure set out to query multiple databases with the same information a
 	--Red tag
     Declare @RedTagDB Varchar(255)= Db_Name();
     Exec [Process].[UspInsert_RedTagLogs] @StoredProcDb = 'BlackBox' ,
-        @StoredProcSchema = 'Report' , @StoredProcName = 'UspResults_WipSubJobStock' ,
+        @StoredProcSchema = 'Report' ,
+        @StoredProcName = 'UspResults_WipSubJobStock' ,
         @UsedByType = @RedTagType , @UsedByName = @RedTagUse ,
         @UsedByDb = @RedTagDB;
 
@@ -96,7 +96,8 @@ Stored procedure set out to query multiple databases with the same information a
                 , [SubJob] Varchar(20)
                     Collate Latin1_General_BIN
                     Constraint [JobLevelCheck_AllKeys]
-                    Primary Key NonClustered ( [DatabaseName] , [Job] , [SubJob] )
+                    Primary Key NonClustered
+                    ( [DatabaseName] , [Job] , [SubJob] )
                     With ( Ignore_Dup_Key = On )
                 );
             Create Table [#WipMasterSub]
@@ -114,12 +115,12 @@ Stored procedure set out to query multiple databases with the same information a
                 , [StockDescription] Varchar(50) Collate Latin1_General_BIN
                 , [UnitQtyReqdEnt] Numeric(20 , 8)
                 , [QtyIssuedEnt] Numeric(20 , 8)
-                , [FixedQtyPerFlag] Char(1)
+                , [FixedQtyPerFlag] Char(1) Collate Latin1_General_BIN
                 , [Uom] Varchar(10) Collate Latin1_General_BIN
-                , [AllocCompleted] Char(1)
+                , [AllocCompleted] Char(1) Collate Latin1_General_BIN
                 , [OperationOffset] Int
                 , [Job] Varchar(20) Collate Latin1_General_BIN
-                , [ReservedLotSerFlag] Char(1)
+                , [ReservedLotSerFlag] Char(1) Collate Latin1_General_BIN
                 , [ReservedLotQty] Numeric(20 , 8)
                 );
             Create Table [#WipAllMatLot]
@@ -153,9 +154,9 @@ Stored procedure set out to query multiple databases with the same information a
                 (
                   [DatabaseName] Varchar(150) Collate Latin1_General_BIN
                 , [StockCode] Varchar(20) Collate Latin1_General_BIN
-                , [PartCategory] Char(1)
-                , [IssMultLotsFlag] Char(1)
-                , [StockUom] Varchar(10)
+                , [PartCategory] Char(1) Collate Latin1_General_BIN
+                , [IssMultLotsFlag] Char(1) Collate Latin1_General_BIN
+                , [StockUom] Varchar(10) Collate Latin1_General_BIN
                 , [Decimals] Int
                 );
             Create Table [#LotDetail]
@@ -184,8 +185,7 @@ Stored procedure set out to query multiple databases with the same information a
 --create script to pull data from each db into the tables
 
 -- all jobs that attach to a high level
-            Declare @SQLJobLevelCheck Varchar(Max) = '
-	USE [?];
+            Declare @SQLJobLevelCheck Varchar(Max) = '	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
                 + --Only query DBs beginning SysProCompany
@@ -632,8 +632,9 @@ Stored procedure set out to query multiple databases with the same information a
                                   , [Job] = [jlc].[SubJob]
                                   , [wms].[SubJob]
                             From    [#JobLevelCheck] As [jlc]
-                                    Inner Join [#WipMasterSub] As [wms] On [wms].[Job] = [jlc].[SubJob]
-                                                              And [jlc].[DatabaseName] = [jlc].[DatabaseName]
+                                    Inner Join [#WipMasterSub] As [wms]
+                                        On [wms].[Job] = [jlc].[SubJob]
+                                           And [jlc].[DatabaseName] = [jlc].[DatabaseName]
                             Where   [jlc].[JobLevel] = @CurrentJobLevel - 1
                                     And [wms].[SubJob] <> '';
 	
@@ -753,28 +754,36 @@ Stored procedure set out to query multiple databases with the same information a
                           , [ReservedLotOldLotNumber] = [CL].[OldLotNumber]
                           , [ReservedLotBleedDate] = [CL].[BleedDate]
                     From    [#JobLevelCheck] [jlc]
-                            Left Join [#WipJobAllMat] [wjam] On [jlc].[SubJob] = [wjam].[Job]
-                                                              And [wjam].[DatabaseName] = [jlc].[DatabaseName]
-                            Left Join [#WipJobAllLab] [wjal] On [wjam].[Job] = [wjal].[Job]
-                                                              And [wjam].[OperationOffset] = [wjal].[Operation]
-                                                              And [wjal].[DatabaseName] = [wjam].[DatabaseName]
-                            Left Join [#WipMaster] [wm] On [jlc].[SubJob] = [wm].[Job]
-                                                           And [wm].[DatabaseName] = [jlc].[DatabaseName]
-                            Left Join [#InvMaster] As [im2] On [im2].[StockCode] = [wm].[StockCode]
-                                                              And [im2].[DatabaseName] = [wm].[DatabaseName]
-                            Left Join [#InvMaster] [im] On [wjam].[StockCode] = [im].[StockCode]
-                                                           And [im].[DatabaseName] = [wjam].[DatabaseName]
-                            Left Join [#LotDetail] As [ld] On [ld].[StockCode] = [im].[StockCode]
-                                                              And [im].[IssMultLotsFlag] = 'Y'
-                                                              And Coalesce([wjam].[ReservedLotSerFlag] ,
-                                                              'N') <> 'Y'
-                                                              And [ld].[DatabaseName] = [im].[DatabaseName]
-                            Left Join [#WipAllMatLot] As [waml] On [waml].[Job] = [wjam].[Job]
-                                                              And [waml].[StockCode] = [wjam].[StockCode]
-                                                              And [waml].[DatabaseName] = [wjam].[DatabaseName]
-                            Left Join [#CusLot] As [CL] On [CL].[Lot] = [waml].[Lot]
-                                                           And [CL].[StockCode] = [waml].[StockCode]
-                                                           And [CL].[DatabaseName] = [waml].[DatabaseName]
+                            Left Join [#WipJobAllMat] [wjam]
+                                On [jlc].[SubJob] = [wjam].[Job]
+                                   And [wjam].[DatabaseName] = [jlc].[DatabaseName]
+                            Left Join [#WipJobAllLab] [wjal]
+                                On [wjam].[Job] = [wjal].[Job]
+                                   And [wjam].[OperationOffset] = [wjal].[Operation]
+                                   And [wjal].[DatabaseName] = [wjam].[DatabaseName]
+                            Left Join [#WipMaster] [wm]
+                                On [jlc].[SubJob] = [wm].[Job]
+                                   And [wm].[DatabaseName] = [jlc].[DatabaseName]
+                            Left Join [#InvMaster] As [im2]
+                                On [im2].[StockCode] = [wm].[StockCode]
+                                   And [im2].[DatabaseName] = [wm].[DatabaseName]
+                            Left Join [#InvMaster] [im]
+                                On [wjam].[StockCode] = [im].[StockCode]
+                                   And [im].[DatabaseName] = [wjam].[DatabaseName]
+                            Left Join [#LotDetail] As [ld]
+                                On [ld].[StockCode] = [im].[StockCode]
+                                   And [im].[IssMultLotsFlag] = 'Y'
+                                   And Coalesce([wjam].[ReservedLotSerFlag] ,
+                                                'N') <> 'Y'
+                                   And [ld].[DatabaseName] = [im].[DatabaseName]
+                            Left Join [#WipAllMatLot] As [waml]
+                                On [waml].[Job] = [wjam].[Job]
+                                   And [waml].[StockCode] = [wjam].[StockCode]
+                                   And [waml].[DatabaseName] = [wjam].[DatabaseName]
+                            Left Join [#CusLot] As [CL]
+                                On [CL].[Lot] = [waml].[Lot]
+                                   And [CL].[StockCode] = [waml].[StockCode]
+                                   And [CL].[DatabaseName] = [waml].[DatabaseName]
                     Where   --wjam.AllocCompleted = 'N'
                         --And
                             [im].[PartCategory] <> 'M';
@@ -885,8 +894,9 @@ Stored procedure set out to query multiple databases with the same information a
           , [r].[ReservedLotOldLotNumber]
           , [r].[ReservedLotBleedDate]
     From    [Report].[Results_WipSubJobStock] As [r]
-            Left Join [#ReservedLotKeys] As [RLK] On [RLK].[StartTime] = [r].[StartTime]
-                                                     And [RLK].[StockCode] = [r].[StockCode]
+            Left Join [#ReservedLotKeys] As [RLK]
+                On [RLK].[StartTime] = [r].[StartTime]
+                   And [RLK].[StockCode] = [r].[StockCode]
     Where   [r].[StartTime] = @StartTime
     Order By [StockCode] Asc;
 

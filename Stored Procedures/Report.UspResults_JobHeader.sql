@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -51,12 +50,12 @@ Stored procedure set out to query multiple databases with the same information a
             , [ProducedStockCode] Varchar(35) Collate Latin1_General_BIN
             , [ProducedStockDescription] Varchar(150)
                 Collate Latin1_General_BIN
-            , [UomFlag] Char(1)
+            , [UomFlag] Char(1) Collate Latin1_General_BIN
             , [JobTenderDate] DateTime2
             , [JobDeliveryDate] DateTime2
             , [JobStartDate] DateTime2
             , [ActCompleteDate] DateTime2
-            , [Complete] Char(1)
+            , [Complete] Char(1) Collate Latin1_General_BIN
             , [QtyManufactured] Float
             , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
             , [SellingPrice] Float
@@ -70,7 +69,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [CostUom] Varchar(10) Collate Latin1_General_BIN
             , [OtherUom] Varchar(10) Collate Latin1_General_BIN
             , [AlternateUom] Varchar(10) Collate Latin1_General_BIN
-            , [IssMultLotsFlag] Char(1)
+            , [IssMultLotsFlag] Char(1) Collate Latin1_General_BIN
             );
         Create Table [#InvMovementsSummary]
             (
@@ -103,8 +102,7 @@ Stored procedure set out to query multiple databases with the same information a
 
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 Varchar(Max) = '
-	USE [?];
+        Declare @SQL1 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
             + --Only query DBs beginning SysProCompany
@@ -415,22 +413,22 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Job] Varchar(50)
-            , [JobDescription] Varchar(150)
-            , [JobClassification] Varchar(50)
-            , [ProducedStockCode] Varchar(50)
-            , [ProducedStockDescription] Varchar(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [JobDescription] Varchar(150) Collate Latin1_General_BIN
+            , [JobClassification] Varchar(50) Collate Latin1_General_BIN
+            , [ProducedStockCode] Varchar(50) Collate Latin1_General_BIN
+            , [ProducedStockDescription] Varchar(150) Collate Latin1_General_BIN
             , [ProducedQty] Numeric(20 , 7)
-            , [Uom] Varchar(10)
+            , [Uom] Varchar(10) Collate Latin1_General_BIN
             , [JobTenderDate] DateTime2
             , [JobDeliveryDate] DateTime2
             , [JobStartDate] DateTime2
             , [ActCompleteDate] DateTime2
-            , [Complete] Char(1)
+            , [Complete] Char(1) Collate Latin1_General_BIN
             , [QtyManufactured] Numeric(20 , 7)
-            , [SalesOrder] Varchar(50)
-            , [IssMultLotsFlag] Char(1)
+            , [SalesOrder] Varchar(50) Collate Latin1_General_BIN
+            , [IssMultLotsFlag] Char(1) Collate Latin1_General_BIN
             , [SellingPrice] Numeric(20 , 7)
             , [MaterialValue] Numeric(20 , 7)
             , [LabourValue] Numeric(20 , 7)
@@ -552,7 +550,6 @@ Stored procedure set out to query multiple databases with the same information a
 
         Drop Table [#Results];
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'high level details of Job', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_JobHeader', NULL, NULL

@@ -42,37 +42,37 @@ As
 
         Create Table [#Movements]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [ShortName] Varchar(250) Collate Latin1_General_BIN
+            , [CompanyName] Varchar(250) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(35) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
+            , [GlGroup] Varchar(10) Collate Latin1_General_BIN
             , [Movement] Numeric(20 , 2)
             , [GlPeriod] Int
             , [GlYear] Int
-            , [Source] Varchar(100)
+            , [Source] Varchar(100) Collate Latin1_General_BIN
             , [Journal] Int
-            , [ReportIndex1] Varchar(35)
-            , [ReportIndex2] Varchar(35)
-            , [GLAccountTypeDesc] Varchar(250)
+            , [ReportIndex1] Varchar(35) Collate Latin1_General_BIN
+            , [ReportIndex2] Varchar(35) Collate Latin1_General_BIN
+            , [GLAccountTypeDesc] Varchar(250) Collate Latin1_General_BIN
             );
         Create Table [#MovementsRaw]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [ShortName] Varchar(250) Collate Latin1_General_BIN
+            , [CompanyName] Varchar(250) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(35) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
+            , [GlGroup] Varchar(10) Collate Latin1_General_BIN
             , [Movement] Numeric(20 , 2)
             , [GlPeriod] Int
             , [GlYear] Int
-            , [ReportIndex1] Varchar(35)
-            , [ReportIndex2] Varchar(35)
-            , [GLAccountTypeDesc] Varchar(250)
+            , [ReportIndex1] Varchar(35) Collate Latin1_General_BIN
+            , [ReportIndex2] Varchar(35) Collate Latin1_General_BIN
+            , [GLAccountTypeDesc] Varchar(250) Collate Latin1_General_BIN
             );
 
         Insert  [#Movements]
@@ -278,7 +278,6 @@ As
         Drop Table [#MovementsRaw];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of gl movements', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovements', NULL, NULL

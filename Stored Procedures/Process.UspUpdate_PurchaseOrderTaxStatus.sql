@@ -46,8 +46,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#OrdersPOTax]
                     (
-                      [TaxStatusCode] Varchar(5)
-                    , [TaxStatusDescription] Varchar(150)
+                      [TaxStatusCode] Varchar(5) Collate Latin1_General_BIN
+                    , [TaxStatusDescription] Varchar(150) Collate Latin1_General_BIN
                     );
 
                 Insert  [#OrdersPOTax]
@@ -149,7 +149,6 @@ As
             Print 'UspUpdate_PurchaseOrderTaxStatus - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_PurchaseOrderTaxStatus', NULL, NULL
 GO

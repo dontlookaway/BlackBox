@@ -34,24 +34,24 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApGlDisburse]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [DistrEntry] Int
-            , [GlCode] Varchar(35)
+            , [GlCode] Varchar(35) Collate Latin1_General_BIN
             , [GlIntPeriod] Int
             , [GlIntYear] Int
             , [GlJournal] BigInt
             , [GlPeriod] Int
             , [GlYear] Int
             , [PostConvRate] Float
-            , [PostCurrency] Varchar(10)
-            , [PostMulDiv] Varchar(10)
-            , [SupplierName] Varchar(50)
-            , [Supplier] Varchar(15)
+            , [PostCurrency] Varchar(10) Collate Latin1_General_BIN
+            , [PostMulDiv] Varchar(10) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(50) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
             , [TriangConvRate] Float
-            , [TriangCurrency] Varchar(10)
-            , [TriangMulDiv] Varchar(5)
+            , [TriangCurrency] Varchar(10) Collate Latin1_General_BIN
+            , [TriangMulDiv] Varchar(5) Collate Latin1_General_BIN
             , [TrnValue] Numeric(20 , 3)
-            , [Invoice] Varchar(20)
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
             );
 
 		
@@ -147,7 +147,6 @@ As
         From    [#ApGlDisburse] [AGD];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of the general ledger distribution from accounts payable', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApGlDisburse', NULL, NULL

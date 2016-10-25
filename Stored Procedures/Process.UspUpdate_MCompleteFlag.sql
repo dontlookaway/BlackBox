@@ -20,9 +20,9 @@ As
             Begin
                 Create Table [Lookups].[MCompleteFlag]
                     (
-                      [Company] Varchar(150)
-                    , [MCompleteFlagCode] Char(5)
-                    , [MCompleteFlagDescription] Varchar(150)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [MCompleteFlagCode] Char(5) Collate Latin1_General_BIN
+                    , [MCompleteFlagDescription] Varchar(150) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -45,8 +45,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#Orders]
                     (
-                      [MCompleteFlagCode] Varchar(5)
-                    , [MCompleteFlagDescription] Varchar(150)
+                      [MCompleteFlagCode] Varchar(5) Collate Latin1_General_BIN
+                    , [MCompleteFlagDescription] Varchar(150) Collate Latin1_General_BIN
                     );
 
                 Insert  [#Orders]
@@ -153,7 +153,6 @@ As
             Print 'UspUpdate_MCompleteFlag - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_MCompleteFlag', NULL, NULL
 GO

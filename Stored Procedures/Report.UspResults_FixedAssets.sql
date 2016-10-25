@@ -38,50 +38,49 @@ Exec [Report].[UspResults_FixedAssets] 10
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#AssetMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [Asset] Varchar(50)
-            , [Description] Varchar(100)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Asset] Varchar(50) Collate Latin1_General_BIN
+            , [Description] Varchar(100) Collate Latin1_General_BIN
             , [AssetQty] Numeric(20 , 7)
             , [OriginalAssetQty] Numeric(20 , 7)
             , [OriginalAssetValue] Numeric(20 , 7)
-            , [GlCode] Varchar(150)
-            , [AssetType] Varchar(50)
-            , [Location] Varchar(50)
-            , [AssetGroupCode] Varchar(10)
+            , [GlCode] Varchar(150) Collate Latin1_General_BIN
+            , [AssetType] Varchar(50) Collate Latin1_General_BIN
+            , [Location] Varchar(50) Collate Latin1_General_BIN
+            , [AssetGroupCode] Varchar(10) Collate Latin1_General_BIN
             , [PurchaseDate] Date
             , [FirstInstalDate] Date
             , [DateSold] Date
-            , [DisposedFlag] Char(1)
-            , [DisposalReason] Varchar(10)
+            , [DisposedFlag] Char(1) Collate Latin1_General_BIN
+            , [DisposalReason] Varchar(10) Collate Latin1_General_BIN
             );
         Create Table [#AssetType]
             (
-              [DatabaseName] Varchar(150)
-            , [AssetType] Varchar(50)
-            , [Description] Varchar(100)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [AssetType] Varchar(50) Collate Latin1_General_BIN
+            , [Description] Varchar(100) Collate Latin1_General_BIN
             );
         Create Table [#AssetLocation]
             (
-              [DatabaseName] Varchar(150)
-            , [Location] Varchar(50)
-            , [Description] Varchar(100)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Location] Varchar(50) Collate Latin1_General_BIN
+            , [Description] Varchar(100) Collate Latin1_General_BIN
             );
         Create Table [#AssetGroup]
             (
-              [DatabaseName] Varchar(150)
-            , [AssetGroupCode] Varchar(10)
-            , [Description] Varchar(100)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [AssetGroupCode] Varchar(10) Collate Latin1_General_BIN
+            , [Description] Varchar(100) Collate Latin1_General_BIN
             );
         Create Table [#AssetReasonDisp]
             (
-              [DatabaseName] Varchar(150)
-            , [DisposalReason] Varchar(10)
-            , [Description] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [DisposalReason] Varchar(10) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 Varchar(Max) = '
-	USE [?];
+        Declare @SQL1 Varchar(Max) = '	USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -124,8 +123,7 @@ Exec [Report].[UspResults_FixedAssets] 10
 				From [AssetMaster] As [am]
 			End
 	End';
-        Declare @SQL2 Varchar(Max) = '
-	USE [?];
+        Declare @SQL2 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -144,8 +142,7 @@ Exec [Report].[UspResults_FixedAssets] 10
 				FROM [AssetType] As [at]
 			End
 	End';
-        Declare @SQL3 Varchar(Max) = '
-	USE [?];
+        Declare @SQL3 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -164,8 +161,7 @@ Exec [Report].[UspResults_FixedAssets] 10
 				FROM [AssetLocation] As [al]
 			End
 	End';
-        Declare @SQL4 Varchar(Max) = '
-	USE [?];
+        Declare @SQL4 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -184,8 +180,7 @@ Exec [Report].[UspResults_FixedAssets] 10
 			 FROM [dbo].[AssetGroup] As [ag]
 			End
 	End';
-        Declare @SQL5 Varchar(Max) = '
-	USE [?];
+        Declare @SQL5 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -223,20 +218,20 @@ Exec [Report].[UspResults_FixedAssets] 10
         Create Table [#Results]
             (
               [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Asset] Varchar(50)
-            , [Description] Varchar(100)
-            , [Location] Varchar(100)
-            , [AssetType] Varchar(100)
+            , [Asset] Varchar(50) Collate Latin1_General_BIN
+            , [Description] Varchar(100) Collate Latin1_General_BIN
+            , [Location] Varchar(100) Collate Latin1_General_BIN
+            , [AssetType] Varchar(100) Collate Latin1_General_BIN
             , [AssetQty] Numeric(20 , 7)
             , [OriginalAssetQty] Numeric(20 , 7)
             , [OriginalAssetValue] Numeric(20 , 7)
-            , [GlCode] Varchar(150)
-            , [AssetGroup] Varchar(150)
+            , [GlCode] Varchar(150) Collate Latin1_General_BIN
+            , [AssetGroup] Varchar(150) Collate Latin1_General_BIN
             , [PurchaseDate] Date
             , [FirstInstalDate] Date
             , [DateSold] Date
-            , [DisposedFlag] Char(1)
-            , [DisposalReason] Varchar(50)
+            , [DisposedFlag] Char(1) Collate Latin1_General_BIN
+            , [DisposalReason] Varchar(50) Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -313,7 +308,6 @@ Exec [Report].[UspResults_FixedAssets] 10
                     On [r].[DatabaseName] = [cn].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of all fixed assets', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_FixedAssets', NULL, NULL

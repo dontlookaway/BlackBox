@@ -22,9 +22,9 @@ As
             Begin
                 Create Table [Lookups].[PurchaseOrderType]
                     (
-                      [Company] Varchar(150)
-                    , [OrderTypeCode] Char(5)
-                    , [OrderTypeDescription] Varchar(150)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [OrderTypeCode] Char(5) Collate Latin1_General_BIN
+                    , [OrderTypeDescription] Varchar(150) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -75,8 +75,7 @@ As
                     );
 
 	--create script to pull data from each db into the tables
-                Declare @SQL Varchar(Max) = '
-		USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
 		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -155,7 +154,6 @@ As
             Print 'UspUpdate_PurchaseOrderType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_PurchaseOrderType', NULL, NULL
 GO

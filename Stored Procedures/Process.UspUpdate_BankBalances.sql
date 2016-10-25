@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -30,12 +29,12 @@ transaction types when relating to inventory changes
 
                 Create Table [Lookups].[BankBalances]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [CompanyName] Varchar(150)
-                    , [Bank] Varchar(10)
-                    , [BankDescription] Varchar(150)
-                    , [CashGlCode] Varchar(150)
-                    , [BankCurrency] Char(3)
+                      [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+                    , [CompanyName] Varchar(150) Collate Latin1_General_BIN
+                    , [Bank] Varchar(10) Collate Latin1_General_BIN
+                    , [BankDescription] Varchar(150) Collate Latin1_General_BIN
+                    , [CashGlCode] Varchar(150) Collate Latin1_General_BIN
+                    , [BankCurrency] Char(3) Collate Latin1_General_BIN
                     , [CurrentBalance] Numeric(20 , 7)
                     , [StatementBalance] Numeric(20 , 7)
                     , [OutStandingDeposits] Numeric(20 , 7)
@@ -61,8 +60,7 @@ transaction types when relating to inventory changes
 
 --create script to pull data from each db into the tables
         Declare @Company Varchar(max) = 'All';
-        Declare @SQLBanks Varchar(Max) = '
-	USE [?];
+        Declare @SQLBanks Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end'
             + --Only query DBs beginning SysProCompany
@@ -138,7 +136,6 @@ transaction types when relating to inventory changes
                 Raiserror (@ErrorMessage,16,1);
             End;
     End;	
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_BankBalances', NULL, NULL

@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Review].[UspResults_LookupDuplicates]
+CREATE Proc [Review].[UspResults_LookupDuplicates]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -21,10 +21,10 @@ As
 
         Create Table [#DupeCheck]
             (
-              [TableName] Varchar(150)
-            , [Company] Varchar(150)
-            , [ID] Varchar(500)
-            , [DescriptionField] Varchar(1000)
+              [TableName] Varchar(150) Collate Latin1_General_BIN
+            , [Company] Varchar(150) Collate Latin1_General_BIN
+            , [ID] Varchar(500) Collate Latin1_General_BIN
+            , [DescriptionField] Varchar(1000) Collate Latin1_General_BIN
             , [DupeCount] Int
             );
 
@@ -401,7 +401,6 @@ As
         Set NoCount On;
         Drop Table [#DupeCheck];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'check lookup tables for duplicates (indicates that refresh failed)', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_LookupDuplicates', NULL, NULL
 GO
