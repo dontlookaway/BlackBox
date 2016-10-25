@@ -1,9 +1,8 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Proc [Report].[UspResults_PurchaseOrdersOpen]
+CREATE Procedure [Report].[UspResults_PurchaseOrdersOpen]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -38,42 +37,42 @@ Returns details of all open (non cancelled & non fulfilled) PO's
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [Buyer] Varchar(35)
-            , [Supplier] Varchar(35)
-            , [OrderStatus] Varchar(35)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [Buyer] Varchar(35) Collate Latin1_General_BIN
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [OrderStatus] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [Line] Varchar(15)
-            , [StockCode] Varchar(35)
-            , [StockDes] Varchar(150)
-            , [SupCatalogue] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [Line] Varchar(15) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35) Collate Latin1_General_BIN
+            , [StockDes] Varchar(150) Collate Latin1_General_BIN
+            , [SupCatalogue] Varchar(50) Collate Latin1_General_BIN
             , [OrderQty] Numeric(20 , 7)
             , [ReceivedQty] Numeric(20 , 7)
             , [MPrice] Numeric(20 , 3)
-            , [OrderUom] Varchar(10)
-            , [Warehouse] Varchar(35)
+            , [OrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [Warehouse] Varchar(35) Collate Latin1_General_BIN
             , [LatestDueDate] DateTime2
             , [CompleteFlag] Char(5)
             , [MForeignPrice] Numeric(20 , 3)
-            , [MGlCode] Varchar(35)
+            , [MGlCode] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(35)
-            , [SupplierName] Varchar(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
             );
         Create Table [#PorMasterDetailPlus]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [Line] Varchar(15)
-            , [Confirmed] Varchar(35)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [Line] Varchar(15) Collate Latin1_General_BIN
+            , [Confirmed] Varchar(35) Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -273,25 +272,25 @@ Returns details of all open (non cancelled & non fulfilled) PO's
 --define the results you want to return
         Create Table [#Results]
             (
-              [Company] Varchar(250)
-            , [PurchaseOrder] Varchar(35)
-            , [Line] Varchar(15)
-            , [Supplier] Varchar(35)
-            , [SupplierName] Varchar(150)
-            , [Buyer] Varchar(35)
-            , [StockCode] Varchar(35)
-            , [StockDescription] Varchar(150)
-            , [SupCatalogue] Varchar(50)
+              [Company] Varchar(250) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [Line] Varchar(15) Collate Latin1_General_BIN
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
+            , [Buyer] Varchar(35) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35) Collate Latin1_General_BIN
+            , [StockDescription] Varchar(150) Collate Latin1_General_BIN
+            , [SupCatalogue] Varchar(50) Collate Latin1_General_BIN
             , [OrderQty] Numeric(20 , 7)
             , [ReceivedQty] Numeric(20 , 7)
-            , [OrderUom] Varchar(10)
-            , [Warehouse] Varchar(35)
+            , [OrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [Warehouse] Varchar(35) Collate Latin1_General_BIN
             , [LatestDueDate] Date
-            , [Confirmed] Varchar(35)
-            , [OrderStatusDescription] Varchar(150)
+            , [Confirmed] Varchar(35) Collate Latin1_General_BIN
+            , [OrderStatusDescription] Varchar(150) Collate Latin1_General_BIN
             , [MPrice] Numeric(20 , 2)
             , [MForeignPrice] Numeric(20 , 2)
-            , [GLCode] Varchar(35)
+            , [GLCode] Varchar(35) Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -379,7 +378,6 @@ Returns details of all open (non cancelled & non fulfilled) PO's
                                                               And [GM].[Company] = [r].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'purchase order details for open purchase orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrdersOpen', NULL, NULL
