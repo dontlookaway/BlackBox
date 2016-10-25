@@ -11,7 +11,7 @@ As
                 Create Table [#TablesToPopulate]
                     (
                       [TID] Int Identity(1 , 1)
-                    , [TableName] Varchar(500)
+                    , [TableName] Varchar(500) Collate Latin1_General_BIN
                     );
 
                 Insert  [#TablesToPopulate]
@@ -24,15 +24,15 @@ As
 
                 Create Table [#Transactions]
                     (
-                      [TransactionDescription] Varchar(500)
-                    , [DatabaseName] Varchar(255)
+                      [TransactionDescription] Varchar(500) Collate Latin1_General_BIN
+                    , [DatabaseName] Varchar(255) Collate Latin1_General_BIN
                     , [SignatureDateTime] DateTime
-                    , [Operator] Varchar(255)
-                    , [ItemKey] Varchar(500)
-                    , [ComputerName] Varchar(500)
-                    , [ProgramName] Varchar(500)
-                    , [ConditionName] Varchar(500)
-                    , [VariableDesc] Varchar(500)
+                    , [Operator] Varchar(255) Collate Latin1_General_BIN
+                    , [ItemKey] Varchar(500) Collate Latin1_General_BIN
+                    , [ComputerName] Varchar(500) Collate Latin1_General_BIN
+                    , [ProgramName] Varchar(500) Collate Latin1_General_BIN
+                    , [ConditionName] Varchar(500) Collate Latin1_General_BIN
+                    , [VariableDesc] Varchar(500) Collate Latin1_General_BIN
                     , [VariableRank] Int
                     , [TransactionRank] Int
                     );
@@ -238,7 +238,6 @@ End Catch';
                     End;
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspPopulate_UnpivotHistory', NULL, NULL
 GO
