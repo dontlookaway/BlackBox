@@ -37,41 +37,41 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#CshApPayments]
             (
-              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [CbTrnYear] Int
             , [TrnMonth] Int
-            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
-            , [Invoice] Varchar(35)			Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
             , [InvoiceDate] DateTime2
-            , [Reference] Varchar(60)		Collate Latin1_General_BIN
-            , [PaymentNumber] Varchar(35)	Collate Latin1_General_BIN
+            , [Reference] Varchar(60) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#ApInvoice]
             (
-              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
-            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
-            , [Invoice] Varchar(35)			Collate Latin1_General_BIN
-            , [PaymentNumber] Varchar(35)	Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#ApInvoicePay]
             (
-              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [TrnValue] Float
-            , [PaymentReference] Varchar(35)	Collate Latin1_General_BIN
-            , [Supplier] Varchar(15)			Collate Latin1_General_BIN
-            , [Invoice] Varchar(35)				Collate Latin1_General_BIN
+            , [PaymentReference] Varchar(35) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
-            , [PurchaseOrder] Varchar(35)		Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
-            , [Supplier] Varchar(35)			Collate Latin1_General_BIN
-            , [SupplierName] Varchar(150)		Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
             );
 
 
@@ -305,18 +305,18 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
-            , [TrnYear] Int						
-            , [TrnMonth] Int					
-            , [Supplier] Varchar(35)			collate Latin1_General_BIN
-            , [SupplierName] Varchar(150)		collate Latin1_General_BIN
-            , [Invoice] Varchar(35)				collate Latin1_General_BIN
-            , [InvoiceDate] DateTime2			
-            , [Reference] Varchar(60)			collate Latin1_General_BIN
-            , [PaymentNumber] Varchar(35)		collate Latin1_General_BIN
-            , [TrnValue] Numeric(18 , 3)		
-            , [PaymentReference] Varchar(35)	collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(35)		collate Latin1_General_BIN
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [TrnYear] Int
+            , [TrnMonth] Int
+            , [Supplier] Varchar(35) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
+            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [InvoiceDate] DateTime2
+            , [Reference] Varchar(60) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
+            , [TrnValue] Numeric(18 , 3)
+            , [PaymentReference] Varchar(35) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
             );
 
@@ -352,18 +352,23 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
                       , [PMO].[PurchaseOrder]
                       , [PHR].[OrderEntryDate]
                 From    [#CshApPayments] [CP]
-                        Left Join [#ApInvoice] [AP] On [AP].[DatabaseName] = [CP].[DatabaseName]
-                                                       And [AP].[Supplier] = [CP].[Supplier]
-                                                       And [AP].[Invoice] = [CP].[Invoice]
-                                                       And [AP].[PaymentNumber] = [CP].[PaymentNumber]
-                        Left Join [#ApInvoicePay] [AIP] On [AIP].[DatabaseName] = [AP].[DatabaseName]
-                                                           And [AIP].[Supplier] = [AP].[Supplier]
-                                                           And [AIP].[Invoice] = [AP].[Invoice]
-                        Left Join [BlackBox].[Lookups].[PurchaseOrderInvoiceMapping] [PMO] On [PMO].[Invoice] = [CP].[Invoice] Collate Latin1_General_BIN
-                                                              And [PMO].[Company] = [CP].[DatabaseName]
-                        Left Join [#PorMasterHdr] [PHR] On [PHR].[DatabaseName] = [AIP].[DatabaseName]
-                                                           And [PHR].[PurchaseOrder] = [PMO].[PurchaseOrder]
-                        Left Join [#ApSupplier] [SP] On [SP].[Supplier] = [CP].[Supplier]
+                        Left Join [#ApInvoice] [AP]
+                            On [AP].[DatabaseName] = [CP].[DatabaseName]
+                               And [AP].[Supplier] = [CP].[Supplier]
+                               And [AP].[Invoice] = [CP].[Invoice]
+                               And [AP].[PaymentNumber] = [CP].[PaymentNumber]
+                        Left Join [#ApInvoicePay] [AIP]
+                            On [AIP].[DatabaseName] = [AP].[DatabaseName]
+                               And [AIP].[Supplier] = [AP].[Supplier]
+                               And [AIP].[Invoice] = [AP].[Invoice]
+                        Left Join [BlackBox].[Lookups].[PurchaseOrderInvoiceMapping] [PMO]
+                            On [PMO].[Invoice] = [CP].[Invoice] Collate Latin1_General_BIN
+                               And [PMO].[Company] = [CP].[DatabaseName]
+                        Left Join [#PorMasterHdr] [PHR]
+                            On [PHR].[DatabaseName] = [AIP].[DatabaseName]
+                               And [PHR].[PurchaseOrder] = [PMO].[PurchaseOrder]
+                        Left Join [#ApSupplier] [SP]
+                            On [SP].[Supplier] = [CP].[Supplier]
                 Group By [CP].[DatabaseName]
                       , [CP].[CbTrnYear] --group added as there are multiple GRNs on PMO
                       , [CP].[TrnMonth]
@@ -389,20 +394,20 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
               , [Reference]
               , [PaymentNumber]
               , [TrnValue] = Coalesce([TrnValue] , 0)
-              , [PaymentReference] = Case When IsNumeric(Coalesce([PaymentReference] ,
-                                                              'I')) = 0
-                                          Then [PaymentReference]
-                                          When IsNumeric([PaymentReference]) = 1
-                                          Then Convert(Varchar(25) , Convert(BigInt , [PaymentReference]))
-                                          Else [PaymentReference]
-                                     End
-              , [PurchaseOrder] = Case When IsNumeric(Coalesce([PurchaseOrder] ,
-                                                              'I')) = 0
-                                       Then [PurchaseOrder]
-                                       When IsNumeric([PurchaseOrder]) = 1
-                                       Then Convert(Varchar(25) , Convert(BigInt , [PurchaseOrder]))
-                                       Else [PurchaseOrder]
-                                  End
+              , [PaymentReference] --= Case When IsNumeric(Coalesce([PaymentReference] ,
+              --                                                'I')) = 0
+              --                            Then [PaymentReference]
+              --                            When IsNumeric([PaymentReference]) = 1
+              --                            Then Convert(Varchar(25) , Convert(Numeric(20) , [PaymentReference]))
+              --                            Else [PaymentReference]
+              --                       End
+              , [PurchaseOrder] --= Case When IsNumeric(Coalesce([PurchaseOrder] ,
+                                  --                            'I')) = 0
+                                  --     Then [PurchaseOrder]
+                                  --     When IsNumeric([PurchaseOrder]) = 1
+                                  --     Then Convert(Varchar(25) , Convert(Numeric(20) , [PurchaseOrder]))
+                                  --     Else [PurchaseOrder]
+                                  --End
               , [OrderEntryDate] = Cast([OrderEntryDate] As Date)
               , [Status] = Case When [PurchaseOrder] Is Null
                                 Then 'No purchase order'

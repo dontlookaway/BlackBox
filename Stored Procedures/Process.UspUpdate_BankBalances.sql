@@ -5,7 +5,7 @@ GO
 CREATE Proc [Process].[UspUpdate_BankBalances]
     (
       @PrevCheck Int
-    , @HoursBetweenUpdates Int
+    , @HoursBetweenUpdates Numeric(6,2)
     )
 As
     Begin
@@ -20,7 +20,7 @@ transaction types when relating to inventory changes
 
         Declare @LoadDate Date = GetDate();
 --Create Lookup table if it doesn't exist
-        If ( Not Exists ( Select    *
+        If ( Not Exists ( Select    1
                           From      [INFORMATION_SCHEMA].[TABLES]
                           Where     [TABLE_SCHEMA] = 'Lookups'
                                     And [TABLE_NAME] = 'BankBalances' )
