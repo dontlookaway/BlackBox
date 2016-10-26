@@ -35,71 +35,71 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ArCustomer]
             (
-              [DatabaseName] sysname
-            , [Customer] Varchar(15)
-            , [Name] Varchar(50)
-            , [ShortName] Varchar(20)
-            , [Area] Varchar(10)
-            , [Currency] Varchar(3)
-            , [DateCustAdded] Date
-            , [Nationality] Char(3)
-            , [SoldToAddr1] Varchar(40)
-            , [SoldToAddr2] Varchar(40)
-            , [SoldToAddr3] Varchar(40)
-            , [SoldToAddr3Loc] Varchar(40)
-            , [SoldToAddr4] Varchar(40)
-            , [SoldToAddr5] Varchar(40)
-            , [SoldPostalCode] Varchar(10)
-            );
-        Create Table [#SorDetail]
-            (
-              [DatabaseName] sysname
-            , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
-            , [LineType] Char(1)
-            , [MStockCode] Varchar(30)
-            , [MStockDes] Varchar(50)
-            , [MWarehouse] Varchar(10)
-            , [MBin] Varchar(20)
-            , [MOrderQty] Numeric(20 , 6)
-            , [MShipQty] Numeric(20 , 6)
-            , [MBackOrderQty] Numeric(20 , 6)
-            , [MUnitCost] Numeric(20 , 6)
-            , [MDecimals] Int
-            , [MOrderUom] Varchar(10)
-            , [MStockQtyToShp] Numeric(20 , 6)
-            , [MStockingUom] Varchar(10)
-            , [MPrice] Numeric(20 , 6)
-            , [MPriceUom] Varchar(10)
-            , [MProductClass] Varchar(20)
-            , [MTaxCode] Char(3)
-            , [MLineShipDate] Date
-            , [MQtyDispatched] Numeric(20 , 6)
-            , [QtyReserved] Numeric(20 , 6)
-            , [NComment] Varchar(100)
-            );
-        Create Table [#SorMaster]
-            (
-              [DatabaseName] sysname
-            , [SalesOrder] Varchar(20)
-            , [OrderStatus] Char(1)
-            , [CustomerPoNumber] Varchar(30)
-            , [OrderDate] Date
-            , [EntrySystemDate] Date
-            , [ReqShipDate] Date
-            , [ShippingInstrs] Varchar(50)
-            , [ExchangeRate] Float
-            , [MulDiv] Char(1)
-            , [Currency] Char(3)
-            , [ShipAddress1] Varchar(40)
-            , [ShipAddress2] Varchar(40)
-            , [ShipAddress3] Varchar(40)
-            , [ShipAddress3Loc] Varchar(40)
-            , [ShipAddress4] Varchar(40)
-            , [ShipAddress5] Varchar(40)
-            , [ShipPostalCode] Varchar(10)
-            , [Customer] Varchar(15)
-            , [CancelledFlag] Char(1)
+              [DatabaseName] sysname			collate latin1_general_bin
+            , [Customer] Varchar(15)			collate latin1_general_bin
+            , [Name] Varchar(50)				collate latin1_general_bin
+            , [ShortName] Varchar(20)			collate latin1_general_bin
+            , [Area] Varchar(10)				collate latin1_general_bin
+            , [Currency] Varchar(3)				collate latin1_general_bin
+            , [DateCustAdded] Date				
+            , [Nationality] Char(3)				collate latin1_general_bin
+            , [SoldToAddr1] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr2] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr3] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr3Loc] Varchar(40)		collate latin1_general_bin
+            , [SoldToAddr4] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr5] Varchar(40)			collate latin1_general_bin
+            , [SoldPostalCode] Varchar(10)		collate latin1_general_bin
+            );									
+        Create Table [#SorDetail]				
+            (									
+              [DatabaseName] sysname			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)			collate latin1_general_bin
+            , [SalesOrderLine] Int				
+            , [LineType] Char(1)				collate latin1_general_bin
+            , [MStockCode] Varchar(30)			collate latin1_general_bin
+            , [MStockDes] Varchar(50)			collate latin1_general_bin
+            , [MWarehouse] Varchar(10)			collate latin1_general_bin
+            , [MBin] Varchar(20)				collate latin1_general_bin
+            , [MOrderQty] Numeric(20 , 6)		
+            , [MShipQty] Numeric(20 , 6)		
+            , [MBackOrderQty] Numeric(20 , 6)	
+            , [MUnitCost] Numeric(20 , 6)		
+            , [MDecimals] Int					
+            , [MOrderUom] Varchar(10)			collate latin1_general_bin
+            , [MStockQtyToShp] Numeric(20 , 6)	
+            , [MStockingUom] Varchar(10)		collate latin1_general_bin
+            , [MPrice] Numeric(20 , 6)			
+            , [MPriceUom] Varchar(10)			collate latin1_general_bin
+            , [MProductClass] Varchar(20)		collate latin1_general_bin
+            , [MTaxCode] Char(3)				collate latin1_general_bin
+            , [MLineShipDate] Date				
+            , [MQtyDispatched] Numeric(20 , 6)	
+            , [QtyReserved] Numeric(20 , 6)		
+            , [NComment] Varchar(100)			collate latin1_general_bin
+            );									
+        Create Table [#SorMaster]				
+            (									
+              [DatabaseName] sysname			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)			collate latin1_general_bin
+            , [OrderStatus] Char(1)				collate latin1_general_bin
+            , [CustomerPoNumber] Varchar(30)	collate latin1_general_bin
+            , [OrderDate] Date					
+            , [EntrySystemDate] Date			
+            , [ReqShipDate] Date				
+            , [ShippingInstrs] Varchar(50)		collate latin1_general_bin
+            , [ExchangeRate] Float				
+            , [MulDiv] Char(1)					collate latin1_general_bin
+            , [Currency] Char(3)				collate latin1_general_bin
+            , [ShipAddress1] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress2] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress3] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress3Loc] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress4] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress5] Varchar(40)		collate latin1_general_bin
+            , [ShipPostalCode] Varchar(10)		collate latin1_general_bin
+            , [Customer] Varchar(15)			collate latin1_general_bin
+            , [CancelledFlag] Char(1)			collate latin1_general_bin
             );
 
 --create script to pull data from each db into the tables
@@ -251,60 +251,60 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [SalesOrder] Varchar(20)
-            , [OrderStatus] Varchar(150)
-            , [CustomerPoNumber] Varchar(30)
-            , [OrderDate] Date
-            , [EntrySystemDate] Date
-            , [ReqShipDate] Date
-            , [ShippingInstrs] Varchar(50)
-            , [ExchangeRate] Float
-            , [MulDiv] Char(1)
-            , [Currency] Char(3)
-            , [ShipAddress1] Varchar(40)
-            , [ShipAddress2] Varchar(40)
-            , [ShipAddress3] Varchar(40)
-            , [ShipAddress3Loc] Varchar(40)
-            , [ShipAddress4] Varchar(40)
-            , [ShipAddress5] Varchar(40)
-            , [ShipPostalCode] Varchar(10)
-            , [SalesOrderLine] Int
-            , [LineType] Int
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [Warehouse] Varchar(10)
-            , [Bin] Varchar(20)
-            , [OrderQty] Numeric(20 , 6)
-            , [ShipQty] Numeric(20 , 6)
-            , [BackOrderQty] Numeric(20 , 6)
-            , [UnitCost] Numeric(20 , 6)
-            , [Decimals] Int
-            , [OrderUom] Char(3)
-            , [StockQtyToShp] Numeric(20 , 6)
-            , [StockingUom] Char(3)
-            , [Price] Numeric(20 , 6)
-            , [PriceUom] Char(3)
-            , [ProductClass] Varchar(20)
-            , [TaxCode] Char(3)
-            , [LineShipDate] Date
-            , [QtyDispatched] Numeric(20 , 6)
-            , [QtyReserved] Numeric(20 , 6)
-            , [LineComment] Varchar(100)
-            , [Customer] Varchar(15)
-            , [CustomerName] Varchar(50)
-            , [CustomerShortName] Varchar(20)
-            , [Area] Varchar(10)
-            , [CustomerCurrency] Varchar(3)
-            , [DateCustAdded] Date
-            , [Nationality] Char(3)
-            , [SoldToAddr1] Varchar(40)
-            , [SoldToAddr2] Varchar(40)
-            , [SoldToAddr3] Varchar(40)
-            , [SoldToAddr3Loc] Varchar(40)
-            , [SoldToAddr4] Varchar(40)
-            , [SoldToAddr5] Varchar(40)
-            , [SoldPostalCode] Varchar(10)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [SalesOrder] Varchar(20)			collate latin1_general_bin
+            , [OrderStatus] Varchar(150)		collate latin1_general_bin
+            , [CustomerPoNumber] Varchar(30)	collate latin1_general_bin
+            , [OrderDate] Date					
+            , [EntrySystemDate] Date			
+            , [ReqShipDate] Date				
+            , [ShippingInstrs] Varchar(50)		collate latin1_general_bin
+            , [ExchangeRate] Float				
+            , [MulDiv] Char(1)					collate latin1_general_bin
+            , [Currency] Char(3)				collate latin1_general_bin
+            , [ShipAddress1] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress2] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress3] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress3Loc] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress4] Varchar(40)		collate latin1_general_bin
+            , [ShipAddress5] Varchar(40)		collate latin1_general_bin
+            , [ShipPostalCode] Varchar(10)		collate latin1_general_bin
+            , [SalesOrderLine] Int				
+            , [LineType] Int					
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [StockDescription] Varchar(50)	collate latin1_general_bin
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
+            , [Bin] Varchar(20)					collate latin1_general_bin
+            , [OrderQty] Numeric(20 , 6)		
+            , [ShipQty] Numeric(20 , 6)			
+            , [BackOrderQty] Numeric(20 , 6)	
+            , [UnitCost] Numeric(20 , 6)		
+            , [Decimals] Int					
+            , [OrderUom] Char(3)				collate latin1_general_bin
+            , [StockQtyToShp] Numeric(20 , 6)	
+            , [StockingUom] Char(3)				collate latin1_general_bin
+            , [Price] Numeric(20 , 6)			
+            , [PriceUom] Char(3)				collate latin1_general_bin
+            , [ProductClass] Varchar(20)		collate latin1_general_bin
+            , [TaxCode] Char(3)					collate latin1_general_bin
+            , [LineShipDate] Date				
+            , [QtyDispatched] Numeric(20 , 6)	
+            , [QtyReserved] Numeric(20 , 6)		
+            , [LineComment] Varchar(100)		collate latin1_general_bin
+            , [Customer] Varchar(15)			collate latin1_general_bin
+            , [CustomerName] Varchar(50)		collate latin1_general_bin
+            , [CustomerShortName] Varchar(20)	collate latin1_general_bin
+            , [Area] Varchar(10)				collate latin1_general_bin
+            , [CustomerCurrency] Varchar(3)		collate latin1_general_bin
+            , [DateCustAdded] Date				
+            , [Nationality] Char(3)				collate latin1_general_bin
+            , [SoldToAddr1] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr2] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr3] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr3Loc] Varchar(40)		collate latin1_general_bin
+            , [SoldToAddr4] Varchar(40)			collate latin1_general_bin
+            , [SoldToAddr5] Varchar(40)			collate latin1_general_bin
+            , [SoldPostalCode] Varchar(10)		collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -492,7 +492,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all sales orders', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllSalesOrders', NULL, NULL

@@ -2,7 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_GenJournalDetails]
     (
       @RedTagType Char(1)
@@ -28,25 +27,25 @@ Stored procedure set out to query all live db's and return details of general le
 
     Create Table [#GenJournalDetail]
         (
-          [DatabaseName] Varchar(300)
-        , [SourceDetail] Varchar(100)
-        , [GlYear] Int
-        , [GlPeriod] Int
-        , [Journal] Int
-        , [EntryNumber] Int
-        , [EntryType] Char(1)
-        , [GlCode] Varchar(35)
-        , [Reference] Varchar(100)
-        , [Comment] Varchar(250)
-        , [EntryValue] Numeric(20 , 2)
-        , [InterCompanyFlag] Char(1)
-        , [Company] Varchar(50)
-        , [EntryDate] Date
-        , [EntryPosted] Char(1)
-        , [CurrencyValue] Numeric(20 , 2)
-        , [PostCurrency] Varchar(10)
-        , [TypeDetail] Varchar(100)
-        , [CommitmentFlag] Char(1)
+          [DatabaseName] Varchar(300)		collate latin1_general_bin
+        , [SourceDetail] Varchar(100)		collate latin1_general_bin
+        , [GlYear] Int						
+        , [GlPeriod] Int					
+        , [Journal] Int						
+        , [EntryNumber] Int					
+        , [EntryType] Char(1)				collate latin1_general_bin
+        , [GlCode] Varchar(35)				collate latin1_general_bin
+        , [Reference] Varchar(100)			collate latin1_general_bin
+        , [Comment] Varchar(250)			collate latin1_general_bin
+        , [EntryValue] Numeric(20 , 2)		
+        , [InterCompanyFlag] Char(1)		collate latin1_general_bin
+        , [Company] Varchar(50)				collate latin1_general_bin
+        , [EntryDate] Date					
+        , [EntryPosted] Char(1)				collate latin1_general_bin
+        , [CurrencyValue] Numeric(20 , 2)	
+        , [PostCurrency] Varchar(10)		collate latin1_general_bin
+        , [TypeDetail] Varchar(100)			collate latin1_general_bin
+        , [CommitmentFlag] Char(1)			collate latin1_general_bin
         , [TransactionDate] Date
         , [DocumentDate] Date
         , [SubModJournal] Int
@@ -54,41 +53,41 @@ Stored procedure set out to query all live db's and return details of general le
         );
     Create Table [#GrnMatching]
         (
-          [DatabaseName] Varchar(300)
-        , [Grn] Varchar(20)
-        , [Invoice] Varchar(20)
+          [DatabaseName] Varchar(300)		collate latin1_general_bin
+        , [Grn] Varchar(20)					collate latin1_general_bin
+        , [Invoice] Varchar(20)				collate latin1_general_bin
         );
     Create Table [#InvJournalDet]
         (
-          [DatabaseName] Varchar(300)
+          [DatabaseName] Varchar(300)		collate latin1_general_bin
         , [JnlYear] Int
         , [GlPeriod] Int
         , [Journal] Int
         , [EntryNumber] Int
-        , [Supplier] Varchar(15)
-        , [PurchaseOrder] Varchar(20)
-        , [Reference] Varchar(30)
+        , [Supplier] Varchar(15)			collate latin1_general_bin
+        , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+        , [Reference] Varchar(30)			collate latin1_general_bin
         );
     Create Table [#GenAnalysisTrn]
         (
-          [DatabaseName] Varchar(150)
+          [DatabaseName] Varchar(150)		collate latin1_general_bin
         , [AnalysisEntry] Int
         , [GlPeriod] Int
         , [GlYear] Int
-        , [AnalysisCategory] Varchar(10)
-        , [AnalysisCode1] Varchar(10)
-        , [AnalysisCode2] Varchar(10)
-        , [AnalysisCode3] Varchar(10)
-        , [AnalysisCode4] Varchar(10)
-        , [AnalysisCode5] Varchar(10)
-        );
+        , [AnalysisCategory] Varchar(10)	collate latin1_general_bin
+        , [AnalysisCode1] Varchar(10)		collate latin1_general_bin
+        , [AnalysisCode2] Varchar(10)		collate latin1_general_bin
+        , [AnalysisCode3] Varchar(10)		collate latin1_general_bin
+        , [AnalysisCode4] Varchar(10)		collate latin1_general_bin
+        , [AnalysisCode5] Varchar(10)		collate latin1_general_bin
+        );									
     Create Table [#GenAnalysisCode]
         (
-          [DatabaseName] Varchar(150)
-        , [AnalysisCategory] Varchar(10)
-        , [AnalysisCode] Varchar(10)
-        , [AnalysisType] Int
-        , [Description] Varchar(50)
+          [DatabaseName] Varchar(150)		collate latin1_general_bin
+        , [AnalysisCategory] Varchar(10)	collate latin1_general_bin
+        , [AnalysisCode] Varchar(10)		collate latin1_general_bin
+        , [AnalysisType] Int				
+        , [Description] Varchar(50)			collate latin1_general_bin
         );
 
     Declare @SQLGenJournalDetail Varchar(Max) = '

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -40,17 +39,17 @@ List of all AR customers
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ArCustomer]
             (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(25)
-            , [Name] Varchar(255)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Customer] Varchar(25)		collate latin1_general_bin
+            , [Name] Varchar(255)			collate latin1_general_bin
             , [InvoiceCount] Int
             , [DateLastSale] DateTime2
             , [DateLastPay] DateTime2
             , [DateCustAdded] DateTime2
-            , [Contact] Varchar(100)
-            , [Telephone] Varchar(20)
-            , [Email] Varchar(255)
-            , [Nationality] Char(3)
+            , [Contact] Varchar(100)		collate latin1_general_bin
+            , [Telephone] Varchar(20)		collate latin1_general_bin
+            , [Email] Varchar(255)			collate latin1_general_bin
+            , [Nationality] Char(3)			collate latin1_general_bin
             );
 
 
@@ -140,7 +139,6 @@ Select @DBCode
                 Left Join [BlackBox].[Lookups].[CompanyNames] As [cn] On [ac].[DatabaseName] = [cn].[Company] Collate Latin1_General_BIN;
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all AR customers', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ArCustomers', NULL, NULL

@@ -2,7 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Review].[UspResults_CompanyDuplicates]
     (
       @IncludeNotes Bit
@@ -24,11 +23,11 @@ As
 
         Create Table [#CpReview]
             (
-              [Company] Varchar(150)
-            , [CompanyName] Varchar(250)
-            , [ShortName] Varchar(250)
-            , [RecordCount] Int
-			, RowType Varchar(50)
+              [Company] Varchar(150)		collate latin1_general_bin
+            , [CompanyName] Varchar(250)	collate latin1_general_bin
+            , [ShortName] Varchar(250)		collate latin1_general_bin
+            , [RecordCount] Int				
+			, RowType Varchar(50)			collate latin1_general_bin
             );
 
 		If @IncludeNotes=1
@@ -74,7 +73,6 @@ As
 		From [#CpReview] [CR]
 		Order By [CR].[RowType] Desc
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'check for duplicates in companyname table', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_CompanyDuplicates', NULL, NULL
 GO

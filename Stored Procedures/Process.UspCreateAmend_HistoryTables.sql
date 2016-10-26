@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -18,7 +17,7 @@ Stored procedure iterates through all electronic signatures and use the variable
     Create Table [#TableList]
         (
           [Tid] Int Identity(1 , 1)
-        , [TableName] Varchar(150)
+        , [TableName] Varchar(150)	collate latin1_general_bin
         , Constraint [tlname] Primary Key NonClustered ( [TableName] )
             With ( Ignore_Dup_Key = On )
         );
@@ -26,9 +25,9 @@ Stored procedure iterates through all electronic signatures and use the variable
     Create Table [#ColumnListTemp]
         (
           [Cid] Int Identity(1 , 1)
-        , [ColumnName] Varchar(150)
-        , [ColumnType] Varchar(100)
-        , [TableName] Varchar(150)
+        , [ColumnName] Varchar(150)		collate latin1_general_bin
+        , [ColumnType] Varchar(100)		collate latin1_general_bin
+        , [TableName] Varchar(150)		collate latin1_general_bin
         , Constraint [cltdetailstemp] Primary Key NonClustered
             ( [ColumnName] , [ColumnType] , [TableName] )
             With ( Ignore_Dup_Key = On )
@@ -37,9 +36,9 @@ Stored procedure iterates through all electronic signatures and use the variable
     Create Table [#ColumnList]
         (
           [Cid] Int Identity(1 , 1)
-        , [ColumnName] Varchar(150)
-        , [ColumnType] Varchar(100)
-        , [TableName] Varchar(150)
+        , [ColumnName] Varchar(150)		collate latin1_general_bin
+        , [ColumnType] Varchar(100)		collate latin1_general_bin
+        , [TableName] Varchar(150)		collate latin1_general_bin
         , Constraint [cldetails] Primary Key NonClustered
             ( [ColumnName] , [ColumnType] , [TableName] )
             With ( Ignore_Dup_Key = On )
@@ -47,8 +46,8 @@ Stored procedure iterates through all electronic signatures and use the variable
 
     Create Table [#CurrentColumns]
         (
-          [ColumnName] Varchar(150)
-        , [TableName] Varchar(150)
+          [ColumnName] Varchar(150)	collate latin1_general_bin
+        , [TableName] Varchar(150)	collate latin1_general_bin
         );
 
     Insert  [#CurrentColumns]
@@ -259,12 +258,12 @@ Stored procedure iterates through all electronic signatures and use the variable
 					Begin
 						Create Table [History].[' + @TableName + ']
 						(' + Left(@TableName , 1) + 'ID int identity(1,1)
-						,TransactionDescription varchar(150)
-						,SignatureDatetime datetime2
-						,Operator varchar(20)
-						,ProgramName varchar(20)
-						,Ranking bigint
-						,ItemKey varchar(150)
+						,TransactionDescription varchar(150) collate latin1_general_bin
+						,SignatureDatetime datetime2 
+						,Operator varchar(20) collate latin1_general_bin
+						,ProgramName varchar(20) collate latin1_general_bin
+						,Ranking bigint 
+						,ItemKey varchar(150) collate latin1_general_bin
 						,CONSTRAINT [' + @TableName
                             + '_ID] PRIMARY KEY (SignatureDatetime,Operator,ProgramName,ItemKey)
 							WITH (IGNORE_DUP_KEY = ON))

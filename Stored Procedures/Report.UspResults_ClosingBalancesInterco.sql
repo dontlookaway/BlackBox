@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -27,11 +26,11 @@ Template designed by Chris Johnson, Prometic Group March 2016
 
         Create Table [#UnpivotAmounts]
             (
-              [Company] Varchar(10)
-            , [GlCode] Varchar(35)
+              [Company] Varchar(10)			collate latin1_general_bin
+            , [GlCode] Varchar(35)			collate latin1_general_bin
             , [GlYear] Int
             , [Period] Int
-            , [DueToCode] Varchar(10)
+            , [DueToCode] Varchar(10)		collate latin1_general_bin
             , [StartYearDateForExRates] DateTime2
             , [ClosingBalance] Numeric(20 , 2)
             , [MonthOffset] As Case When [Period] >= 12 Then 12
@@ -129,7 +128,6 @@ Template designed by Chris Johnson, Prometic Group March 2016
         Drop Table [#UnpivotAmounts];
 
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Return closing balances related to InterCompany payments for analysis', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ClosingBalancesInterco', NULL, NULL
 GO

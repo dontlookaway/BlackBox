@@ -21,8 +21,8 @@ As
             Begin
                 Create Table [Lookups].[BudgetType]
                     (
-                      [BudgetType] Char(1)
-                    , [BudgetTypeDesc] Varchar(250)
+                      [BudgetType] Char(1)			collate latin1_general_bin
+                    , [BudgetTypeDesc] Varchar(250)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -106,7 +106,6 @@ As
                     + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_BudgetType', NULL, NULL
 GO

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -21,32 +20,32 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#Base]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [BaseCcy] Char(3) Collate Latin1_General_BIN
-            , [BaseCcyName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [BaseCcy] Char(3)				Collate Latin1_General_BIN
+            , [BaseCcyName] Varchar(150)	Collate Latin1_General_BIN
             );
         Create Table [#SecondConvert]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [SecondConvert] Char(3) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [SecondConvert] Char(3)		Collate Latin1_General_BIN
             , [SecondConvertSellRate] Numeric(20 , 7)
             , [SecondConvertBuyRate] Numeric(20 , 7)
             );
         Create Table [#TblCurrency]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Currency] Char(3) Collate Latin1_General_BIN
-            , [Description] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Currency] Char(3)			Collate Latin1_General_BIN
+            , [Description] Varchar(150)	Collate Latin1_General_BIN
             , [BuyExchangeRate] Numeric(20 , 7)
             , [SellExchangeRate] Numeric(20 , 7)
             );
         Create Table [#ApBank]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Bank] Varchar(15) Collate Latin1_General_BIN
-            , [Description] Varchar(50) Collate Latin1_General_BIN
-            , [CashGlCode] Varchar(50) Collate Latin1_General_BIN
-            , [Currency] Char(3)
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Bank] Varchar(15)			Collate Latin1_General_BIN
+            , [Description] Varchar(50)		Collate Latin1_General_BIN
+            , [CashGlCode] Varchar(50)		collate latin1_general_bin
+            , [Currency] Char(3)			collate latin1_general_bin
             , [CurrentBalance] Numeric(20 , 7)
             , [StatementBalance] Numeric(20 , 7)
             , [OutStandingDeposits] Numeric(20 , 7)
@@ -248,27 +247,27 @@ End';
 --define the results you want to return
         Create Table [#CurrencyConversions]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Currency] Char(3)
-            , [Description] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Currency] Char(3)					collate latin1_general_bin
+            , [Description] Varchar(150)			collate latin1_general_bin
             , [BuyExchangeRate] Numeric(20 , 7)
             , [SellExchangeRate] Numeric(20 , 7)
-            , [BaseCcy] Char(3)
-            , [BaseCcyName] Varchar(150) Collate Latin1_General_BIN
+            , [BaseCcy] Char(3)						collate latin1_general_bin
+            , [BaseCcyName] Varchar(150)			Collate Latin1_General_BIN
             , [SecondConvertBuyRate] Numeric(20 , 7)
             , [SecondConvertSellRate] Numeric(20 , 7)
-            , [SecondConvert] Char(3)
+            , [SecondConvert] Char(3)				collate latin1_general_bin
             , [RateSell] Numeric(20 , 7)
             , [RateBuy] Numeric(20 , 7)
             );
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [CompanyName] Varchar(150)
-            , [Bank] Varchar(10)
-            , [BankDescription] Varchar(150)
-            , [CashGlCode] Varchar(150)
-            , [BankCurrency] Char(3)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [CompanyName] Varchar(150)			collate latin1_general_bin
+            , [Bank] Varchar(10)					collate latin1_general_bin
+            , [BankDescription] Varchar(150)		collate latin1_general_bin
+            , [CashGlCode] Varchar(150)				collate latin1_general_bin
+            , [BankCurrency] Char(3)				collate latin1_general_bin
             , [CurrentBalance] Numeric(20 , 7)
             , [StatementBalance] Numeric(20 , 7)
             , [OutStandingDeposits] Numeric(20 , 7)
@@ -281,14 +280,14 @@ End';
             , [PrevMonth2StatementBalance] Numeric(20 , 7)
             , [PrevMonth2OutStandingDeposits] Numeric(20 , 7)
             , [PrevMonth2OutStandingWithdrawals] Numeric(20 , 7)
-            , [CurrencyDescription] Varchar(150)
+            , [CurrencyDescription] Varchar(150)	collate latin1_general_bin
             , [BuyExchangeRate] Numeric(20 , 7)
             , [SellExchangeRate] Numeric(20 , 7)
-            , [BaseCcy] Char(3)
-            , [BaseCcyName] Varchar(150)
+            , [BaseCcy] Char(3)						collate latin1_general_bin
+            , [BaseCcyName] Varchar(150)			collate latin1_general_bin
             , [SecondConvertBuyRate] Numeric(20 , 7)
             , [SecondConvertSellRate] Numeric(20 , 7)
-            , [SecondConvert] Char(3)
+            , [SecondConvert] Char(3)				collate latin1_general_bin
             , [RateSell] Numeric(20 , 7)
             , [RateBuy] Numeric(20 , 7)
             );
@@ -409,7 +408,6 @@ End';
         Drop Table [#CurrencyConversions];
         Drop Table [#ApBank];
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'returns list of all bank balances', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllBankBalances', NULL, NULL

@@ -1,9 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_PurchaseOrderWithHistory]
     (
       @Company Varchar(Max)
@@ -38,58 +36,58 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [Line] Int
-            , [LineType] Int
-            , [MStockCode] Varchar(30)
-            , [MStockDes] Varchar(50)
-            , [MWarehouse] Varchar(10)
-            , [MOrderQty] Numeric(20 , 6)
-            , [MReceivedQty] Numeric(20 , 6)
-            , [MCompleteFlag] Char(1)
-            , [MOrderUom] Varchar(10)
-            , [MLatestDueDate] Date
-            , [MOrigDueDate] Date
-            , [MLastReceiptDat] Date
-            , [MPrice] Numeric(20 , 2)
-            , [MForeignPrice] Numeric(20 , 2)
-            );
-        Create Table [#PorHistReceipt]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLin] Int
-            , [DateReceived] Date
-            , [QtyReceived] Numeric(20 , 6)
-            , [PriceReceived] Numeric(20 , 2)
-            , [RejectCode] Varchar(10)
-            , [Reference] Varchar(30)
-            );
-        Create Table [#PorMasterHdr]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [OrderStatus] Char(1)
-            , [Supplier] Varchar(15)
-            );
-        Create Table [#InvMaster]
-            (
-              [DatabaseName] Varchar(150)
-            , [StockCode] Varchar(30)
-            , [Description] Varchar(50)
-            );
-        Create Table [#ApSupplier]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
-            );
-        Create Table [#GrnDetails]
-            (
-              [DatabaseName] Varchar(150)
-            , [Grn] Varchar(20)
-            , [DebitRecGlCode] Varchar(35)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)			collate latin1_general_bin
+            , [Line] Int							
+            , [LineType] Int						
+            , [MStockCode] Varchar(30)				collate latin1_general_bin
+            , [MStockDes] Varchar(50)				collate latin1_general_bin
+            , [MWarehouse] Varchar(10)				collate latin1_general_bin
+            , [MOrderQty] Numeric(20 , 6)			
+            , [MReceivedQty] Numeric(20 , 6)		
+            , [MCompleteFlag] Char(1)				collate latin1_general_bin
+            , [MOrderUom] Varchar(10)				collate latin1_general_bin
+            , [MLatestDueDate] Date					
+            , [MOrigDueDate] Date					
+            , [MLastReceiptDat] Date				
+            , [MPrice] Numeric(20 , 2)				
+            , [MForeignPrice] Numeric(20 , 2)		
+            );										
+        Create Table [#PorHistReceipt]				
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)			collate latin1_general_bin
+            , [PurchaseOrderLin] Int				
+            , [DateReceived] Date					
+            , [QtyReceived] Numeric(20 , 6)			
+            , [PriceReceived] Numeric(20 , 2)		
+            , [RejectCode] Varchar(10)				collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            );										
+        Create Table [#PorMasterHdr]				
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)			collate latin1_general_bin
+            , [OrderStatus] Char(1)					collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            );										
+        Create Table [#InvMaster]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [Description] Varchar(50)				collate latin1_general_bin
+            );										
+        Create Table [#ApSupplier]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [SupplierName] Varchar(50)			collate latin1_general_bin
+            );										
+        Create Table [#GrnDetails]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Grn] Varchar(20)						collate latin1_general_bin
+            , [DebitRecGlCode] Varchar(35)			collate latin1_general_bin
             );
 
 
@@ -168,33 +166,33 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [CompanyName] Varchar(200)
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
-            , [PurchaseOrder] Varchar(30)
-            , [Line] Int
-            , [LineType] Varchar(200)
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [Warehouse] Varchar(10)
-            , [OrderQty] Numeric(20 , 6)
-            , [ReceivedQty] Numeric(20 , 6)
-            , [QtyOutstanding] Numeric(20 , 6)
-            , [MOrderUom] Varchar(10)
-            , [LatestDueDate] Date
-            , [OrigDueDate] Date
-            , [LastReceiptDate] Date
-            , [Price] Numeric(20 , 2)
-            , [ForeignPrice] Numeric(20 , 2)
-            , [DateReceived] Date
-            , [QtyReceived] Numeric(20 , 6)
-            , [PriceReceived] Numeric(20 , 2)
-            , [RejectCode] Varchar(10)
-            , [Reference] Varchar(30)
-            , [CompleteFlag] Char(1)
-            , [OrderStatus] Varchar(150)
-            , [DebitRecGlCode] Varchar(35)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [CompanyName] Varchar(200)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [SupplierName] Varchar(50)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(30)			collate latin1_general_bin
+            , [Line] Int							
+            , [LineType] Varchar(200)				collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [OrderQty] Numeric(20 , 6)			
+            , [ReceivedQty] Numeric(20 , 6)			
+            , [QtyOutstanding] Numeric(20 , 6)		
+            , [MOrderUom] Varchar(10)				collate latin1_general_bin
+            , [LatestDueDate] Date					
+            , [OrigDueDate] Date					
+            , [LastReceiptDate] Date				
+            , [Price] Numeric(20 , 2)				
+            , [ForeignPrice] Numeric(20 , 2)		
+            , [DateReceived] Date					
+            , [QtyReceived] Numeric(20 , 6)			
+            , [PriceReceived] Numeric(20 , 2)		
+            , [RejectCode] Varchar(10)				collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [CompleteFlag] Char(1)				collate latin1_general_bin
+            , [OrderStatus] Varchar(150)			collate latin1_general_bin
+            , [DebitRecGlCode] Varchar(35)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -320,7 +318,6 @@ Stored procedure set out to query multiple databases with the same information a
                                                               And [DatabaseName] = [GM].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'purchase order details with purchase order changes', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrderWithHistory', NULL, NULL

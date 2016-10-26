@@ -31,21 +31,21 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [MRequisition] Varchar(10)
-            );
-        Create Table [#PorMasterHdr]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [OrderStatus] Char(1)
-            , [Supplier] Varchar(15)
-            , [OrderEntryDate] Date
-            , [OrderDueDate] Date
-            , [DatePoCompleted] Date
-            , [Buyer] Varchar(20)
-            , [CancelledFlag] Char(1)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [MRequisition] Varchar(10)		collate latin1_general_bin
+            );									
+        Create Table [#PorMasterHdr]			
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [OrderStatus] Char(1)				collate latin1_general_bin
+            , [Supplier] Varchar(15)			collate latin1_general_bin
+            , [OrderEntryDate] Date				
+            , [OrderDueDate] Date				
+            , [DatePoCompleted] Date			
+            , [Buyer] Varchar(20)				collate latin1_general_bin
+            , [CancelledFlag] Char(1)			collate latin1_general_bin
             );
 
 
@@ -113,14 +113,14 @@ As
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [OrderStatus] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [OrderEntryDate] Date
-            , [OrderDueDate] Date
-            , [DatePoCompleted] Date
-            , [Buyer] Varchar(20)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [OrderStatus] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(15)			collate latin1_general_bin
+            , [OrderEntryDate] Date				
+            , [OrderDueDate] Date				
+            , [DatePoCompleted] Date			
+            , [Buyer] Varchar(20)				collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -187,7 +187,6 @@ As
                     On [R].[DatabaseName] = [CN].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of Purchase orders without requisitions', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PosNoReqs', NULL, NULL

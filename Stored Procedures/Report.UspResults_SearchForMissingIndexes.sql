@@ -17,14 +17,14 @@ Based off work here - http://blog.sqlauthority.com/2011/01/03/sql-server-2008-mi
 
     Create Table [#ResultSets]
         (
-          [DatabaseName] Varchar(300)
+          [DatabaseName] Varchar(300)	collate latin1_general_bin
         , [AvgEstimatedImpact] Float
         , [LastUserSeek] DateTime2
         , [UserScans] BigInt
         , [UserSeeks] BigInt
         , [AvgUserImpact] Float
-        , [TableName] Varchar(500)
-        , [Create_Statement] Varchar(Max)
+        , [TableName] Varchar(500)		collate latin1_general_bin
+        , [Create_Statement] Varchar(Max)	
         );
 
 
@@ -32,7 +32,7 @@ Based off work here - http://blog.sqlauthority.com/2011/01/03/sql-server-2008-mi
 
 
 
-    Set @SQLScript = '		Insert [#ResultSets]
+    Set @SQLScript = 'Insert [#ResultSets]
 		        ( [DatabaseName]
 		        , [AvgEstimatedImpact]
 		        , [LastUserSeek]
@@ -75,7 +75,6 @@ From    [sys].[dm_db_missing_index_groups] [dm_mig]
 
         Where   Lower([d].[name]) Like Lower(''' + @DbSearch + ''');';
  
-  Print @SQLScript
     Exec (@SQLScript)
   
 
@@ -90,7 +89,6 @@ From    [sys].[dm_db_missing_index_groups] [dm_mig]
     From    [#ResultSets] As [RS]
 	Where [RS].[TableName] Is Not Null
 	Order By [RS].[AvgEstimatedImpact] Desc;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'proc to evaluate any missing indexes that can be added', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SearchForMissingIndexes', NULL, NULL
 GO

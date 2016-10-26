@@ -2,8 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
--- Stored Procedure
-
 CREATE Proc [Process].[UspPopulate_HistoryTables1] ( @RebuildBit Bit )
 As /*
 Template designed by Chris Johnson, Prometic Group September 2015
@@ -37,15 +35,15 @@ Stored procedure set out to query multiple databases with the same information a
 
         If Not Exists ( Select  [t].[name]
                         From    [sys].[tables] [t]
-                                Left Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                                Left Join [sys].[schemas] [s]
+                                    On [s].[schema_id] = [t].[schema_id]
                         Where   [s].[name] = 'Process'
                                 And [t].[name] = 'SysproTransactionsLogged' )
             Begin
                 Create Table [Process].[SysproTransactionsLogged]
                     (
-                      [TransactionDescription] Varchar(150)
-                        Collate Latin1_General_BIN
-                    , [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+                      [TransactionDescription] Varchar(150)		Collate Latin1_General_BIN
+                    , [DatabaseName] Varchar(150)				Collate Latin1_General_BIN
                     , [SignatureDateTime] As DateAdd(Millisecond ,
                                                      Cast(Substring(Cast([SignatureTime] As Char(8)) ,
                                                               7 , 2) As Int) ,
@@ -61,17 +59,17 @@ Stored procedure set out to query multiple databases with the same information a
                                                               Cast([SignatureDate] As DateTime)))))
                     , [SignatureDate] Date
                     , [SignatureTime] Int
-                    , [Operator] Varchar(20) Collate Latin1_General_BIN
-                    , [VariableDesc] Varchar(100) Collate Latin1_General_BIN
-                    , [ItemKey] Varchar(150) Collate Latin1_General_BIN
+                    , [Operator] Varchar(20)					Collate Latin1_General_BIN
+                    , [VariableDesc] Varchar(100)				Collate Latin1_General_BIN
+                    , [ItemKey] Varchar(150)					Collate Latin1_General_BIN
                     , [VariableType] Char(1)
-                    , [VarAlphaValue] Varchar(255) Collate Latin1_General_BIN
+                    , [VarAlphaValue] Varchar(255)				Collate Latin1_General_BIN
                     , [VarNumericValue] Float
                     , [VarDateValue] DateTime2
-                    , [ComputerName] Varchar(150) Collate Latin1_General_BIN
-                    , [ProgramName] Varchar(100) Collate Latin1_General_BIN
-                    , [TableName] Varchar(150) Collate Latin1_General_BIN
-                    , [ConditionName] Varchar(15) Collate Latin1_General_BIN
+                    , [ComputerName] Varchar(150)				Collate Latin1_General_BIN
+                    , [ProgramName] Varchar(100)				Collate Latin1_General_BIN
+                    , [TableName] Varchar(150)					Collate Latin1_General_BIN
+                    , [ConditionName] Varchar(15)				Collate Latin1_General_BIN
                     , [AlreadyEntered] Bit Default 0
                     , Constraint [TDR_AllKeys] Primary Key NonClustered
                         ( [DatabaseName] , [SignatureDate] , [SignatureTime] , [ItemKey] , [Operator] , [ProgramName] , [VariableDesc] , [TableName] )
@@ -437,7 +435,8 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                 Print 'Rebuilt Option Selected - previous transactions removed';
                 If Exists ( Select  [t].[name]
                             From    [sys].[tables] [t]
-                                    Left Join [sys].[schemas] [s] On [s].[schema_id] = [t].[schema_id]
+                                    Left Join [sys].[schemas] [s]
+                                        On [s].[schema_id] = [t].[schema_id]
                             Where   [s].[name] = 'Process'
                                     And [t].[name] = 'SysproTransactionsLogged' )
                     Begin
@@ -447,9 +446,9 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
 
         --If Len(@SQLTransactions) <= 2000 --only run script if less than 2000
             --Begin
-                Print 'Capturing Transactions';
-                Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLTransactions,
-                    @SchemaTablesToCheck = N'AdmSignatureLog,AdmSignatureLogDet,ApAmendmentJnl,TblCurAmendmentJnl,AssetAmendmentJnl,EftCbAmendmentJnl,BomAmendmentJnl,InvMastAmendJnl,ArAmendmentJnl,WipJobAmendJnl,InvWhAmendJnl' -- nvarchar(max)
+        Print 'Capturing Transactions';
+        Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLTransactions ,
+            @SchemaTablesToCheck = N'AdmSignatureLog,AdmSignatureLogDet,ApAmendmentJnl,TblCurAmendmentJnl,AssetAmendmentJnl,EftCbAmendmentJnl,BomAmendmentJnl,InvMastAmendJnl,ArAmendmentJnl,WipJobAmendJnl,InvWhAmendJnl'; -- nvarchar(max)
                  
             --End;
         --If Len(@SQLTransactions) > 2000 --if the script is greater than 2000 then the script will probably fail - raise an error
@@ -464,8 +463,8 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                 Create Table [#TablesToRename]
                     (
                       [TID] Int Identity(1 , 1)
-                    , [SchemaName] Varchar(500)  Collate Latin1_General_BIN
-                    , [TableName] Varchar(500)  Collate Latin1_General_BIN
+                    , [SchemaName] Varchar(500) Collate Latin1_General_BIN
+                    , [TableName] Varchar(500) Collate Latin1_General_BIN
                     , [NewTableName] As 'Archive' + [TableName]
                         + Upper(Replace(Replace(Convert(Varchar(24) , GetDate() , 113) ,
                                                 ' ' , '') , ':' , '')) --new table name is old name plus the current timestamp
@@ -478,7 +477,8 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                         Select  [SchemaName] = [S].[name]
                               , [TableName] = [T].[name]
                         From    [sys].[schemas] As [S]
-                                Left Join [sys].[tables] As [T] On [T].[schema_id] = [S].[schema_id]
+                                Left Join [sys].[tables] As [T]
+                                    On [T].[schema_id] = [S].[schema_id]
                         Where   [S].[name] = 'History'
                                 And [T].[name] Not Like 'Archive%'; --do not archive tables that have already been archived;
 
@@ -593,7 +593,8 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                         Where   [TL].[TableName] Not In (
                                 Select  [T].[name]
                                 From    [sys].[schemas] As [S]
-                                        Left Join [sys].[tables] [T] On [T].[schema_id] = [S].[schema_id]
+                                        Left Join [sys].[tables] [T]
+                                            On [T].[schema_id] = [S].[schema_id]
                                 Where   [S].[name] = 'History' );
 
 	--Create all required tables with keys
@@ -644,7 +645,7 @@ Insert  [BlackBox].[Process].[SysproTransactionsLogged]
                                                     + [STL].[TableName] + '' As Varchar(150))
                                           From      [Process].[SysproTransactionsLogged]
                                                     As [STL]
-											Where [STL].[AlreadyEntered]=0
+                                          Where     [STL].[AlreadyEntered] = 0
                                         For
                                           Xml Path('')
                                         ) , 1 , 1 , '');

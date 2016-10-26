@@ -38,41 +38,41 @@ As
 
         Create Table [#WipLabJnl]
             (
-              [DatabaseCode] Varchar(10)
-            , [Job] Varchar(20)
+              [DatabaseCode] Varchar(10)	collate latin1_general_bin
+            , [Job] Varchar(20)				collate latin1_general_bin
             , [RunTime] Numeric(20 , 4)
             );
         Create Table [#LotTransactions]
             (
-              [DatabaseCode] Varchar(10)
-            , [StockCode] Varchar(30)
-            , [Warehouse] Varchar(10)
+              [DatabaseCode] Varchar(10)	collate latin1_general_bin
+            , [StockCode] Varchar(30)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)		collate latin1_general_bin
             , [TrnQuantity] Numeric(20 , 6)
-            , [JobPurchOrder] Varchar(20)
+            , [JobPurchOrder] Varchar(20)	collate latin1_general_bin
             , [TrnDate] Date
             , [TrnType] Char(1)
-            , [Lot] Varchar(50)
+            , [Lot] Varchar(50)				collate latin1_general_bin
             );
         Create Table [#InvMaster]
             (
-              [DatabaseCode] Varchar(10)
-            , [StockCode] Varchar(30)
-            , [Description] Varchar(50)
+              [DatabaseCode] Varchar(10)	collate latin1_general_bin
+            , [StockCode] Varchar(30)		collate latin1_general_bin
+            , [Description] Varchar(50)		collate latin1_general_bin
             );
 --temp tables used in calculations
         Create Table [#WarehouseLevels]
             (
-              [DatabaseCode] Varchar(10)
-            , [StockCode] Varchar(30)
-            , [Warehouse] Varchar(10)
+              [DatabaseCode] Varchar(10)	collate latin1_general_bin
+            , [StockCode] Varchar(30)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)		collate latin1_general_bin
             , [TrnQuantityMod] Numeric(20 , 8)
-            , [JobPurchOrder] Varchar(30)
+            , [JobPurchOrder] Varchar(30)	collate latin1_general_bin
             , [CreatedDate] Date
             );
         Create Table [#HoursPerJob]
             (
-              [DatabaseCode] Varchar(10)
-            , [Job] Varchar(20)
+              [DatabaseCode] Varchar(10)	collate latin1_general_bin
+            , [Job] Varchar(20)				collate latin1_general_bin
             , [RunTime] Numeric(20 , 4)
             );
 
@@ -156,15 +156,15 @@ As
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseCode] Varchar(10)
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(150)
-            , [Warehouse] Varchar(10)
+              [DatabaseCode] Varchar(10)		collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [StockDescription] Varchar(150)	collate latin1_general_bin
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
             , [QtyOnHand] Numeric(20 , 8)
             , [RunTimeTotal] Numeric(20 , 2)
             , [TimePerUnit] Float
             , [JobQuantity] Numeric(20 , 8)
-            , [JobPurchOrder] Varchar(30)
+            , [JobPurchOrder] Varchar(30)		collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required

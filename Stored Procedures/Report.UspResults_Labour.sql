@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -35,10 +34,10 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#WipLabJnl]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
             , [EntryMonth] Date
             , [EntryDate] DateTime2
-            , [Employee] Varchar(20)
+            , [Employee] Varchar(20)		collate latin1_general_bin
             , [RunTime] Numeric(20 , 7)
             , [RunTimeRate] Numeric(20 , 7)
             , [SetUpTime] Numeric(20 , 7)
@@ -50,8 +49,8 @@ Stored procedure set out to query multiple databases with the same information a
             , [LabourValue] Numeric(20 , 7)
             , [FixedOhRate] Numeric(20 , 7)
             , [VariableOhRate] Numeric(20 , 7)
-            , [WorkCentre] Varchar(150)
-            , [Job] Varchar(50)
+            , [WorkCentre] Varchar(150)		collate latin1_general_bin
+            , [Job] Varchar(50)				collate latin1_general_bin
             );
 
 --create script to pull data from each db into the tables

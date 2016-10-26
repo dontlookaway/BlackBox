@@ -21,15 +21,15 @@ As
 
         Create Table [#ObjectsAndColumns]
             (
-              [SchemaName] sysname
-            , [ObjectName] sysname
-            , [ColumnName] sysname Null
-            , [DatabaseName] sysname
-            , [ColumnType] sysname Null
+              [SchemaName] sysname		collate latin1_general_bin 
+            , [ObjectName] sysname		collate latin1_general_bin 
+            , [ColumnName] sysname		collate latin1_general_bin Null
+            , [DatabaseName] sysname	collate latin1_general_bin 
+            , [ColumnType] sysname		collate latin1_general_bin Null
             , [max_length] Smallint
             , [precision] TinyInt
-            , [ObjectType] Varchar(50)
-            , [parameters] sysname Null
+            , [ObjectType] Varchar(50)	collate latin1_general_bin
+            , [parameters] sysname		collate latin1_general_bin Null
             );
 
         Declare @DBCount Int;
@@ -151,7 +151,6 @@ If Lower(Db_Name()) Not Like ''%_srs'' And Lower(Db_Name()) Like ''sysprocompany
 
         Drop Table [#ObjectsAndColumns];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'provide details of differences between databases', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_DbDiffs', NULL, NULL
 GO

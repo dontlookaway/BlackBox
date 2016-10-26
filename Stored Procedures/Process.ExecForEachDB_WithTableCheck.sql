@@ -30,7 +30,8 @@ Amended 21st June to check for tables to run against before executing
           , @ValidQuery Int;
 
         Select  @ValidationQuery = @ValidationQuery
-                + Stuff((Select 'SELECT @Temp=max(1)  FROM ' + QuoteName([Value]) + '
+                + Stuff((Select 'SELECT @Temp=max(1)  FROM '
+                                + QuoteName([Value]) + '
 '
                          From   [dbo].[udf_SplitString](@SchemaTablesToCheck ,
                                                         ',')
@@ -55,7 +56,7 @@ Amended 21st June to check for tables to run against before executing
                         (
                           [LogID] BigInt Identity(1 , 1)
                         , [LogTime] DateTime2 Default GetDate()
-                        , [Cmd] NVarchar(2000)
+                        , [Cmd] NVarchar(2000) Collate Latin1_General_BIN
                         );
                 End Try
                 Begin Catch
@@ -89,7 +90,7 @@ Amended 21st June to check for tables to run against before executing
                         (
                           [LogID] BigInt Identity(1 , 1)
                         , [LogTime] DateTime2 Default GetDate()
-                        , [Error] NVarchar(2000)
+                        , [Error] NVarchar(2000) Collate Latin1_General_BIN
                         );
                 End Try
                 Begin Catch
@@ -181,7 +182,6 @@ Amended 21st June to check for tables to run against before executing
                 Deallocate [DbNames];
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'The purpose of this stored procedure is to replace the undocumented procedure sp_MSforeachdb as this may be removed in future versions
 of SQL Server. The stored procedure iterates through all user databases and executes the code passed to it. In addition to this, proc checks that tables exist before executing (reducing error messages)', 'SCHEMA', N'Process', 'PROCEDURE', N'ExecForEachDB_WithTableCheck', NULL, NULL

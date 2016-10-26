@@ -20,9 +20,9 @@ As
             Begin
                 Create Table [Lookups].[SalesOrderLineType]
                     (
-                      [Company] Varchar(150)
-                    , [LineTypeCode] Char(5)
-                    , [LineTypeDescription] Varchar(150)
+                      [Company] Varchar(150)					collate latin1_general_bin
+                    , [LineTypeCode] Char(5)					collate latin1_general_bin
+                    , [LineTypeDescription] Varchar(150)		collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -45,8 +45,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#SalesOrderLineType]
                     (
-                      [LineTypeCode] Varchar(5)
-                    , [LineTypeDescription] Varchar(150)
+                      [LineTypeCode] Varchar(5)				collate latin1_general_bin
+                    , [LineTypeDescription] Varchar(150)	collate latin1_general_bin
                     );
 
                 Insert  [#SalesOrderLineType]
@@ -79,8 +79,7 @@ As
                     );
 
 	--create script to pull data from each db into the tables
-                Declare @SQL Varchar(Max) = '
-		USE [?];
+                Declare @SQL Varchar(Max) = 'USE [?];
 		Declare @DB varchar(150),@DBCode varchar(150)
 		Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 		IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -161,7 +160,6 @@ As
             Print 'UspUpdate_SalesOrderLineType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_SalesOrderLineType', NULL, NULL
 GO

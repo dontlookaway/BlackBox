@@ -22,7 +22,7 @@ As
                 Create Table [Lookups].[PorLineType]
                     (
                       [PorLineType] Int Primary Key
-                    , [PorLineTypeDesc] Varchar(150)
+                    , [PorLineTypeDesc] Varchar(150)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -112,7 +112,6 @@ As
             Print 'UspUpdate_PorLineType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_PorLineType', NULL, NULL

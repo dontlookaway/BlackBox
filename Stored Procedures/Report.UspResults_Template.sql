@@ -34,8 +34,8 @@ Set NoCount On
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#Table1]
             (
-              [DatabaseName] Varchar(150)
-            , [ColumnName] Varchar(500)
+              [DatabaseName] Varchar(150) collate latin1_general_bin
+            , [ColumnName] Varchar(500)	collate latin1_general_bin
             );
 
 	
@@ -69,8 +69,8 @@ Set NoCount On
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Results] Varchar(500)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Results] Varchar(500)	collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -90,7 +90,6 @@ Set NoCount Off
         From    [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'used to develop new stored procs (copy and paste code and alter as necessary)', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_Template', NULL, NULL

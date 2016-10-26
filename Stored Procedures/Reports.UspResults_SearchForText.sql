@@ -29,11 +29,11 @@ As
         Create Table [#ObjectList]
             (
               [object_id] Int Not Null
-            , [ObjectName] sysname
-            , [ObjectType] Varchar(10)
-            , [SchemaName] sysname
-            , [DBName] Varchar(255) Not Null
-            , [ObjectDefinition] NVarchar(Max)
+            , [ObjectName] sysname					   collate latin1_general_bin
+            , [ObjectType] Varchar(10)				   collate latin1_general_bin
+            , [SchemaName] sysname					   collate latin1_general_bin
+            , [DBName] Varchar(255)						collate latin1_general_bin Not Null
+            , [ObjectDefinition] NVarchar(Max)			collate latin1_general_bin
             , Constraint [PK_ObjList_ObjectID_DBName] Primary Key
                 ( [object_id] , [DBName] )
             );
@@ -42,10 +42,10 @@ As
             (
               [object_id] Int Not Null
             , [ColumnID] Int Not Null
-            , [ColumnName] sysname
+            , [ColumnName] sysname						collate latin1_general_bin
             , [ColumnType] TinyInt
             , [max_length] Smallint
-            , [DBName] Varchar(255) Not Null
+            , [DBName] Varchar(255)						collate latin1_general_bin Not Null
             , [ExecID] Int Identity(1 , 1)
             , Constraint [PL_ColList_ObjectID_ColID_DBName] Primary Key
                 ( [object_id] , [ColumnID] , [DBName] )
@@ -149,13 +149,13 @@ As
 
         Create Table [#Results]
             (
-              [ColumnName] sysname
-            , [TableName] sysname
-            , [SchemaName] sysname
-            , [DBName] Varchar(250)
-            , [CountofMatchingRows] Int
-            , [MaxMatchingRow] NVarchar(Max)
-            , [MinMatchingRow] NVarchar(Max)
+              [ColumnName] sysname				collate latin1_general_bin
+            , [TableName] sysname				collate latin1_general_bin
+            , [SchemaName] sysname				collate latin1_general_bin
+            , [DBName] Varchar(250)				collate latin1_general_bin
+            , [CountofMatchingRows] Int			
+            , [MaxMatchingRow] NVarchar(Max)	collate latin1_general_bin
+            , [MinMatchingRow] NVarchar(Max)	collate latin1_general_bin
             );
 
         Select  @CurrentID = Min([CL].[ExecID])
@@ -297,7 +297,6 @@ where lower(' + QuoteName([R].[ColumnName]) + ') like ''' + @TextToSearch
         Drop Table [#ColumnList];
         Drop Table [#Results];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'proc to search for text in dbs - warning this is server intensive', 'SCHEMA', N'Reports', 'PROCEDURE', N'UspResults_SearchForText', NULL, NULL
 GO

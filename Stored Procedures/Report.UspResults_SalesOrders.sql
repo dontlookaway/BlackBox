@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,41 +36,41 @@ List of all Sales orders with details
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#SorMaster]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
-            , [CancelledFlag] Char(1)
-            , [Customer] Varchar(50) Collate Latin1_General_BIN
-            , [CustomerName] Varchar(255) Collate Latin1_General_BIN
-            , [OrderStatus] Varchar(5) Collate Latin1_General_BIN
-            , [Salesperson] Varchar(20) Collate Latin1_General_BIN
-            , [Branch] Varchar(10) Collate Latin1_General_BIN
-            , [CustomerPoNumber] Varchar(30) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(35)			Collate Latin1_General_BIN
+            , [CancelledFlag] Char(1)			collate latin1_general_bin
+            , [Customer] Varchar(50)			Collate Latin1_General_BIN
+            , [CustomerName] Varchar(255)		Collate Latin1_General_BIN
+            , [OrderStatus] Varchar(5)			Collate Latin1_General_BIN
+            , [Salesperson] Varchar(20)			Collate Latin1_General_BIN
+            , [Branch] Varchar(10)				Collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(30)	Collate Latin1_General_BIN
             , [OrderDate] DateTime2
             , [EntrySystemDate] DateTime2
             , [ReqShipDate] DateTime2
-            , [Currency] Varchar(5) Collate Latin1_General_BIN
+            , [Currency] Varchar(5)				Collate Latin1_General_BIN
             );
         Create Table [#SorDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(35)			Collate Latin1_General_BIN
             , [SalesOrderLine] Int
-            , [LineType] Varchar(10) Collate Latin1_General_BIN
-            , [MStockCode] Varchar(35) Collate Latin1_General_BIN
-            , [MStockDes] Varchar(255) Collate Latin1_General_BIN
+            , [LineType] Varchar(10)			Collate Latin1_General_BIN
+            , [MStockCode] Varchar(35)			Collate Latin1_General_BIN
+            , [MStockDes] Varchar(255)			Collate Latin1_General_BIN
             , [MOrderQty] Numeric(20 , 7)
-            , [MOrderUom] Varchar(5) Collate Latin1_General_BIN
+            , [MOrderUom] Varchar(5)			Collate Latin1_General_BIN
             , [MPrice] Numeric(20 , 2)
-            , [NComment] Varchar(100) Collate Latin1_General_BIN
-            , [NMscProductCls] Varchar(20) Collate Latin1_General_BIN
+            , [NComment] Varchar(100)			Collate Latin1_General_BIN
+            , [NMscProductCls] Varchar(20)		Collate Latin1_General_BIN
             , [NMscChargeValue] Numeric(20 , 3)
             );
         Create Table [#SalSalesperson]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Name] Varchar(50) Collate Latin1_General_BIN
-            , [Branch] Varchar(10) Collate Latin1_General_BIN
-            , [Salesperson] Varchar(20) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Name] Varchar(50)				Collate Latin1_General_BIN
+            , [Branch] Varchar(10)				Collate Latin1_General_BIN
+            , [Salesperson] Varchar(20)			Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -237,27 +236,27 @@ List of all Sales orders with details
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
-            , [OrderStatusDescription] Varchar(255) Collate Latin1_General_BIN
-            , [CancelledFlag] Char(1)
-            , [Customer] Varchar(35) Collate Latin1_General_BIN
-            , [CustomerName] Varchar(255) Collate Latin1_General_BIN
-            , [Name] Varchar(150) Collate Latin1_General_BIN
-            , [CustomerPoNumber] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)			Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(35)				Collate Latin1_General_BIN
+            , [OrderStatusDescription] Varchar(255) collate latin1_general_bin
+            , [CancelledFlag] Char(1)				collate latin1_general_bin
+            , [Customer] Varchar(35)				Collate Latin1_General_BIN
+            , [CustomerName] Varchar(255)			Collate Latin1_General_BIN
+            , [Name] Varchar(150)					Collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(150)		Collate Latin1_General_BIN
             , [OrderDate] DateTime2
             , [EntrySystemDate] DateTime2
             , [ReqShipDate] DateTime2
-            , [Currency] Varchar(5) Collate Latin1_General_BIN
+            , [Currency] Varchar(5)					Collate Latin1_General_BIN
             , [SalesOrderLine] Int
-            , [LineTypeDescription] Varchar(150) Collate Latin1_General_BIN
-            , [MStockCode] Varchar(35) Collate Latin1_General_BIN
-            , [MStockDes] Varchar(150) Collate Latin1_General_BIN
+            , [LineTypeDescription] Varchar(150)	Collate Latin1_General_BIN
+            , [MStockCode] Varchar(35)				Collate Latin1_General_BIN
+            , [MStockDes] Varchar(150)				Collate Latin1_General_BIN
             , [MOrderQty] Numeric(20 , 7)
-            , [MOrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [MOrderUom] Varchar(10)				Collate Latin1_General_BIN
             , [MPrice] Numeric(20 , 3)
-            , [NComment] Varchar(100) Collate Latin1_General_BIN
-            , [NMscProductCls] Varchar(20) Collate Latin1_General_BIN
+            , [NComment] Varchar(100)				Collate Latin1_General_BIN
+            , [NMscProductCls] Varchar(20)			Collate Latin1_General_BIN
             , [NMscChargeValue] Numeric(20 , 3)
             );
 
@@ -349,7 +348,6 @@ List of all Sales orders with details
         From    [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of sales orders ', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrders', NULL, NULL

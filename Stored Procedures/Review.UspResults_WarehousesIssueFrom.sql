@@ -23,11 +23,11 @@ As
 
         Create Table [#WHReview]
             (
-              [IssueFrom] Varchar(150)
-            , [Warehouse] Varchar(50)
-            , [Description] Varchar(150)
-            , [DB] Varchar(150)
-            , [RowType] Varchar(10)
+              [IssueFrom] Varchar(150)			collate latin1_general_bin
+            , [Warehouse] Varchar(50)			collate latin1_general_bin
+            , [Description] Varchar(150)		collate latin1_general_bin
+            , [DB] Varchar(150)					collate latin1_general_bin
+            , [RowType] Varchar(10)				collate latin1_general_bin
             );
 
         If @IncludeNotes = 1
@@ -78,7 +78,6 @@ end';
         Where   [WR].[IssueFrom] Not In ( 'Y' , 'N' )
         Order By [WR].[RowType] Desc;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of warehouse that do not have issue from completed', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_WarehousesIssueFrom', NULL, NULL
 GO

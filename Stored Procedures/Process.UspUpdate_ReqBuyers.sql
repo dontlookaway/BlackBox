@@ -48,8 +48,8 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1]
                     (
-                      [Company] Varchar(150)
-                    , [BuyerName] Varchar(150)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [BuyerName] Varchar(150) Collate Latin1_General_BIN
                     );
 
 --create script to pull data from each db into the tables
@@ -136,7 +136,6 @@ From    [dbo].[ReqDetail] As [RD];
             Print 'UspUpdate_ReqBuyers - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_ReqBuyers', NULL, NULL

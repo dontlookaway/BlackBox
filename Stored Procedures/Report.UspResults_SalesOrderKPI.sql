@@ -30,71 +30,71 @@ Set NoCount on
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#MdnMasterRep]
             (
-              [DatabaseName] Varchar(150)
-            , [PlannedDeliverDate] DateTime
-            , [ActualDeliveryDate] DateTime
-            , [SalesOrder] Varchar(20)
-            , [Invoice] Varchar(20)
-            , [DispatchComments1] Varchar(100)
-            , [DispatchComments2] Varchar(100)
-            , [DispatchComments3] Varchar(100)
-            , [DispatchComments4] Varchar(100)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [PlannedDeliverDate] DateTime			
+            , [ActualDeliveryDate] DateTime			
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [Invoice] Varchar(20)					collate latin1_general_bin
+            , [DispatchComments1] Varchar(100)		collate latin1_general_bin
+            , [DispatchComments2] Varchar(100)		collate latin1_general_bin
+            , [DispatchComments3] Varchar(100)		collate latin1_general_bin
+            , [DispatchComments4] Varchar(100)		collate latin1_general_bin
             );
         Create Table [#SorMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [SalesOrder] Varchar(20)
-            , [OrderDate] DateTime
-            , [EntrySystemDate] DateTime
-            , [ReqShipDate] DateTime
-            , [CustomerPoNumber] Varchar(30)
-            , [CustomerName] Varchar(50)
-            , [Customer] Varchar(15)
-            , [NonMerchFlag] Char(1)
-            , [OrderStatus] Char(1)
-            , [Warehouse] Varchar(10)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [OrderDate] DateTime					
+            , [EntrySystemDate] DateTime			
+            , [ReqShipDate] DateTime				
+            , [CustomerPoNumber] Varchar(30)		collate latin1_general_bin
+            , [CustomerName] Varchar(50)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            , [NonMerchFlag] Char(1)				collate latin1_general_bin
+            , [OrderStatus] Char(1)					collate latin1_general_bin
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
             );
         Create Table [#CusSorMasterPlus]
             (
-              [DatabaseName] Varchar(150)
-            , [SalesOrder] Varchar(20)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
             , [AcceptedDate] DateTime
             );
         Create Table [#SorDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
-            , [MStockCode] Varchar(30)
-            , [MStockDes] Varchar(50)
-            , [MOrderQty] Numeric(20 , 8)
-            , [LineType] Char(1)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [SalesOrderLine] Int					
+            , [MStockCode] Varchar(30)				collate latin1_general_bin
+            , [MStockDes] Varchar(50)				collate latin1_general_bin
+            , [MOrderQty] Numeric(20 , 8)			
+            , [LineType] Char(1)					collate latin1_general_bin
             );
         Create Table [#MdnDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [DispatchNote] Varchar(20)
-            , [DispatchStatus] Char(1)
-            , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
-            , [LineType] Char(1)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [DispatchNote] Varchar(20)			collate latin1_general_bin
+            , [DispatchStatus] Char(1)				collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [SalesOrderLine] Int					
+            , [LineType] Char(1)					collate latin1_general_bin
             , [JnlYear] Int
             );
         Create Table [#LotTransactions]
             (
-              [DatabaseName] Varchar(150)
-            , [Lot] Varchar(50)
-            , [Job] Varchar(20)
-            , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
-            , [StockCode] Varchar(30)
-            , [DispatchNote] Varchar(20)
-            , [Invoice] Varchar(20)
-            , [NewWarehouse] Varchar(10)
-            , [JnlYear] Int
-            , [TrnType] Char(1)
-            , [Reference] Varchar(30)
-            , [JobPurchOrder] Varchar(30)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [SalesOrderLine] Int					
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [DispatchNote] Varchar(20)			collate latin1_general_bin
+            , [Invoice] Varchar(20)					collate latin1_general_bin
+            , [NewWarehouse] Varchar(10)			collate latin1_general_bin
+            , [JnlYear] Int							
+            , [TrnType] Char(1)						collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [JobPurchOrder] Varchar(30)			collate latin1_general_bin
             );
 	
 --create script to pull data from each db into the tables
@@ -352,29 +352,29 @@ Set NoCount on
 --define the results you want to return
         Create Table [#Results]
             (
-              [CompanyName] Varchar(300)
-            , [SalesOrder] Varchar(20)
-            , [SalesOrderLine] Int
-            , [OrderDate] Date
-            , [EntrySystemDate] Date
-            , [ReqShipDate] Date
-            , [AcceptedDate] Date
-            , [CustomerPoNumber] Varchar(30)
-            , [CustomerName] Varchar(50)
-            , [Customer] Varchar(15)
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [OrderQty] Numeric(20 , 8)
-            , [DispatchNote] Varchar(20)
-            , [DispatchStatus] Char(1)
-            , [PlannedDeliverDate] Date
-            , [ActualDeliveryDate] Date
-            , [DaysDiff] Int
-            , [NonMerchFlag] Char(1)
-            , [OrderStatus] Char(1)
-            , [Job] Varchar(20)
-            , [DispatchComments] Varchar(500)
+              [CompanyName] Varchar(300)			collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [SalesOrderLine] Int					
+            , [OrderDate] Date						
+            , [EntrySystemDate] Date				
+            , [ReqShipDate] Date					
+            , [AcceptedDate] Date					
+            , [CustomerPoNumber] Varchar(30)		collate latin1_general_bin
+            , [CustomerName] Varchar(50)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [OrderQty] Numeric(20 , 8)			
+            , [DispatchNote] Varchar(20)			collate latin1_general_bin
+            , [DispatchStatus] Char(1)				collate latin1_general_bin
+            , [PlannedDeliverDate] Date				
+            , [ActualDeliveryDate] Date				
+            , [DaysDiff] Int						
+            , [NonMerchFlag] Char(1)				collate latin1_general_bin
+            , [OrderStatus] Char(1)					collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [DispatchComments] Varchar(500)		collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -531,7 +531,6 @@ Set NoCount Off
         From    [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'data for sales order KPI report', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrderKPI', NULL, NULL
