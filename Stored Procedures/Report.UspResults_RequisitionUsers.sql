@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -39,34 +38,34 @@ List of all requisition users
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ReqUser]
             (
-              [DatabaseName] Varchar(150)
-            , [UserCode] Varchar(20)
-            , [UserName] Varchar(50)
-            , [AuthorityLevel] Char(1)
-            , [CanAddReqn] Char(1)
-            , [CanAddReqnDetails] Char(1)
-            , [CanChgReqnDetails] Char(1)
-            , [CanApproveReqn] Char(1)
-            , [CanCreateOrder] Char(1)
-            , [RequisitionGroup] Varchar(6)
-            , [AdminStopFlag] Char(1)
-            , [MaxApproveValue] Float
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [UserCode] Varchar(20)			 Collate Latin1_General_BIN
+            , [UserName] Varchar(50)			 Collate Latin1_General_BIN
+            , [AuthorityLevel] Char(1)			 Collate Latin1_General_BIN
+            , [CanAddReqn] Char(1)				 Collate Latin1_General_BIN
+            , [CanAddReqnDetails] Char(1)		 Collate Latin1_General_BIN
+            , [CanChgReqnDetails] Char(1)		 Collate Latin1_General_BIN
+            , [CanApproveReqn] Char(1)			 Collate Latin1_General_BIN
+            , [CanCreateOrder] Char(1)			 Collate Latin1_General_BIN
+            , [RequisitionGroup] Varchar(6)		 Collate Latin1_General_BIN
+            , [AdminStopFlag] Char(1)			 Collate Latin1_General_BIN
+            , [MaxApproveValue] Float			 
             );
 
         Create Table [#ReqGroup]
             (
-              [DatabaseName] Varchar(150)
-            , [RequisitionGroup] Varchar(6)
-            , [GroupDescription] Varchar(50)
-            );
-
-        Create Table [#ReqGroupAuthority]
-            (
-              [DatabaseName] Varchar(150)
-            , [RequisitionGroup] Varchar(6)
-            , [MaxApproveValue] Float
-            , [UserForPorder] Varchar(20)
-            , [ProductClass] Varchar(20)
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [RequisitionGroup] Varchar(6)		 Collate Latin1_General_BIN
+            , [GroupDescription] Varchar(50)	 Collate Latin1_General_BIN
+            );									 
+												 
+        Create Table [#ReqGroupAuthority]		 
+            (									 
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [RequisitionGroup] Varchar(6)		 Collate Latin1_General_BIN
+            , [MaxApproveValue] Float			 
+            , [UserForPorder] Varchar(20)		 Collate Latin1_General_BIN
+            , [ProductClass] Varchar(20)		 Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -188,20 +187,20 @@ List of all requisition users
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [UserCode] Varchar(20)
-            , [UserName] Varchar(50)
-            , [AuthorityLevel] Char(1)
-            , [CanAddReqn] Char(1)
-            , [CanAddReqnDetails] Char(1)
-            , [CanChgReqnDetails] Char(1)
-            , [CanApproveReqn] Char(1)
-            , [CanCreateOrder] Char(1)
-            , [AdminStopFlag] Char(1)
-            , [RequisitionGroup] Varchar(50)
-            , [GroupMaxApproveValue] Float
-            , [UserMaxApproveValue] Float
-            , [ProductClass] Varchar(20)
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [UserCode] Varchar(20)			 Collate Latin1_General_BIN
+            , [UserName] Varchar(50)			 Collate Latin1_General_BIN
+            , [AuthorityLevel] Char(1)			 Collate Latin1_General_BIN
+            , [CanAddReqn] Char(1)				 Collate Latin1_General_BIN
+            , [CanAddReqnDetails] Char(1)		 Collate Latin1_General_BIN
+            , [CanChgReqnDetails] Char(1)		 Collate Latin1_General_BIN
+            , [CanApproveReqn] Char(1)			 Collate Latin1_General_BIN
+            , [CanCreateOrder] Char(1)			 Collate Latin1_General_BIN
+            , [AdminStopFlag] Char(1)			 Collate Latin1_General_BIN
+            , [RequisitionGroup] Varchar(50)	 Collate Latin1_General_BIN
+            , [GroupMaxApproveValue] Float		 
+            , [UserMaxApproveValue] Float		 
+            , [ProductClass] Varchar(20)		 Collate Latin1_General_BIN
             );
 
 
@@ -289,7 +288,6 @@ List of all requisition users
                     On [R].[DatabaseName] = [CN].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions users', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_RequisitionUsers', NULL, NULL

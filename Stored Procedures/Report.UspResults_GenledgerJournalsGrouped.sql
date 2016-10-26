@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,19 +36,19 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GenJournalDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [EntryDate] DateTime2
-            , [Journal] Int
-            , [GlCode] Varchar(150) Collate Latin1_General_BIN
-            , [EntryType] Char(1)
-            , [Reference] Varchar(255)
-            , [Comment] Varchar(255)
-            , [EntryValue] Numeric(20 , 7)
-            , [EntryPosted] Char(1)
-            , [SubModJournal] Int
-            , [Description] Varchar(150)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [EntryDate] DateTime2				
+            , [Journal] Int						
+            , [GlCode] Varchar(150) 			collate Latin1_General_BIN
+            , [EntryType] Char(1)				collate Latin1_General_BIN
+            , [Reference] Varchar(255)			collate Latin1_General_BIN
+            , [Comment] Varchar(255)			collate Latin1_General_BIN
+            , [EntryValue] Numeric(20 , 7)		
+            , [EntryPosted] Char(1)				collate Latin1_General_BIN
+            , [SubModJournal] Int				collate Latin1_General_BIN
+            , [Description] Varchar(150)		collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -109,28 +108,28 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#ResultsGL]
             (
-              [DatabaseName] Varchar(150)
-            , [Mapping1] Varchar(255)
-            , [Mapping2] Varchar(255)
-            , [Mapping3] Varchar(255)
-            , [Mapping4] Varchar(255)
-            , [Mapping5] Varchar(255)
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [EntryDate] DateTime2
-            , [Journal] Int
-            , [GlCode] Varchar(150)
-            , [GlStart] Char(3)
-            , [GlMid] Char(5)
-            , [GlEnd] Char(3)
-            , [EntryType] Char(1)
-            , [Modifier] Numeric(20 , 7)
-            , [Reference] Varchar(250)
-            , [Comment] Varchar(250)
-            , [EntryValue] Numeric(20 , 7)
-            , [EntryPosted] Char(1)
-            , [SubModJournal] Int
-            , [GlDescription] Varchar(150)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [Mapping1] Varchar(255)			collate Latin1_General_BIN
+            , [Mapping2] Varchar(255)			collate Latin1_General_BIN
+            , [Mapping3] Varchar(255)			collate Latin1_General_BIN
+            , [Mapping4] Varchar(255)			collate Latin1_General_BIN
+            , [Mapping5] Varchar(255)			collate Latin1_General_BIN
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [EntryDate] DateTime2				
+            , [Journal] Int						
+            , [GlCode] Varchar(150)				collate Latin1_General_BIN
+            , [GlStart] Char(3)					collate Latin1_General_BIN
+            , [GlMid] Char(5)					collate Latin1_General_BIN
+            , [GlEnd] Char(3)					collate Latin1_General_BIN
+            , [EntryType] Char(1)				collate Latin1_General_BIN
+            , [Modifier] Numeric(20 , 7)		
+            , [Reference] Varchar(250)			
+            , [Comment] Varchar(250)			
+            , [EntryValue] Numeric(20 , 7)		
+            , [EntryPosted] Char(1)				collate Latin1_General_BIN
+            , [SubModJournal] Int				
+            , [GlDescription] Varchar(150)		collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required

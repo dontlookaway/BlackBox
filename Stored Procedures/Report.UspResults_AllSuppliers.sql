@@ -35,11 +35,11 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApSupplier]
             (
-              [DatabaseName] sysname
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
-            , [SupShortName] Varchar(20)
-            , [Branch] Varchar(10)
+              [DatabaseName] sysname		collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		collate Latin1_General_BIN
+            , [SupplierName] Varchar(50)	collate Latin1_General_BIN
+            , [SupShortName] Varchar(20)	collate Latin1_General_BIN
+            , [Branch] Varchar(10)			collate Latin1_General_BIN
             );
 
 	
@@ -94,7 +94,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#ApSupplier] [ApS];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all suppliers', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllSuppliers', NULL, NULL

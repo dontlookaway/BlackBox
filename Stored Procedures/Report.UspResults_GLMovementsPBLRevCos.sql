@@ -1,10 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Report].[UspResults_GLMovementsPBLRevCos]
     (
       @RedTagType Char(1)
@@ -24,17 +21,17 @@ As
 
         Create Table [#Movements]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [ShortName] Varchar(250) Collate Latin1_General_BIN
+            , [CompanyName] Varchar(250) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(35) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
+            , [GlGroup] Varchar(10) Collate Latin1_General_BIN
             , [Movement] Numeric(20 , 2)
             , [GlPeriod] Int
             , [GlYear] Int
-            , [Source] Varchar(100)
+            , [Source] Varchar(100) Collate Latin1_General_BIN
             , [Journal] Int
             );
 
@@ -146,7 +143,7 @@ As
                                               '101.60095.001' ,
                                               '101.60095.002' )
                 ) [t]
-                Left Join [SysproCompany40]..[GenMaster] [GM]
+                Left Join [SysproCompany40].[dbo].[GenMaster] [GM]
                     On [t].[RevGLCode] = [GM].[GlCode]
         Order By [t].[RevGLCode]
               , [t].[GlYear]
@@ -155,7 +152,6 @@ As
         Drop Table [#Movements];
 
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'PBL Revenue and Cost of Sales', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovementsPBLRevCos', NULL, NULL
 GO

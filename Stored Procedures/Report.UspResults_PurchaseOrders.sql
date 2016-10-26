@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -38,49 +37,49 @@ Procedure to return all Purchase Order Details
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#Buyers]
             (
-              [DatabaseName] Varchar(150)
-            , [BuyerCode] Varchar(20)
-            , [BuyerName] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [BuyerCode] Varchar(20) Collate Latin1_General_BIN
+            , [BuyerName] Varchar(50) Collate Latin1_General_BIN
             );
 
         Create Table [#PurchaseHeader]
             (
-              [DatabaseName] Varchar(150)
-            , [OrderStatus] Char(1)
-            , [PurchaseOrder] Varchar(20)
-            , [ExchRateFixed] Char(1)
-            , [Currency] Char(3)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [OrderStatus] Char(1) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
+            , [ExchRateFixed] Char(1) Collate Latin1_General_BIN
+            , [Currency] Char(3) Collate Latin1_General_BIN
             , [ExchangeRate] Float
-            , [OrderType] Char(1)
-            , [TaxStatus] Char(1)
-            , [Customer] Varchar(15)
-            , [PaymentTerms] Char(3)
-            , [Buyer] Varchar(20)
-            , [ShippingInstrs] Varchar(50)
-            , [ShippingLocation] Varchar(10)
-            , [SupplierClass] Varchar(10)
-            , [Supplier] Varchar(15)
+            , [OrderType] Char(1) Collate Latin1_General_BIN
+            , [TaxStatus] Char(1) Collate Latin1_General_BIN
+            , [Customer] Varchar(15) Collate Latin1_General_BIN
+            , [PaymentTerms] Char(3) Collate Latin1_General_BIN
+            , [Buyer] Varchar(20) Collate Latin1_General_BIN
+            , [ShippingInstrs] Varchar(50) Collate Latin1_General_BIN
+            , [ShippingLocation] Varchar(10) Collate Latin1_General_BIN
+            , [SupplierClass] Varchar(10) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
             , [OrderDueDate] DateTime2
             , [DateLastDocPrt] DateTime2
             , [DatePoCompleted] DateTime2
-            , [EdiPoFlag] Char(1)
-            , [EdiExtractFlag] Char(1)
-            , [EdiActionFlag] Char(1)
-            , [EdiConfirmation] Char(1)
+            , [EdiPoFlag] Char(1) Collate Latin1_General_BIN
+            , [EdiExtractFlag] Char(1) Collate Latin1_General_BIN
+            , [EdiActionFlag] Char(1) Collate Latin1_General_BIN
+            , [EdiConfirmation] Char(1) Collate Latin1_General_BIN
             );
 
         Create Table [#PurchaseDetails]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [Line] Decimal
-            , [LineType] Char(1)
-            , [MStockCode] Varchar(30)
-            , [MStockDes] Varchar(50)
-            , [MWarehouse] Varchar(10)
-            , [MOrderUom] Varchar(10)
-            , [MStockingUom] Varchar(10)
+            , [LineType] Char(1) Collate Latin1_General_BIN
+            , [MStockCode] Varchar(30) Collate Latin1_General_BIN
+            , [MStockDes] Varchar(50) Collate Latin1_General_BIN
+            , [MWarehouse] Varchar(10) Collate Latin1_General_BIN
+            , [MOrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [MStockingUom] Varchar(10) Collate Latin1_General_BIN
             , [MOrderQty] Float
             , [MReceivedQty] Float
             , [MLatestDueDate] DateTime2
@@ -88,26 +87,26 @@ Procedure to return all Purchase Order Details
             , [MPrice] Float--DECIMAL(15,12)
             , [MForeignPrice] Float--DECIMAL(15,12)
             , [MDecimalsToPrt] Int
-            , [MPriceUom] Varchar(10)
-            , [MTaxCode] Char(3)
-            , [MProductClass] Varchar(20)
-            , [MCompleteFlag] Char(1)
-            , [MJob] Varchar(20)
-            , [MJobLine] Char(2)
-            , [MGlCode] Varchar(35)
-            , [MUserAuthReqn] Varchar(20)
-            , [MRequisition] Varchar(10)
+            , [MPriceUom] Varchar(10) Collate Latin1_General_BIN
+            , [MTaxCode] Char(3) Collate Latin1_General_BIN
+            , [MProductClass] Varchar(20) Collate Latin1_General_BIN
+            , [MCompleteFlag] Char(1) Collate Latin1_General_BIN
+            , [MJob] Varchar(20) Collate Latin1_General_BIN
+            , [MJobLine] Char(2) Collate Latin1_General_BIN
+            , [MGlCode] Varchar(35) Collate Latin1_General_BIN
+            , [MUserAuthReqn] Varchar(20) Collate Latin1_General_BIN
+            , [MRequisition] Varchar(10) Collate Latin1_General_BIN
             , [MRequisitionLine] Decimal
-            , [MSalesOrder] Varchar(20)
+            , [MSalesOrder] Varchar(20) Collate Latin1_General_BIN
             , [MSalesOrderLine] Decimal
             , [MOrigDueDate] DateTime2
-            , [MReschedDueDate] Char(1)
+            , [MReschedDueDate] Char(1) Collate Latin1_General_BIN
             , [MSubcontractOp] Decimal
-            , [MInspectionReqd] Char(1)
+            , [MInspectionReqd] Char(1) Collate Latin1_General_BIN
             , [NMscChargeValue] Float
-            , [CapexCode] Varchar(15)
+            , [CapexCode] Varchar(15) Collate Latin1_General_BIN
             , [CapexLine] Decimal
-            , [NComment] Varchar(100)
+            , [NComment] Varchar(100) Collate Latin1_General_BIN
             );
 
 	
@@ -358,7 +357,6 @@ End';
 --return results
 
     End;
-
 
 
 GO

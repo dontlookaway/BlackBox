@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -115,31 +114,31 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [AbcClass] Char(1)
-            , [CostUom] Varchar(10)
-            , [CycleCount] Decimal
-            , [Description] Varchar(50)
-            , [ProductClass] Varchar(20)
-            , [StockCode] Varchar(30)
-            , [StockUom] Varchar(10)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [AbcClass] Char(1)				collate latin1_general_bin
+            , [CostUom] Varchar(10)				collate latin1_general_bin
+            , [CycleCount] Decimal				
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [ProductClass] Varchar(20)		collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [StockUom] Varchar(10)			collate latin1_general_bin
             );
 
 
 
         Create Table [#InvMovements]
             (
-              [DatabaseName] Varchar(150)
-            , [Bin] Varchar(20)
-            , [EnteredCost] Float
-            , [EntryDate] DateTime2
-            , [MovementType] Char(1)
-            , [TrnQty] Float
-            , [TrnType] Char(1)
-            , [TrnValue] Float
-            , [Warehouse] Varchar(10)
-            , [StockCode] Varchar(30)
-            , [LotSerial] Varchar(50)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Bin] Varchar(20)					collate latin1_general_bin
+            , [EnteredCost] Float				
+            , [EntryDate] DateTime2				
+            , [MovementType] Char(1)			collate latin1_general_bin
+            , [TrnQty] Float					
+            , [TrnType] Char(1)					collate latin1_general_bin
+            , [TrnValue] Float					
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [LotSerial] Varchar(50)			collate latin1_general_bin
             , [TrnPeriod] Int
             );
 
@@ -241,23 +240,23 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [Company] Varchar(150)
-            , [AbcClass] Char(1)
-            , [CostUom] Varchar(10)
-            , [CycleCount] Float
-            , [Description] Varchar(50)
-            , [ProductClass] Varchar(20)
-            , [StockCode] Varchar(30)
-            , [StockUom] Varchar(10)
-            , [Bin] Varchar(20)
-            , [EnteredCost] Decimal
-            , [EntryDate] DateTime2
-            , [MovementType] Char(1)
-            , [TrnQty] Float
-            , [TrnType] Char(1)
-            , [TrnValue] Float
-            , [Warehouse] Varchar(10)
-            , [LotSerial] Varchar(50)
+              [Company] Varchar(150)		collate latin1_general_bin
+            , [AbcClass] Char(1)			collate latin1_general_bin
+            , [CostUom] Varchar(10)			collate latin1_general_bin
+            , [CycleCount] Float			
+            , [Description] Varchar(50)		collate latin1_general_bin
+            , [ProductClass] Varchar(20)	collate latin1_general_bin
+            , [StockCode] Varchar(30)		collate latin1_general_bin
+            , [StockUom] Varchar(10)		collate latin1_general_bin
+            , [Bin] Varchar(20)				collate latin1_general_bin
+            , [EnteredCost] Decimal			
+            , [EntryDate] DateTime2			
+            , [MovementType] Char(1)		collate latin1_general_bin
+            , [TrnQty] Float				
+            , [TrnType] Char(1)				collate latin1_general_bin
+            , [TrnValue] Float				
+            , [Warehouse] Varchar(10)		collate latin1_general_bin
+            , [LotSerial] Varchar(50)		collate latin1_general_bin
             , [TrnPeriod] Int
             );
 

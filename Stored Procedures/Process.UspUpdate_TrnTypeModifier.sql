@@ -20,8 +20,8 @@ As
             Begin
                 Create Table [Lookups].[TrnTypeAmountModifier]
                     (
-                      [Company] Varchar(150)
-                    , [TrnType] Char(5)
+                      [Company] Varchar(150)	Collate Latin1_General_BIN
+                    , [TrnType] Char(5)			Collate Latin1_General_BIN
                     , [AmountModifier] Int
                     , [LastUpdated] DateTime2
                     );
@@ -44,7 +44,7 @@ As
 	--create master list of how codes affect stock
                 Create Table [#AmountsTTM]
                     (
-                      [TrnType] Char(5)
+                      [TrnType] Char(5)		Collate Latin1_General_BIN
                     , [amountmodifier] Int
                     );
 
@@ -174,7 +174,6 @@ As
             Print 'UspUpdate_TrnTypeModifier - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_TrnTypeModifier', NULL, NULL
 GO

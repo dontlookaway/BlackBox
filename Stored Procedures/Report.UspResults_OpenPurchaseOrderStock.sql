@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,32 +36,32 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [OrderDueDate] Date
-            , [DeliveryAddr1] Varchar(40)
+            , [DeliveryAddr1] Varchar(40) Collate Latin1_General_BIN
             );
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [Line] Int
-            , [MSupCatalogue] Varchar(50)
-            , [MStockDes] Varchar(50)
-            , [MStockCode] Varchar(30)
+            , [MSupCatalogue] Varchar(50) Collate Latin1_General_BIN
+            , [MStockDes] Varchar(50) Collate Latin1_General_BIN
+            , [MStockCode] Varchar(30) Collate Latin1_General_BIN
             , [MLatestDueDate] Date
-            , [MCompleteFlag] Char(1)
+            , [MCompleteFlag] Char(1) Collate Latin1_General_BIN
             , [MOrderQty] Numeric(20 , 8)
             , [MReceivedQty] Numeric(20 , 8)
-            , [MOrderUom] Varchar(10)
-            , [MWarehouse] Varchar(10)
+            , [MOrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [MWarehouse] Varchar(10) Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(50) Collate Latin1_General_BIN
             );
 
 

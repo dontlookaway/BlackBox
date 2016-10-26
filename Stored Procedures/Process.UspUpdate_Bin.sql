@@ -25,8 +25,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Begin
                 Create Table [Lookups].[Bin]
                     (
-                      [Company] Varchar(150)
-                    , [Bin] Varchar(150)
+                      [Company] Varchar(150)	collate Latin1_General_BIN
+                    , [Bin] Varchar(150)		collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -52,8 +52,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1]
                     (
-                      [Company] Varchar(150)
-                    , [Bin] Varchar(150)
+                      [Company] Varchar(150)	collate Latin1_General_BIN
+                    , [Bin] Varchar(150)		collate Latin1_General_BIN
                     );
 
 --create script to pull data from each db into the tables
@@ -150,7 +150,6 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Print 'UspUpdate_Bin - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_Bin', NULL, NULL

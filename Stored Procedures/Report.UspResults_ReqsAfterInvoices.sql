@@ -37,63 +37,63 @@ Proc to return where a requisition was created after an invoice was received
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ReqHeader]
             (
-              [DatabaseName] Varchar(150)
-            , [Requisition] Varchar(10)
-            , [DateReqnRaised] Date
-            );
-        Create Table [#ReqDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [Requisition] Varchar(10)
-            , [Line] Int
-            , [ApprovedDate] Date
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            );
-        Create Table [#PorMasterDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [MRequisition] Varchar(10)
-            , [Line] Int
-            , [PurchaseOrder] Varchar(20)
-            , [MOrderQty] Numeric(20 , 8)
-            , [MPrice] Numeric(20 , 2)
-            , [MForeignPrice] Numeric(20 , 2)
-            );
-        Create Table [#PorMasterHdr]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [OrderEntryDate] Date
-            );
-        Create Table [#GrnDetails]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [Grn] Varchar(20)
-            , [Supplier] Varchar(15)
-            , [Warehouse] Varchar(10)
-            );
-        Create Table [#GrnMatching]
-            (
-              [DatabaseName] Varchar(150)
-            , [Grn] Varchar(20)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            );
-        Create Table [#ApInvoice]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [InvoiceDate] Date
-            , [PostCurrency] Varchar(10)
-            );
-        Create Table [#ApSupplier]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [Requisition] Varchar(10)				collate Latin1_General_BIN
+            , [DateReqnRaised] Date					
+            );										
+        Create Table [#ReqDetail]					
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [Requisition] Varchar(10)				collate Latin1_General_BIN
+            , [Line] Int							
+            , [ApprovedDate] Date					
+            , [StockCode] Varchar(30)				collate Latin1_General_BIN
+            , [StockDescription] Varchar(50)		collate Latin1_General_BIN
+            );										
+        Create Table [#PorMasterDetail]				
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [MRequisition] Varchar(10)			collate Latin1_General_BIN
+            , [Line] Int							
+            , [PurchaseOrder] Varchar(20)			collate Latin1_General_BIN
+            , [MOrderQty] Numeric(20 , 8)			
+            , [MPrice] Numeric(20 , 2)				
+            , [MForeignPrice] Numeric(20 , 2)		
+            );										
+        Create Table [#PorMasterHdr]				
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20)			collate Latin1_General_BIN
+            , [OrderEntryDate] Date					
+            );										
+        Create Table [#GrnDetails]					
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20)			collate Latin1_General_BIN
+            , [Grn] Varchar(20)						collate Latin1_General_BIN
+            , [Supplier] Varchar(15)				collate Latin1_General_BIN
+            , [Warehouse] Varchar(10)				collate Latin1_General_BIN
+            );										
+        Create Table [#GrnMatching]					
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [Grn] Varchar(20)						collate Latin1_General_BIN
+            , [Supplier] Varchar(15)				collate Latin1_General_BIN
+            , [Invoice] Varchar(20)					collate Latin1_General_BIN
+            );										
+        Create Table [#ApInvoice]					
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [Supplier] Varchar(15)				collate Latin1_General_BIN
+            , [Invoice] Varchar(20)					collate Latin1_General_BIN
+            , [InvoiceDate] Date					
+            , [PostCurrency] Varchar(10)			collate Latin1_General_BIN
+            );										
+        Create Table [#ApSupplier]					
+            (										
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [Supplier] Varchar(15)				collate Latin1_General_BIN
+            , [SupplierName] Varchar(50)			collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -314,24 +314,24 @@ Proc to return where a requisition was created after an invoice was received
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [Requisition] Varchar(10)
-            , [DateReqnRaised] Date
-            , [OrderEntryDate] Date
-            , [ApprovedDate] Date
-            , [Grn] Varchar(20)
-            , [Invoice] Varchar(20)
-            , [InvoiceDate] Date
-            , [Supplier] Varchar(15)
-            , [SupplierName] Varchar(50)
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [PostCurrency] Varchar(10)
-            , [MOrderQty] Numeric(20 , 8)
-            , [MPrice] Numeric(20 , 2)
-            , [MForeignPrice] Numeric(20 , 2)
-            , [Warehouse] Varchar(10)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20)		collate Latin1_General_BIN
+            , [Requisition] Varchar(10)			collate Latin1_General_BIN
+            , [DateReqnRaised] Date				
+            , [OrderEntryDate] Date				
+            , [ApprovedDate] Date				
+            , [Grn] Varchar(20)					collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				collate Latin1_General_BIN
+            , [InvoiceDate] Date				
+            , [Supplier] Varchar(15)			collate Latin1_General_BIN
+            , [SupplierName] Varchar(50)		collate Latin1_General_BIN
+            , [StockCode] Varchar(30)			collate Latin1_General_BIN
+            , [StockDescription] Varchar(50)	collate Latin1_General_BIN
+            , [PostCurrency] Varchar(10)		collate Latin1_General_BIN
+            , [MOrderQty] Numeric(20 , 8)		
+            , [MPrice] Numeric(20 , 2)			
+            , [MForeignPrice] Numeric(20 , 2)	
+            , [Warehouse] Varchar(10)			collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -420,7 +420,6 @@ Proc to return where a requisition was created after an invoice was received
                 Left Join [BlackBox].[Lookups].[CompanyNames] As [CN] On [CN].[Company] = [R].[DatabaseName];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions raised post invoices appearing in system', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ReqsAfterInvoices', NULL, NULL

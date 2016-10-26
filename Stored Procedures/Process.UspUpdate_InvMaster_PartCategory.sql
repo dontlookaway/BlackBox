@@ -20,7 +20,9 @@ As
                 Create Table [Lookups].[InvMaster_PartCategory]
                     (
                       [PartCategoryCode] Varchar(10)
+                        Collate Latin1_General_BIN
                     , [PartCategoryDescription] Varchar(150)
+                        Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -42,8 +44,9 @@ As
 	--create master list of how codes affect stock
                 Create Table [#PartCategoryList]
                     (
-                      [PartCategory] Varchar(150)
+                      [PartCategory] Varchar(150) Collate Latin1_General_BIN
                     , [PartCategoryName] Varchar(250)
+                        Collate Latin1_General_BIN
                     );
 
                 Insert  [#PartCategoryList]
@@ -135,7 +138,6 @@ As
             Print 'UspUpdate_InvMaster_PartCategory - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_InvMaster_PartCategory', NULL, NULL
 GO

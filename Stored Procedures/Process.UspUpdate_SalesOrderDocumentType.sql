@@ -19,8 +19,8 @@ As
             Begin
                 Create Table [Lookups].[SalesOrderDocumentType]
                     (
-                      [DocumentType] Varchar(10)
-                    , [DocumentTypeDesc] Varchar(250)
+                      [DocumentType] Varchar(10) Collate Latin1_General_BIN
+                    , [DocumentTypeDesc] Varchar(250) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -43,7 +43,7 @@ As
                 Create Table [#SalesOrderDocumentType]
                     (
                       [DocumentType] Varchar(10) Collate Latin1_General_BIN
-                    , [DocumentTypeDescription] Varchar(250)
+                    , [DocumentTypeDescription] Varchar(250) Collate Latin1_General_BIN
                     );
 
                 Insert  [#SalesOrderDocumentType]
@@ -123,7 +123,6 @@ As
             Print 'UspUpdate_SalesOrderDocumentType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_SalesOrderDocumentType', NULL, NULL
 GO

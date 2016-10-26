@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -36,54 +35,54 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(50)		Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
             , [OrderDueDate] DateTime2
-            , [Supplier] Varchar(50) Collate Latin1_General_BIN
-            , [DeliveryName] Varchar(100) Collate Latin1_General_BIN
-            , [DeliveryAddr1] Varchar(155) Collate Latin1_General_BIN
-            , [Currency] Varchar(10) Collate Latin1_General_BIN
-            , [OrderStatus] Varchar(10) Collate Latin1_General_BIN
+            , [Supplier] Varchar(50)			Collate Latin1_General_BIN
+            , [DeliveryName] Varchar(100)		Collate Latin1_General_BIN
+            , [DeliveryAddr1] Varchar(155)		Collate Latin1_General_BIN
+            , [Currency] Varchar(10)			Collate Latin1_General_BIN
+            , [OrderStatus] Varchar(10)			Collate Latin1_General_BIN
             );
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(50)		Collate Latin1_General_BIN
             , [Line] Int
-            , [MStockCode] Varchar(50) Collate Latin1_General_BIN
-            , [MSupCatalogue] Varchar(150) Collate Latin1_General_BIN
-            , [MGlCode] Varchar(50) Collate Latin1_General_BIN
-            , [MStockDes] Varchar(150) Collate Latin1_General_BIN
-            , [MOrderUom] Varchar(10) Collate Latin1_General_BIN
+            , [MStockCode] Varchar(50)			Collate Latin1_General_BIN
+            , [MSupCatalogue] Varchar(150)		Collate Latin1_General_BIN
+            , [MGlCode] Varchar(50)				Collate Latin1_General_BIN
+            , [MStockDes] Varchar(150)			Collate Latin1_General_BIN
+            , [MOrderUom] Varchar(10)			Collate Latin1_General_BIN
             , [MPrice] Numeric(20 , 3)
             , [MForeignPrice] Numeric(20 , 3)
             , [MOrderQty] Numeric(20 , 7)
-            , [MRequisition] Varchar(50) Collate Latin1_General_BIN
+            , [MRequisition] Varchar(50)		Collate Latin1_General_BIN
             , [MRequisitionLine] Int
             );
         Create Table [#ReqDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Buyer] Varchar(100) Collate Latin1_General_BIN
-            , [Originator] Varchar(100) Collate Latin1_General_BIN
-            , [ReasonForReqn] Varchar(500) Collate Latin1_General_BIN
-            , [Operator] Varchar(150) Collate Latin1_General_BIN
-            , [Requisition] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Buyer] Varchar(100)				Collate Latin1_General_BIN
+            , [Originator] Varchar(100)			Collate Latin1_General_BIN
+            , [ReasonForReqn] Varchar(500)		Collate Latin1_General_BIN
+            , [Operator] Varchar(150)			Collate Latin1_General_BIN
+            , [Requisition] Varchar(50)			Collate Latin1_General_BIN
             , [Line] Int
             );
         Create Table [#ReqHeader]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
             , [DateReqnRaised] DateTime2
-            , [Requisition] Varchar(50) Collate Latin1_General_BIN
+            , [Requisition] Varchar(50)			Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(50) Collate Latin1_General_BIN
-            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
-            , [MerchGlCode] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Supplier] Varchar(50)			Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)		Collate Latin1_General_BIN
+            , [MerchGlCode] Varchar(50)			Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -318,33 +317,33 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#PurchaseOrderDetailsResults]
             (
-              [PurchaseOrder] Varchar(50)
-            , [OrderEntryDate] DateTime2
-            , [OrderDueDate] DateTime2
-            , [Supplier] Varchar(50)
-            , [DeliveryName] Varchar(50)
-            , [DeliveryAddr1] Varchar(150)
-            , [Currency] Varchar(5)
-            , [DateReqnRaised] DateTime
-            , [Requisition] Varchar(50)
-            , [Line] Int
-            , [StockCode] Varchar(50)
-            , [SupCatalogue] Varchar(150)
-            , [GlCode] Varchar(50)
-            , [StockDes] Varchar(150)
-            , [OrderUom] Varchar(10)
-            , [Price] Numeric(20 , 3)
-            , [ForeignPrice] Numeric(20 , 3)
-            , [OrderQty] Numeric(20 , 7)
-            , [Buyer] Varchar(50)
-            , [Originator] Varchar(150)
-            , [ReasonForReqn] Varchar(255)
-            , [ReqOperator] Varchar(150)
-            , [SupplierName] Varchar(150)
-            , [MerchGlCode] Varchar(50)
-            , [CompanyName] Varchar(150)
-            , [OrderStatus] Varchar(250)
-            );
+              [PurchaseOrder] Varchar(50)		collate Latin1_General_BIN
+            , [OrderEntryDate] DateTime2		
+            , [OrderDueDate] DateTime2			
+            , [Supplier] Varchar(50)			collate Latin1_General_BIN
+            , [DeliveryName] Varchar(50)		collate Latin1_General_BIN
+            , [DeliveryAddr1] Varchar(150)		collate Latin1_General_BIN
+            , [Currency] Varchar(5)				collate Latin1_General_BIN
+            , [DateReqnRaised] DateTime			
+            , [Requisition] Varchar(50)			collate Latin1_General_BIN
+            , [Line] Int						
+            , [StockCode] Varchar(50)			collate Latin1_General_BIN
+            , [SupCatalogue] Varchar(150)		collate Latin1_General_BIN
+            , [GlCode] Varchar(50)				collate Latin1_General_BIN
+            , [StockDes] Varchar(150)			collate Latin1_General_BIN
+            , [OrderUom] Varchar(10)			collate Latin1_General_BIN
+            , [Price] Numeric(20 , 3)			
+            , [ForeignPrice] Numeric(20 , 3)	
+            , [OrderQty] Numeric(20 , 7)		
+            , [Buyer] Varchar(50)				collate Latin1_General_BIN
+            , [Originator] Varchar(150)			collate Latin1_General_BIN
+            , [ReasonForReqn] Varchar(255)		collate Latin1_General_BIN
+            , [ReqOperator] Varchar(150)		collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)		collate Latin1_General_BIN
+            , [MerchGlCode] Varchar(50)			collate Latin1_General_BIN
+            , [CompanyName] Varchar(150)		collate Latin1_General_BIN
+            , [OrderStatus] Varchar(250)		collate Latin1_General_BIN
+            );									
 
 --Placeholder to create indexes as required
 
@@ -454,7 +453,6 @@ Stored procedure set out to query multiple databases with the same information a
         Drop Table [#PurchaseOrderDetailsResults];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'purchase order details', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrderDetails', NULL, NULL

@@ -36,47 +36,47 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ArInvoice]
             (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(15)
-            , [SalesOrder] Varchar(20)
-            , [Invoice] Varchar(20)
-            , [InvoiceDate] Date
-            , [CurrencyValue] Numeric(20 , 2)
-            , [ConvRate] Numeric(20 , 6)
-            , [MulDiv] Char(1)
-            , [PostCurrency] Varchar(3)
-            , [DueDate] Date
-            );
-        Create Table [#ArInvoicePay]
-            (
-              [DatabaseName] Varchar(150)
-            , [JournalDate] Date
-            , [TrnValue] Numeric(20 , 2)
-            , [InvoiceNotation] Varchar(50)
-            , [PostCurrency] Varchar(3)
-            , [PostConvRate] Numeric(20 , 6)
-            , [PostMulDiv] Char(1)
-            , [Journal] Int
-            , [Customer] Varchar(15)
-            , [TrnType] Char(1)
-            , [Invoice] Varchar(20)
-            );
-        Create Table [#CshArPayments]
-            (
-              [DatabaseName] Varchar(150)
-            , [CbTrnDate] Date
-            , [GrossPayment] Numeric(20 , 2)
-            , [NetPayment] Numeric(20 , 2)
-            , [Customer] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [Journal] Int
-            , [Bank] Varchar(15)
-            );
-        Create Table [#ApBank]
-            (
-              [DatabaseName] Varchar(150)
-            , [Description] Varchar(50)
-            , [Bank] Varchar(15)
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [Customer] Varchar(15)			 Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(20)			 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				 Collate Latin1_General_BIN
+            , [InvoiceDate] Date				 
+            , [CurrencyValue] Numeric(20 , 2)	 
+            , [ConvRate] Numeric(20 , 6)		 
+            , [MulDiv] Char(1)					 Collate Latin1_General_BIN
+            , [PostCurrency] Varchar(3)			 Collate Latin1_General_BIN
+            , [DueDate] Date					 
+            );									 
+        Create Table [#ArInvoicePay]			 
+            (									 
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [JournalDate] Date				 
+            , [TrnValue] Numeric(20 , 2)		 
+            , [InvoiceNotation] Varchar(50)		 Collate Latin1_General_BIN
+            , [PostCurrency] Varchar(3)			 Collate Latin1_General_BIN
+            , [PostConvRate] Numeric(20 , 6)	 
+            , [PostMulDiv] Char(1)				 Collate Latin1_General_BIN
+            , [Journal] Int						 
+            , [Customer] Varchar(15)			 Collate Latin1_General_BIN
+            , [TrnType] Char(1)					 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				 Collate Latin1_General_BIN
+            );									 
+        Create Table [#CshArPayments]			 
+            (									 
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [CbTrnDate] Date					
+            , [GrossPayment] Numeric(20 , 2)	
+            , [NetPayment] Numeric(20 , 2)		
+            , [Customer] Varchar(15)			 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				 Collate Latin1_General_BIN
+            , [Journal] Int						
+            , [Bank] Varchar(15)				 Collate Latin1_General_BIN
+            );									 
+        Create Table [#ApBank]					 
+            (									 
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [Description] Varchar(50)			 Collate Latin1_General_BIN
+            , [Bank] Varchar(15)				 Collate Latin1_General_BIN
             );
 
 
@@ -186,31 +186,31 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [Customer] Varchar(15)
-            , [SalesOrder] Varchar(20)
-            , [Invoice] Varchar(20)
-            , [InvoiceDate] Date
-            , [DueDate] Date
-            , [CurrencyValue] Numeric(20 , 2)
-            , [ConvRate] Numeric(20 , 6)
-            , [MulDiv] Varchar(1)
-            , [PostCurrency] Varchar(3)
-            , [LocalValue] Numeric(20 , 2)
-            , [JournalDate] Date
-            , [TrnTypeDesc] Varchar(250)
-            , [TrnValue] Numeric(20 , 2)
-            , [InvoiceNotation] Varchar(50)
-            , [JournalPostCurrency] Varchar(3)
-            , [PostConvRate] Numeric(20 , 6)
-            , [PostMulDiv] Varchar(1)
-            , [LocalJournalValue] Numeric(20 , 2)
-            , [Journal] Int
-            , [CbTrnDate] Date
-            , [GrossPayment] Numeric(20 , 2)
-            , [NetPayment] Numeric(20 , 2)
-            , [Bank] Varchar(50)
-            , [Company] Varchar(150)
-            , [CompanyName] Varchar(250)
+              [Customer] Varchar(15)				 Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(20)				 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)					 Collate Latin1_General_BIN
+            , [InvoiceDate] Date					 
+            , [DueDate] Date						 
+            , [CurrencyValue] Numeric(20 , 2)		 
+            , [ConvRate] Numeric(20 , 6)			 
+            , [MulDiv] Varchar(1)					 Collate Latin1_General_BIN
+            , [PostCurrency] Varchar(3)				 Collate Latin1_General_BIN
+            , [LocalValue] Numeric(20 , 2)			 
+            , [JournalDate] Date					 
+            , [TrnTypeDesc] Varchar(250)			 Collate Latin1_General_BIN
+            , [TrnValue] Numeric(20 , 2)			 
+            , [InvoiceNotation] Varchar(50)			 Collate Latin1_General_BIN
+            , [JournalPostCurrency] Varchar(3)		 Collate Latin1_General_BIN
+            , [PostConvRate] Numeric(20 , 6)		 
+            , [PostMulDiv] Varchar(1)				 
+            , [LocalJournalValue] Numeric(20 , 2)	 
+            , [Journal] Int							 
+            , [CbTrnDate] Date						 
+            , [GrossPayment] Numeric(20 , 2)		 
+            , [NetPayment] Numeric(20 , 2)			 
+            , [Bank] Varchar(50)					 Collate Latin1_General_BIN
+            , [Company] Varchar(150)				 Collate Latin1_General_BIN
+            , [CompanyName] Varchar(250)			 Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -327,7 +327,6 @@ Stored procedure set out to query multiple databases with the same information a
         Order By [R].[InvoiceDate] Desc;
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'returns details on how long it takes for AR to be settled', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ARDaysToPayment', NULL, NULL

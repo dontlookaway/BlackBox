@@ -48,31 +48,31 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvWhControl]
             (
-              [DatabaseName] Varchar(150)
-            , [Warehouse] Varchar(10)
-            , [Description] Varchar(50)
-            , [Fax] Varchar(20)
-            );
-        Create Table [#LotTransactions]
-            (
-              [DatabaseName] Varchar(150)
-            , [Warehouse] Varchar(10)
-            , [TrnType] Char(1)
-            , [Reference] Varchar(30)
-            , [StockCode] Varchar(30)
-            , [TrnQuantity] Numeric(20 , 6)
-            , [TimeStamp] NVarchar(50)
-            , [TrnDate] Date
-            , [Lot] Varchar(50)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [Fax] Varchar(20)					collate latin1_general_bin
+            );									
+        Create Table [#LotTransactions]			
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
+            , [TrnType] Char(1)					collate latin1_general_bin
+            , [Reference] Varchar(30)			collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [TrnQuantity] Numeric(20 , 6)		
+            , [TimeStamp] NVarchar(50)			collate latin1_general_bin
+            , [TrnDate] Date					
+            , [Lot] Varchar(50)					collate latin1_general_bin
             , [EntryDateTime] As Left(Convert(NVarchar(50) , [TrnDate] , 121) ,
                                       10) + [TimeStamp]
             ); 
         Create Table [#InvMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [StockCode] Varchar(30)
-            , [Description] Varchar(50)
-            , [StockUom] Varchar(10)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [StockUom] Varchar(10)			collate latin1_general_bin
             , [Decimals] Int
             );
 
@@ -209,21 +209,21 @@ As
 --define the results you want to return
         Create Table [#AllMovements]
             (
-              [Warehouse] Varchar(10)
-            , [WarehouseDescription] Varchar(50)
-            , [IssueFrom] Varchar(20)
-            , [AmountModifier] Int
-            , [TrnType] Char(1)
-            , [Reference] Varchar(30)
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [StockUom] Varchar(10)
+              [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [WarehouseDescription] Varchar(50)	collate latin1_general_bin
+            , [IssueFrom] Varchar(20)				collate latin1_general_bin
+            , [AmountModifier] Int					
+            , [TrnType] Char(1)						collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [StockUom] Varchar(10)				collate latin1_general_bin
             , [TrnQty] Numeric(20 , 6)
             , [Decimals] Int
             , [EntryDateTime] DateTime2
             , [DescendingRank] BigInt
-            , [DatabaseName] Varchar(150)
+            , [DatabaseName] Varchar(150)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -320,7 +320,6 @@ As
               , [CN].[ShortName];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all available lots', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AvailableLots', NULL, NULL

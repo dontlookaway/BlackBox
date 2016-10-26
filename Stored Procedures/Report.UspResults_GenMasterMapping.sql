@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -35,9 +34,9 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GenMaster]
             (
-              [Company] Varchar(150) Collate Latin1_General_BIN
-            , [GlCode] Varchar(150) Collate Latin1_General_BIN
-            , [Description] Varchar(255) Collate Latin1_General_BIN
+              [Company] Varchar(150)		Collate Latin1_General_BIN
+            , [GlCode] Varchar(150)			Collate Latin1_General_BIN
+            , [Description] Varchar(255)	Collate Latin1_General_BIN
             );
         Print 1;
         Insert  [#GenMaster]
@@ -57,21 +56,21 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [GlCode] Varchar(150)
-            , [Company] Varchar(150)
-            , [GlStart] Varchar(3)
-            , [GlMid] Varchar(5)
-            , [Mid1] Varchar(3)
-            , [Mid2] Varchar(2)
-            , [GlEnd] Varchar(3)
-            , [MappingDescription] Varchar(255)
-            , [LedgerDescription] Varchar(255)
-            , [Mapping1] Varchar(255)
-            , [Mapping2] Varchar(255)
-            , [Mapping3] Varchar(255)
-            , [Mapping4] Varchar(255)
-            , [Mapping5] Varchar(255)
-            , [Status] Varchar(255)
+              [GlCode] Varchar(150)					collate Latin1_General_BIN
+            , [Company] Varchar(150)				collate Latin1_General_BIN
+            , [GlStart] Varchar(3)					collate Latin1_General_BIN
+            , [GlMid] Varchar(5)					collate Latin1_General_BIN
+            , [Mid1] Varchar(3)						collate Latin1_General_BIN
+            , [Mid2] Varchar(2)						collate Latin1_General_BIN
+            , [GlEnd] Varchar(3)					collate Latin1_General_BIN
+            , [MappingDescription] Varchar(255)		collate Latin1_General_BIN
+            , [LedgerDescription] Varchar(255)		collate Latin1_General_BIN
+            , [Mapping1] Varchar(255)				collate Latin1_General_BIN
+            , [Mapping2] Varchar(255)				collate Latin1_General_BIN
+            , [Mapping3] Varchar(255)				collate Latin1_General_BIN
+            , [Mapping4] Varchar(255)				collate Latin1_General_BIN
+            , [Mapping5] Varchar(255)				collate Latin1_General_BIN
+            , [Status] Varchar(255)					collate Latin1_General_BIN
             );
 
         Print 2;

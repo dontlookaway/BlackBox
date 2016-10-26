@@ -19,8 +19,8 @@ As
             Begin
                 Create Table [Lookups].[GLAccountType]
                     (
-                      [GLAccountType] Varchar(10)
-                    , [GLAccountTypeDesc] Varchar(250)
+                      [GLAccountType] Varchar(10)		collate Latin1_General_BIN
+                    , [GLAccountTypeDesc] Varchar(250)	collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -42,8 +42,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#GLAccountType]
                     (
-                      [AccountType] Varchar(10) Collate Latin1_General_BIN
-                    , [AccountTypeDescription] Varchar(250)
+                      [AccountType] Varchar(10)					collate Latin1_General_BIN
+                    , [AccountTypeDescription] Varchar(250)		collate Latin1_General_BIN
                     );
 
                 Insert  [#GLAccountType]
@@ -145,7 +145,6 @@ As
             Print 'UspUpdate_GLAccountType - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_GLAccountType', NULL, NULL
 GO

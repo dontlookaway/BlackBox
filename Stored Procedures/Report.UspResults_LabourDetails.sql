@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -40,12 +39,12 @@ Stored procedure set out to query multiple databases with the same information a
         Create Table [#WipLabJnl]
             (
               [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Job] Varchar(35)
+            , [Job] Varchar(35) Collate Latin1_General_BIN
             , [TrnYear] Int
             , [TrnMonth] Int
-            , [Machine] Varchar(150)
-            , [WorkCentre] Varchar(35)
-            , [Employee] Varchar(35)
+            , [Machine] Varchar(150) Collate Latin1_General_BIN
+            , [WorkCentre] Varchar(35) Collate Latin1_General_BIN
+            , [Employee] Varchar(35) Collate Latin1_General_BIN
             , [SetUpRate] Numeric(20 , 7)
             , [RunTimeRate] Numeric(20 , 7)
             , [FixedOhRate] Numeric(20 , 7)
@@ -126,12 +125,12 @@ Stored procedure set out to query multiple databases with the same information a
         Create Table [#LabourDetailsResults]
             (
               [Company] Varchar(150) Collate Latin1_General_BIN
-            , [Job] Varchar(35)
+            , [Job] Varchar(35) Collate Latin1_General_BIN
             , [TrnYear] Int
             , [TrnMonth] Int
-            , [Machine] Varchar(150)
-            , [WorkCentre] Varchar(35)
-            , [Employee] Varchar(35)
+            , [Machine] Varchar(150) Collate Latin1_General_BIN
+            , [WorkCentre] Varchar(35) Collate Latin1_General_BIN
+            , [Employee] Varchar(35) Collate Latin1_General_BIN
             , [SetUpRate] Numeric(20 , 7)
             , [RunTimeRate] Numeric(20 , 7)
             , [FixedOhRate] Numeric(20 , 7)
@@ -191,7 +190,8 @@ Stored procedure set out to query multiple databases with the same information a
                       , [WJL].[StartUpTime]
                       , [WJL].[TeardownTime]
                 From    [#WipLabJnl] [WJL]
-                        Left Join [Lookups].[CompanyNames] As [cn] On [WJL].[DatabaseName] = [cn].[Company];
+                        Left Join [Lookups].[CompanyNames] As [cn]
+                            On [WJL].[DatabaseName] = [cn].[Company];
 
 --return results
         Select  [r].[Company]

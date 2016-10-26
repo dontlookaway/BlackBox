@@ -13,12 +13,11 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to exec
 */
         Set NoCount On; 
 --find all procedures that need to be updated
-        Create --drop --alter 
-	Table [#ProcsToRun]
+        Create Table [#ProcsToRun]
             (
               [PID] Int Identity(1 , 1)
-            , [SchemaName] Varchar(150)
-            , [ProcName] Varchar(150)
+            , [SchemaName] Varchar(150)	collate Latin1_General_BIN
+            , [ProcName] Varchar(150)	collate Latin1_General_BIN
             );
 
         Insert  [#ProcsToRun]
@@ -66,7 +65,6 @@ end catch';
                 Set @CurrentProc = @CurrentProc + 1;
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored procedure to execute all stored procs marked as update ', 'SCHEMA', N'Process', 'PROCEDURE', N'UspLoad_LoadController', NULL, NULL
 GO

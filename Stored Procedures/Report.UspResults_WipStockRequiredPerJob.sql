@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -50,90 +49,90 @@ Stored procedure set out to query multiple databases with the same information a
 --Create table to capture results
     Create Table [#JobLevelCheck]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
         , [JobLevel] Int
-        , [Job] Varchar(20) Collate Latin1_General_BIN
-        , [SubJob] Varchar(20) Collate Latin1_General_BIN
+        , [Job] Varchar(20)				Collate Latin1_General_BIN
+        , [SubJob] Varchar(20)			Collate Latin1_General_BIN
         );
     Create Table [#WipMasterSub]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Job] Varchar(20) Collate Latin1_General_BIN
-        , [SubJob] Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+        , [Job] Varchar(20)				Collate Latin1_General_BIN
+        , [SubJob] Varchar(20)			Collate Latin1_General_BIN
         );
     Create Table [#WipJobAllMat]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [SequenceNum] Varchar(6) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [SequenceNum] Varchar(6)			Collate Latin1_General_BIN
         , [SubJobQty] Numeric(20 , 8)
-        , [StockCode] Varchar(30) Collate Latin1_General_BIN
-        , [StockDescription] Varchar(50) Collate Latin1_General_BIN
+        , [StockCode] Varchar(30)			Collate Latin1_General_BIN
+        , [StockDescription] Varchar(50)	Collate Latin1_General_BIN
         , [UnitQtyReqdEnt] Numeric(20 , 8)
         , [QtyIssuedEnt] Numeric(20 , 8)
-        , [FixedQtyPerFlag] Char(1)
-        , [Uom] Varchar(10) Collate Latin1_General_BIN
-        , [AllocCompleted] Char(1)
+        , [FixedQtyPerFlag] Char(1)			Collate Latin1_General_BIN
+        , [Uom] Varchar(10)					Collate Latin1_General_BIN
+        , [AllocCompleted] Char(1)			Collate Latin1_General_BIN
         , [OperationOffset] Int
-        , [Job] Varchar(20) Collate Latin1_General_BIN
-        , [ReservedLotSerFlag] Char(1)
+        , [Job] Varchar(20)					Collate Latin1_General_BIN
+        , [ReservedLotSerFlag] Char(1)		Collate Latin1_General_BIN
         , [ReservedLotQty] Numeric(20 , 8)
         );
     Create Table [#WipAllMatLot]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Job] Varchar(20) Collate Latin1_General_BIN
-        , [StockCode] Varchar(30) Collate Latin1_General_BIN
-        , [Lot] Varchar(50) Collate Latin1_General_BIN
-        , [Bin] Varchar(20) Collate Latin1_General_BIN
-        , [Warehouse] Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [Job] Varchar(20)					Collate Latin1_General_BIN
+        , [StockCode] Varchar(30)			Collate Latin1_General_BIN
+        , [Lot] Varchar(50)					Collate Latin1_General_BIN
+        , [Bin] Varchar(20)					Collate Latin1_General_BIN
+        , [Warehouse] Varchar(20)			Collate Latin1_General_BIN
         , [QtyReserved] Numeric(20 , 8)
         , [QtyIssued] Numeric(20 , 8)
         );
     Create Table [#WipJobAllLab]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [WorkCentre] Varchar(20) Collate Latin1_General_BIN
-        , [Job] Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [WorkCentre] Varchar(20)			Collate Latin1_General_BIN
+        , [Job] Varchar(20)					Collate Latin1_General_BIN
         , [Operation] Int
         );
     Create Table [#WipMaster]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Job] Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [Job] Varchar(20)					Collate Latin1_General_BIN
         , [QtyToMake] Numeric(20 , 8)
         , [QtyManufactured] Numeric(20 , 8)
-        , [JobDescription] Varchar(150)
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
+        , [JobDescription] Varchar(150)		Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)			Collate Latin1_General_BIN
         );
     Create Table [#InvMaster]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
-        , [PartCategory] Char(1) Collate Latin1_General_BIN
-        , [IssMultLotsFlag] Char(1)
-        , [StockUom] Varchar(10)
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)			Collate Latin1_General_BIN
+        , [PartCategory] Char(1)			Collate Latin1_General_BIN
+        , [IssMultLotsFlag] Char(1)			Collate Latin1_General_BIN
+        , [StockUom] Varchar(10)			Collate Latin1_General_BIN
         );
     Create Table [#LotDetail]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
-        , [Lot] Varchar(20) Collate Latin1_General_BIN
-        , [Bin] Varchar(20) Collate Latin1_General_BIN
-        , [Warehouse] Varchar(30) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)			Collate Latin1_General_BIN
+        , [Lot] Varchar(20)					Collate Latin1_General_BIN
+        , [Bin] Varchar(20)					Collate Latin1_General_BIN
+        , [Warehouse] Varchar(30)			Collate Latin1_General_BIN
         , [QtyOnHand] Numeric(20 , 8)
         , [ExpiryDate] DateTime2
         , [CreationDate] DateTime2
         );
     Create Table [#CusLot]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Lot] Varchar(50) Collate Latin1_General_BIN
-        , [StockCode] Varchar(30) Collate Latin1_General_BIN
-        , [BleedNumber] Varchar(20) Collate Latin1_General_BIN
-        , [DonorNumber] Varchar(20) Collate Latin1_General_BIN
-        , [VendorBatchNumber] Varchar(50) Collate Latin1_General_BIN
-        , [OldLotNumber] Varchar(20) Collate Latin1_General_BIN
-        , [BleedDate] Varchar(15) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [Lot] Varchar(50)					Collate Latin1_General_BIN
+        , [StockCode] Varchar(30)			Collate Latin1_General_BIN
+        , [BleedNumber] Varchar(20)			Collate Latin1_General_BIN
+        , [DonorNumber] Varchar(20)			Collate Latin1_General_BIN
+        , [VendorBatchNumber] Varchar(50)	Collate Latin1_General_BIN
+        , [OldLotNumber] Varchar(20)		Collate Latin1_General_BIN
+        , [BleedDate] Varchar(15)			Collate Latin1_General_BIN
         );
 
 --create script to pull data from each db into the tables

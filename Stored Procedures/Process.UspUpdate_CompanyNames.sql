@@ -40,10 +40,10 @@ As
             Begin
                 Create Table [Lookups].[CompanyNames]
                     (
-                      [Company] Varchar(150)
-                    , [CompanyName] Varchar(250)
-                    , [ShortName] Varchar(250)
-                    , [Currency] Varchar(10)
+                      [Company] Varchar(150)		collate Latin1_General_BIN
+                    , [CompanyName] Varchar(250)	collate Latin1_General_BIN
+                    , [ShortName] Varchar(250)		collate Latin1_General_BIN
+                    , [Currency] Varchar(10)		collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -65,9 +65,9 @@ As
 	--create master list of Company Names
                 Create 	Table [#CompanyList]
                     (
-                      [Company] Varchar(150)
-                    , [CompanyName] Varchar(250)
-                    , [ShortName] Varchar(250)
+                      [Company] Varchar(150)		collate Latin1_General_BIN
+                    , [CompanyName] Varchar(250)	collate Latin1_General_BIN
+                    , [ShortName] Varchar(250)		collate Latin1_General_BIN
                     );
 
 
@@ -282,7 +282,6 @@ As
                     + Cast(@LastDate As Varchar(255)) + ' no update applied';
             End;
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_CompanyNames', NULL, NULL

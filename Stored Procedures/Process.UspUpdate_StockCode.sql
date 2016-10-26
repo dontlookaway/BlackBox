@@ -21,10 +21,10 @@ As
             Begin
                 Create Table [Lookups].[StockCode]
                     (
-                      [Company] Varchar(150)
-                    , [StockCode] Varchar(150)
-                    , [StockDescription] Varchar(150)
-                    , [PartCategory] Varchar(5)
+                      [Company] Varchar(150)			collate Latin1_General_BIN
+                    , [StockCode] Varchar(150)			collate Latin1_General_BIN
+                    , [StockDescription] Varchar(150)	collate Latin1_General_BIN
+                    , [PartCategory] Varchar(5)			collate Latin1_General_BIN
                     , [ActivePOFlag] Bit
                     , [LastUpdated] DateTime2
                     );
@@ -50,10 +50,10 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1StockCode]
                     (
-                      [Company] Varchar(150)
-                    , [StockCode] Varchar(150)
-                    , [StockDescription] Varchar(150)
-                    , [PartCategory] Varchar(5)
+                      [Company] Varchar(150)			collate Latin1_General_BIN
+                    , [StockCode] Varchar(150)			collate Latin1_General_BIN
+                    , [StockDescription] Varchar(150)	collate Latin1_General_BIN
+                    , [PartCategory] Varchar(5)			collate Latin1_General_BIN
                     , [ActivePOFlag] Bit
                     );
 
@@ -154,7 +154,6 @@ Group By [StockCode]
             Print 'UspUpdate_StockCode - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 
 GO

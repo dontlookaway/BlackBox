@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -38,41 +37,41 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#CshApPayments]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
             , [CbTrnYear] Int
             , [TrnMonth] Int
-            , [Supplier] Varchar(15) Collate Latin1_General_BIN
-            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
+            , [Invoice] Varchar(35)			Collate Latin1_General_BIN
             , [InvoiceDate] DateTime2
-            , [Reference] Varchar(60) Collate Latin1_General_BIN
-            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
+            , [Reference] Varchar(60)		Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35)	Collate Latin1_General_BIN
             );
         Create Table [#ApInvoice]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(15) Collate Latin1_General_BIN
-            , [Invoice] Varchar(35) Collate Latin1_General_BIN
-            , [PaymentNumber] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
+            , [Invoice] Varchar(35)			Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35)	Collate Latin1_General_BIN
             );
         Create Table [#ApInvoicePay]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
             , [TrnValue] Float
-            , [PaymentReference] Varchar(35) Collate Latin1_General_BIN
-            , [Supplier] Varchar(15) Collate Latin1_General_BIN
-            , [Invoice] Varchar(35) Collate Latin1_General_BIN
+            , [PaymentReference] Varchar(35)	Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)			Collate Latin1_General_BIN
+            , [Invoice] Varchar(35)				Collate Latin1_General_BIN
             );
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
-            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)		Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(35) Collate Latin1_General_BIN
-            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Supplier] Varchar(35)			Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)		Collate Latin1_General_BIN
             );
 
 
@@ -306,18 +305,18 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [TrnYear] Int
-            , [TrnMonth] Int
-            , [Supplier] Varchar(35)
-            , [SupplierName] Varchar(150)
-            , [Invoice] Varchar(35)
-            , [InvoiceDate] DateTime2
-            , [Reference] Varchar(60)
-            , [PaymentNumber] Varchar(35)
-            , [TrnValue] Numeric(18 , 3)
-            , [PaymentReference] Varchar(35)
-            , [PurchaseOrder] Varchar(35)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [TrnYear] Int						
+            , [TrnMonth] Int					
+            , [Supplier] Varchar(35)			collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)		collate Latin1_General_BIN
+            , [Invoice] Varchar(35)				collate Latin1_General_BIN
+            , [InvoiceDate] DateTime2			
+            , [Reference] Varchar(60)			collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(35)		collate Latin1_General_BIN
+            , [TrnValue] Numeric(18 , 3)		
+            , [PaymentReference] Varchar(35)	collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)		collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
             );
 
@@ -416,7 +415,6 @@ Return details of all purchase orders and invoices, highlighting where a PO is n
         From    [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'purchase order details with invoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_PurchaseOrdersInvoices', NULL, NULL

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -30,12 +29,12 @@ Returns ApSupplierNar table for PO
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApSupplierNar]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [NoteType] Char(1)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
+            , [NoteType] Char(1) Collate Latin1_General_BIN
             , [Line] Int
-            , [Text] Varchar(100)
+            , [Text] Varchar(100) Collate Latin1_General_BIN
             );
 
 	
@@ -131,7 +130,6 @@ Returns ApSupplierNar table for PO
         From    [#Results] As [R];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'used to return AP supp narrative in documents', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApSupplierNar', NULL, NULL

@@ -1,10 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Report].[UspResults_PurchaseOrdersHistory] ( @Company Varchar(10)     , @RedTagType Char(1)
     , @RedTagUse Varchar(500)
     )
@@ -38,13 +35,13 @@ Procedure to return all Purchase Order Details and changes
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [DatabaseCode] Varchar(150) Collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [DatabaseCode] Varchar(150)		Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)		Collate Latin1_General_BIN
             , [Line] Int
-            , [StockCode] Varchar(35) Collate Latin1_General_BIN
-            , [StockDescription] Varchar(255) Collate Latin1_General_BIN
-            , [MStockingUom] Varchar(10) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35)			Collate Latin1_General_BIN
+            , [StockDescription] Varchar(255)	Collate Latin1_General_BIN
+            , [MStockingUom] Varchar(10)		Collate Latin1_General_BIN
             , [MOrderQty] Numeric(20 , 7)
             , [MReceivedQty] Numeric(20 , 7)
             , [MLatestDueDate] DateTime2
@@ -121,27 +118,27 @@ End';
 --define the results you want to return
         Create Table [#Results]
             (
-              [CompanyName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [Line] Int
-            , [StockCode] Varchar(35)
-            , [StockDescription] Varchar(255)
-            , [StockingUom] Varchar(10)
-            , [OrderQty] Numeric(20 , 7)
-            , [ReceivedQty] Numeric(20 , 7)
-            , [LatestDueDate] DateTime2
-            , [OrigDueDate] DateTime2
-            , [LocalPrice] Numeric(20 , 3)
-            , [ForeignPrice] Numeric(20 , 3)
-            , [TransactionDescription] Varchar(255)
-            , [SignatureDatetime] DateTime2
-            , [Operator] Varchar(255)
-            , [Price] Numeric(20 , 3)
-            , [PreviousPrice] Numeric(20 , 3)
-            , [Quantity] Numeric(20 , 7)
-            , [PreviousQuantity] Numeric(20 , 7)
-            , [QuantityBeingReceieved] Numeric(20 , 7)
-            , [Grn] Varchar(50)
+              [CompanyName] Varchar(150)					Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)					collate Latin1_General_BIN
+            , [Line] Int								   
+            , [StockCode] Varchar(35)					   collate Latin1_General_BIN
+            , [StockDescription] Varchar(255)			   collate Latin1_General_BIN
+            , [StockingUom] Varchar(10)					   collate Latin1_General_BIN
+            , [OrderQty] Numeric(20 , 7)				   
+            , [ReceivedQty] Numeric(20 , 7)				   
+            , [LatestDueDate] DateTime2					   
+            , [OrigDueDate] DateTime2					   
+            , [LocalPrice] Numeric(20 , 3)				   
+            , [ForeignPrice] Numeric(20 , 3)			   
+            , [TransactionDescription] Varchar(255)		   collate Latin1_General_BIN
+            , [SignatureDatetime] DateTime2				   
+            , [Operator] Varchar(255)					   collate Latin1_General_BIN
+            , [Price] Numeric(20 , 3)					   
+            , [PreviousPrice] Numeric(20 , 3)			   
+            , [Quantity] Numeric(20 , 7)				   
+            , [PreviousQuantity] Numeric(20 , 7)		   
+            , [QuantityBeingReceieved] Numeric(20 , 7)	   
+            , [Grn] Varchar(50)							   collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -231,7 +228,6 @@ End';
         From    [#Results];
 
     End;
-
 
 
 

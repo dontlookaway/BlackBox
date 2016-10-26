@@ -19,9 +19,9 @@ As
             Begin
                 Create Table [Lookups].[GlExpenseCode]
                     (
-                      [Company] Varchar(150)
-                    , [GlExpenseCode] Char(5)
-                    , [GlExpenseDescription] Varchar(150)
+                      [Company] Varchar(150)				collate Latin1_General_BIN
+                    , [GlExpenseCode] Char(5)				collate Latin1_General_BIN
+                    , [GlExpenseDescription] Varchar(150)	collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -44,8 +44,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#OrdersGlExpenseCode]
                     (
-                      [GlExpenseCode] Varchar(5)
-                    , [GlExpenseDescription] Varchar(150)
+                      [GlExpenseCode] Varchar(5)			collate Latin1_General_BIN
+                    , [GlExpenseDescription] Varchar(150)	collate Latin1_General_BIN
                     );
 
                 Insert  [#OrdersGlExpenseCode]
@@ -141,7 +141,6 @@ As
             Print 'UspUpdate_GlExpenseCode - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_GlExpenseCode', NULL, NULL
 GO

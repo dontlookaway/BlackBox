@@ -35,24 +35,24 @@ Set NoCount On
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GenJournalDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [Journal] Int
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [EntryNumber] Int
-            , [EntryType] Char(1)
-            , [GlCode] Varchar(35)
-            , [Reference] Varchar(50)
-            , [Comment] Varchar(250)
-            , [EntryValue] Numeric(20 , 2)
-            , [EntryDate] Date
-            , [EntryPosted] Char(1)
-            , [InterCompanyFlag] Char(1)
-            , [Company] Varchar(50)
-            , [CurrencyValue] Numeric(20 , 2)
-            , [PostCurrency] Varchar(10)
-            , [TypeDetail] Varchar(100)
-            , [CommitmentFlag] Char(1)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [Journal] Int						
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [EntryNumber] Int					
+            , [EntryType] Char(1)				collate Latin1_General_BIN
+            , [GlCode] Varchar(35)				collate Latin1_General_BIN
+            , [Reference] Varchar(50)			collate Latin1_General_BIN
+            , [Comment] Varchar(250)			collate Latin1_General_BIN
+            , [EntryValue] Numeric(20 , 2)		
+            , [EntryDate] Date					
+            , [EntryPosted] Char(1)				collate Latin1_General_BIN
+            , [InterCompanyFlag] Char(1)		collate Latin1_General_BIN
+            , [Company] Varchar(50)				collate Latin1_General_BIN
+            , [CurrencyValue] Numeric(20 , 2)	
+            , [PostCurrency] Varchar(10)		collate Latin1_General_BIN
+            , [TypeDetail] Varchar(100)			collate Latin1_General_BIN
+            , [CommitmentFlag] Char(1)			collate Latin1_General_BIN
             , [TransactionDate] Date
             , [DocumentDate] Date
             , [SubModJournal] Int
@@ -60,65 +60,65 @@ Set NoCount On
             );
         Create Table [#GenJournalCtl]
             (
-              [DatabaseName] Varchar(150)
-            , [JnlPrintFlag] Char(1)
-            , [JournalDate] Date
-            , [NumOfEntries] Int
-            , [DebitAmount] Numeric(20 , 2)
-            , [CreditAmount] Numeric(20 , 2)
-            , [JnlPostingType] Char(1)
-            , [Source] Char(1)
-            , [Operator] Varchar(20)
-            , [JnlStatus] Char(1)
-            , [Reference] Varchar(30)
-            , [AuthorisedBy] Varchar(20)
-            , [PostedBy] Varchar(20)
-            , [Authorised] Char(1)
-            , [PostDate] Date
-            , [Notation] Varchar(100)
-            , [GlJournal] Int
-            , [GlPeriod] Int
-            , [GlYear] Int
-            , [JournalSource] Char(2)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [JnlPrintFlag] Char(1)			collate Latin1_General_BIN
+            , [JournalDate] Date				
+            , [NumOfEntries] Int				
+            , [DebitAmount] Numeric(20 , 2)		
+            , [CreditAmount] Numeric(20 , 2)	
+            , [JnlPostingType] Char(1)			collate Latin1_General_BIN
+            , [Source] Char(1)					collate Latin1_General_BIN
+            , [Operator] Varchar(20)			collate Latin1_General_BIN
+            , [JnlStatus] Char(1)				collate Latin1_General_BIN
+            , [Reference] Varchar(30)			collate Latin1_General_BIN
+            , [AuthorisedBy] Varchar(20)		collate Latin1_General_BIN
+            , [PostedBy] Varchar(20)			collate Latin1_General_BIN
+            , [Authorised] Char(1)				collate Latin1_General_BIN
+            , [PostDate] Date					
+            , [Notation] Varchar(100)			collate Latin1_General_BIN
+            , [GlJournal] Int					
+            , [GlPeriod] Int					
+            , [GlYear] Int						
+            , [JournalSource] Char(2)			collate Latin1_General_BIN
             );
         Create Table [#GrnMatching]
             (
-              [DatabaseName] Varchar(300)
-            , [Grn] Varchar(20)
-            , [Invoice] Varchar(20)
+              [DatabaseName] Varchar(300)		collate Latin1_General_BIN
+            , [Grn] Varchar(20)					collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				collate Latin1_General_BIN
             );
         Create Table [#InvJournalDet]
             (
-              [DatabaseName] Varchar(300)
-            , [JnlYear] Int
-            , [GlPeriod] Int
-            , [Journal] Int
-            , [EntryNumber] Int
-            , [Supplier] Varchar(15)
-            , [PurchaseOrder] Varchar(20)
-            , [Reference] Varchar(30)
+              [DatabaseName] Varchar(300)		collate Latin1_General_BIN
+            , [JnlYear] Int						
+            , [GlPeriod] Int					
+            , [Journal] Int						
+            , [EntryNumber] Int					
+            , [Supplier] Varchar(15)			collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20)		collate Latin1_General_BIN
+            , [Reference] Varchar(30)			collate Latin1_General_BIN
             );
         Create Table [#GenAnalysisTrn]
             (
-              [DatabaseName] Varchar(150)
-            , [AnalysisEntry] Int
-            , [GlPeriod] Int
-            , [GlYear] Int
-            , [AnalysisCategory] Varchar(10)
-            , [AnalysisCode1] Varchar(10)
-            , [AnalysisCode2] Varchar(10)
-            , [AnalysisCode3] Varchar(10)
-            , [AnalysisCode4] Varchar(10)
-            , [AnalysisCode5] Varchar(10)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [AnalysisEntry] Int				
+            , [GlPeriod] Int					
+            , [GlYear] Int						
+            , [AnalysisCategory] Varchar(10)	collate Latin1_General_BIN
+            , [AnalysisCode1] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode2] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode3] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode4] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode5] Varchar(10)		collate Latin1_General_BIN
             , [EntryValue] Numeric(20 , 2)
             );
         Create Table [#GenAnalysisCode]
             (
-              [DatabaseName] Varchar(150)
-            , [AnalysisCategory] Varchar(10)
-            , [AnalysisCode] Varchar(10)
-            , [AnalysisType] Int
-            , [Description] Varchar(50)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [AnalysisCategory] Varchar(10)	collate Latin1_General_BIN
+            , [AnalysisCode] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisType] Int				
+            , [Description] Varchar(50)			collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -400,44 +400,44 @@ Set NoCount On
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Journal] Int
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [EntryNumber] Int
-            , [EntryType] Char(1)
-            , [GlCode] Varchar(35)
-            , [Reference] Varchar(50)
-            , [Comment] Varchar(250)
-            , [EntryValue] Numeric(20 , 2)
-            , [EntryDate] Date
-            , [EntryPosted] Char(1)
-            , [JnlPrintFlag] Char(1)
-            , [JournalDate] Date
-            , [NumOfEntries] Int
-            , [DebitAmount] Numeric(20 , 2)
-            , [CreditAmount] Numeric(20 , 2)
-            , [JnlPostingType] Char(1)
-            , [Source] Char(1)
-            , [Operator] Varchar(20)
-            , [JnlStatus] Char(1)
-            , [AuthorisedBy] Varchar(20)
-            , [PostedBy] Varchar(20)
-            , [Authorised] Char(1)
-            , [PostDate] Date
-            , [Notation] Varchar(100)
-            , [JournalSource] Char(2)
-            , [Supplier] Varchar(15)
-            , [PurchaseOrder] Varchar(20)
-            , [Grn] Varchar(Max)
-            , [Invoice] Varchar(Max)
-            , [AnalysisCategory] Varchar(10)
-            , [AnalysisCode1] Varchar(10)
-            , [Analysis1] Varchar(50)
-            , [AnalysisCode2] Varchar(10)
-            , [AnalysisCode3] Varchar(10)
-            , [AnalysisCode4] Varchar(10)
-            , [AnalysisCode5] Varchar(10)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [Journal] Int						
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [EntryNumber] Int					
+            , [EntryType] Char(1)				collate Latin1_General_BIN
+            , [GlCode] Varchar(35)				collate Latin1_General_BIN
+            , [Reference] Varchar(50)			collate Latin1_General_BIN
+            , [Comment] Varchar(250)			collate Latin1_General_BIN
+            , [EntryValue] Numeric(20 , 2)		
+            , [EntryDate] Date					
+            , [EntryPosted] Char(1)				collate Latin1_General_BIN
+            , [JnlPrintFlag] Char(1)			collate Latin1_General_BIN
+            , [JournalDate] Date				
+            , [NumOfEntries] Int				
+            , [DebitAmount] Numeric(20 , 2)		
+            , [CreditAmount] Numeric(20 , 2)	
+            , [JnlPostingType] Char(1)			collate Latin1_General_BIN
+            , [Source] Char(1)					collate Latin1_General_BIN
+            , [Operator] Varchar(20)			collate Latin1_General_BIN
+            , [JnlStatus] Char(1)				collate Latin1_General_BIN
+            , [AuthorisedBy] Varchar(20)		collate Latin1_General_BIN
+            , [PostedBy] Varchar(20)			collate Latin1_General_BIN
+            , [Authorised] Char(1)				collate Latin1_General_BIN
+            , [PostDate] Date					
+            , [Notation] Varchar(100)			collate Latin1_General_BIN
+            , [JournalSource] Char(2)			collate Latin1_General_BIN
+            , [Supplier] Varchar(15)			collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20)		collate Latin1_General_BIN
+            , [Grn] Varchar(Max)				collate Latin1_General_BIN
+            , [Invoice] Varchar(Max)			collate Latin1_General_BIN
+            , [AnalysisCategory] Varchar(10)	collate Latin1_General_BIN
+            , [AnalysisCode1] Varchar(10)		collate Latin1_General_BIN
+            , [Analysis1] Varchar(50)			collate Latin1_General_BIN
+            , [AnalysisCode2] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode3] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode4] Varchar(10)		collate Latin1_General_BIN
+            , [AnalysisCode5] Varchar(10)		collate Latin1_General_BIN
             , [AnalysisEntryValue] Numeric(20 , 2)
             );
 

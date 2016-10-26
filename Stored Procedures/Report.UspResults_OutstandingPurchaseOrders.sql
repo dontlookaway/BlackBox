@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,27 +36,27 @@ Stored procedure set out to bring back purchase orders which do not have receipt
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)	Collate Latin1_General_BIN
             , [OrderEntryDate] DateTime2
             , [OrderDueDate] DateTime2
-            , [OrderStatus] Varchar(35) Collate Latin1_General_BIN
-            , [Supplier] Varchar(15) Collate Latin1_General_BIN
-            , [CancelledFlag] Char(1) Collate Latin1_General_BIN
+            , [OrderStatus] Varchar(35)		Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
+            , [CancelledFlag] Char(1)		Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(15) Collate Latin1_General_BIN
-            , [SupplierName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		Collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)	Collate Latin1_General_BIN
             );
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [PurchaseOrder] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)	Collate Latin1_General_BIN
             , [Line] Int
-            , [MStockCode] Varchar(35) Collate Latin1_General_BIN
-            , [MStockDes] Varchar(150) Collate Latin1_General_BIN
+            , [MStockCode] Varchar(35)		Collate Latin1_General_BIN
+            , [MStockDes] Varchar(150)		Collate Latin1_General_BIN
             , [MOrderQty] Numeric(20 , 8)
             , [MPrice] Numeric(20 , 3)
             );
@@ -200,15 +199,15 @@ Stored procedure set out to bring back purchase orders which do not have receipt
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [SupplierName] Varchar(150)
-            , [OrderStatusDescription] Varchar(150)
-            , [OrderEntryDate] DateTime2
-            , [OrderDueDate] DateTime2
-            , [Line] Int
-            , [StockCode] Varchar(35)
-            , [StockDesc] Varchar(150)
+              [DatabaseName] Varchar(150)			collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(35)			collate Latin1_General_BIN
+            , [SupplierName] Varchar(150)			collate Latin1_General_BIN
+            , [OrderStatusDescription] Varchar(150)	collate Latin1_General_BIN
+            , [OrderEntryDate] DateTime2			
+            , [OrderDueDate] DateTime2				
+            , [Line] Int							
+            , [StockCode] Varchar(35)				collate Latin1_General_BIN
+            , [StockDesc] Varchar(150)				collate Latin1_General_BIN
             , [OrderQty] Numeric(20 , 6)
             , [Price] Numeric(20 , 3)
             );
@@ -279,7 +278,6 @@ Stored procedure set out to bring back purchase orders which do not have receipt
               , [OrderEntryDate] Desc;
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of purchase orders outstanding', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_OutstandingPurchaseOrders', NULL, NULL

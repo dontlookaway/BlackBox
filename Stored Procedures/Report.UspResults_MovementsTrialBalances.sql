@@ -26,46 +26,46 @@ Stored procedure set out to query multiple databases with the same information a
             @UsedByDb = @RedTagDB;
         Create Table [#Movements]
             (
-              [Company] Varchar(50)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(50)
-            , [Description] Varchar(150)
-            , [GlGroup] Varchar(50)
-            , [Movement] Numeric(20 , 6)
-            , [GlPeriod] Int
-            , [GlYear] Int
-            , [Source] Varchar(100)
-            , [Journal] Int
-            , [ReportIndex1] Varchar(35)
-            , [ReportIndex2] Varchar(35)
-            , [AccountType] Varchar(250)
-            , [Parse1] Varchar(50)
-            , [Parse2] Varchar(50)
-            , [Parse3] Varchar(50)
-            );
-
-        Create Table [#Balances]
-            (
-              [Company] Varchar(150)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(50)
-            , [GlDescription] Varchar(150)
-            , [ReportIndex1] Varchar(50)
-            , [ReportIndex2] Varchar(50)
-            , [GlGroup] Varchar(50)
-            , [GlYear] Int
-            , [ClosingBalance] Numeric(20 , 6)
-            , [Debit] Numeric(20 , 6)
-            , [Credit] Numeric(20 , 6)
-            , [Period] Int
-            , [AccountType] Varchar(250)
-            , [Parse1] Varchar(50)
-            , [Parse2] Varchar(50)
-            , [Parse3] Varchar(50)
+              [Company] Varchar(50)						collate latin1_general_bin
+            , [ShortName] Varchar(250)					collate latin1_general_bin
+            , [CompanyName] Varchar(250)				collate latin1_general_bin
+            , [Currency] Varchar(10)					collate latin1_general_bin
+            , [GlCode] Varchar(50)						collate latin1_general_bin
+            , [Description] Varchar(150)				collate latin1_general_bin
+            , [GlGroup] Varchar(50)						collate latin1_general_bin
+            , [Movement] Numeric(20 , 6)				
+            , [GlPeriod] Int							
+            , [GlYear] Int								
+            , [Source] Varchar(100)						collate latin1_general_bin
+            , [Journal] Int								
+            , [ReportIndex1] Varchar(35)				collate latin1_general_bin
+            , [ReportIndex2] Varchar(35)				collate latin1_general_bin
+            , [AccountType] Varchar(250)				collate latin1_general_bin
+            , [Parse1] Varchar(50)						collate latin1_general_bin
+            , [Parse2] Varchar(50)						collate latin1_general_bin
+            , [Parse3] Varchar(50)						collate latin1_general_bin
+            );											
+														
+        Create Table [#Balances]						
+            (											
+              [Company] Varchar(150)					collate latin1_general_bin
+            , [ShortName] Varchar(250)					collate latin1_general_bin
+            , [CompanyName] Varchar(250)				collate latin1_general_bin
+            , [Currency] Varchar(10)					collate latin1_general_bin
+            , [GlCode] Varchar(50)						collate latin1_general_bin
+            , [GlDescription] Varchar(150)				collate latin1_general_bin
+            , [ReportIndex1] Varchar(50)				collate latin1_general_bin
+            , [ReportIndex2] Varchar(50)				collate latin1_general_bin
+            , [GlGroup] Varchar(50)						collate latin1_general_bin
+            , [GlYear] Int								
+            , [ClosingBalance] Numeric(20 , 6)			
+            , [Debit] Numeric(20 , 6)					
+            , [Credit] Numeric(20 , 6)					
+            , [Period] Int								
+            , [AccountType] Varchar(250)				collate latin1_general_bin
+            , [Parse1] Varchar(50)						collate latin1_general_bin
+            , [Parse2] Varchar(50)						collate latin1_general_bin
+            , [Parse3] Varchar(50)						collate latin1_general_bin
             );
         
 		

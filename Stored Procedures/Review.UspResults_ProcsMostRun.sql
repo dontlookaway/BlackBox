@@ -21,8 +21,8 @@ As
 
         Create Table [#ProcsRun_NonDev]
             (
-              [ProcName] Varchar(500)
-            , [SchemaName] Varchar(150)
+              [ProcName] Varchar(500) Collate Latin1_General_BIN
+            , [SchemaName] Varchar(150) Collate Latin1_General_BIN
             , [RunTime] DateTime
             , [SPs] Int
             );
@@ -111,7 +111,6 @@ As
         Set NoCount On;
         Drop Table [#ProcsRun_NonDev];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of the most commonly used stored procedures', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_ProcsMostRun', NULL, NULL
 GO

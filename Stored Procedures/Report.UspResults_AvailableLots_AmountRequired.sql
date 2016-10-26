@@ -42,20 +42,20 @@ Stored procedure set out to query multiple databases with the same information a
 --Create table to capture results
     Create Table [#InvMaster]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
-        , [Description] Varchar(50) Collate Latin1_General_BIN
-        , [PartCategory] Char(1)
-        , [IssMultLotsFlag] Char(1)
-        , [StockUom] Varchar(10)
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)		Collate Latin1_General_BIN
+        , [Description] Varchar(50)		Collate Latin1_General_BIN
+        , [PartCategory] Char(1)		Collate Latin1_General_BIN
+        , [IssMultLotsFlag] Char(1)		Collate Latin1_General_BIN
+        , [StockUom] Varchar(10)		Collate Latin1_General_BIN
         );
     Create Table [#LotDetail]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
-        , [Lot] Varchar(20) Collate Latin1_General_BIN
-        , [Bin] Varchar(20) Collate Latin1_General_BIN
-        , [Warehouse] Varchar(30) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)		Collate Latin1_General_BIN
+        , [Lot] Varchar(20)				Collate Latin1_General_BIN
+        , [Bin] Varchar(20)				Collate Latin1_General_BIN
+        , [Warehouse] Varchar(30)		Collate Latin1_General_BIN
         , [QtyOnHand] Numeric(20 , 8)
         , [ExpiryDate] DateTime2
         , [CreationDate] DateTime2
@@ -166,12 +166,12 @@ Stored procedure set out to query multiple databases with the same information a
 
     Create Table [#Results]
         (
-          [StockCode] Varchar(20)
-        , [StockDescription] Varchar(50)
-        , [IssMultLotsFlag] Char(1)
-        , [AvailableLot] Varchar(20)
-        , [AvailableLotBin] Varchar(20)
-        , [AvailableLotWarehouse] Varchar(30)
+          [StockCode] Varchar(20)					 Collate Latin1_General_BIN
+        , [StockDescription] Varchar(50)			 Collate Latin1_General_BIN
+        , [IssMultLotsFlag] Char(1)					 Collate Latin1_General_BIN
+        , [AvailableLot] Varchar(20)				 Collate Latin1_General_BIN
+        , [AvailableLotBin] Varchar(20)				 Collate Latin1_General_BIN
+        , [AvailableLotWarehouse] Varchar(30)		 Collate Latin1_General_BIN
         , [AvailableLotQtyOnHand] Numeric(20 , 8)
         , [AvailableLotExpiryDate] Date
         , [AvailableLotCreationDate] Date
@@ -262,7 +262,6 @@ Stored procedure set out to query multiple databases with the same information a
 --tidy up
     Drop Table [#InvMaster];
     Drop Table [#LotDetail];
-
 
 
 

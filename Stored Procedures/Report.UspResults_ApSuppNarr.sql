@@ -2,9 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE Proc  [Report].[UspResults_ApSuppNarr]
+CREATE Proc [Report].[UspResults_ApSuppNarr]
     (
       @Company Varchar(Max)
     , @RedTagType Char(1)
@@ -33,11 +31,11 @@ As
 
         Create Table [#ApSupplierNar]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Line] BigInt
-            , [Text] Varchar(100)
-            );
+              [DatabaseName] Varchar(150)	collate Latin1_General_BIN
+            , [Supplier] Varchar(15)		collate Latin1_General_BIN
+            , [Line] BigInt					
+            , [Text] Varchar(100)			collate Latin1_General_BIN
+            );							
 
 
 
@@ -77,7 +75,6 @@ As
 
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'used to return AP supp narrative in documents', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApSuppNarr', NULL, NULL

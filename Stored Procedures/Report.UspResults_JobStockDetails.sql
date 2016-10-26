@@ -32,23 +32,23 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvMovements]
             (
-              [DatabaseName] Varchar(150)
-            , [Job] Varchar(35)
-            , [Warehouse] Varchar(20)
-            , [Bin] Varchar(20)
-            , [StockCode] Varchar(35)
-            , [TrnType] Varchar(5)
-            , [LotSerial] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(35) Collate Latin1_General_BIN
+            , [Warehouse] Varchar(20) Collate Latin1_General_BIN
+            , [Bin] Varchar(20) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35) Collate Latin1_General_BIN
+            , [TrnType] Varchar(5) Collate Latin1_General_BIN
+            , [LotSerial] Varchar(50) Collate Latin1_General_BIN
             , [TrnQty] Float
             , [TrnValue] Float
             , [UnitCost] Numeric(20 , 7)
             );
         Create Table [#InvMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [StockCode] Varchar(35)
-            , [StockDescription] Varchar(150)
-            , [StockUom] Varchar(10)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [StockCode] Varchar(35) Collate Latin1_General_BIN
+            , [StockDescription] Varchar(150) Collate Latin1_General_BIN
+            , [StockUom] Varchar(10) Collate Latin1_General_BIN
             );
 
 

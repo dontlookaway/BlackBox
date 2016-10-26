@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,12 +36,12 @@ Stored procedure for Payment run verify
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApInvoice]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [PostCurrency] Char(3)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
+            , [PostCurrency] Char(3) Collate Latin1_General_BIN
             , [ConvRate] Float
-            , [MulDiv] Char(1)
+            , [MulDiv] Char(1) Collate Latin1_General_BIN
             , [MthInvBal1] Float
             , [InvoiceYear] Int
             , [InvoiceMonth] Int
@@ -51,9 +50,9 @@ Stored procedure for Payment run verify
             );
         Create Table [#ApJnlSummary]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
             , [TrnYear] Int
             , [TrnMonth] Int
             , [Journal] Int
@@ -61,9 +60,9 @@ Stored procedure for Payment run verify
             );
         Create Table [#ApJnlDistrib]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
             , [DistrValue] Float
-            , [ExpenseGlCode] Varchar(35)
+            , [ExpenseGlCode] Varchar(35) Collate Latin1_General_BIN
             , [TrnYear] Int
             , [TrnMonth] Int
             , [Journal] Int
@@ -71,39 +70,39 @@ Stored procedure for Payment run verify
             );
         Create Table [#ApPayRunDet]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [Cheque] Varchar(15)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)	 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)		 Collate Latin1_General_BIN
+            , [Cheque] Varchar(15)		 Collate Latin1_General_BIN
             , [ChequeDate] DateTime2
             , [InvoiceDate] DateTime2
             , [NetPayValue] Float
             , [DueDate] DateTime2
-            , [InvoiceType] Char(1)
+            , [InvoiceType] Char(1)	 Collate Latin1_General_BIN
             , [PostValue] Float
-            , [PostCurrency] Char(3)
+            , [PostCurrency] Char(3) Collate Latin1_General_BIN
             , [PostConvRate] Float
-            , [PostMulDiv] Char(1)
-            , [SupplierName] Varchar(50)
-            , [PaymentNumber] Varchar(15)
+            , [PostMulDiv] Char(1) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(50) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(15) Collate Latin1_General_BIN
             );
         Create Table [#ApPayRunHdr]
             (
-              [DatabaseName] Varchar(150)
-            , [PaymentNumber] Varchar(15)
-            , [Bank] Varchar(15)
+              [DatabaseName] Varchar(150)  Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(15)  Collate Latin1_General_BIN
+            , [Bank] Varchar(15) Collate Latin1_General_BIN
             , [PaymentDate] DateTime2
             , [PayYear] Int
             , [PayMonth] Int
-            , [Operator] Varchar(20)
+            , [Operator] Varchar(20) Collate Latin1_General_BIN
             , [ChRegister] Float
             );
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(50)
-            , [SupplierName] Varchar(255)
-            , [Currency] Varchar(5)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Supplier] Varchar(50) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(255) Collate Latin1_General_BIN
+            , [Currency] Varchar(5) Collate Latin1_General_BIN
             );
 	
 --create script to pull data from each db into the tables
@@ -355,39 +354,39 @@ Stored procedure for Payment run verify
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [PostCurrency] Char(3)
-            , [ConvRate] Float
-            , [MulDiv] Char(1)
-            , [MthInvBal] Float
-            , [CompLocalAmt] Decimal(10 , 2)
-            , [DistrValue] Float
-            , [Description] Varchar(50)
-            , [ExpenseGlCode] Varchar(35)
-            , [InvoiceYear] Int
-            , [InvoiceMonth] Int
-            , [JournalDate] DateTime2
-            , [InvoiceDate] DateTime2
-            , [PaymentNumber] Int
-            , [Bank] Varchar(15)
-            , [PaymentDate] DateTime2
-            , [PayYear] Int
-            , [PayMonth] Int
-            , [Operator] Varchar(20)
-            , [ChRegister] Float
-            , [Cheque] Varchar(15)
-            , [ChequeDate] DateTime2
-            --, InvoiceDate DATETIME2
-            , [InvNetPayValue] Decimal(15 , 3)
-            , [DueDate] DateTime2
-            , [InvoiceType] Char(1)
-            , [PostValue] Decimal(15 , 3)
-            , [PostConvRate] Float
-            , [PostMulDiv] Char(1)
-            , [SupplierName] Varchar(50)
-            , [SupplierCurrency] Varchar(5)
+              [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+            , [Supplier] Varchar(15)			 Collate Latin1_General_BIN
+            , [Invoice] Varchar(20)				 Collate Latin1_General_BIN
+            , [PostCurrency] Char(3)			 Collate Latin1_General_BIN
+            , [ConvRate] Float					 
+            , [MulDiv] Char(1)					 Collate Latin1_General_BIN
+            , [MthInvBal] Float					 
+            , [CompLocalAmt] Decimal(10 , 2)	 
+            , [DistrValue] Float				 
+            , [Description] Varchar(50)			 Collate Latin1_General_BIN
+            , [ExpenseGlCode] Varchar(35)		 Collate Latin1_General_BIN
+            , [InvoiceYear] Int					 
+            , [InvoiceMonth] Int				 
+            , [JournalDate] DateTime2			 
+            , [InvoiceDate] DateTime2			 
+            , [PaymentNumber] Int				 
+            , [Bank] Varchar(15)				 Collate Latin1_General_BIN
+            , [PaymentDate] DateTime2			 
+            , [PayYear] Int						 
+            , [PayMonth] Int					 
+            , [Operator] Varchar(20)			 Collate Latin1_General_BIN
+            , [ChRegister] Float				 
+            , [Cheque] Varchar(15)				 Collate Latin1_General_BIN
+            , [ChequeDate] DateTime2			 
+            --, InvoiceDate DATETIME2			 
+            , [InvNetPayValue] Decimal(15 , 3)	 
+            , [DueDate] DateTime2				 
+            , [InvoiceType] Char(1)				 Collate Latin1_General_BIN
+            , [PostValue] Decimal(15 , 3)		 
+            , [PostConvRate] Float				 
+            , [PostMulDiv] Char(1)				 Collate Latin1_General_BIN
+            , [SupplierName] Varchar(50)		 Collate Latin1_General_BIN
+            , [SupplierCurrency] Varchar(5)		 Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required
@@ -566,7 +565,6 @@ Stored procedure for Payment run verify
                 Left Join [Lookups].[CompanyNames] As [cn] On [cn].[Company] = [R].[DatabaseName] Collate Latin1_General_BIN;
 
     End;
-
 
 
 GO

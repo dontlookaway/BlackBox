@@ -1,9 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_ListAllCompanies]
 As
     Begin
@@ -23,7 +21,7 @@ for use in report dropdowns
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#Table1]
             (
-              [CompanyName] Varchar(150)
+              [CompanyName] Varchar(150)	 collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -94,7 +92,6 @@ for use in report dropdowns
 
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all companies available', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ListAllCompanies', NULL, NULL

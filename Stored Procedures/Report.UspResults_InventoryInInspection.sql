@@ -36,32 +36,32 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvInspect]
             (
-              [DatabaseName] Varchar(150)
-            , [Grn] Varchar(20)
-            , [Lot] Varchar(50)
-            , [InspNarration] Varchar(100)
-            , [StockCode] Varchar(30)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Grn] Varchar(20) Collate Latin1_General_BIN
+            , [Lot] Varchar(50) Collate Latin1_General_BIN
+            , [InspNarration] Varchar(100) Collate Latin1_General_BIN
+            , [StockCode] Varchar(30) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [QtyAdvised] Numeric(20 , 8)
             , [QtyInspected] Numeric(20 , 8)
             , [QtyRejected] Numeric(20 , 8)
-            , [InspectCompleted] Char(1)
+            , [InspectCompleted] Char(1) Collate Latin1_General_BIN
             , [DeliveryDate] Date
             , [PurchaseOrderLin] Int
             , [GrnReceiptDate] Date
             );
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [MStockingUom] Varchar(10)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [MStockingUom] Varchar(10) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [Line] Int
             );
         Create Table [#InvMaster]
             (
-              [DatabaseName] Varchar(150)
-            , [StockCode] Varchar(30)
-            , [Description] Varchar(50)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [StockCode] Varchar(30) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
             );
 
 
@@ -163,19 +163,19 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Grn] Varchar(20)
-            , [Lot] Varchar(50)
-            , [InspNarration] Varchar(100)
-            , [StockCode] Varchar(30)
-            , [PurchaseOrder] Varchar(20)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Grn] Varchar(20) Collate Latin1_General_BIN
+            , [Lot] Varchar(50) Collate Latin1_General_BIN
+            , [InspNarration] Varchar(100) Collate Latin1_General_BIN
+            , [StockCode] Varchar(30) Collate Latin1_General_BIN
+            , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
             , [QtyAdvised] Numeric(20 , 8)
             , [QtyInspected] Numeric(20 , 8)
             , [QtyRejected] Numeric(20 , 8)
-            , [MStockingUom] Varchar(10)
-            , [InspectCompleted] Char(1)
+            , [MStockingUom] Varchar(10) Collate Latin1_General_BIN
+            , [InspectCompleted] Char(1) Collate Latin1_General_BIN
             , [DeliveryDate] Date
-            , [StockDescription] Varchar(50)
+            , [StockDescription] Varchar(50) Collate Latin1_General_BIN
             , [ReceiptDate] Date
             );
 

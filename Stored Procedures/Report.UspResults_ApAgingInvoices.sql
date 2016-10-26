@@ -2,8 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
 CREATE Proc [Report].[UspResults_ApAgingInvoices]
     (
       @RunDate Date
@@ -36,17 +34,17 @@ Template designed by Chris Johnson, Prometic Group March 2016
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApInvoice]
             (
-              [DB] Varchar(50)
-            , [Supplier] Varchar(50)
-            , [Invoice] Varchar(20)
+              [DB] Varchar(50) Collate Latin1_General_BIN
+            , [Supplier] Varchar(50) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
             , [NextPaymEntry] Int
             , [JournalDate] Date
             , [Journal] Int
-            , [Branch] Varchar(10)
+            , [Branch] Varchar(10) Collate Latin1_General_BIN
             , [InvoiceDate] Date
             , [DiscountDate] Date
             , [DueDate] Date
-            , [Reference] Varchar(30)
+            , [Reference] Varchar(30) Collate Latin1_General_BIN
             , [OrigInvValue] Numeric(20 , 2)
             , [OrigDiscValue] Numeric(20 , 2)
             , [MthInvBal1] Numeric(20 , 2)
@@ -54,10 +52,10 @@ Template designed by Chris Johnson, Prometic Group March 2016
             , [MthInvBal3] Numeric(20 , 2)
             , [ManualChqDate] Date
             , [ManualChqNum] BigInt
-            , [DiscActiveFlag] Char(1)
-            , [InvoiceStatus] Char(1)
-            , [Currency] Varchar(10)
-            , [Bank] Varchar(20)
+            , [DiscActiveFlag] Char(1) Collate Latin1_General_BIN
+            , [InvoiceStatus] Char(1) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [Bank] Varchar(20) Collate Latin1_General_BIN
             , [PaymGrossValue] Numeric(20 , 2)
             , [PaymDiscValue] Numeric(20 , 2)
             , [TaxPortionDisc] Numeric(20 , 2)
@@ -67,49 +65,49 @@ Template designed by Chris Johnson, Prometic Group March 2016
             , [YearInvBalZero] Int
             , [MonthInvBalZero] Int
             , [ExchangeRate] Float
-            , [FirstTaxCode] Char(3)
+            , [FirstTaxCode] Char(3) Collate Latin1_General_BIN
             , [WithTaxValue] Numeric(20 , 2)
             , [WithTaxRate] Float
             , [CurrencyValue] Numeric(20 , 2)
-            , [PostCurrency] Varchar(10)
+            , [PostCurrency] Varchar(10) Collate Latin1_General_BIN
             , [ConvRate] Float
-            , [MulDiv] Char(1)
-            , [AccountCur] Varchar(10)
+            , [MulDiv] Char(1) Collate Latin1_General_BIN
+            , [AccountCur] Varchar(10) Collate Latin1_General_BIN
             , [AccConvRate] Float
-            , [AccMulDiv] Char(1)
-            , [TriangCurrency] Varchar(10)
+            , [AccMulDiv] Char(1) Collate Latin1_General_BIN
+            , [TriangCurrency] Varchar(10) Collate Latin1_General_BIN
             , [TriangRate] Float
-            , [TriangMulDiv] Char(1)
+            , [TriangMulDiv] Char(1) Collate Latin1_General_BIN
             , [Tax2Value] Numeric(20 , 2)
-            , [VatInvalid] Char(1)
+            , [VatInvalid] Char(1) Collate Latin1_General_BIN
             , [EntryNumber] Int
-            , [PaymentChkType] Char(1)
+            , [PaymentChkType] Char(1) Collate Latin1_General_BIN
             , [ManualChRef] Varchar(30)
-            , [PaymentNumber] Varchar(15)
-            , [InvoiceTakeOn] Char(1)
-            , [FixExchangeRate] Char(1)
+            , [PaymentNumber] Varchar(15) Collate Latin1_General_BIN
+            , [InvoiceTakeOn] Char(1) Collate Latin1_General_BIN
+            , [FixExchangeRate] Char(1) Collate Latin1_General_BIN
             , [NextRevalNo] Int
-            , [TaxReverse] Char(1)
-            , [Tax2Reverse] Char(1)
-            , [NationalitySource] Char(3)
-            , [NationalityDest] Char(3)
-            , [AutoVoucherCreated] Char(1)
-            , [AutoVoucherPrinted] Char(1)
-            , [SecondTaxCode] Char(3)
-            , [WithTaxCode] Char(3)
+            , [TaxReverse] Char(1) Collate Latin1_General_BIN
+            , [Tax2Reverse] Char(1) Collate Latin1_General_BIN
+            , [NationalitySource] Char(3) Collate Latin1_General_BIN
+            , [NationalityDest] Char(3) Collate Latin1_General_BIN
+            , [AutoVoucherCreated] Char(1) Collate Latin1_General_BIN
+            , [AutoVoucherPrinted] Char(1) Collate Latin1_General_BIN
+            , [SecondTaxCode] Char(3) Collate Latin1_General_BIN
+            , [WithTaxCode] Char(3) Collate Latin1_General_BIN
             );
         Create Table [#ApSupplier]
             (
-              [DB] Varchar(50)
-            , [Supplier] Varchar(50)
-            , [SupplierName] Varchar(255)
-            , [TermsCode] Char(2)
+              [DB] Varchar(50) Collate Latin1_General_BIN
+            , [Supplier] Varchar(50) Collate Latin1_General_BIN
+            , [SupplierName] Varchar(255) Collate Latin1_General_BIN
+            , [TermsCode] Char(2) Collate Latin1_General_BIN
             );
         Create Table [#TblApTerms]
             (
-              [DB] Varchar(50)
-            , [TermsCode] Char(2)
-            , [Description] Varchar(50)
+              [DB] Varchar(50) Collate Latin1_General_BIN
+            , [TermsCode] Char(2) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
             );
 
 
@@ -253,17 +251,17 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
 --define the results you want to return
         Create Table [#ApData]
             (
-              [Company] Varchar(50)
-            , [Supplier] Varchar(255)
-            , [Invoice] Varchar(20)
+              [Company] Varchar(50) Collate Latin1_General_BIN
+            , [Supplier] Varchar(255) Collate Latin1_General_BIN
+            , [Invoice] Varchar(20) Collate Latin1_General_BIN
             , [NextPaymEntry] Int
             , [JournalDate] Date
             , [Journal] Int
-            , [Branch] Varchar(10)
+            , [Branch] Varchar(10) Collate Latin1_General_BIN
             , [InvoiceDate] Date
             , [DiscountDate] Date
             , [DueDate] Date
-            , [Reference] Varchar(30)
+            , [Reference] Varchar(30) Collate Latin1_General_BIN
             , [OrigInvValue] Numeric(20 , 2)
             , [OrigDiscValue] Numeric(20 , 2)
             , [MthInvBal1] Numeric(20 , 2)
@@ -271,10 +269,10 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
             , [MthInvBal3] Numeric(20 , 2)
             , [ManualChqDate] Date
             , [ManualChqNum] BigInt
-            , [DiscActiveFlag] Char(1)
-            , [InvoiceStatus] Char(1)
-            , [Currency] Varchar(10)
-            , [Bank] Varchar(20)
+            , [DiscActiveFlag] Char(1) Collate Latin1_General_BIN
+            , [InvoiceStatus] Char(1) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [Bank] Varchar(20) Collate Latin1_General_BIN
             , [PaymGrossValue] Numeric(20 , 2)
             , [PaymDiscValue] Numeric(20 , 2)
             , [TaxPortionDisc] Numeric(20 , 2)
@@ -284,36 +282,36 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
             , [YearInvBalZero] Int
             , [MonthInvBalZero] Int
             , [ExchangeRate] Float
-            , [FirstTaxCode] Char(3)
+            , [FirstTaxCode] Char(3) Collate Latin1_General_BIN
             , [WithTaxValue] Numeric(20 , 2)
             , [WithTaxRate] Float
             , [CurrencyValue] Numeric(20 , 2)
-            , [PostCurrency] Varchar(10)
+            , [PostCurrency] Varchar(10) Collate Latin1_General_BIN
             , [ConvRate] Float
-            , [MulDiv] Char(1)
-            , [AccountCur] Varchar(10)
+            , [MulDiv] Char(1) Collate Latin1_General_BIN
+            , [AccountCur] Varchar(10) Collate Latin1_General_BIN
             , [AccConvRate] Float
-            , [AccMulDiv] Char(1)
-            , [TriangCurrency] Varchar(10)
+            , [AccMulDiv] Char(1) Collate Latin1_General_BIN
+            , [TriangCurrency] Varchar(10) Collate Latin1_General_BIN
             , [TriangRate] Float
-            , [TriangMulDiv] Char(1)
+            , [TriangMulDiv] Char(1) Collate Latin1_General_BIN
             , [Tax2Value] Numeric(20 , 2)
-            , [VatInvalid] Char(1)
+            , [VatInvalid] Char(1) Collate Latin1_General_BIN
             , [EntryNumber] Int
-            , [PaymentChkType] Char(1)
-            , [ManualChRef] Varchar(30)
-            , [PaymentNumber] Varchar(15)
-            , [InvoiceTakeOn] Char(1)
-            , [FixExchangeRate] Char(1)
+            , [PaymentChkType] Char(1) Collate Latin1_General_BIN
+            , [ManualChRef] Varchar(30) Collate Latin1_General_BIN
+            , [PaymentNumber] Varchar(15) Collate Latin1_General_BIN
+            , [InvoiceTakeOn] Char(1) Collate Latin1_General_BIN
+            , [FixExchangeRate] Char(1) Collate Latin1_General_BIN
             , [NextRevalNo] Int
-            , [TaxReverse] Char(1)
-            , [Tax2Reverse] Char(1)
-            , [NationalitySource] Char(3)
-            , [NationalityDest] Char(3)
-            , [AutoVoucherCreated] Char(1)
-            , [AutoVoucherPrinted] Char(1)
-            , [SecondTaxCode] Char(3)
-            , [WithTaxCode] Char(3)
+            , [TaxReverse] Char(1) Collate Latin1_General_BIN
+            , [Tax2Reverse] Char(1) Collate Latin1_General_BIN
+            , [NationalitySource] Char(3) Collate Latin1_General_BIN
+            , [NationalityDest] Char(3) Collate Latin1_General_BIN
+            , [AutoVoucherCreated] Char(1) Collate Latin1_General_BIN
+            , [AutoVoucherPrinted] Char(1) Collate Latin1_General_BIN
+            , [SecondTaxCode] Char(3) Collate Latin1_General_BIN
+            , [WithTaxCode] Char(3) Collate Latin1_General_BIN
             , [30Days] Numeric(20 , 2)
             , [45Days] Numeric(20 , 2)
             , [60Days] Numeric(20 , 2)
@@ -593,7 +591,6 @@ SELECT [DB]=@DBCode, [AI].[Supplier], [AI].[Invoice], [AI].[NextPaymEntry], [AI]
                 Left Join [Lookups].[CompanyNames] As [CN] On [CN].[Company] = [AD].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'replaced by UspResults_AccPayable_AgedInvoices', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApAgingInvoices', NULL, NULL

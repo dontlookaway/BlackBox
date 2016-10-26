@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -22,17 +21,17 @@ As
 
         Create Table [#Movements]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
+              [Company] Varchar(10)		collate Latin1_General_BIN
+            , [ShortName] Varchar(250)	collate Latin1_General_BIN
+            , [CompanyName] Varchar(250)collate Latin1_General_BIN
+            , [Currency] Varchar(10)	collate Latin1_General_BIN
+            , [GlCode] Varchar(35)		collate Latin1_General_BIN
+            , [Description] Varchar(50)	collate Latin1_General_BIN
+            , [GlGroup] Varchar(10)		collate Latin1_General_BIN
             , [Movement] Numeric(20 , 2)
-            , [GlPeriod] Int
-            , [GlYear] Int
-            , [Source] Varchar(100)
+            , [GlPeriod] Int			
+            , [GlYear] Int				
+            , [Source] Varchar(100)		collate Latin1_General_BIN
             , [Journal] Int
             );
 
@@ -85,7 +84,6 @@ As
                                    'INTINTERCO' , 'INTERCOCOS' );
 
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Intercompany profit and loss general ledger', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GLMovementsIntercoPL', NULL, NULL
 GO

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -45,34 +44,34 @@ Stored procedure set out to query multiple databases with the same information a
 --Create table to capture results
     Create Table [#WipAllMatLot]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Job] Varchar(20) Collate Latin1_General_BIN
-        , [StockCode] Varchar(30) Collate Latin1_General_BIN
-        , [Lot] Varchar(50) Collate Latin1_General_BIN
-        , [Bin] Varchar(20) Collate Latin1_General_BIN
-        , [Warehouse] Varchar(20) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+        , [Job] Varchar(20)				Collate Latin1_General_BIN
+        , [StockCode] Varchar(30)		Collate Latin1_General_BIN
+        , [Lot] Varchar(50)				Collate Latin1_General_BIN
+        , [Bin] Varchar(20)				Collate Latin1_General_BIN
+        , [Warehouse] Varchar(20)		Collate Latin1_General_BIN
         , [QtyReserved] Numeric(20 , 8)
         , [QtyIssued] Numeric(20 , 8)
         );
     Create Table [#InvMaster]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Description] Varchar(50)
-        , [StockCode] Varchar(20) Collate Latin1_General_BIN
-        , [PartCategory] Char(1)
-        , [IssMultLotsFlag] Char(1)
-        , [StockUom] Varchar(10)
+          [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+        , [Description] Varchar(50)		Collate Latin1_General_BIN
+        , [StockCode] Varchar(20)		Collate Latin1_General_BIN
+        , [PartCategory] Char(1)		Collate Latin1_General_BIN
+        , [IssMultLotsFlag] Char(1)		Collate Latin1_General_BIN
+        , [StockUom] Varchar(10)		Collate Latin1_General_BIN
         );
     Create Table [#CusLot]
         (
-          [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-        , [Lot] Varchar(50) Collate Latin1_General_BIN
-        , [StockCode] Varchar(30) Collate Latin1_General_BIN
-        , [BleedNumber] Varchar(20) Collate Latin1_General_BIN
-        , [DonorNumber] Varchar(20) Collate Latin1_General_BIN
-        , [VendorBatchNumber] Varchar(50) Collate Latin1_General_BIN
-        , [OldLotNumber] Varchar(20) Collate Latin1_General_BIN
-        , [BleedDate] Varchar(15) Collate Latin1_General_BIN
+          [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+        , [Lot] Varchar(50)					Collate Latin1_General_BIN
+        , [StockCode] Varchar(30)			Collate Latin1_General_BIN
+        , [BleedNumber] Varchar(20)			Collate Latin1_General_BIN
+        , [DonorNumber] Varchar(20)			Collate Latin1_General_BIN
+        , [VendorBatchNumber] Varchar(50)	Collate Latin1_General_BIN
+        , [OldLotNumber] Varchar(20)		Collate Latin1_General_BIN
+        , [BleedDate] Varchar(15)			Collate Latin1_General_BIN
         );
 
 --create script to pull data from each db into the tables
@@ -257,7 +256,6 @@ Stored procedure set out to query multiple databases with the same information a
     Drop Table [#CusLot];
  
  
-
 
 
 GO

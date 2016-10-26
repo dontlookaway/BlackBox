@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -40,44 +39,44 @@ Compares GRN amounts and confirms how much is outstanding
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GrnDets]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Grn] Varchar(20)
-            , [GrnSource] Char(1)
-            , [Journal] Int
-            , [JournalEntry] Int
-            , [DebitRecGlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [OrigGrnValue] Numeric(20 , 8)
-            , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLin] Int
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [SupCatalogueNum] Varchar(50)
-            , [Warehouse] Varchar(10)
-            , [QtyReceived] Numeric(20 , 8)
-            , [PostCurrency] Char(3)
-            , [ConvRate] Numeric(20 , 8)
-            , [MulDiv] Char(1)
-            , [GrnYear] Int
-            , [GrnMonth] Int
-            );
-        Create Table [#GrnAdjust]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Grn] Varchar(20)
-            , [GrnSource] Char(1)
-            , [OrigJournal] Int
-            , [OrigJournalEntry] Int
-            , [GrnAdjValue] Numeric(20 , 8)
-            );
-        Create Table [#GrnMatch]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Grn] Varchar(20)
-            , [TransactionType] Char(1)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [Grn] Varchar(20)						collate latin1_general_bin
+            , [GrnSource] Char(1)					collate latin1_general_bin
+            , [Journal] Int							
+            , [JournalEntry] Int					
+            , [DebitRecGlCode] Varchar(35)			collate latin1_general_bin
+            , [Description] Varchar(50)				collate latin1_general_bin
+            , [OrigGrnValue] Numeric(20 , 8)		
+            , [PurchaseOrder] Varchar(20)			collate latin1_general_bin
+            , [PurchaseOrderLin] Int				
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [SupCatalogueNum] Varchar(50)			collate latin1_general_bin
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [QtyReceived] Numeric(20 , 8)			
+            , [PostCurrency] Char(3)				collate latin1_general_bin
+            , [ConvRate] Numeric(20 , 8)			
+            , [MulDiv] Char(1)						
+            , [GrnYear] Int							
+            , [GrnMonth] Int						
+            );										
+        Create Table [#GrnAdjust]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [Grn] Varchar(20)						collate latin1_general_bin
+            , [GrnSource] Char(1)					collate latin1_general_bin
+            , [OrigJournal] Int						
+            , [OrigJournalEntry] Int				
+            , [GrnAdjValue] Numeric(20 , 8)			
+            );										
+        Create Table [#GrnMatch]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [Grn] Varchar(20)						collate latin1_general_bin
+            , [TransactionType] Char(1)				collate latin1_general_bin
             , [Journal] Int
             , [EntryNumber] Int
             , [MatchedValue] Numeric(20 , 8)
@@ -248,26 +247,26 @@ End';
         Create Table [#Results]
             (
               [GrnPeriod] Int
-            , [CompanyName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Grn] Varchar(20)
-            , [DebitRecGlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLine] Int
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [SupCatalogueNum] Varchar(50)
-            , [Warehouse] Varchar(10)
-            , [QtyReceived] Numeric(20 , 8)
-            , [GrnValue] Numeric(20 , 8)
-            , [OrigGrnValue] Numeric(20 , 8)
-            , [Matched] Numeric(20 , 8)
-            , [Adjustments] Numeric(20 , 8)
-            , [PostCurrency] Char(3)
-            , [ConvRate] Numeric(20 , 8)
-            , [MultiDiv] Char(1)
-            , [ShortName] Varchar(250)
+            , [CompanyName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(15)			collate latin1_general_bin
+            , [Grn] Varchar(20)					collate latin1_general_bin
+            , [DebitRecGlCode] Varchar(35)		collate latin1_general_bin
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [PurchaseOrderLine] Int			
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [StockDescription] Varchar(50)	collate latin1_general_bin
+            , [SupCatalogueNum] Varchar(50)		collate latin1_general_bin
+            , [Warehouse] Varchar(10)			collate latin1_general_bin
+            , [QtyReceived] Numeric(20 , 8)		
+            , [GrnValue] Numeric(20 , 8)		
+            , [OrigGrnValue] Numeric(20 , 8)	
+            , [Matched] Numeric(20 , 8)			
+            , [Adjustments] Numeric(20 , 8)		
+            , [PostCurrency] Char(3)			collate latin1_general_bin
+            , [ConvRate] Numeric(20 , 8)		
+            , [MultiDiv] Char(1)				collate latin1_general_bin
+            , [ShortName] Varchar(250)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -33,7 +32,7 @@ Based off of http://sqlblog.com/blogs/aaron_bertrand/archive/2010/02/08/bad-habi
                         (
                           [LogID] BigInt Identity(1 , 1)
                         , [LogTime] DateTime2 Default GetDate()
-                        , [Cmd] NVarchar(2000)
+                        , [Cmd] NVarchar(2000) collate Latin1_General_BIN
                         );
                 End Try
                 Begin Catch
@@ -66,7 +65,7 @@ Based off of http://sqlblog.com/blogs/aaron_bertrand/archive/2010/02/08/bad-habi
                         (
                           [LogID] BigInt Identity(1 , 1)
                         , [LogTime] DateTime2 Default GetDate()
-                        , [Error] NVarchar(2000)
+                        , [Error] NVarchar(2000)collate Latin1_General_BIN
                         );
                 End Try
                 Begin Catch
@@ -138,7 +137,6 @@ Based off of http://sqlblog.com/blogs/aaron_bertrand/archive/2010/02/08/bad-habi
                 Deallocate [DbNames];
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'The purpose of this stored procedure is to replace the undocumented procedure sp_MSforeachdb as this may be removed in future versions
 of SQL Server. The stored procedure iterates through all user databases and executes the code passed to it.', 'SCHEMA', N'Process', 'PROCEDURE', N'ExecForEachDB', NULL, NULL

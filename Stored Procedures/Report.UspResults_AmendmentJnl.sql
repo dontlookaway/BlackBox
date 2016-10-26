@@ -1,9 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_AmendmentJnl]
     (
       @Company Varchar(Max)
@@ -38,17 +36,17 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApAmendmentJnl]
             (
-              [Company] Varchar(50)
-            , [JnlDate] DateTime2
-            , [JnlTime] Decimal
-            , [JnlLine] Decimal
-            , [Supplier] Varchar(15)
-            , [JournalPrinted] Char(1)
-            , [ChangeFlag] Char(1)
-            , [ColumnName] Varchar(50)
-            , [Before] Varchar(255)
-            , [After] Varchar(255)
-            , [OperatorCode] Varchar(20)
+              [Company] Varchar(50)			 Collate Latin1_General_BIN
+            , [JnlDate] DateTime2			 
+            , [JnlTime] Decimal				 
+            , [JnlLine] Decimal				 
+            , [Supplier] Varchar(15)		 Collate Latin1_General_BIN
+            , [JournalPrinted] Char(1)		 Collate Latin1_General_BIN
+            , [ChangeFlag] Char(1)			 Collate Latin1_General_BIN
+            , [ColumnName] Varchar(50)		 Collate Latin1_General_BIN
+            , [Before] Varchar(255)			 Collate Latin1_General_BIN
+            , [After] Varchar(255)			 Collate Latin1_General_BIN
+            , [OperatorCode] Varchar(20)	 Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
@@ -134,7 +132,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#ApAmendmentJnl];
 
     End;
-
 
 
 GO

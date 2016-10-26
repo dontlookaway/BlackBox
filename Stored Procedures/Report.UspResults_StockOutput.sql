@@ -37,53 +37,53 @@ Details of where lots are distributed
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#LotTransactions]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [JobPurchOrder] Varchar(50) Collate Latin1_General_BIN
-            , [Lot] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [JobPurchOrder] Varchar(50)	Collate Latin1_General_BIN
+            , [Lot] Varchar(50)				Collate Latin1_General_BIN
             , [TrnQuantity] Numeric(20 , 7)
             , [TrnValue] Numeric(20 , 2)
-            , [TrnType] Varchar(5) Collate Latin1_General_BIN
+            , [TrnType] Varchar(5)			Collate Latin1_General_BIN
             , [TrnDate] DateTime2
             , [OldExpiryDate] DateTime2
             , [NewExpiryDate] DateTime2
-            , [Job] Varchar(50) Collate Latin1_General_BIN
-            , [Bin] Varchar(50) Collate Latin1_General_BIN
+            , [Job] Varchar(50)				Collate Latin1_General_BIN
+            , [Bin] Varchar(50)				Collate Latin1_General_BIN
             , [UnitCost] Numeric(20 , 7)
-            , [Warehouse] Varchar(10) Collate Latin1_General_BIN
-            , [Narration] Varchar(150) Collate Latin1_General_BIN
-            , [Reference] Varchar(150) Collate Latin1_General_BIN
+            , [Warehouse] Varchar(10)		Collate Latin1_General_BIN
+            , [Narration] Varchar(150)		Collate Latin1_General_BIN
+            , [Reference] Varchar(150)		Collate Latin1_General_BIN
             );
         Create Table [#WipMaster]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Customer] Varchar(50) Collate Latin1_General_BIN
-            , [CustomerName] Varchar(255) Collate Latin1_General_BIN
-            , [Job] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Customer] Varchar(50)		Collate Latin1_General_BIN
+            , [CustomerName] Varchar(255)	Collate Latin1_General_BIN
+            , [Job] Varchar(50)				Collate Latin1_General_BIN
             , [JobDescription] Varchar(255) Collate Latin1_General_BIN
             , [JobClassification] Varchar(50) Collate Latin1_General_BIN
             , [SellingPrice] Numeric(20 , 2)
-            , [SalesOrder] Varchar(50) Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(50)		Collate Latin1_General_BIN
             , [SalesOrderLine] Varchar(15) Collate Latin1_General_BIN
             );
         Create Table [#Lots]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [JobPurchOrder] Varchar(50) Collate Latin1_General_BIN
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(50)
-            , [StockDescription] Varchar(255)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [JobPurchOrder] Varchar(50)		collate latin1_general_bin
+            , [Lot] Varchar(50)					collate latin1_general_bin
+            , [StockCode] Varchar(50)			collate latin1_general_bin
+            , [StockDescription] Varchar(255)	collate latin1_general_bin
             );
         Create Table [#SorMaster]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [SalesOrder] Varchar(50) Collate Latin1_General_BIN
-            , [CustomerPoNumber] Varchar(150)
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [SalesOrder] Varchar(50)			Collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(150)	collate latin1_general_bin
             );
         Create Table [#InvMaster]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [StockCode] Varchar(50)
-            , [StockUom] Varchar(10)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [StockCode] Varchar(50)			collate latin1_general_bin
+            , [StockUom] Varchar(10)			collate latin1_general_bin
             );
 
 		
@@ -287,34 +287,34 @@ Details of where lots are distributed
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [CompanyName] Varchar(150)
-            , [JobPurchOrder] Varchar(50)
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(50)
-            , [StockDescription] Varchar(255)
-            , [Customer] Varchar(50)
-            , [CustomerName] Varchar(255)
-            , [JobDescription] Varchar(255)
-            , [JobClassification] Varchar(150)
-            , [SellingPrice] Numeric(20 , 2)
-            , [SalesOrder] Varchar(50)
-            , [SalesOrderLine] Varchar(15)
-            , [TrnQuantity] Numeric(20 , 7)
-            , [TrnValue] Numeric(20 , 2)
-            , [TrnType] Varchar(100)
-            , [AmountModifier] Int
-            , [TrnDate] DateTime2
-            , [OldExpiryDate] DateTime2
-            , [NewExpiryDate] DateTime2
-            , [Job] Varchar(50)
-            , [Bin] Varchar(50)
-            , [CustomerPoNumber] Varchar(150)
-            , [UnitCost] Numeric(20 , 7)
-            , [StockUom] Varchar(10)
-            , [Warehouse] Varchar(200)
-            , [Narration] Varchar(150) Collate Latin1_General_BIN
-            , [Reference] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [CompanyName] Varchar(150)			collate latin1_general_bin
+            , [JobPurchOrder] Varchar(50)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [StockCode] Varchar(50)				collate latin1_general_bin
+            , [StockDescription] Varchar(255)		collate latin1_general_bin
+            , [Customer] Varchar(50)				collate latin1_general_bin
+            , [CustomerName] Varchar(255)			collate latin1_general_bin
+            , [JobDescription] Varchar(255)			collate latin1_general_bin
+            , [JobClassification] Varchar(150)		collate latin1_general_bin
+            , [SellingPrice] Numeric(20 , 2)		
+            , [SalesOrder] Varchar(50)				collate latin1_general_bin
+            , [SalesOrderLine] Varchar(15)			collate latin1_general_bin
+            , [TrnQuantity] Numeric(20 , 7)			
+            , [TrnValue] Numeric(20 , 2)			
+            , [TrnType] Varchar(100)				collate latin1_general_bin
+            , [AmountModifier] Int					
+            , [TrnDate] DateTime2					
+            , [OldExpiryDate] DateTime2				
+            , [NewExpiryDate] DateTime2				
+            , [Job] Varchar(50)						collate latin1_general_bin
+            , [Bin] Varchar(50)						collate latin1_general_bin
+            , [CustomerPoNumber] Varchar(150)		collate latin1_general_bin
+            , [UnitCost] Numeric(20 , 7)			
+            , [StockUom] Varchar(10)				collate latin1_general_bin
+            , [Warehouse] Varchar(200)				collate latin1_general_bin
+            , [Narration] Varchar(150)				Collate Latin1_General_BIN
+            , [Reference] Varchar(150)				Collate Latin1_General_BIN
             );
 
 --Placeholder to create indexes as required

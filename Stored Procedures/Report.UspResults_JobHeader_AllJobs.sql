@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -50,12 +49,12 @@ Template designed by Chris Johnson, Prometic Group September 2015
             , [ProducedStockCode] Varchar(35) Collate Latin1_General_BIN
             , [ProducedStockDescription] Varchar(150)
                 Collate Latin1_General_BIN
-            , [UomFlag] Char(1)
+            , [UomFlag] Char(1) Collate Latin1_General_BIN
             , [JobTenderDate] DateTime2
             , [JobDeliveryDate] DateTime2
             , [JobStartDate] DateTime2
             , [ActCompleteDate] DateTime2
-            , [Complete] Char(1)
+            , [Complete] Char(1) Collate Latin1_General_BIN
             , [QtyManufactured] Float
             , [SalesOrder] Varchar(35) Collate Latin1_General_BIN
             , [SellingPrice] Float
@@ -68,7 +67,7 @@ Template designed by Chris Johnson, Prometic Group September 2015
             , [CostUom] Varchar(10) Collate Latin1_General_BIN
             , [OtherUom] Varchar(10) Collate Latin1_General_BIN
             , [AlternateUom] Varchar(10) Collate Latin1_General_BIN
-            , [IssMultLotsFlag] Char(1)
+            , [IssMultLotsFlag] Char(1) Collate Latin1_General_BIN
             );
         Create Table [#InvMovementsSummary]
             (
@@ -476,22 +475,22 @@ Template designed by Chris Johnson, Prometic Group September 2015
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Job] Varchar(50)
-            , [JobDescription] Varchar(150)
-            , [JobClassification] Varchar(50)
-            , [ProducedStockCode] Varchar(50)
-            , [ProducedStockDescription] Varchar(150)
+              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+            , [Job] Varchar(50) Collate Latin1_General_BIN
+            , [JobDescription] Varchar(150) Collate Latin1_General_BIN
+            , [JobClassification] Varchar(50) Collate Latin1_General_BIN
+            , [ProducedStockCode] Varchar(50) Collate Latin1_General_BIN
+            , [ProducedStockDescription] Varchar(150) Collate Latin1_General_BIN
             , [ProducedQty] Numeric(20 , 7)
-            , [Uom] Varchar(10)
+            , [Uom] Varchar(10) Collate Latin1_General_BIN
             , [JobTenderDate] DateTime2
             , [JobDeliveryDate] DateTime2
             , [JobStartDate] DateTime2
             , [ActCompleteDate] DateTime2
-            , [Complete] Char(1)
+            , [Complete] Char(1) Collate Latin1_General_BIN
             , [QtyManufactured] Numeric(20 , 7)
             , [SalesOrder] Varchar(50)
-            , [IssMultLotsFlag] Char(1)
+            , [IssMultLotsFlag] Char(1) Collate Latin1_General_BIN
             , [SellingPrice] Numeric(20 , 7)
             , [MaterialValue] Numeric(20 , 7)
             , [LabourValue] Numeric(20 , 7)
@@ -621,7 +620,6 @@ Template designed by Chris Johnson, Prometic Group September 2015
 
         Drop Table [#Results];
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'high level details of Job, for all jobs', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_JobHeader_AllJobs', NULL, NULL

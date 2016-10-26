@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -46,30 +45,30 @@ Stored procedure set out to query multiple databases with the same information a
             Begin
                 Create Table [Report].[GrnInvoiceDetails]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [Supplier] Varchar(150)
-                    , [Grn] Varchar(50)
-                    , [TransactionType] Varchar(5)
-                    , [Journal] Int
-                    , [EntryNumber] Int
-                    , [Invoice] Varchar(150)
-                    , [PurchaseOrder] Varchar(150)
-                    , [PurchaseOrderLine] Int
-                    , [Requisition] Varchar(150)
-                    , [RequisitionLine] Int
-                    , [GlCode] Varchar(50)
-                    , [Description] Varchar(150)
-                    , [MatchedValue] Decimal(15 , 3)
-                    , [MatchedDate] Date
-                    , [StockCode] Varchar(50)
-                    , [QtyReceived] Decimal(20 , 12)
-                    , [MatchedYear] Int
-                    , [MatchedMonth] Int
-                    , [MatchedQty] Decimal(20 , 12)
-                    , [Operator] Varchar(150)
-                    , [Approver] Varchar(150)
-                    , [OrigReceiptDate] Date
-                    , [LoadDate] DateTime2
+                      [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+                    , [Supplier] Varchar(150)			 Collate Latin1_General_BIN
+                    , [Grn] Varchar(50)					 Collate Latin1_General_BIN
+                    , [TransactionType] Varchar(5)		 Collate Latin1_General_BIN
+                    , [Journal] Int						 
+                    , [EntryNumber] Int					 
+                    , [Invoice] Varchar(150)			 Collate Latin1_General_BIN
+                    , [PurchaseOrder] Varchar(150)		 Collate Latin1_General_BIN
+                    , [PurchaseOrderLine] Int			 
+                    , [Requisition] Varchar(150)		 Collate Latin1_General_BIN
+                    , [RequisitionLine] Int				 
+                    , [GlCode] Varchar(50)				 Collate Latin1_General_BIN
+                    , [Description] Varchar(150)		 Collate Latin1_General_BIN
+                    , [MatchedValue] Decimal(15 , 3)	 
+                    , [MatchedDate] Date				 
+                    , [StockCode] Varchar(50)			 Collate Latin1_General_BIN
+                    , [QtyReceived] Decimal(20 , 12)	 
+                    , [MatchedYear] Int					 
+                    , [MatchedMonth] Int				 
+                    , [MatchedQty] Decimal(20 , 12)		
+                    , [Operator] Varchar(150)			 Collate Latin1_General_BIN
+                    , [Approver] Varchar(150)			 Collate Latin1_General_BIN
+                    , [OrigReceiptDate] Date			 
+                    , [LoadDate] DateTime2				 
                     );
             End;
 --Create Process table - this will capture if job is incomplete
@@ -83,7 +82,7 @@ Stored procedure set out to query multiple databases with the same information a
                     (
                       [LoadDate] DateTime2
                     , [IsComplete] Bit Default 0
-                    , [Company] Varchar(150)
+                    , [Company] Varchar(150) Collate Latin1_General_BIN
                     );
             End;
 
@@ -109,55 +108,55 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#GrnMatching]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [Supplier] Varchar(150)
-                    , [Grn] Varchar(50)
-                    , [TransactionType] Varchar(5)
-                    , [Journal] Int
-                    , [EntryNumber] Int
-                    , [Invoice] Varchar(50)
-                    , [MatchedValue] Decimal(15 , 2)
-                    , [MatchedDate] DateTime2
-                    , [MatchedYear] Int
-                    , [MatchedMonth] Int
-                    , [MatchedQty] Decimal(20 , 12)
+                      [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+                    , [Supplier] Varchar(150)			 Collate Latin1_General_BIN
+                    , [Grn] Varchar(50)					 Collate Latin1_General_BIN
+                    , [TransactionType] Varchar(5)		 Collate Latin1_General_BIN
+                    , [Journal] Int						 
+                    , [EntryNumber] Int					 
+                    , [Invoice] Varchar(50)				 Collate Latin1_General_BIN
+                    , [MatchedValue] Decimal(15 , 2)	 
+                    , [MatchedDate] DateTime2			 
+                    , [MatchedYear] Int					 
+                    , [MatchedMonth] Int				 
+                    , [MatchedQty] Decimal(20 , 12)		 
                     );
                 Create Table [#GrnDetails]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [PurchaseOrder] Varchar(20)
-                    , [PurchaseOrderLin] Int
-                    , [DebitRecGlCode] Varchar(50)
-                    , [StockCode] Varchar(30)
-                    , [QtyReceived] Decimal(25 , 8)
-                    , [Supplier] Varchar(150)
-                    , [Grn] Varchar(25)
-                    , [GrnSource] Varchar(150)
-                    , [Journal] Int
-                    , [JournalEntry] Int
-                    , [OrigReceiptDate] Date
+                      [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+                    , [PurchaseOrder] Varchar(20)	    Collate Latin1_General_BIN
+                    , [PurchaseOrderLin] Int		    
+                    , [DebitRecGlCode] Varchar(50)	    Collate Latin1_General_BIN
+                    , [StockCode] Varchar(30)		    Collate Latin1_General_BIN
+                    , [QtyReceived] Decimal(25 , 8)	    
+                    , [Supplier] Varchar(150)		    Collate Latin1_General_BIN
+                    , [Grn] Varchar(25)				    Collate Latin1_General_BIN
+                    , [GrnSource] Varchar(150)		    Collate Latin1_General_BIN
+                    , [Journal] Int					    
+                    , [JournalEntry] Int			    
+                    , [OrigReceiptDate] Date		    
                     );
                 Create Table [#PorMasterDetail]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [MRequisition] Varchar(50)
-                    , [MRequisitionLine] Int
-                    , [PurchaseOrder] Varchar(50)
-                    , [Line] Int
+                      [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+                    , [MRequisition] Varchar(50)		 Collate Latin1_General_BIN
+                    , [MRequisitionLine] Int			 
+                    , [PurchaseOrder] Varchar(50)		 Collate Latin1_General_BIN
+                    , [Line] Int						 
                     );
                 Create Table [#ReqRouting]
                     (
-                      [DatabaseName] Varchar(150)
-                    , [Requisition] Varchar(10)
-                    , [RequisitionLine] Int
-                    , [Operator] Varchar(150)
+                      [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+                    , [Requisition] Varchar(10)			 Collate Latin1_General_BIN
+                    , [RequisitionLine] Int				 
+                    , [Operator] Varchar(150)			 Collate Latin1_General_BIN
                     );
                 Create Table [#ReqDetails]
                     (
-                      [Requisition] Varchar(10)
-                    , [UserCode] Varchar(20)
-                    , [DatabaseName] Varchar(150)
-                    , [Line] Int
+                      [Requisition] Varchar(10)			 Collate Latin1_General_BIN
+                    , [UserCode] Varchar(20)			 Collate Latin1_General_BIN
+                    , [DatabaseName] Varchar(150)		 Collate Latin1_General_BIN
+                    , [Line] Int						 
                     );
 
 --create script to pull data from each db into the tables

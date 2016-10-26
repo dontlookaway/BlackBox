@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -50,7 +49,7 @@ Stored proc to insert logs
                 Create Table [Lookups].[RedTagsUsedByType]
                     (
                       [UsedByType] [Char](1) Not Null
-                    , [UsedByDescription] [Varchar](150) Null
+                    , [UsedByDescription] [Varchar](150) collate latin1_general_bin null
                     , Primary Key Clustered ( [UsedByType] Asc )
                         With ( Pad_Index = Off , Statistics_Norecompute = Off ,
                                Ignore_Dup_Key = Off , Allow_Row_Locks = On ,
@@ -93,14 +92,14 @@ Stored proc to insert logs
                                     Not Null
                     , [TagDatetime] [DateTime2](7) Null
                                                    Default ( GetDate() )
-                    , [StoredProcDb] [Varchar](255) Null
-                    , [StoredProcSchema] [Varchar](255) Null
-                    , [StoredProcName] [Varchar](255) Null
-                    , [UsedByType] [Char](1)
+                    , [StoredProcDb] [Varchar](255) 	collate latin1_general_bin null
+                    , [StoredProcSchema] [Varchar](255) collate latin1_general_bin null
+                    , [StoredProcName] [Varchar](255)	collate latin1_general_bin null
+                    , [UsedByType] [Char](1)			collate latin1_general_bin
                         Null
                         Foreign Key References [Lookups].[RedTagsUsedByType] ( [UsedByType] )
-                    , [UsedByName] [Varchar](500) Null
-                    , [UsedByDb] [Varchar](255) Null
+                    , [UsedByName] [Varchar](500)		collate latin1_general_bin Null
+                    , [UsedByDb] [Varchar](255)			collate latin1_general_bin Null
                     )
                 On  [PRIMARY];
             End;
@@ -146,7 +145,6 @@ Stored proc to insert logs
                 Raiserror ('Red tag logs failure - tables do not exist',16,4);
             End;
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'procedure is used to drive logs from reports into table RedTagLogs table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspInsert_RedTagLogs', NULL, NULL
 GO

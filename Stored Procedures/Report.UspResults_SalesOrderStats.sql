@@ -32,46 +32,46 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ArCustomer]
             (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(15)
-            , [Name] Varchar(50)
-            );
-        Create Table [#SorMaster]
-            (
-              [DatabaseName] Varchar(150)
-            , [CustomerPoNumber] Varchar(30)
-            , [EntrySystemDate] DateTime
-            , [Currency] Char(3)
-            , [SalesOrder] Varchar(20)
-            , [Customer] Varchar(15)
-            , [DocumentType] Varchar(10)
-            , [LastInvoice] Varchar(20)
-            , [ShipAddress5] Varchar(40)
-            );
-        Create Table [#SorDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [MStockCode] Varchar(30)
-            , [MStockDes] Varchar(50)
-            , [MOrderQty] Numeric(20 , 8)
-            , [MPrice] Numeric(20 , 8)
-            , [MLineShipDate] DateTime
-            , [SalesOrderLine] Int
-            , [SalesOrder] Varchar(20)
-            );
-        Create Table [#CusSorMasterPlus]
-            (
-              [DatabaseName] Varchar(150)
-            , [AttentionOf] Varchar(60)
-            , [AcceptedDate] DateTime
-            , [SalesOrder] Varchar(20)
-            );
-        Create Table [#GenJournalDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [SubModArInvoice] Varchar(20)
-            , [Reference] Varchar(50)
-            , [EntryDate] Date
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [Customer] Varchar(15)			collate Latin1_General_BIN
+            , [Name] Varchar(50)				collate Latin1_General_BIN
+            );									
+        Create Table [#SorMaster]				
+            (									
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(30)	collate Latin1_General_BIN
+            , [EntrySystemDate] DateTime		
+            , [Currency] Char(3)				collate Latin1_General_BIN
+            , [SalesOrder] Varchar(20)			collate Latin1_General_BIN
+            , [Customer] Varchar(15)			collate Latin1_General_BIN
+            , [DocumentType] Varchar(10)		collate Latin1_General_BIN
+            , [LastInvoice] Varchar(20)			collate Latin1_General_BIN
+            , [ShipAddress5] Varchar(40)		collate Latin1_General_BIN
+            );									
+        Create Table [#SorDetail]				
+            (									
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [MStockCode] Varchar(30)			collate Latin1_General_BIN
+            , [MStockDes] Varchar(50)			collate Latin1_General_BIN
+            , [MOrderQty] Numeric(20 , 8)		
+            , [MPrice] Numeric(20 , 8)			
+            , [MLineShipDate] DateTime			
+            , [SalesOrderLine] Int				
+            , [SalesOrder] Varchar(20)			collate Latin1_General_BIN
+            );									
+        Create Table [#CusSorMasterPlus]		
+            (									
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [AttentionOf] Varchar(60)			collate Latin1_General_BIN
+            , [AcceptedDate] DateTime			
+            , [SalesOrder] Varchar(20)			collate Latin1_General_BIN
+            );									
+        Create Table [#GenJournalDetail]		
+            (									
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [SubModArInvoice] Varchar(20)		collate Latin1_General_BIN
+            , [Reference] Varchar(50)			collate Latin1_General_BIN
+            , [EntryDate] Date					
             );
 
 
@@ -216,34 +216,34 @@ As
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(15)
-            , [CustomerName] Varchar(50)
-            , [CustomerPoNumber] Varchar(30)
-            , [Contact] Varchar(60)
-            , [EntrySystemDate] DateTime
-            , [AcceptedDate] DateTime
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [OrderQty] Numeric(20 , 8)
-            , [Price] Numeric(20 , 8)
-            , [Currency] Varchar(10)
-            , [ShipDate] DateTime
-            , [SalesOrder] Varchar(20)
-            , [SOLine] Int
-            , [DocumentType] Varchar(250)
-            , [LastInvoice] Varchar(20)
-            , [ProFormaDate] DateTime
-            , [Country] Varchar(40)
-            , [InvoiceEntryDate] Date
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
+            , [Customer] Varchar(15)			collate Latin1_General_BIN
+            , [CustomerName] Varchar(50)		collate Latin1_General_BIN
+            , [CustomerPoNumber] Varchar(30)	collate Latin1_General_BIN
+            , [Contact] Varchar(60)				collate Latin1_General_BIN
+            , [EntrySystemDate] DateTime		
+            , [AcceptedDate] DateTime			
+            , [StockCode] Varchar(30)			collate Latin1_General_BIN
+            , [StockDescription] Varchar(50)	collate Latin1_General_BIN
+            , [OrderQty] Numeric(20 , 8)		
+            , [Price] Numeric(20 , 8)			
+            , [Currency] Varchar(10)			collate Latin1_General_BIN
+            , [ShipDate] DateTime				
+            , [SalesOrder] Varchar(20)			collate Latin1_General_BIN
+            , [SOLine] Int						
+            , [DocumentType] Varchar(250)		collate Latin1_General_BIN
+            , [LastInvoice] Varchar(20)			collate Latin1_General_BIN
+            , [ProFormaDate] DateTime			
+            , [Country] Varchar(40)				collate Latin1_General_BIN
+            , [InvoiceEntryDate] Date			
             );
 
 --Placeholder to create indexes as required
         Create Table [#ProformaDates]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate Latin1_General_BIN
             , [ProFormaDate] DateTime2
-            , [SalesOrder] Varchar(20)
+            , [SalesOrder] Varchar(20)			collate Latin1_General_BIN
             );   
 	
         Insert  [#ProformaDates]
@@ -362,7 +362,6 @@ As
                     On [R].[DatabaseName] = [CN].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'data for sales order stats report', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_SalesOrderStats', NULL, NULL

@@ -22,10 +22,10 @@ As
             Begin
                 Create Table [Lookups].[PurchaseOrderInvoiceMapping]
                     (
-                      [Company] Varchar(150)
-                    , [Grn] Varchar(20)
-                    , [Invoice] Varchar(20)
-                    , [PurchaseOrder] Varchar(20)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [Grn] Varchar(20) Collate Latin1_General_BIN
+                    , [Invoice] Varchar(20) Collate Latin1_General_BIN
+                    , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -51,10 +51,10 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1POIM]
                     (
-                      [Company] Varchar(150)
-                    , [Grn] Varchar(20)
-                    , [Invoice] Varchar(20)
-                    , [PurchaseOrder] Varchar(20)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [Grn] Varchar(20) Collate Latin1_General_BIN
+                    , [Invoice] Varchar(20) Collate Latin1_General_BIN
+                    , [PurchaseOrder] Varchar(20) Collate Latin1_General_BIN
                     );
 
 
@@ -157,7 +157,6 @@ As
             Print 'UspUpdate_PurchaseOrderInvoiceMapping - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 
 GO

@@ -22,9 +22,9 @@ As
             Begin
                 Create Table [Lookups].[ProductClass]
                     (
-                      [Company] Varchar(150)
-                    , [ProductClass] Varchar(150)
-                    , [ProductClassDescription] Varchar(250)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [ProductClass] Varchar(150) Collate Latin1_General_BIN
+                    , [ProductClassDescription] Varchar(250) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -52,9 +52,9 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1PC]
                     (
-                      [Company] Varchar(150)
-                    , [ProductClass] Varchar(150)
-                    , [ProductClassDescription] Varchar(250)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [ProductClass] Varchar(150) Collate Latin1_General_BIN
+                    , [ProductClassDescription] Varchar(250) Collate Latin1_General_BIN
                     );
 
 --create script to pull data from each db into the tables
@@ -147,7 +147,6 @@ As
             Print 'UspUpdate_ProductClass - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 
 GO

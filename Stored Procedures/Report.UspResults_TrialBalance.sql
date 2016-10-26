@@ -22,21 +22,21 @@ Set NoCount On
 
         Create Table [#Results]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(150)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [GlDescription] Varchar(50)
-            , [ReportIndex1] Varchar(35)
-            , [ReportIndex2] Varchar(35)
-            , [GlGroup] Varchar(10)
-            , [GlYear] Int
-            , [ClosingBalance] Numeric(20 , 2)
-            , [Debit] Numeric(20 , 2)
-            , [Credit] Numeric(20 , 2)
-            , [Period] TinyInt
-            , [AccountType] Varchar(250)
+              [Company] Varchar(10)				collate Latin1_General_BIN
+            , [ShortName] Varchar(150)			collate Latin1_General_BIN
+            , [CompanyName] Varchar(250)		collate Latin1_General_BIN
+            , [Currency] Varchar(10)			collate Latin1_General_BIN
+            , [GlCode] Varchar(35)				collate Latin1_General_BIN
+            , [GlDescription] Varchar(50)		collate Latin1_General_BIN
+            , [ReportIndex1] Varchar(35)		collate Latin1_General_BIN
+            , [ReportIndex2] Varchar(35)		collate Latin1_General_BIN
+            , [GlGroup] Varchar(10)				collate Latin1_General_BIN
+            , [GlYear] Int						
+            , [ClosingBalance] Numeric(20 , 2)	
+            , [Debit] Numeric(20 , 2)			
+            , [Credit] Numeric(20 , 2)			
+            , [Period] TinyInt					
+            , [AccountType] Varchar(250)		collate Latin1_General_BIN
             );
 
         Insert  [#Results]

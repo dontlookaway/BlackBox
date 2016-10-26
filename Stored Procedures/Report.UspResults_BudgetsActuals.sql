@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -27,16 +26,16 @@ Template designed by Chris Johnson, Prometic Group March 2016
 
         Create Table [#Budgets]
             (
-              [Company] Varchar(10)
-            , [GlCode] Varchar(100)
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(100) Collate Latin1_General_BIN
             , [Budget] Numeric(20 , 2)
-            , [BudgetType] Char(1)
+            , [BudgetType] Char(1) Collate Latin1_General_BIN
             , [Period] Int
             );
         Create Table [#Actuals]
             (
-              [Company] Varchar(10)
-            , [GlCode] Varchar(50)
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(50) Collate Latin1_General_BIN
             , [Period] Int
             , [Actual] Numeric(20 , 2)
             , [YearMovement] Numeric(20 , 2)
@@ -46,15 +45,15 @@ Template designed by Chris Johnson, Prometic Group March 2016
             );
         Create Table [#BudgetsActuals]
             (
-              [CompanyGlCode] Varchar(150)
+              [CompanyGlCode] Varchar(150) Collate Latin1_General_BIN
             , [Period] Int
             , [Budget] Numeric(20 , 2)
             , [Actual] Numeric(20 , 2)
             , [GlYear] Int
-            , [LineType] Varchar(50)
+            , [LineType] Varchar(50) Collate Latin1_General_BIN
             , [ClosingBalance] Numeric(20 , 2)
             , [MovementToDate] Numeric(20 , 2)
-            , [Company] Varchar(10)
+            , [Company] Varchar(10) Collate Latin1_General_BIN
             );
 
         Insert  [#Budgets]
@@ -170,7 +169,6 @@ Template designed by Chris Johnson, Prometic Group March 2016
                                                               End;
 
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'budgets vs actuals from GL', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_BudgetsActuals', NULL, NULL
 GO

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -69,7 +68,7 @@ Stored procedure set out to query multiple databases with the same information a
         Create Table [#LatestLots]
             (
               [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [StockCode] Varchar(30)
+            , [StockCode] Varchar(30)  Collate Latin1_General_BIN
             , [Lot] Varchar(35) Collate Latin1_General_BIN
             , [UnitCost] Numeric(20 , 8)
             );
@@ -372,7 +371,6 @@ Stored procedure set out to query multiple databases with the same information a
         Drop Table [#Results];
         Drop Table [#LatestLots];
     End;
-
 
 
 GO
