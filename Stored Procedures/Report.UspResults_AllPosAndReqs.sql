@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -36,72 +35,72 @@ Template designed by Chris Johnson, Prometic Group February 2016
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterDetail]
             (
-              [DatabaseName] Varchar(150)
-            , [MRequisition] Varchar(50)
-            , [PurchaseOrder] Varchar(50)
-            , [Line] Int
-            , [MStockCode] Varchar(50)
-            , [MStockDes] Varchar(200)
-            , [MOrderQty] Numeric(20 , 8)
-            , [MPriceUom] Varchar(10)
-            , [MLatestDueDate] Date
-            , [MSupCatalogue] Varchar(50)
-            , [MPrice] Numeric(20 , 2)
-            , [MForeignPrice] Numeric(20 , 2)
-            , [MGlCode] Varchar(100)
-            , [MCompleteFlag] Char(1)
-            , [MProductClass] Varchar(20)
-            );
-        Create Table [#ReqDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [Requisition] Varchar(50)
-            , [Line] Int
-            , [StockCode] Varchar(50)
-            , [StockDescription] Varchar(200)
-            , [OrderQty] Numeric(20 , 8)
-            , [OrderUom] Varchar(10)
-            , [DueDate] Date
-            , [SupCatalogueNum] Varchar(50)
-            , [Price] Numeric(20 , 2)
-            , [GlCode] Varchar(100)
-            , [Originator] Varchar(100)
-            , [Buyer] Varchar(100)
-            , [ReqnStatus] Varchar(150)
-            , [Operator] Varchar(150)
-            , [ApprovedDate] Date
-            , [DateReqnRaised] Date
-            , [DatePoConfirmed] Date
-            , [ProductClass] Varchar(20)
-            , [Supplier] Varchar(30)
-            );
-        Create Table [#PorMasterHdr]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(50)
-            , [Buyer] Varchar(100)
-            , [DatePoCompleted] Date
-            , [OrderStatus] Varchar(10)
-            , [Supplier] Varchar(30)
-            );
-        Create Table [#ProjectList]
-            (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(50)
-            , [Line] Int
-            , [ProjectName] Varchar(255)
-            );
-        Create Table [#ReqUser]
-            (
-              [DatabaseName] Varchar(150)
-            , [Originator] Varchar(100)
-            , [OriginatorName] Varchar(255)
-            );
-        Create Table [#ApSupplier]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(30)
-            , [SupplierName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [MRequisition] Varchar(50)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(50)		collate latin1_general_bin
+            , [Line] Int						
+            , [MStockCode] Varchar(50)			collate latin1_general_bin
+            , [MStockDes] Varchar(200)			collate latin1_general_bin
+            , [MOrderQty] Numeric(20 , 8)		
+            , [MPriceUom] Varchar(10)			collate latin1_general_bin
+            , [MLatestDueDate] Date				
+            , [MSupCatalogue] Varchar(50)		collate latin1_general_bin
+            , [MPrice] Numeric(20 , 2)			
+            , [MForeignPrice] Numeric(20 , 2)	
+            , [MGlCode] Varchar(100)			collate latin1_general_bin
+            , [MCompleteFlag] Char(1)			collate latin1_general_bin
+            , [MProductClass] Varchar(20)		collate latin1_general_bin
+            );									
+        Create Table [#ReqDetail]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Requisition] Varchar(50)			collate latin1_general_bin
+            , [Line] Int						
+            , [StockCode] Varchar(50)			collate latin1_general_bin
+            , [StockDescription] Varchar(200)	collate latin1_general_bin
+            , [OrderQty] Numeric(20 , 8)		
+            , [OrderUom] Varchar(10)			collate latin1_general_bin
+            , [DueDate] Date					
+            , [SupCatalogueNum] Varchar(50)		collate latin1_general_bin
+            , [Price] Numeric(20 , 2)			
+            , [GlCode] Varchar(100)				collate latin1_general_bin
+            , [Originator] Varchar(100)			collate latin1_general_bin
+            , [Buyer] Varchar(100)				collate latin1_general_bin
+            , [ReqnStatus] Varchar(150)			collate latin1_general_bin
+            , [Operator] Varchar(150)			collate latin1_general_bin
+            , [ApprovedDate] Date				
+            , [DateReqnRaised] Date				
+            , [DatePoConfirmed] Date			
+            , [ProductClass] Varchar(20)		collate latin1_general_bin
+            , [Supplier] Varchar(30)			collate latin1_general_bin
+            );									
+        Create Table [#PorMasterHdr]			
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(50)		collate latin1_general_bin
+            , [Buyer] Varchar(100)				collate latin1_general_bin
+            , [DatePoCompleted] Date			
+            , [OrderStatus] Varchar(10)			collate latin1_general_bin
+            , [Supplier] Varchar(30)			collate latin1_general_bin
+            );									
+        Create Table [#ProjectList]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(50)		collate latin1_general_bin
+            , [Line] Int						
+            , [ProjectName] Varchar(255)		collate latin1_general_bin
+            );									
+        Create Table [#ReqUser]					
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Originator] Varchar(100)			collate latin1_general_bin
+            , [OriginatorName] Varchar(255)		collate latin1_general_bin
+            );									
+        Create Table [#ApSupplier]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(30)			collate latin1_general_bin
+            , [SupplierName] Varchar(150)		collate latin1_general_bin
             );
 	
 	
@@ -412,50 +411,50 @@ Template designed by Chris Johnson, Prometic Group February 2016
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Requisition] Varchar(50)
-            , [PurchaseOrder] Varchar(50)
-            , [Line] Int
-            , [StockCode] Varchar(50)
-            , [ProjectName] Varchar(50)
-            , [OriginalStockCode] Varchar(50)
-            , [StockDescription] Varchar(200)
-            , [OrderQty] Numeric(20 , 8)
-            , [OrderUom] Varchar(10)
-            , [DueDate] Date
-            , [SupCatalogueNum] Varchar(100)
-            , [Price] Numeric(20 , 2)
-            , [MForeignPrice] Numeric(20 , 2)
-            , [ProductClass] Varchar(250)
-            , [GlCode] Varchar(200)
-            , [GlDescription] Varchar(200)
-            , [GlGroup] Varchar(20)
-            , [Originator] Varchar(150)
-            , [OriginatorName] Varchar(255)
-            , [Buyer] Varchar(150)
-            , [RequisitionStatus] Varchar(150)
-            , [Supplier] Varchar(100)
-            , [DatePoConfirmed] Date
-            , [DatePoCompleted] Date
-            , [RequisitionOperator] Varchar(150)
-            , [ApprovedDate] Date
-            , [DateRequisitionRaised] Date
-            , [PurchaseOrders] Bit
-            , [OpenRequisitions] Bit
-            , [POStatus] Varchar(20)
-            , [Capex] Varchar(20)
-            , [DeptCode] Char(5)
-            , [OrderStatus] Varchar(150)
-            , [OrderStatusDescription] Varchar(250)
-            , [MCompleteFlag] Char(1)
-            , [CompanyName] Varchar(200)
-            , [ShortName] Varchar(250)
-            , [Company] Varchar(150)
-            , [Currency] Varchar(10)
-            , [CADDivision] Float
-            , [CADMultiply] Float
-            , [StartDateTime] DateTime2
-            , [SupplierName] Varchar(150)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Requisition] Varchar(50)				collate latin1_general_bin
+            , [PurchaseOrder] Varchar(50)			collate latin1_general_bin
+            , [Line] Int							
+            , [StockCode] Varchar(50)				collate latin1_general_bin
+            , [ProjectName] Varchar(50)				collate latin1_general_bin
+            , [OriginalStockCode] Varchar(50)		collate latin1_general_bin
+            , [StockDescription] Varchar(200)		collate latin1_general_bin
+            , [OrderQty] Numeric(20 , 8)			
+            , [OrderUom] Varchar(10)				collate latin1_general_bin
+            , [DueDate] Date						
+            , [SupCatalogueNum] Varchar(100)		collate latin1_general_bin
+            , [Price] Numeric(20 , 2)				
+            , [MForeignPrice] Numeric(20 , 2)		
+            , [ProductClass] Varchar(250)			collate latin1_general_bin
+            , [GlCode] Varchar(200)					collate latin1_general_bin
+            , [GlDescription] Varchar(200)			collate latin1_general_bin
+            , [GlGroup] Varchar(20)					collate latin1_general_bin
+            , [Originator] Varchar(150)				collate latin1_general_bin
+            , [OriginatorName] Varchar(255)			collate latin1_general_bin
+            , [Buyer] Varchar(150)					collate latin1_general_bin
+            , [RequisitionStatus] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(100)				collate latin1_general_bin
+            , [DatePoConfirmed] Date				
+            , [DatePoCompleted] Date				
+            , [RequisitionOperator] Varchar(150)	collate latin1_general_bin
+            , [ApprovedDate] Date					
+            , [DateRequisitionRaised] Date			
+            , [PurchaseOrders] Bit					
+            , [OpenRequisitions] Bit				
+            , [POStatus] Varchar(20)				collate latin1_general_bin
+            , [Capex] Varchar(20)					collate latin1_general_bin
+            , [DeptCode] Char(5)					collate latin1_general_bin
+            , [OrderStatus] Varchar(150)			collate latin1_general_bin
+            , [OrderStatusDescription] Varchar(250)	collate latin1_general_bin
+            , [MCompleteFlag] Char(1)				collate latin1_general_bin
+            , [CompanyName] Varchar(200)			collate latin1_general_bin
+            , [ShortName] Varchar(250)				collate latin1_general_bin
+            , [Company] Varchar(150)				collate latin1_general_bin
+            , [Currency] Varchar(10)				collate latin1_general_bin
+            , [CADDivision] Float					
+            , [CADMultiply] Float					
+            , [StartDateTime] DateTime2				
+            , [SupplierName] Varchar(150)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -708,7 +707,6 @@ Template designed by Chris Johnson, Prometic Group February 2016
         Order By [PurchaseOrder] Asc
               , [Line] Asc;
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of all purchase orders and requisitions', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_AllPosAndReqs', NULL, NULL

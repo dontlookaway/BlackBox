@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -39,8 +38,8 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterHdr]
             (
-              [DatabaseName] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [PurchaseOrder] Varchar(35)		collate latin1_general_bin
             , [OrderEntryDate] DateTime2
             , [OrderDueDate] DateTime2
             );
@@ -92,22 +91,22 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [ItemKey] Varchar(150)
-            , [PurchaseOrder] Varchar(35)
-            , [Line] Varchar(35)
-            , [OrderEntryDate] DateTime2
-            , [OrderDueDate] DateTime2
-            , [DatabaseName] Varchar(150)
-            , [TransactionDescription] Varchar(200)
-            , [SignatureDatetime] DateTime2
-            , [Operator] Varchar(50)
-            , [PreviousPrice] Float
-            , [Price] Float
-            , [PreviousForeignPrice] Float
-            , [ForeignPrice] Float
-            , [PreviousQuantity] Float
-            , [Quantity] Float
-            , [OrderUnitOfMeasure] Varchar(15)
+              [ItemKey] Varchar(150)					collate latin1_general_bin
+            , [PurchaseOrder] Varchar(35)				collate latin1_general_bin
+            , [Line] Varchar(35)						collate latin1_general_bin
+            , [OrderEntryDate] DateTime2				
+            , [OrderDueDate] DateTime2					
+            , [DatabaseName] Varchar(150)				collate latin1_general_bin
+            , [TransactionDescription] Varchar(200)		collate latin1_general_bin
+            , [SignatureDatetime] DateTime2				
+            , [Operator] Varchar(50)					collate latin1_general_bin
+            , [PreviousPrice] Float						
+            , [Price] Float								
+            , [PreviousForeignPrice] Float				
+            , [ForeignPrice] Float						
+            , [PreviousQuantity] Float					
+            , [Quantity] Float							
+            , [OrderUnitOfMeasure] Varchar(15)			collate latin1_general_bin
             , [PriceDiff] Float
             , [PriceDiffPercent] Float
             , [ForeignPriceDiff] Float
@@ -118,7 +117,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [PrevLineForeignValue] Float
             , [LineLocalValue] Float
             , [PrevLineLocalValue] Float
-            , [CompanyName] Varchar(255)
+            , [CompanyName] Varchar(255)				collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -245,7 +244,6 @@ Stored procedure set out to query multiple databases with the same information a
         From    [#Results];
 
     End;
-
 
 
 GO

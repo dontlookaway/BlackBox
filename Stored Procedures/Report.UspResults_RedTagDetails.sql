@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -11,12 +10,12 @@ Stored procedure created by Chris Johnson 2nd to show all procs marked to be inc
 As --Get list of procs with Red Tag Type included in parameter
     Create Table [#Procs]
         (
-          [SchemaName] Varchar(255)
-        , [ProcedureName] Varchar(255)
-        , [ParameterDetails] Varchar(Max)
-        , [DatabaseName] Varchar(500)
-        , [ExecScript] Varchar(Max)
-        , [CreateScript] Varchar(Max)
+          [SchemaName] Varchar(255)			collate latin1_general_bin
+        , [ProcedureName] Varchar(255)		collate latin1_general_bin
+        , [ParameterDetails] Varchar(Max)	collate latin1_general_bin
+        , [DatabaseName] Varchar(500)		collate latin1_general_bin
+        , [ExecScript] Varchar(Max)			collate latin1_general_bin
+        , [CreateScript] Varchar(Max)		collate latin1_general_bin
         );
 
     Insert  [#Procs]

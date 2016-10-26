@@ -41,48 +41,48 @@ Stored procedure set out to query multiple databases with the same information a
 --[#InvInspect][#LotTransactions][#InvMaster]
         Create Table [#InvInspect]
             (
-              [DatabaseName] Varchar(150)
-            , [InspNarration] Varchar(100)
-            , [Lot] Varchar(50)
-            , [GrnReceiptDate] Date
-            , [StockCode] Varchar(30)
-            , [TotalReceiptQty] Numeric(20 , 8)
-            );
-        Create Table [#LotTransactions]
-            (
-              [DatabaseName] Varchar(150)
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(30)
-            , [TrnDate] Date
-            , [Warehouse] Varchar(10)
-            , [Bin] Varchar(20)
-            , [Job] Varchar(20)
-            , [Reference] Varchar(30)
-            , [UnitCost] Numeric(20 , 2)
-            , [TrnQuantity] Numeric(20 , 8)
-            , [TrnValue] Numeric(20 , 8)
-            , [TrnType] Char(1)
-            , [JobPurchOrder] Varchar(20)
-            , [Customer] Varchar(15)
-            );
-        Create Table [#InvMaster]
-            (
-              [DatabaseName] Varchar(150)
-            , [Description] Varchar(50)
-            , [StockUom] Varchar(20)
-            , [StockCode] Varchar(30)
-            );
-        Create Table [#ArCustomer]
-            (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(15)
-            , [Name] Varchar(50)
-            );
-        Create Table [#WipMaster]
-            (
-              [DatabaseName] Varchar(150)
-            , [Job] Varchar(20)
-            , [ActCompleteDate] Date
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [InspNarration] Varchar(100)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [GrnReceiptDate] Date					
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [TotalReceiptQty] Numeric(20 , 8)		
+            );										
+        Create Table [#LotTransactions]				
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [TrnDate] Date						
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [Bin] Varchar(20)						collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [UnitCost] Numeric(20 , 2)			
+            , [TrnQuantity] Numeric(20 , 8)			
+            , [TrnValue] Numeric(20 , 8)			
+            , [TrnType] Char(1)						collate latin1_general_bin
+            , [JobPurchOrder] Varchar(20)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            );										
+        Create Table [#InvMaster]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Description] Varchar(50)				collate latin1_general_bin
+            , [StockUom] Varchar(20)				collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            );										
+        Create Table [#ArCustomer]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            , [Name] Varchar(50)					collate latin1_general_bin
+            );										
+        Create Table [#WipMaster]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [ActCompleteDate] Date				
             );
 
 			
@@ -237,25 +237,25 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [Company] Varchar(300)
-            , [SupplierLotNumber] Varchar(100)
-            , [Lot] Varchar(50)
-            , [GrnReceiptDate] Date
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [TrnDate] Date
-            , [Warehouse] Varchar(10)
-            , [Bin] Varchar(20)
-            , [Job] Varchar(20)
-            , [TrnTypeDescription] Varchar(100)
-            , [Reference] Varchar(30)
-            , [TotalReceiptQty] Numeric(20 , 8)
-            , [StockUom] Varchar(20)
-            , [UnitCost] Numeric(20 , 2)
-            , [TrnQuantity] Numeric(20 , 8)
-            , [TrnValue] Numeric(20 , 2)
-            , [MasterJob] Varchar(30)
-            , [CustomerName] Varchar(50)
+              [Company] Varchar(300)				collate latin1_general_bin
+            , [SupplierLotNumber] Varchar(100)		collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [GrnReceiptDate] Date					
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [TrnDate] Date						
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [Bin] Varchar(20)						collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [TrnTypeDescription] Varchar(100)		collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [TotalReceiptQty] Numeric(20 , 8)		
+            , [StockUom] Varchar(20)				collate latin1_general_bin
+            , [UnitCost] Numeric(20 , 2)			
+            , [TrnQuantity] Numeric(20 , 8)			
+            , [TrnValue] Numeric(20 , 2)			
+            , [MasterJob] Varchar(30)				collate latin1_general_bin
+            , [CustomerName] Varchar(50)			collate latin1_general_bin
             , [MasterJobDate] Date
             );
 
@@ -417,12 +417,6 @@ Stored procedure set out to query multiple databases with the same information a
                 Left Join [Lookups].[Warehouse] As [W]
                     On [W].[Warehouse] = [R].[Warehouse]
                        And [W].[Company] = [R].[Company];
-        --Where   [R].[TrnTypeDescription] In ( 'Receipt of lot qty' ,
-        --                                      'Issue to a job' ,
-        --                                      'Transfer of lot qty' ,
-        --                                      'Adjustment to lot qty' ,
-        --                                      'Dispatch note' );
 
---SELECT * FROM [#ArCustomer] As [AC]
     End;
 GO

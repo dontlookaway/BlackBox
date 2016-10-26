@@ -39,34 +39,34 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApInvoice]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(35)
-            , [Invoice] Varchar(150)
-            , [InvoiceDate] DateTime2
-            , [DueDate] DateTime2
-            , [OrigInvValue] Numeric(20 , 7)
-            , [OrigDiscValue] Numeric(20 , 7)
-            , [PaymentNumber] Varchar(150)
-            , [MthInvBal1] Numeric(20 , 7)
-            , [MthInvBal2] Numeric(20 , 7)
-            , [MthInvBal3] Numeric(20 , 7)
-            , [ConvRate] Numeric(20 , 7)
-            , [Currency] Char(3)
-            , [Journal] BigInt
-            );
-        Create Table [#ApInvoicePay]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(35)
-            , [Invoice] Varchar(150)
-            , [PaymentReference] Varchar(150)
-            , [PostValue] Numeric(20 , 7)
-            );
-        Create Table [#ApSupplier]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(50)
-            , [SupplierName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(35)			collate latin1_general_bin
+            , [Invoice] Varchar(150)			collate latin1_general_bin
+            , [InvoiceDate] DateTime2			
+            , [DueDate] DateTime2				
+            , [OrigInvValue] Numeric(20 , 7)	
+            , [OrigDiscValue] Numeric(20 , 7)	
+            , [PaymentNumber] Varchar(150)		collate latin1_general_bin
+            , [MthInvBal1] Numeric(20 , 7)		
+            , [MthInvBal2] Numeric(20 , 7)		
+            , [MthInvBal3] Numeric(20 , 7)		
+            , [ConvRate] Numeric(20 , 7)		
+            , [Currency] Char(3)				collate latin1_general_bin
+            , [Journal] BigInt					
+            );									
+        Create Table [#ApInvoicePay]			
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(35)			collate latin1_general_bin
+            , [Invoice] Varchar(150)			collate latin1_general_bin
+            , [PaymentReference] Varchar(150)	collate latin1_general_bin
+            , [PostValue] Numeric(20 , 7)		
+            );									
+        Create Table [#ApSupplier]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(50)			collate latin1_general_bin
+            , [SupplierName] Varchar(150)		collate latin1_general_bin
             );
 
 --create script to pull data from each db into the tables
@@ -170,31 +170,31 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(30)
-            , [SupplierName] Varchar(150)
-            , [Invoice] Varchar(50)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(30)			collate latin1_general_bin
+            , [SupplierName] Varchar(150)		collate latin1_general_bin
+            , [Invoice] Varchar(50)				collate latin1_general_bin
             , [InvoiceDate] DateTime2
             , [DueDate] DateTime2
             , [OrigInvValue] Numeric(20 , 7)
             , [OrigDiscValue] Numeric(20 , 7)
-            , [PaymentReference] Varchar(150)
-            , [PaymentNumber] Varchar(150)
+            , [PaymentReference] Varchar(150)	collate latin1_general_bin
+            , [PaymentNumber] Varchar(150)		collate latin1_general_bin
             , [PostValue] Numeric(20 , 7)
             , [Value] Numeric(20 , 7)
             , [MthInvBal1] Numeric(20 , 7)
             , [MthInvBal2] Numeric(20 , 7)
             , [MthInvBal3] Numeric(20 , 7)
             , [ConvRate] Numeric(20 , 7)
-            , [Currency] Char(3)
+            , [Currency] Char(3)				collate latin1_general_bin
             , [Journal] BigInt
             );
         Create Table [#SupplierSummary]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Supplier] Varchar(50)
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Supplier] Varchar(50)			collate latin1_general_bin
             , [SupplierValue] Numeric(20 , 7)
-            , [Currency] Char(3)
+            , [Currency] Char(3)				collate latin1_general_bin
             );
 
 
@@ -315,7 +315,6 @@ Stored procedure set out to query multiple databases with the same information a
         Order By [DueDate];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'details of Ap Invoices including payment details', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ApInvoicesWithPaymentDetails', NULL, NULL

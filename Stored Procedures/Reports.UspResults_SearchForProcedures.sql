@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Reports].[UspResults_SearchForProcedures]
+CREATE Proc [Reports].[UspResults_SearchForProcedures]
     (
       @DbSearch Varchar(300)
     , @ProcedureSearch Varchar(150)
@@ -25,12 +25,12 @@ The purpose of this stored procedure is to search for stored procs by name, sche
 
     Create Table [#ResultSets]
         (
-          [SchemaName] Varchar(300)
-        , [ProcedureName] Varchar(300)
-        , [ParameterDetails] Varchar(Max)
-        , [DatabaseName] Varchar(300)
-        , [ExecScript] Varchar(Max) --script to get distinct values of returned column
-        , [CreateScript] Varchar(Max) --script to get top 10 with all fields from table
+          [SchemaName] Varchar(300)			collate latin1_general_bin
+        , [ProcedureName] Varchar(300)		collate latin1_general_bin
+        , [ParameterDetails] Varchar(Max)	collate latin1_general_bin
+        , [DatabaseName] Varchar(300)		collate latin1_general_bin
+        , [ExecScript] Varchar(Max)			collate latin1_general_bin			--script to get distinct values of returned column
+        , [CreateScript] Varchar(Max)		collate latin1_general_bin			--script to get top 10 with all fields from table
         );
 
 

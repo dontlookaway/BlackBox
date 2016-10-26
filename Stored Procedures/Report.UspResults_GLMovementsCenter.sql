@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -48,31 +47,31 @@ As
 
         Create Table [#Movements]
             (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
-            , [Movement] Numeric(20 , 2)
-            , [GlPeriod] Int
-            , [GlYear] Int
-            , [Source] Varchar(100)
-            , [Journal] Int
-            );
-        Create Table [#MovementsRaw]
-            (
-              [Company] Varchar(10)
-            , [ShortName] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [Currency] Varchar(10)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [GlGroup] Varchar(10)
-            , [Movement] Numeric(20 , 2)
-            , [GlPeriod] Int
-            , [GlYear] Int
+              [Company] Varchar(10)			collate latin1_general_bin
+            , [ShortName] Varchar(250)		collate latin1_general_bin
+            , [CompanyName] Varchar(250)	collate latin1_general_bin
+            , [Currency] Varchar(10)		collate latin1_general_bin
+            , [GlCode] Varchar(35)			collate latin1_general_bin
+            , [Description] Varchar(50)		collate latin1_general_bin
+            , [GlGroup] Varchar(10)			collate latin1_general_bin
+            , [Movement] Numeric(20 , 2)	
+            , [GlPeriod] Int				
+            , [GlYear] Int					
+            , [Source] Varchar(100)			collate latin1_general_bin
+            , [Journal] Int					
+            );								
+        Create Table [#MovementsRaw]		
+            (								
+              [Company] Varchar(10)			collate latin1_general_bin
+            , [ShortName] Varchar(250)		collate latin1_general_bin
+            , [CompanyName] Varchar(250)	collate latin1_general_bin
+            , [Currency] Varchar(10)		collate latin1_general_bin
+            , [GlCode] Varchar(35)			collate latin1_general_bin
+            , [Description] Varchar(50)		collate latin1_general_bin
+            , [GlGroup] Varchar(10)			collate latin1_general_bin
+            , [Movement] Numeric(20 , 2)	
+            , [GlPeriod] Int				
+            , [GlYear] Int					
             );
 
         Insert  [#Movements]

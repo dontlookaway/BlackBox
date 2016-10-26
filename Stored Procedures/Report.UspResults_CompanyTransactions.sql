@@ -36,41 +36,41 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#GenJournalDetail]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
             , [Journal] Int
             , [GlYear] Int
             , [GlPeriod] Int
             , [EntryNumber] Int
-            , [EntryType] Char(1)
-            , [GlCode] Varchar(35)
-            , [Reference] Varchar(50)
-            , [Comment] Varchar(250)
+            , [EntryType] Char(1)				collate latin1_general_bin
+            , [GlCode] Varchar(35)				collate latin1_general_bin
+            , [Reference] Varchar(50)			collate latin1_general_bin
+            , [Comment] Varchar(250)			collate latin1_general_bin
             , [EntryValue] Numeric(20 , 2)
             , [EntryDate] Date
-            , [EntryPosted] Char(1)
+            , [EntryPosted] Char(1)				collate latin1_general_bin
             );
         Create Table [#GenJournalCtl]
             (
-              [DatabaseName] Varchar(150)
-            , [JnlPrintFlag] Char(1)
-            , [JournalDate] Date
-            , [NumOfEntries] Int
-            , [DebitAmount] Numeric(20 , 2)
-            , [CreditAmount] Numeric(20 , 2)
-            , [JnlPostingType] Char(1)
-            , [Source] Char(1)
-            , [Operator] Varchar(20)
-            , [JnlStatus] Char(1)
-            , [Reference] Varchar(30)
-            , [AuthorisedBy] Varchar(20)
-            , [PostedBy] Varchar(20)
-            , [Authorised] Char(1)
-            , [PostDate] Date
-            , [Notation] Varchar(100)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [JnlPrintFlag] Char(1)			collate latin1_general_bin
+            , [JournalDate] Date				
+            , [NumOfEntries] Int				
+            , [DebitAmount] Numeric(20 , 2)		
+            , [CreditAmount] Numeric(20 , 2)	
+            , [JnlPostingType] Char(1)			collate latin1_general_bin
+            , [Source] Char(1)					collate latin1_general_bin
+            , [Operator] Varchar(20)			collate latin1_general_bin
+            , [JnlStatus] Char(1)				collate latin1_general_bin
+            , [Reference] Varchar(30)			collate latin1_general_bin
+            , [AuthorisedBy] Varchar(20)		collate latin1_general_bin
+            , [PostedBy] Varchar(20)			collate latin1_general_bin
+            , [Authorised] Char(1)				collate latin1_general_bin
+            , [PostDate] Date					
+            , [Notation] Varchar(100)			collate latin1_general_bin
             , [GlJournal] Int
             , [GlPeriod] Int
             , [GlYear] Int
-            , [JournalSource] Char(2)
+            , [JournalSource] Char(2)			collate latin1_general_bin
             );
 	
 --create script to pull data from each db into the tables
@@ -200,33 +200,33 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Journal] Int
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [EntryNumber] Int
-            , [EntryType] Char(1)
-            , [GlCode] Varchar(35)
-            , [Reference] Varchar(50)
-            , [Comment] Varchar(250)
-            , [EntryValue] Numeric(20 , 2)
-            , [EntryDate] Date
-            , [EntryPosted] Char(1)
-            , [JnlPrintFlag] Char(1)
-            , [JournalDate] Date
-            , [NumOfEntries] Int
-            , [DebitAmount] Numeric(20 , 2)
-            , [CreditAmount] Numeric(20 , 2)
-            , [JnlPostingType] Char(1)
-            , [Source] Char(1)
-            , [Operator] Varchar(20)
-            , [JnlStatus] Char(1)
-            , [AuthorisedBy] Varchar(20)
-            , [PostedBy] Varchar(20)
-            , [Authorised] Char(1)
-            , [PostDate] Date
-            , [Notation] Varchar(100)
-            , [JournalSource] Char(2)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Journal] Int						
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [EntryNumber] Int					
+            , [EntryType] Char(1)				collate latin1_general_bin
+            , [GlCode] Varchar(35)				collate latin1_general_bin
+            , [Reference] Varchar(50)			collate latin1_general_bin
+            , [Comment] Varchar(250)			collate latin1_general_bin
+            , [EntryValue] Numeric(20 , 2)		
+            , [EntryDate] Date					
+            , [EntryPosted] Char(1)				collate latin1_general_bin
+            , [JnlPrintFlag] Char(1)			collate latin1_general_bin
+            , [JournalDate] Date				
+            , [NumOfEntries] Int				
+            , [DebitAmount] Numeric(20 , 2)		
+            , [CreditAmount] Numeric(20 , 2)	
+            , [JnlPostingType] Char(1)			collate latin1_general_bin
+            , [Source] Char(1)					collate latin1_general_bin
+            , [Operator] Varchar(20)			collate latin1_general_bin
+            , [JnlStatus] Char(1)				collate latin1_general_bin
+            , [AuthorisedBy] Varchar(20)		collate latin1_general_bin
+            , [PostedBy] Varchar(20)			collate latin1_general_bin
+            , [Authorised] Char(1)				collate latin1_general_bin
+            , [PostDate] Date					
+            , [Notation] Varchar(100)			collate latin1_general_bin
+            , [JournalSource] Char(2)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -341,7 +341,6 @@ Stored procedure set out to query multiple databases with the same information a
                     On [R].[JournalSource] = [GJCJS].[GenJournalCtlJnlSource];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'journals for each company', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_CompanyTransactions', NULL, NULL

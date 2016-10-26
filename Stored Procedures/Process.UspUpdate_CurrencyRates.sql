@@ -22,7 +22,7 @@ As
                     (
                       [StartDateTime] DateTime
                     , [EndDateTime] DateTime
-                    , [Currency] Varchar(10)
+                    , [Currency] Varchar(10)			collate latin1_general_bin
                     , [CADDivision] Numeric(12 , 7)
                     , [CHFDivision] Numeric(12 , 7)
                     , [EURDivision] Numeric(12 , 7)
@@ -414,7 +414,6 @@ As
             Print 'UspUpdate_CurrencyRates - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_CurrencyRates', NULL, NULL
 GO

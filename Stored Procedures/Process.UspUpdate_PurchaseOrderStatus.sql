@@ -24,9 +24,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Begin
                 Create Table [Lookups].[PurchaseOrderStatus]
                     (
-                      [Company] Varchar(150)
-                    , [OrderStatusCode] Char(5)
-                    , [OrderStatusDescription] Varchar(150)
+                      [Company] Varchar(150)				collate latin1_general_bin
+                    , [OrderStatusCode] Char(5)				collate latin1_general_bin
+                    , [OrderStatusDescription] Varchar(150)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -48,8 +48,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--create master list of how codes affect stock
                 Create Table [#OrdersPOStatus]
                     (
-                      [OrderStatusCode] Varchar(5)
-                    , [OrderStatusDescription] Varchar(150)
+                      [OrderStatusCode] Varchar(5)			collate latin1_general_bin
+                    , [OrderStatusDescription] Varchar(150)	collate latin1_general_bin
                     );
 
                 Insert  [#OrdersPOStatus]
@@ -79,7 +79,7 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1]
                     (
-                      [CompanyName] Varchar(150)
+                      [CompanyName] Varchar(150)	collate latin1_general_bin
                     );
 
 	--create script to pull data from each db into the tables
@@ -164,7 +164,6 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Print 'UspUpdate_PurchaseOrderStatus - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_PurchaseOrderStatus', NULL, NULL
 GO

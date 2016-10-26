@@ -1,9 +1,7 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE Proc [Report].[UspResults_JournalDetails]
     (
       @Company Varchar(Max)
@@ -35,47 +33,47 @@ Stored procedure set out to query multiple databases with the same information a
 
         Create Table [#Results]
             (
-              [Company] Varchar(250)
-            , [CompanyName] Varchar(250)
-            , [GlCode] Varchar(35)
-            , [GlCodeStart] Varchar(10)
-            , [GlCodeMid] Varchar(10)
-            , [GlCodeEnd] Varchar(10)
-            , [GlCodeDesc] Varchar(250)
-            , [GlYear] Int
-            , [GlPeriod] Int
-            , [GlLine] Int
-            , [Source] Varchar(250)
-            , [Journal] Int
-            , [JnlDate] Date
-            , [Reference] Varchar(250)
-            , [EntryValue] Numeric(20 , 2)
-            , [Comment] Varchar(500)
-            , [TransactionDate] Date
-            , [SubModJournal] Int
-            , [SubModInvoiceReg] Int
-            , [SubModAssetReg] Int
-            , [SubModArInvoice] Varchar(250)
-            , [SubModApInvoice] Varchar(250)
-            , [SubModSupplier] Varchar(250)
-            , [SubModCustomer] Varchar(15)
-            , [SubModRef] Varchar(30)
-            , [SubModCheck] Varchar(15)
-            , [SubModBank] Varchar(15)
-            , [SubModApBranch] Varchar(10)
-            , [SubModArBranch] Varchar(10)
-            , [SubModWh] Varchar(10)
-            , [SubModStock] Varchar(30)
-            , [SubModJnlArea] Varchar(10)
-            , [SubModTransDesc] Varchar(50)
-            , [SubModAsset] Varchar(30)
-            , [SubModGrn] Varchar(20)
-            , [SubModJob] Varchar(20)
-            , [SubModOperation] Int
-            , [SubModWorkCenter] Varchar(20)
-            , [SubModEmployee] Varchar(20)
-            , [SubModSalesOrder] Varchar(20)
-            , [ExtendedComment] Varchar(500)
+              [Company] Varchar(250)			collate latin1_general_bin
+            , [CompanyName] Varchar(250)		collate latin1_general_bin
+            , [GlCode] Varchar(35)				collate latin1_general_bin
+            , [GlCodeStart] Varchar(10)			collate latin1_general_bin
+            , [GlCodeMid] Varchar(10)			collate latin1_general_bin
+            , [GlCodeEnd] Varchar(10)			collate latin1_general_bin
+            , [GlCodeDesc] Varchar(250)			collate latin1_general_bin
+            , [GlYear] Int						
+            , [GlPeriod] Int					
+            , [GlLine] Int						
+            , [Source] Varchar(250)				collate latin1_general_bin
+            , [Journal] Int						
+            , [JnlDate] Date					
+            , [Reference] Varchar(250)			collate latin1_general_bin
+            , [EntryValue] Numeric(20 , 2)		
+            , [Comment] Varchar(500)			collate latin1_general_bin
+            , [TransactionDate] Date			
+            , [SubModJournal] Int				
+            , [SubModInvoiceReg] Int			
+            , [SubModAssetReg] Int				
+            , [SubModArInvoice] Varchar(250)	collate latin1_general_bin
+            , [SubModApInvoice] Varchar(250)	collate latin1_general_bin
+            , [SubModSupplier] Varchar(250)		collate latin1_general_bin
+            , [SubModCustomer] Varchar(15)		collate latin1_general_bin
+            , [SubModRef] Varchar(30)			collate latin1_general_bin
+            , [SubModCheck] Varchar(15)			collate latin1_general_bin
+            , [SubModBank] Varchar(15)			collate latin1_general_bin
+            , [SubModApBranch] Varchar(10)		collate latin1_general_bin
+            , [SubModArBranch] Varchar(10)		collate latin1_general_bin
+            , [SubModWh] Varchar(10)			collate latin1_general_bin
+            , [SubModStock] Varchar(30)			collate latin1_general_bin
+            , [SubModJnlArea] Varchar(10)		collate latin1_general_bin
+            , [SubModTransDesc] Varchar(50)		collate latin1_general_bin
+            , [SubModAsset] Varchar(30)			collate latin1_general_bin
+            , [SubModGrn] Varchar(20)			collate latin1_general_bin
+            , [SubModJob] Varchar(20)			collate latin1_general_bin
+            , [SubModOperation] Int				
+            , [SubModWorkCenter] Varchar(20)	collate latin1_general_bin
+            , [SubModEmployee] Varchar(20)		collate latin1_general_bin
+            , [SubModSalesOrder] Varchar(20)	collate latin1_general_bin
+            , [ExtendedComment] Varchar(500)	collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required

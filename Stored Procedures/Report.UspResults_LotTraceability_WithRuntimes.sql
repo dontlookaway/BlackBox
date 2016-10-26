@@ -32,58 +32,58 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvInspect]
             (
-              [DatabaseName] Varchar(150)
-            , [InspNarration] Varchar(100)
-            , [Lot] Varchar(50)
-            , [GrnReceiptDate] Date
-            , [StockCode] Varchar(30)
-            , [TotalReceiptQty] Numeric(20 , 8)
-            );
-        Create Table [#LotTransactions]
-            (
-              [DatabaseName] Varchar(150)
-            , [Lot] Varchar(50)
-            , [StockCode] Varchar(30)
-            , [TrnDate] Date
-            , [Warehouse] Varchar(10)
-            , [Bin] Varchar(20)
-            , [Job] Varchar(20)
-            , [Reference] Varchar(30)
-            , [UnitCost] Numeric(20 , 2)
-            , [TrnQuantity] Numeric(20 , 8)
-            , [TrnValue] Numeric(20 , 8)
-            , [TrnType] Char(1)
-            , [JobPurchOrder] Varchar(20)
-            , [Customer] Varchar(15)
-            , [Source] Char(1)
-            , [SalesOrder] Varchar(20)
-            , [Bucket] Int
-            );
-        Create Table [#InvMaster]
-            (
-              [DatabaseName] Varchar(150)
-            , [Description] Varchar(50)
-            , [StockUom] Varchar(20)
-            , [StockCode] Varchar(30)
-            );
-        Create Table [#ArCustomer]
-            (
-              [DatabaseName] Varchar(150)
-            , [Customer] Varchar(15)
-            , [Name] Varchar(50)
-            );
-        Create Table [#WipLabJnl]
-            (
-              [DatabaseName] Varchar(150)
-            , [RunTime] Numeric(20 , 6)
-            , [Job] Varchar(20)
-            );
-        Create Table [#Labour]
-            (
-              [Lot] Varchar(50)
-            , [JobPurchOrder] Varchar(20)
-            , [RunTime] Numeric(20 , 5)
-            , [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [InspNarration] Varchar(100)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [GrnReceiptDate] Date					
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [TotalReceiptQty] Numeric(20 , 8)		
+            );										
+        Create Table [#LotTransactions]				
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [TrnDate] Date						
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [Bin] Varchar(20)						collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [UnitCost] Numeric(20 , 2)			
+            , [TrnQuantity] Numeric(20 , 8)			
+            , [TrnValue] Numeric(20 , 8)			
+            , [TrnType] Char(1)						collate latin1_general_bin
+            , [JobPurchOrder] Varchar(20)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            , [Source] Char(1)						collate latin1_general_bin
+            , [SalesOrder] Varchar(20)				collate latin1_general_bin
+            , [Bucket] Int							
+            );										
+        Create Table [#InvMaster]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Description] Varchar(50)				collate latin1_general_bin
+            , [StockUom] Varchar(20)				collate latin1_general_bin
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            );										
+        Create Table [#ArCustomer]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Customer] Varchar(15)				collate latin1_general_bin
+            , [Name] Varchar(50)					collate latin1_general_bin
+            );										
+        Create Table [#WipLabJnl]					
+            (										
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [RunTime] Numeric(20 , 6)				
+            , [Job] Varchar(20)						collate latin1_general_bin
+            );										
+        Create Table [#Labour]						
+            (										
+              [Lot] Varchar(50)						collate latin1_general_bin
+            , [JobPurchOrder] Varchar(20)			collate latin1_general_bin
+            , [RunTime] Numeric(20 , 5)				
+            , [DatabaseName] Varchar(150)			collate latin1_general_bin
             , [TotalLots] Int
             );
 
@@ -243,35 +243,35 @@ As
 --define the results to return
         Create Table [#Results]
             (
-              [Company] Varchar(300)
-            , [SupplierLotNumber] Varchar(100)
-            , [Lot] Varchar(50)
-            , [GrnReceiptDate] Date
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [TrnDate] Date
-            , [Warehouse] Varchar(10)
-            , [Bin] Varchar(20)
-            , [Job] Varchar(20)
-            , [TrnTypeDescription] Varchar(100)
-            , [Reference] Varchar(30)
-            , [TotalReceiptQty] Numeric(20 , 8)
-            , [StockUom] Varchar(20)
-            , [UnitCost] Numeric(20 , 2)
-            , [TrnQuantity] Numeric(20 , 8)
-            , [TrnValue] Numeric(20 , 2)
-            , [MasterJob] Varchar(30)
-            , [CustomerName] Varchar(50)
+              [Company] Varchar(300)				collate latin1_general_bin
+            , [SupplierLotNumber] Varchar(100)		collate latin1_general_bin
+            , [Lot] Varchar(50)						collate latin1_general_bin
+            , [GrnReceiptDate] Date					
+            , [StockCode] Varchar(30)				collate latin1_general_bin
+            , [StockDescription] Varchar(50)		collate latin1_general_bin
+            , [TrnDate] Date						
+            , [Warehouse] Varchar(10)				collate latin1_general_bin
+            , [Bin] Varchar(20)						collate latin1_general_bin
+            , [Job] Varchar(20)						collate latin1_general_bin
+            , [TrnTypeDescription] Varchar(100)		collate latin1_general_bin
+            , [Reference] Varchar(30)				collate latin1_general_bin
+            , [TotalReceiptQty] Numeric(20 , 8)		
+            , [StockUom] Varchar(20)				collate latin1_general_bin
+            , [UnitCost] Numeric(20 , 2)			
+            , [TrnQuantity] Numeric(20 , 8)			
+            , [TrnValue] Numeric(20 , 2)			
+            , [MasterJob] Varchar(30)				collate latin1_general_bin
+            , [CustomerName] Varchar(50)			collate latin1_general_bin
             , [TranRank] Int
             );
 
 --Placeholder to create indexes as required
         Create Table [#LotMasterJob]
             (
-              [Lot] Varchar(50)
-            , [MasterJob] Varchar(30)
-            , [TempLot] Varchar(50)
-            , [DatabaseName] Varchar(150)
+              [Lot] Varchar(50)						collate latin1_general_bin
+            , [MasterJob] Varchar(30)				collate latin1_general_bin
+            , [TempLot] Varchar(50)					collate latin1_general_bin
+            , [DatabaseName] Varchar(150)			collate latin1_general_bin
             );
 
         Insert  [#LotMasterJob]

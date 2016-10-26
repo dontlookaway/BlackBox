@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,48 +36,48 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#PorMasterDetail]
             (
-              [DB] Varchar(150)
-            , [PurchaseOrder] Varchar(20)
-            , [Line] Int
-            , [MPrice] Numeric(20 , 2)
-            );
-        Create Table [#InvInspect]
-            (
-              [DB] Varchar(150)
-            , [Lot] Varchar(50)
-            , [Grn] Varchar(20)
-            , [DeliveryDate] Date
-            , [GrnReceiptDate] Date
-            , [InspNarration] Varchar(100)
-            , [ExpiryDate] Date
-            , [StockCode] Varchar(30)
-            , [QtyAdvised] Numeric(20 , 8)
-            , [QtyInspected] Numeric(20 , 8)
-            , [QtyAccepted] Numeric(20 , 8)
-            , [QtyScrapped] Numeric(20 , 8)
-            , [QtyRejected] Numeric(20 , 8)
-            , [InspectCompleted] Char(1)
-            , [Supplier] Varchar(15)
-            , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLin] Int
-            , [SupDelNote] Varchar(50)
-            );
-        Create Table [#InvInspectDet]
-            (
-              [DB] Varchar(150)
-            , [TrnDate] Date
-            , [Grn] Varchar(20)
-            , [Lot] Varchar(50)
-            , [TrnType] Char(1)
-            );
-        Create Table [#InvMaster]
-            (
-              [DB] Varchar(150)
-            , [StockCode] Varchar(30)
-            , [InspectionFlag] Char(1)
-            , [TraceableType] Char(1)
-            , [Description] Varchar(50)
-            , [StockUom] Varchar(10)
+              [DB] Varchar(150)					collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [Line] Int						
+            , [MPrice] Numeric(20 , 2)			
+            );									
+        Create Table [#InvInspect]				
+            (									
+              [DB] Varchar(150)					collate latin1_general_bin
+            , [Lot] Varchar(50)					collate latin1_general_bin
+            , [Grn] Varchar(20)					collate latin1_general_bin
+            , [DeliveryDate] Date				
+            , [GrnReceiptDate] Date				
+            , [InspNarration] Varchar(100)		collate latin1_general_bin
+            , [ExpiryDate] Date					
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [QtyAdvised] Numeric(20 , 8)		
+            , [QtyInspected] Numeric(20 , 8)	
+            , [QtyAccepted] Numeric(20 , 8)		
+            , [QtyScrapped] Numeric(20 , 8)		
+            , [QtyRejected] Numeric(20 , 8)		
+            , [InspectCompleted] Char(1)		collate latin1_general_bin
+            , [Supplier] Varchar(15)			collate latin1_general_bin
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [PurchaseOrderLin] Int			
+            , [SupDelNote] Varchar(50)			collate latin1_general_bin
+            );									
+        Create Table [#InvInspectDet]			
+            (									
+              [DB] Varchar(150)					collate latin1_general_bin
+            , [TrnDate] Date					
+            , [Grn] Varchar(20)					collate latin1_general_bin
+            , [Lot] Varchar(50)					collate latin1_general_bin
+            , [TrnType] Char(1)					collate latin1_general_bin
+            );									
+        Create Table [#InvMaster]				
+            (									
+              [DB] Varchar(150)					collate latin1_general_bin
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [InspectionFlag] Char(1)			collate latin1_general_bin
+            , [TraceableType] Char(1)			collate latin1_general_bin
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [StockUom] Varchar(10)			collate latin1_general_bin
             );
 
 			
@@ -280,29 +279,29 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [Grn] Varchar(20)
-            , [Lot] Varchar(50)
-            , [Supplier] Varchar(15)
-            , [OrigReceiptDate] Date
-            , [PurchaseOrder] Varchar(20)
-            , [PurchaseOrderLine] Int
-            , [StockCode] Varchar(30)
-            , [StockDescription] Varchar(50)
-            , [SupCatalogueNum] Varchar(50)
-            , [QtyUom] Varchar(10)
-            , [DeliveryDate] Date
-            , [GrnReceiptDate] Date
-            , [SupplierLot] Varchar(100)
-            , [ExpiryDate] Date
-            , [QtyAdvised] Numeric(20 , 8)
-            , [QtyInspected] Numeric(20 , 8)
-            , [QtyAccepted] Numeric(20 , 8)
-            , [QtyScrapped] Numeric(20 , 8)
-            , [QtyRejected] Numeric(20 , 8)
-            , [InspectCompleted] Char(1)
-            , [TrnDate] Date
-            , [WorkingDaysToApprove] Int
-            , [DatabaseName] Varchar(150)
+              [Grn] Varchar(20)					collate latin1_general_bin
+            , [Lot] Varchar(50)					collate latin1_general_bin
+            , [Supplier] Varchar(15)			collate latin1_general_bin
+            , [OrigReceiptDate] Date			
+            , [PurchaseOrder] Varchar(20)		collate latin1_general_bin
+            , [PurchaseOrderLine] Int			
+            , [StockCode] Varchar(30)			collate latin1_general_bin
+            , [StockDescription] Varchar(50)	collate latin1_general_bin
+            , [SupCatalogueNum] Varchar(50)		collate latin1_general_bin
+            , [QtyUom] Varchar(10)				collate latin1_general_bin
+            , [DeliveryDate] Date				
+            , [GrnReceiptDate] Date				
+            , [SupplierLot] Varchar(100)		collate latin1_general_bin
+            , [ExpiryDate] Date					
+            , [QtyAdvised] Numeric(20 , 8)		
+            , [QtyInspected] Numeric(20 , 8)	
+            , [QtyAccepted] Numeric(20 , 8)		
+            , [QtyScrapped] Numeric(20 , 8)		
+            , [QtyRejected] Numeric(20 , 8)		
+            , [InspectCompleted] Char(1)		collate latin1_general_bin
+            , [TrnDate] Date					
+            , [WorkingDaysToApprove] Int		
+            , [DatabaseName] Varchar(150)		collate latin1_general_bin
             , [Price] Numeric(20 , 2)
             );
 

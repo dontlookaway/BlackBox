@@ -25,9 +25,9 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Begin
                 Create Table [Lookups].[GlAccountCode]
                     (
-                      [Company] Varchar(150)
-                    , [GlAccountCode] Char(5)
-                    , [GlAccountDescription] Varchar(150)
+                      [Company] Varchar(150)				collate latin1_general_bin
+                    , [GlAccountCode] Char(5)				collate latin1_general_bin
+                    , [GlAccountDescription] Varchar(150)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -50,8 +50,8 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
 	--create master list of how codes affect stock
                 Create Table [#OrdersGlAccountCode]
                     (
-                      [GlAccountCode] Varchar(5)
-                    , [GlAccountDescription] Varchar(150)
+                      [GlAccountCode] Varchar(5)			collate latin1_general_bin
+                    , [GlAccountDescription] Varchar(150)	collate latin1_general_bin
                     );
 
                 Insert  [#OrdersGlAccountCode]
@@ -143,7 +143,6 @@ Stored procedure created by Chris Johnson, Prometic Group September 2015 to popu
             Print 'UspUpdate_GlAccountCode - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_GlAccountCode', NULL, NULL
 GO

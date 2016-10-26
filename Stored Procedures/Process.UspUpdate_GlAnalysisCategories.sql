@@ -22,8 +22,8 @@ As
             Begin
                 Create Table [Lookups].[GlAnalysisCategory]
                     (
-                      [Company] Varchar(150)
-                    , [GlAnalysisCategory] Varchar(150)
+                      [Company] Varchar(150)			collate latin1_general_bin
+                    , [GlAnalysisCategory] Varchar(150)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -50,8 +50,8 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1GLA]
                     (
-                      [Company] Varchar(150)
-                    , [GlAnalysisCategory] Varchar(150)
+                      [Company] Varchar(150)			collate latin1_general_bin
+                    , [GlAnalysisCategory] Varchar(150)	collate latin1_general_bin
                     );
 
 --create script to pull data from each db into the tables
@@ -138,7 +138,6 @@ As
             Print 'UspUpdate_GlAnalysisCategories - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 
 GO

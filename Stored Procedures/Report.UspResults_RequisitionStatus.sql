@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -41,32 +40,32 @@ List of all requisitions and their statuses
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ReqHeader]
             (
-              [DatabaseName] Varchar(150)
-            , [Requisition] Varchar(35)
-            );
-        Create Table [#ReqDetail]
-            (
-              [DatabaseName] Varchar(150)
-            , [Buyer] Varchar(20)
-            , [CurrentHolder] Varchar(20)
-            , [DateReqnRaised] DateTime2
-            , [DueDate] DateTime2
-            , [Line] Int
-            , [OrderQty] Numeric(20 , 6)
-            , [Originator] Varchar(20)
-            , [Price] Numeric(18 , 3)
-            , [StockCode] Varchar(35)
-            , [StockDescription] Varchar(150)
-            , [SupCatalogueNum] Varchar(50)
-            , [ReqnStatus] Varchar(10)
-            , [Requisition] Varchar(35)
-            , [Supplier] Varchar(35)
-            );
-        Create Table [#ApSupplier]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(35)
-            , [SupplierName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Requisition] Varchar(35)			collate latin1_general_bin
+            );									
+        Create Table [#ReqDetail]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Buyer] Varchar(20)				collate latin1_general_bin
+            , [CurrentHolder] Varchar(20)		collate latin1_general_bin
+            , [DateReqnRaised] DateTime2		
+            , [DueDate] DateTime2				
+            , [Line] Int						
+            , [OrderQty] Numeric(20 , 6)		
+            , [Originator] Varchar(20)			collate latin1_general_bin
+            , [Price] Numeric(18 , 3)			
+            , [StockCode] Varchar(35)			collate latin1_general_bin
+            , [StockDescription] Varchar(150)	collate latin1_general_bin
+            , [SupCatalogueNum] Varchar(50)		collate latin1_general_bin
+            , [ReqnStatus] Varchar(10)			collate latin1_general_bin
+            , [Requisition] Varchar(35)			collate latin1_general_bin
+            , [Supplier] Varchar(35)			collate latin1_general_bin
+            );									
+        Create Table [#ApSupplier]				
+            (									
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Supplier] Varchar(35)			collate latin1_general_bin
+            , [SupplierName] Varchar(150)		collate latin1_general_bin
             );
 
 --create script to pull data from each db into the tables
@@ -126,39 +125,30 @@ List of all requisitions and their statuses
 			End
 	End';
 
---Enable this function to check script changes (try to run script directly against db manually)
---Print @SQL
 
-        If Len(@SQL) > 2000
-            Begin
-                Print Len(@SQL);
-            End;
-        If Len(@SQL) <= 2000
-            Begin
                 Exec [Process].[ExecForEachDB] @cmd = @SQL;
-            End;
 --execute script against each db, populating the base tables
         
 
 --define the results you want to return
         Create Table [#ResultsReqStatus]
             (
-              [DatabaseName] Varchar(150)
-            , [SupplierName] Varchar(150)
-            , [Buyer] Varchar(150)
-            , [CurrentHolder] Varchar(150)
-            , [DateReqnRaised] DateTime2
-            , [DueDate] DateTime2
-            , [Line] Varchar(10)
-            , [OrderQty] Float
-            , [Originator] Varchar(150)
-            , [Price] Numeric(20 , 3)
-            , [ReqStatus] Varchar(150)
-            , [StockCode] Varchar(35)
-            , [StockDescription] Varchar(150)
-            , [SupCatalogueNum] Varchar(50)
-            , [Requisition] Varchar(35)
-            , [CompanyName] Varchar(150)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [SupplierName] Varchar(150)		collate latin1_general_bin
+            , [Buyer] Varchar(150)				collate latin1_general_bin
+            , [CurrentHolder] Varchar(150)		collate latin1_general_bin
+            , [DateReqnRaised] DateTime2		
+            , [DueDate] DateTime2				
+            , [Line] Varchar(10)				collate latin1_general_bin
+            , [OrderQty] Float					
+            , [Originator] Varchar(150)			collate latin1_general_bin
+            , [Price] Numeric(20 , 3)			
+            , [ReqStatus] Varchar(150)			collate latin1_general_bin
+            , [StockCode] Varchar(35)			collate latin1_general_bin
+            , [StockDescription] Varchar(150)	collate latin1_general_bin
+            , [SupCatalogueNum] Varchar(50)		collate latin1_general_bin
+            , [Requisition] Varchar(35)			collate latin1_general_bin
+            , [CompanyName] Varchar(150)		collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required
@@ -182,7 +172,7 @@ List of all requisitions and their statuses
                 , [Requisition]
                 , [CompanyName]
                 )
-                Select  CN.[Company]
+                Select  [CN].[Company]
                       , [APS].[SupplierName]
                       , [RD].[Buyer]
                       , [RD].[CurrentHolder]
@@ -201,7 +191,7 @@ List of all requisitions and their statuses
                 From    [BlackBox].[Lookups].[CompanyNames] As [CN]
                         Left Join [#ReqHeader] [RH]
                             On [CN].[Company] = [RH].[DatabaseName] Collate Latin1_General_BIN
-                        left Join [#ReqDetail] [RD]
+                        Left Join [#ReqDetail] [RD]
                             On [RD].[Requisition] = [RH].[Requisition]
                                And [RD].[DatabaseName] = [RH].[DatabaseName]
                         Left Join [#ApSupplier] [APS]
@@ -239,7 +229,6 @@ List of all requisitions and their statuses
         From    [#ResultsReqStatus] [RRS];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of requisitions with status', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_RequisitionStatus', NULL, NULL

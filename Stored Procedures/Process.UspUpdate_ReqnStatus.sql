@@ -20,9 +20,9 @@ As
             Begin
                 Create Table [Lookups].[ReqnStatus]
                     (
-                      [Company] Varchar(150)
-                    , [ReqnStatusCode] Char(5)
-                    , [ReqnStatusDescription] Varchar(150)
+                      [Company] Varchar(150)				collate latin1_general_bin
+                    , [ReqnStatusCode] Char(5)				collate latin1_general_bin
+                    , [ReqnStatusDescription] Varchar(150)	collate latin1_general_bin
                     , [LastUpdated] DateTime2
                     );
             End;
@@ -45,8 +45,8 @@ As
 	--create master list of how codes affect stock
                 Create Table [#OrdersReqSC]
                     (
-                      [ReqnStatusCode] Varchar(5)
-                    , [ReqnStatusDescription] Varchar(150)
+                      [ReqnStatusCode] Varchar(5)			collate latin1_general_bin
+                    , [ReqnStatusDescription] Varchar(150)	collate latin1_general_bin
                     );
 
                 Insert  [#OrdersReqSC]
@@ -164,7 +164,6 @@ As
             Print 'UspUpdate_ReqnStatus - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'Stored proc to update specified table', 'SCHEMA', N'Process', 'PROCEDURE', N'UspUpdate_ReqnStatus', NULL, NULL
 GO

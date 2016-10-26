@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -36,31 +35,30 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#InvInspect]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Lot] Varchar(50) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
+            , [Lot] Varchar(50)				Collate Latin1_General_BIN
             , [QtyScrapped] Numeric(20 , 8)
-            , [StockCode] Varchar(50)
+            , [StockCode] Varchar(50)		collate latin1_general_bin
             , [PoPrice] Numeric(20 , 8)
-            , [PriceUom] Varchar(10)
-            , [PrcFactor] Char(1)
+            , [PriceUom] Varchar(10)		collate latin1_general_bin
+            , [PrcFactor] Char(1)			collate latin1_general_bin
             , [ConvFactPrcUom] Int
             , [ConvFactOrdUom] Int
-            , [Grn] Varchar(50) Collate Latin1_General_BIN
+            , [Grn] Varchar(50)				Collate Latin1_General_BIN
             );
         Create Table [#InvInspectDet]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)	Collate Latin1_General_BIN
             , [TrnQty] Numeric(20 , 8)
             , [TrnDate] Date
-            , [RejectScrapCode] Varchar(50)
+            , [RejectScrapCode] Varchar(50)	collate latin1_general_bin
             , [TrnType] Char(1)
-            , [Grn] Varchar(50) Collate Latin1_General_BIN
-            , [Lot] Varchar(50) Collate Latin1_General_BIN
+            , [Grn] Varchar(50)				Collate Latin1_General_BIN
+            , [Lot] Varchar(50)				Collate Latin1_General_BIN
             );
 
 --create script to pull data from each db into the tables
-        Declare @SQL1 Varchar(Max) = '
-	USE [?];
+        Declare @SQL1 Varchar(Max) = 'USE [?];
 	Declare @DB varchar(150),@DBCode varchar(150)
 	Select @DB = DB_NAME(),@DBCode = case when len(db_Name())>13 then right(db_Name(),len(db_Name())-13) else null end
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
@@ -164,18 +162,18 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150) Collate Latin1_General_BIN
-            , [Lot] Varchar(35) Collate Latin1_General_BIN
+              [DatabaseName] Varchar(150)		Collate Latin1_General_BIN
+            , [Lot] Varchar(35)					Collate Latin1_General_BIN
             , [TotalScrapped] Numeric(20 , 8)
             , [TrnQty] Numeric(20 , 8)
-            , [StockCode] Varchar(50)
+            , [StockCode] Varchar(50)			collate latin1_general_bin
             , [PoPrice] Numeric(20 , 8)
             , [TrnDate] Date
-            , [PriceUom] Varchar(10)
-            , [PrcFactor] Char(1)
+            , [PriceUom] Varchar(10)			collate latin1_general_bin
+            , [PrcFactor] Char(1)				collate latin1_general_bin
             , [TotalValue] Numeric(20 , 8)
             , [Value] Numeric(20 , 8)
-            , [RejectScrapCode] Varchar(50)
+            , [RejectScrapCode] Varchar(50)		collate latin1_general_bin
             , [ConvFactPrcUom] Int
             , [ConvFactOrdUom] Int
             );
@@ -239,7 +237,6 @@ Stored procedure set out to query multiple databases with the same information a
                 Left Join [Lookups].[CompanyNames] As [cn] On [r].[DatabaseName] = [cn].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of scrap costs', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_ScrapCosts', NULL, NULL

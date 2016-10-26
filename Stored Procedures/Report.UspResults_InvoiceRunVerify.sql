@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -37,69 +36,69 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#ApSupplier]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(50)
-            , [SupplierName] Varchar(255)
-            , [Currency] Varchar(5)
-            );
-        Create Table [#ApInvoice]
-            (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(50)
-            , [Invoice] Varchar(50)
-            , [EntryNumber] Int
-            , [Journal] Int
-            , [PaymentNumber] Int
-            , [ConvRate] Float
-            , [MulDiv] Varchar(5)
-            , [MthInvBal1] Numeric(20 , 2)
-            , [InvoiceYear] Int
-            , [InvoiceMonth] Int
-            , [JournalDate] Date
-            , [Bank] Varchar(10)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Supplier] Varchar(50)		collate latin1_general_bin
+            , [SupplierName] Varchar(255)	collate latin1_general_bin
+            , [Currency] Varchar(5)			collate latin1_general_bin
+            );								
+        Create Table [#ApInvoice]			
+            (								
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Supplier] Varchar(50)		collate latin1_general_bin
+            , [Invoice] Varchar(50)			collate latin1_general_bin
+            , [EntryNumber] Int				
+            , [Journal] Int					
+            , [PaymentNumber] Int			
+            , [ConvRate] Float				
+            , [MulDiv] Varchar(5)			collate latin1_general_bin
+            , [MthInvBal1] Numeric(20 , 2)	
+            , [InvoiceYear] Int				
+            , [InvoiceMonth] Int			
+            , [JournalDate] Date			
+            , [Bank] Varchar(10)			collate latin1_general_bin
             , [InvoiceDate] Date
             , [DueDate] Date
             , [OrigInvValue] Numeric(20 , 2)
             );
         Create Table [#ApJnlSummary]
             (
-              [DatabaseName] Varchar(150)
-            , [Invoice] Varchar(50)
-            , [EntryNumber] Int
-            , [Journal] Int
-            , [TransactionCode] Varchar(5)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Invoice] Varchar(50)			collate latin1_general_bin
+            , [EntryNumber] Int				
+            , [Journal] Int					
+            , [TransactionCode] Varchar(5)	collate latin1_general_bin
             , [InvoiceValue] Numeric(20 , 2)
             );
         Create Table [#ApJnlDistrib]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
             , [Journal] Int
             , [EntryNumber] Int
             , [DistrValue] Numeric(20 , 2)
-            , [ExpenseGlCode] Varchar(50)
-            , [ExpenseType] Varchar(5)
+            , [ExpenseGlCode] Varchar(50)	collate latin1_general_bin
+            , [ExpenseType] Varchar(5)		collate latin1_general_bin
             );
         Create Table [#ApPayRunDet]
             (
-              [DatabaseName] Varchar(150)
-            , [Invoice] Varchar(50)
-            , [PaymentNumber] Int
-            , [Supplier] Varchar(50)
-            , [Cheque] Varchar(30)
-            , [PostCurrency] Varchar(10)
-            , [ChequeDate] Date
-            , [PostConvRate] Float
-            , [ChRegister] Int
-            , [PostMulDiv] Varchar(5)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
+            , [Invoice] Varchar(50)			collate latin1_general_bin
+            , [PaymentNumber] Int			
+            , [Supplier] Varchar(50)		collate latin1_general_bin
+            , [Cheque] Varchar(30)			collate latin1_general_bin
+            , [PostCurrency] Varchar(10)	collate latin1_general_bin
+            , [ChequeDate] Date				
+            , [PostConvRate] Float			
+            , [ChRegister] Int				
+            , [PostMulDiv] Varchar(5)		collate latin1_general_bin
             );
         Create Table [#ApPayRunHdr]
             (
-              [DatabaseName] Varchar(150)
+              [DatabaseName] Varchar(150)	collate latin1_general_bin
             , [PaymentNumber] Int
             , [PaymentDate] Date
             , [PayYear] Int
             , [PayMonth] Int
-            , [Operator] Varchar(250)
+            , [Operator] Varchar(250)		collate latin1_general_bin
             );
 
 --create script to pull data from each db into the tables
@@ -394,40 +393,40 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Supplier] Varchar(15)
-            , [Invoice] Varchar(20)
-            , [PostCurrency] Char(3)
-            , [ConvRate] Float
-            , [MulDiv] Char(1)
-            , [MthInvBal] Float
-            , [CompLocalAmt] Decimal(10 , 2)
-            , [DistrValue] Float
-            , [Description] Varchar(50)
-            , [ExpenseGlCode] Varchar(35)
-            , [InvoiceYear] Int
-            , [InvoiceMonth] Int
-            , [JournalDate] Date
-            , [InvoiceDate] Date
-            , [PaymentNumber] Int
-            , [Bank] Varchar(15)
-            , [PaymentDate] Date
-            , [PayYear] Int
-            , [PayMonth] Int
-            , [Operator] Varchar(20)
-            , [ChRegister] Float
-            , [Cheque] Varchar(15)
-            , [ChequeDate] Date
-            , [InvNetPayValue] Decimal(15 , 3)
-            , [DueDate] Date
-            , [InvoiceType] Char(1)
-            , [PostValue] Decimal(15 , 3)
-            , [PostConvRate] Float
-            , [PostMulDiv] Char(1)
-            , [SupplierName] Varchar(50)
-            , [ExpenseType] Varchar(150)
-            , [CompanyName] Varchar(300)
-            , [SupplierCurrency] Varchar(5)
+              [DatabaseName] Varchar(150)			collate latin1_general_bin
+            , [Supplier] Varchar(15)				collate latin1_general_bin
+            , [Invoice] Varchar(20)					collate latin1_general_bin
+            , [PostCurrency] Char(3)				collate latin1_general_bin
+            , [ConvRate] Float						
+            , [MulDiv] Char(1)						collate latin1_general_bin
+            , [MthInvBal] Float						
+            , [CompLocalAmt] Decimal(10 , 2)		
+            , [DistrValue] Float					
+            , [Description] Varchar(50)				collate latin1_general_bin
+            , [ExpenseGlCode] Varchar(35)			collate latin1_general_bin
+            , [InvoiceYear] Int						
+            , [InvoiceMonth] Int					
+            , [JournalDate] Date					
+            , [InvoiceDate] Date					
+            , [PaymentNumber] Int					
+            , [Bank] Varchar(15)					collate latin1_general_bin
+            , [PaymentDate] Date					
+            , [PayYear] Int							
+            , [PayMonth] Int						
+            , [Operator] Varchar(20)				collate latin1_general_bin
+            , [ChRegister] Float					
+            , [Cheque] Varchar(15)					collate latin1_general_bin
+            , [ChequeDate] Date						
+            , [InvNetPayValue] Decimal(15 , 3)		
+            , [DueDate] Date						
+            , [InvoiceType] Char(1)					collate latin1_general_bin
+            , [PostValue] Decimal(15 , 3)			
+            , [PostConvRate] Float					
+            , [PostMulDiv] Char(1)					collate latin1_general_bin
+            , [SupplierName] Varchar(50)			collate latin1_general_bin
+            , [ExpenseType] Varchar(150)			collate latin1_general_bin
+            , [CompanyName] Varchar(300)			collate latin1_general_bin
+            , [SupplierCurrency] Varchar(5)			collate latin1_general_bin
             );
 
 --Placeholder to create indexes as required

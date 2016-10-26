@@ -21,11 +21,11 @@ As
             Begin
                 Create Table [Lookups].[ApSupplier]
                     (
-                      [Company] Varchar(150)
-                    , [Supplier] Varchar(150)
-                    , [SupplierName] Varchar(150)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [Supplier] Varchar(150) Collate Latin1_General_BIN
+                    , [SupplierName] Varchar(150) Collate Latin1_General_BIN
                     , [LastUpdated] DateTime2
-					, [ActivePOFlag] bit
+                    , [ActivePOFlag] Bit
                     );
             End;
 
@@ -49,10 +49,10 @@ As
 --create temporary tables to be pulled from different databases, including a column to id
                 Create Table [#Table1Supplier]
                     (
-                      [Company] Varchar(150)
-                    , [Supplier] Varchar(150)
-                    , [SupplierName] Varchar(150)
-					, [ActivePOFlag] bit
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [Supplier] Varchar(150) Collate Latin1_General_BIN
+                    , [SupplierName] Varchar(150) Collate Latin1_General_BIN
+                    , [ActivePOFlag] Bit
                     );
 
 --create script to pull data from each db into the tables
@@ -91,13 +91,13 @@ End
                         , [Supplier]
                         , [LastUpdated]
                         , [SupplierName]
-						, [ActivePOFlag]
+                        , [ActivePOFlag]
                         )
                         Select  [Company]
                               , [Supplier]
                               , @LastUpdated
                               , [SupplierName]
-							  , [ActivePOFlag]
+                              , [ActivePOFlag]
                         From    [#Table1Supplier];
 
                 If @PrevCheck = 1
@@ -143,7 +143,6 @@ End
             Print 'UspUpdate_ApSupplier - Table was last updated at '
                 + Cast(@LastDate As Varchar(255)) + ' no update applied';
         End;
-
 
 
 GO

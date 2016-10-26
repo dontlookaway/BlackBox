@@ -33,8 +33,8 @@ As
 
         Create Table [#Results]
             (
-              [SchemaName] Varchar(100)
-            , [TableName] Varchar(100)
+              [SchemaName] Varchar(100)		collate latin1_general_bin
+            , [TableName] Varchar(100)		collate latin1_general_bin
             , [LastUpdated] DateTime2
             , [OldRowCount] Int
             , [NewRowCount] Int
@@ -239,7 +239,6 @@ As
         --Drop Table [#Results];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'used to refresh all the lookup and history table, in addition providing times for how long this takes', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResultsRefresh_TableTimes', NULL, NULL

@@ -37,8 +37,8 @@ Stored procedure set out to query multiple databases with the same information a
 --create temporary tables to be pulled from different databases, including a column to id
         Create Table [#WipLabJnl]
             (
-              [DatabaseName] Varchar(150)
-            , [Employee] Varchar(20)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Employee] Varchar(20)			collate latin1_general_bin
             , [TrnYear] Int
             , [EntryDate] Date
             , [RunTime] Numeric(20 , 6)
@@ -91,8 +91,8 @@ Stored procedure set out to query multiple databases with the same information a
 --define the results you want to return
         Create Table [#Results]
             (
-              [DatabaseName] Varchar(150)
-            , [Employee] Varchar(20)
+              [DatabaseName] Varchar(150)		collate latin1_general_bin
+            , [Employee] Varchar(20)			collate latin1_general_bin
             , [TrnYear] Int
             , [ISOWeek] Int
             , [RunTime] Numeric(20 , 6)
@@ -154,7 +154,6 @@ Stored procedure set out to query multiple databases with the same information a
                     On [CN].[Company] = [r].[DatabaseName];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'labour logged split by ISO week', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_LabourLoggedPerISOWeek', NULL, NULL

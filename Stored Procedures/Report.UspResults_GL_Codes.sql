@@ -2,7 +2,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-Create Proc [Report].[UspResults_GL_Codes]
+CREATE Proc [Report].[UspResults_GL_Codes]
     (
       @RedTagType Char(1)
     , @RedTagUse Varchar(500)
@@ -25,14 +25,14 @@ As
 --define the results you want to return
         Create Table [#Results]
             (
-              [Company] Char(4)
-            , [GlCode] Varchar(35)
-            , [Description] Varchar(50)
-            , [ReportIndex1] Varchar(35)
-            , [ReportIndex2] Varchar(35)
-            , [GlGroup] Varchar(10)
-            , [CurrentBalance] Numeric(20 , 2)
-            , [PrevPerEndBal] Numeric(20 , 2)
+              [Company] Char(4)					collate latin1_general_bin
+            , [GlCode] Varchar(35)				collate latin1_general_bin
+            , [Description] Varchar(50)			collate latin1_general_bin
+            , [ReportIndex1] Varchar(35)		collate latin1_general_bin
+            , [ReportIndex2] Varchar(35)		collate latin1_general_bin
+            , [GlGroup] Varchar(10)				collate latin1_general_bin
+            , [CurrentBalance] Numeric(20 , 2)	
+            , [PrevPerEndBal] Numeric(20 , 2)	
             );
 
 --script to combine base data and insert into results table
@@ -74,7 +74,6 @@ Set NoCount Off
 		Left Join [Lookups].[CompanyNames] [CN] On [CN].[Company] = [R].[Company];
 
     End;
-
 
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'list of gl codes', 'SCHEMA', N'Report', 'PROCEDURE', N'UspResults_GL_Codes', NULL, NULL
