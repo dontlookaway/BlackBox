@@ -70,17 +70,6 @@ Stored procedure iterates through all electronic signatures and use the variable
         + --Only query DBs beginning SysProCompany
         '
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-				Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
-        + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT
-
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
-
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
-
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 						Insert  #TableList (TableName)
 						Select Distinct ASL.TableName
@@ -110,17 +99,6 @@ Stored procedure iterates through all electronic signatures and use the variable
         + --Only query DBs beginning SysProCompany
         '
 	IF left(@DB,13)=''SysproCompany'' and right(@DB,3)<>''SRS''
-				Declare @ListOfTables VARCHAR(max) = ''' + @ListOfTables
-        + '''
-					, @RequiredCountOfTables INT
-					, @ActualCountOfTables INT
-
-			Select @RequiredCountOfTables= count(1) from  BlackBox.dbo.[udf_SplitString](@ListOfTables,'','')
-
-			Select @ActualCountOfTables = COUNT(1) FROM sys.tables
-			Where name In (Select Value Collate Latin1_General_BIN From BlackBox.dbo.udf_SplitString(@ListOfTables,'','')) 
-
-			If @ActualCountOfTables=@RequiredCountOfTables
 			BEGIN
 			Insert  #ColumnListTemp
 					( ColumnName
@@ -128,7 +106,7 @@ Stored procedure iterates through all electronic signatures and use the variable
 					, TableName
 					)
 					Select Distinct
-						Upper(ADSL.VariableDesc)
+						replace(Upper(ADSL.VariableDesc),'' '','''')
 						, MAX(Case When ADSL.VariableType = ''A''
 								Then ''Varchar(255)''
 								When ADSL.VariableType = ''N''
@@ -155,8 +133,11 @@ Stored procedure iterates through all electronic signatures and use the variable
 						, ASL.TableName
 			END';
 
-    Exec [Process].[ExecForEachDB] @cmd = @SQLTable;
-    Exec [Process].[ExecForEachDB] @cmd = @SQLColumn;
+    Exec [Process].[ExecForEachDB_WithTableCheck] @cmd = @SQLTable , -- nvarchar(max)
+        @SchemaTablesToCheck = @ListOfTables;
+    Exec [Process].[ExecForEachDB_WithTableCheck]
+     @cmd = @SQLColumn, -- nvarchar(max)
+        @SchemaTablesToCheck = @ListOfTables;
 
     Update  [#ColumnListTemp]
     Set     [ColumnName] = Upper([ColumnName]);
@@ -290,6 +271,7 @@ Stored procedure iterates through all electronic signatures and use the variable
                                                               And [C].[TableName] = [CT].[TableName]
                             Where   [CT].[TableName] = @TableName
                                     And [C].[ColumnName] Is Null;
+
 
                     Select  @ColumnCount = Max([Cid])
                     From    [#ColumnList];
