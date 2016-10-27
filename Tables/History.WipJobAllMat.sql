@@ -1,14 +1,13 @@
 CREATE TABLE [History].[WipJobAllMat]
 (
+[WID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [JOB] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [OPERATORCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [QUANTITY] [float] NULL,
@@ -18,7 +17,5 @@ CREATE TABLE [History].[WipJobAllMat]
 [WIPJOBALLMATKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [History].[WipJobAllMat] ADD CONSTRAINT [WipJobAllMat_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-GO
-EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipJobAllMat change logs', 'SCHEMA', N'History', 'TABLE', N'WipJobAllMat', NULL, NULL
+ALTER TABLE [History].[WipJobAllMat] ADD CONSTRAINT [WipJobAllMat_ID] PRIMARY KEY CLUSTERED  ([SignatureDatetime], [Operator], [ProgramName], [ItemKey], [DatabaseName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

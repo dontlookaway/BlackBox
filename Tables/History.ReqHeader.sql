@@ -1,16 +1,15 @@
 CREATE TABLE [History].[ReqHeader]
 (
+[RID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [CONDITIONDESCRIPTION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[DATEREQUISITIONRAISED] [date] NULL,
+[DATEREQUISITIONRAISED] [datetime] NULL,
 [OPERATORCODE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [OPERATORNAME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [ORIGINATOR] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -20,7 +19,5 @@ CREATE TABLE [History].[ReqHeader]
 [VALUEOFREQUISITION] [float] NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [History].[ReqHeader] ADD CONSTRAINT [ReqHeader_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-GO
-EXEC sp_addextendedproperty N'MS_Description', N'Logs from ReqHeader change logs', 'SCHEMA', N'History', 'TABLE', N'ReqHeader', NULL, NULL
+ALTER TABLE [History].[ReqHeader] ADD CONSTRAINT [ReqHeader_ID] PRIMARY KEY CLUSTERED  ([SignatureDatetime], [Operator], [ProgramName], [ItemKey], [DatabaseName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

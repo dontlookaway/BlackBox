@@ -1,16 +1,15 @@
 CREATE TABLE [History].[WipInspect]
 (
+[WID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [BINLOCATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[EXPIRYDATE] [date] NULL,
+[EXPIRYDATE] [datetime] NULL,
 [INSPECTIONREFERENCE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [JOB] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [LOTNUMBER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -20,12 +19,9 @@ CREATE TABLE [History].[WipInspect]
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WIPINSPECTKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [ALTERNATEWAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[QUANTITY] [float] NULL,
 [ALTWAREHOUSEFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[CONCESSION] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[QUANTITY] [float] NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [History].[WipInspect] ADD CONSTRAINT [WipInspect_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-GO
-EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipInspect change logs', 'SCHEMA', N'History', 'TABLE', N'WipInspect', NULL, NULL
+ALTER TABLE [History].[WipInspect] ADD CONSTRAINT [WipInspect_ID] PRIMARY KEY CLUSTERED  ([SignatureDatetime], [Operator], [ProgramName], [ItemKey], [DatabaseName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

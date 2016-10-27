@@ -1,27 +1,22 @@
 CREATE TABLE [History].[WipMaster]
 (
+[WID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
-[AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [BINLOCATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CONDITIONDESCRIPTION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [COSTBASIS] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[COSTMULTIPLIERAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[COSTMULTIPLIERBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[CURRENTCOMPANYDATE] [date] NULL,
+[CURRENTCOMPANYDATE] [datetime] NULL,
 [CURRENTCOMPANYID] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTCOMPANYNAME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTLABORVALUE] [float] NULL,
 [CURRENTMATERIALVALUE] [float] NULL,
-[CURRENTOPERATINGSYSTEMDATE] [date] NULL,
+[CURRENTOPERATINGSYSTEMDATE] [datetime] NULL,
 [CURRENTOPERATINGSYSTEMTIME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [FIFO/LIFOCOST] [float] NULL,
 [IMPORTFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -59,14 +54,8 @@ CREATE TABLE [History].[WipMaster]
 [TOTALMATERIALISSUEDVALUE] [float] NULL,
 [UPDATESALESORDERLINEORDERQUANTITY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [VERSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[DEFAULTBINAFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[DEFAULTBINBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[USERFIELD3AFTER] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[USERFIELD3BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL
+[WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
-GO
-EXEC sp_addextendedproperty N'MS_Description', N'Logs from WipMaster change logs', 'SCHEMA', N'History', 'TABLE', N'WipMaster', NULL, NULL
+ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_ID] PRIMARY KEY CLUSTERED  ([SignatureDatetime], [Operator], [ProgramName], [ItemKey], [DatabaseName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
