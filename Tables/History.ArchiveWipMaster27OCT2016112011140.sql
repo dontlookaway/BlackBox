@@ -1,27 +1,23 @@
-CREATE TABLE [History].[WipMaster]
+CREATE TABLE [History].[ArchiveWipMaster27OCT2016112011140]
 (
+[WID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
-[BEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [BINLOCATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CONDITIONDESCRIPTION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [COSTBASIS] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[COSTMULTIPLIERBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[CURRENTCOMPANYDATE] [date] NULL,
+[CURRENTCOMPANYDATE] [datetime] NULL,
 [CURRENTCOMPANYID] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTCOMPANYNAME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTLABORVALUE] [float] NULL,
 [CURRENTMATERIALVALUE] [float] NULL,
-[CURRENTOPERATINGSYSTEMDATE] [date] NULL,
+[CURRENTOPERATINGSYSTEMDATE] [datetime] NULL,
 [CURRENTOPERATINGSYSTEMTIME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[DEFAULTBINBEFORE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [FIFO/LIFOCOST] [float] NULL,
 [IMPORTFLAG] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [INSPECTIONQUANTITY] [float] NULL,
@@ -60,6 +56,4 @@ CREATE TABLE [History].[WipMaster]
 [VERSION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-GO
-ALTER TABLE [History].[WipMaster] ADD CONSTRAINT [WipMaster_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO

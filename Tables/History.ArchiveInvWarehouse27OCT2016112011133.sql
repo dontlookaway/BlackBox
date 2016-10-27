@@ -1,20 +1,19 @@
-CREATE TABLE [History].[InvWarehouse]
+CREATE TABLE [History].[ArchiveInvWarehouse27OCT2016112011133]
 (
+[IID] [int] NOT NULL IDENTITY(1, 1),
 [TransactionDescription] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[SignatureDateTime] [datetime2] NOT NULL,
+[SignatureDatetime] [datetime2] NOT NULL,
 [Operator] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[ProgramName] [varchar] (20) COLLATE Latin1_General_BIN NOT NULL,
+[Ranking] [bigint] NULL,
 [ItemKey] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
-[ComputerName] [varchar] (150) COLLATE Latin1_General_BIN NULL,
-[ProgramName] [varchar] (100) COLLATE Latin1_General_BIN NOT NULL,
-[ConditionName] [varchar] (15) COLLATE Latin1_General_BIN NULL,
-[AlreadyEntered] [bit] NULL,
+[DatabaseName] [varchar] (150) COLLATE Latin1_General_BIN NOT NULL,
 [BINLOCATION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CONDITIONDESCRIPTION] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[CURRENTCOMPANYDATE] [date] NULL,
+[CURRENTCOMPANYDATE] [datetime] NULL,
 [CURRENTCOMPANYID] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [CURRENTCOMPANYNAME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
-[CURRENTOPERATINGSYSTEMDATE] [date] NULL,
+[CURRENTOPERATINGSYSTEMDATE] [datetime] NULL,
 [CURRENTOPERATINGSYSTEMTIME] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [DESTINATIONWAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL,
 [INVWAREHOUSEKEY] [varchar] (255) COLLATE Latin1_General_BIN NULL,
@@ -39,6 +38,4 @@ CREATE TABLE [History].[InvWarehouse]
 [UNITCOST] [float] NULL,
 [WAREHOUSE] [varchar] (255) COLLATE Latin1_General_BIN NULL
 ) ON [PRIMARY]
-GO
-ALTER TABLE [History].[InvWarehouse] ADD CONSTRAINT [InvWarehouse_AllKeys] PRIMARY KEY NONCLUSTERED  ([DatabaseName], [SignatureDateTime], [ItemKey], [Operator], [ProgramName]) WITH (IGNORE_DUP_KEY=ON) ON [PRIMARY]
 GO
