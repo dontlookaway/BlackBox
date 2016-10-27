@@ -47,7 +47,7 @@ Stored procedure set out to query multiple databases with the same information a
             , [Comment] Varchar(255)			collate Latin1_General_BIN
             , [EntryValue] Numeric(20 , 7)		
             , [EntryPosted] Char(1)				collate Latin1_General_BIN
-            , [SubModJournal] Int				collate Latin1_General_BIN
+            , [SubModJournal] Int				
             , [Description] Varchar(150)		collate Latin1_General_BIN
             );
 
