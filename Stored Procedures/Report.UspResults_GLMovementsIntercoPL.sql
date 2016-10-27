@@ -21,18 +21,24 @@ As
 
         Create Table [#Movements]
             (
-              [Company] Varchar(10)		collate Latin1_General_BIN
-            , [ShortName] Varchar(250)	collate Latin1_General_BIN
-            , [CompanyName] Varchar(250)collate Latin1_General_BIN
-            , [Currency] Varchar(10)	collate Latin1_General_BIN
-            , [GlCode] Varchar(35)		collate Latin1_General_BIN
-            , [Description] Varchar(50)	collate Latin1_General_BIN
-            , [GlGroup] Varchar(10)		collate Latin1_General_BIN
+              [Company] Varchar(10) Collate Latin1_General_BIN
+            , [ShortName] Varchar(250) Collate Latin1_General_BIN
+            , [CompanyName] Varchar(250) Collate Latin1_General_BIN
+            , [Currency] Varchar(10) Collate Latin1_General_BIN
+            , [GlCode] Varchar(35) Collate Latin1_General_BIN
+            , [Description] Varchar(50) Collate Latin1_General_BIN
+            , [GlGroup] Varchar(10) Collate Latin1_General_BIN
             , [Movement] Numeric(20 , 2)
-            , [GlPeriod] Int			
-            , [GlYear] Int				
-            , [Source] Varchar(100)		collate Latin1_General_BIN
+            , [GlPeriod] Int
+            , [GlYear] Int
+            , [Source] Varchar(100) Collate Latin1_General_BIN
             , [Journal] Int
+            , [ReportIndex1] Varchar(100) Collate Latin1_General_BIN
+            , [ReportIndex2] Varchar(100) Collate Latin1_General_BIN
+            , [AccountType] Varchar(100) Collate Latin1_General_BIN
+            , [Parse1] Varchar(100) Collate Latin1_General_BIN
+            , [Parse2] Varchar(100) Collate Latin1_General_BIN
+            , [Parse3] Varchar(100) Collate Latin1_General_BIN
             );
 
         Insert  [#Movements]
@@ -48,6 +54,12 @@ As
                 , [GlYear]
                 , [Source]
                 , [Journal]
+                , [ReportIndex1]
+                , [ReportIndex2]
+                , [AccountType]
+                , [Parse1]
+                , [Parse2]
+                , [Parse3]		
                 )
                 Exec [Report].[UspResults_GLMovements] @RedTagType = @RedTagType , -- char(1)
                     @RedTagUse = @RedTagUse;
