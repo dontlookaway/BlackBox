@@ -187,8 +187,8 @@ As
 	--Get list of all companies in use
                 Create Table [#CompanyNameTable1]
                     (
-                      [Company] Varchar(150)
-                    , [Currency] Varchar(10)
+                      [Company] Varchar(150) Collate Latin1_General_BIN
+                    , [Currency] Varchar(10) Collate Latin1_General_BIN
                     );
  
 	--create script to pull data from each db into the tables
