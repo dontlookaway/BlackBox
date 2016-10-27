@@ -22,7 +22,7 @@ As
 
         Create Table [#ListOfDbs]
             (
-              [DatabaseName] sysname
+              [DatabaseName] sysname Collate Latin1_General_BIN
             );
 
         Declare @SQLCmd Varchar(Max)= N'use [?];
@@ -49,7 +49,6 @@ end';
         Set NoCount On;
         Drop Table [#ListOfDbs];
     End;
-
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'check for missing company names in lookup', 'SCHEMA', N'Review', 'PROCEDURE', N'UspResults_CompanyNamesMissing', NULL, NULL
 GO
