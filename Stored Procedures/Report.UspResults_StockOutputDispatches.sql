@@ -34,7 +34,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
         Set @Company2 = @Company;
         Set @RedTagType2 = @RedTagType;
         Set @RedTagUse2 = @RedTagUse;
-
+		
         Create Table [#Results]
             (
               [Company] Varchar(150)				collate latin1_general_bin
@@ -52,7 +52,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
             , [SalesOrderLine] Varchar(15)			collate latin1_general_bin
             , [TrnQuantity] Numeric(20 , 8)			
             , [TrnValue] Numeric(20 , 2)			
-            , [TrnType] Varchar(10)					
+            , [TrnType] Varchar(100)					
             , [AmountModifier] Int					
             , [TrnDate] Date						
             , [OldExpiryDate] Date					
@@ -60,7 +60,7 @@ Template designed by Chris Johnson, Prometic Group March 2016
             , [Job] Varchar(150)					collate latin1_general_bin
             , [Bin] Varchar(150)					collate latin1_general_bin
             , [CustomerPoNumber] Varchar(150)		collate latin1_general_bin
-            , [UnitCost] Numeric(20 , 2)			
+            , [UnitCost] Numeric(20 , 7)			
             , [Warehouse] Varchar(200)				collate latin1_general_bin
             , [Uom] Varchar(10)						collate latin1_general_bin
             , [Narration] Varchar(500)				collate latin1_general_bin
