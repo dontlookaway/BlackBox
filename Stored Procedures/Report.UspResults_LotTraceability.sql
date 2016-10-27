@@ -262,9 +262,9 @@ Stored procedure set out to query multiple databases with the same information a
 --Placeholder to create indexes as required
         Create Table [#LotMasterJob]
             (
-              [Lot] Varchar(50)
-            , [MasterJob] Varchar(30)
-            , [TempLot] Varchar(50)
+              [Lot] Varchar(50)	Collate Latin1_General_BIN
+            , [MasterJob] Varchar(30) Collate Latin1_General_BIN
+            , [TempLot] Varchar(50) Collate Latin1_General_BIN
             , [ActCompleteDate] Date
             );
 

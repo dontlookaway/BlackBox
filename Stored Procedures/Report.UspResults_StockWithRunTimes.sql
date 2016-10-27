@@ -50,7 +50,7 @@ As
             , [TrnQuantity] Numeric(20 , 6)
             , [JobPurchOrder] Varchar(20)	collate latin1_general_bin
             , [TrnDate] Date
-            , [TrnType] Char(1)
+            , [TrnType] Char(1) Collate Latin1_General_BIN
             , [Lot] Varchar(50)				collate latin1_general_bin
             );
         Create Table [#InvMaster]
