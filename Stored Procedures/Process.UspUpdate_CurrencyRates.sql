@@ -9,6 +9,7 @@ CREATE Proc [Process].[UspUpdate_CurrencyRates]
     )
 As
     Begin
+Set NoCount on
         Declare @MaxRank Int;
 
 --check if table exists and create if it doesn't
