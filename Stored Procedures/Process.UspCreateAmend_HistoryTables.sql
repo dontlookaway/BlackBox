@@ -272,7 +272,7 @@ Stored procedure iterates through all electronic signatures and use the variable
                             + '] (SignatureDatetime,Operator,ProgramName,ItemKey)
 					end'; --ignore duplication as multiple rows to a change
 
-                    Print @SQL;
+                    --Print @SQL;
                     Exec (@SQL);
 
 					--select only columns that do not exist
