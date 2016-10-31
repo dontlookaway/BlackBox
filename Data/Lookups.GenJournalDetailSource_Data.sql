@@ -1,3 +1,4 @@
+INSERT INTO [Lookups].[GenJournalDetailSource] ([GJSource], [GJSourceDetail]) VALUES ('JE', 'Journal Entry')
 INSERT INTO [Lookups].[GenJournalDetailSource] ([GJSource], [GJSourceDetail]) VALUES ('AP', 'Creditors')
 INSERT INTO [Lookups].[GenJournalDetailSource] ([GJSource], [GJSourceDetail]) VALUES ('AR', 'Debtors')
 INSERT INTO [Lookups].[GenJournalDetailSource] ([GJSource], [GJSourceDetail]) VALUES ('AS', 'Assets')
